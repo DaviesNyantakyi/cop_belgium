@@ -1,7 +1,7 @@
-import 'package:cop_belgium/screens/testimonies_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_series_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
-import 'package:cop_belgium/widgets/podcast_card.dart';
 import 'package:flutter/material.dart';
 
 class PodcastScreen extends StatefulWidget {
@@ -34,30 +34,8 @@ class _BuildBody extends StatefulWidget {
 }
 
 class _BuildBodyState extends State<_BuildBody> {
-  final double _pagePadding = 20;
-  final List<PodcastCard> _series = const [
-    // this is the podcast information not the card
-    // create a model
-    PodcastCard(
-      image: 'assets/images/Rectangle 269.png',
-      episodes: 12,
-      title: 'The Paradigm',
-    ),
-    PodcastCard(
-      image: 'assets/images/Rectangle 269.png',
-      episodes: 12,
-      title: 'The Paradigm',
-    ),
-    PodcastCard(
-      image: 'assets/images/Rectangle 269.png',
-      episodes: 12,
-      title: 'The Paradigm',
-    ),
-    PodcastCard(
-      image: 'assets/images/Rectangle 269.png',
-      episodes: 12,
-      title: 'The Paradigm',
-    ),
+  final List<PodcastSeriesCard> _series = const [
+    //create a model with the podcast details not the cards
   ];
 
   @override
@@ -65,12 +43,12 @@ class _BuildBodyState extends State<_BuildBody> {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 40),
+        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: _pagePadding),
+              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -88,10 +66,9 @@ class _BuildBodyState extends State<_BuildBody> {
                         'What do we do with the passages in the Bible that are really difficult?',
                     image: const AssetImage('assets/images/Rectangle 269.png'),
                     onTap: () {
-                      debugPrint('The Paradigm');
                       Navigator.pushNamed(
                         context,
-                        TestimoniesScreen.testimoniesScreen,
+                        PodcastDetailScreen.podcastDetailScreen,
                       );
                     },
                   ),
@@ -100,7 +77,7 @@ class _BuildBodyState extends State<_BuildBody> {
             ),
             const SizedBox(height: 42),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: _pagePadding),
+              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
               child: _buildSeriesTitle(
                 text: 'Series',
                 onTap: () {
@@ -112,7 +89,7 @@ class _BuildBodyState extends State<_BuildBody> {
             _buildSeriesList(),
             const SizedBox(height: 42),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: _pagePadding),
+              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
               child: _buildSeriesTitle(
                 text: 'Most Popular Episodes',
                 onTap: () {
@@ -132,14 +109,24 @@ class _BuildBodyState extends State<_BuildBody> {
     return SizedBox(
       height: 200,
       child: ListView.builder(
-        itemCount: _series.length,
+        itemCount: 15,
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(left: _pagePadding),
+        padding: const EdgeInsets.only(left: kBodyPadding),
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: _series[index],
+            child: PodcastSeriesCard(
+              image: 'assets/images/Rectangle 269.png',
+              episodes: 12,
+              title: 'The Paradigm',
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  PodcastDetailScreen.podcastDetailScreen,
+                );
+              },
+            ),
           );
         },
       ),
@@ -153,7 +140,7 @@ Widget _buildGreeting({required String userName}) {
     children: [
       const Text(
         'Good morning,',
-        style: kSFNormal,
+        style: kSFBody,
       ),
       Row(
         children: [
@@ -221,70 +208,80 @@ Widget _buildLatestCard({
   required ImageProvider image,
   required VoidCallback onTap,
 }) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      //background image
-      width: 380,
-      height: 180,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(15),
-        ),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: image,
-        ),
+  return Container(
+    //background image
+    width: 380,
+    height: 180,
+    decoration: BoxDecoration(
+      color: Colors.blue,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(15),
       ),
-      child: Container(
-        //gradient
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(15),
+      image: DecorationImage(
+        fit: BoxFit.cover,
+        image: image,
+      ),
+    ),
+    child: Stack(
+      children: [
+        Container(
+          //gradient
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                kBlueDark.withOpacity(1),
+                kBlueDark.withOpacity(0.1),
+              ],
+            ),
           ),
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              kBlueDark.withOpacity(1),
-              kBlueDark.withOpacity(0.1),
+          child: Column(
+            // content
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 23)
+                    .copyWith(left: 22, right: 89),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'The Paradigm',
+                      style: kSFHeadLine2.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
+                      style: kSFBody.copyWith(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPlayBt(
+                      onPressed: onTap,
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        child: Column(
-          // content
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 23)
-                  .copyWith(left: 22, right: 89),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'The Paradigm',
-                    style: kSFHeadLine2.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
-                    style: kSFNormal.copyWith(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildPlayBt(
-                    onPressed: onTap,
-                  )
-                ],
-              ),
+        Positioned.fill(
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              splashColor: kBlueLight.withOpacity(0.3),
+              onTap: onTap,
             ),
-          ],
+          ),
         ),
-      ),
+      ],
     ),
   );
 }
@@ -315,7 +312,7 @@ Widget _buildPlayBt({VoidCallback? onPressed}) {
         children: [
           Text(
             'Play Now',
-            style: kSFNormal.copyWith(
+            style: kSFBody.copyWith(
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -323,7 +320,7 @@ Widget _buildPlayBt({VoidCallback? onPressed}) {
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Image.asset(
-              'assets/images/icons/arrow_right.png',
+              'assets/images/icons/arrow_right_icon.png',
             ),
           ),
         ],

@@ -63,7 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
                 const SizedBox(height: 40),
-                const Text('Or login with', style: kSFNormal),
+                const Text('Or login with', style: kSFBody),
                 const SizedBox(height: 24),
                 _buildSocialBt(
                   onPressedGoogle: () {
@@ -132,11 +132,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             children: [
               const Text(
                 'Not a Meber? ',
-                style: kSFNormal,
+                style: kSFBody,
               ),
               Text(
                 'Sing Up',
-                style: kSFNormalBold.copyWith(color: kBlue),
+                style: kSFBodyBold.copyWith(color: kBlue),
               ),
             ],
           ),
@@ -146,7 +146,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           splashColor: kBlueLight,
           child: const Text(
             'Forgot Password?',
-            style: kSFNormal,
+            style: kSFBody,
           ),
           onTap: onTapForgotP,
         ),
@@ -172,7 +172,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         onPressed: onPressed,
         child: Text(
           btText,
-          style: kSFNormalBold,
+          style: kSFBodyBold,
         ),
       ),
     );
@@ -193,7 +193,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           margin: const EdgeInsets.only(bottom: 20),
           child: Text(
             inputLabel,
-            style: kSFNormal,
+            style: kSFBody,
           ),
         ),
         _buildTF(
@@ -222,13 +222,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     required bool obscureText,
   }) {
     return TextField(
-      style: kSFNormal,
+      style: kSFBody,
       keyboardType: keyboardType,
       obscureText: obscureText,
       decoration: InputDecoration(
         filled: true,
         hintText: hintText,
-        hintStyle: kSFNormal,
+        hintStyle: kSFBody,
         fillColor: kBlueLight,
         border: InputBorder.none,
         focusColor: Colors.yellow,

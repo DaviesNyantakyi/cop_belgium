@@ -1,7 +1,8 @@
-import 'package:cop_belgium/screens/fasting_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen.dart';
-import 'package:cop_belgium/screens/profile_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen.dart';
+import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
+import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
+import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedIndex == 0 ? _buildAppbar() : null,
+      appBar: _buildAppbar(
+        selectedIndex: _selectedIndex,
+        onTap: () {
+          Navigator.pushNamed(context, AnnouncementScreen.announcementScreen);
+        },
+      ),
       body: SafeArea(
         child: _screens[_selectedIndex],
       ),
@@ -114,19 +120,23 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
   );
 }
 
-PreferredSizeWidget _buildAppbar({VoidCallback? onTap}) {
-  return AppBar(
-    actions: [
-      Container(
-        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-        child: InkWell(
-          splashColor: kBlueLight,
-          child: Image.asset(
-            'assets/images/icons/notification_icon.png',
+dynamic _buildAppbar({VoidCallback? onTap, required int selectedIndex}) {
+  if (selectedIndex == 0) {
+    return AppBar(
+      actions: [
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
+          child: InkWell(
+            splashColor: kBlueLight,
+            child: Image.asset(
+              'assets/images/icons/notification_icon.png',
+            ),
+            onTap: onTap,
           ),
-          onTap: onTap,
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  } else {
+    return null;
+  }
 }

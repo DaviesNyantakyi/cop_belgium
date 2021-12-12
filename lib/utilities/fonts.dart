@@ -18,14 +18,14 @@ const kSFHeadLine2 = TextStyle(
   fontFamily: _sfDisplayFont,
 );
 
-const kSFNormal = TextStyle(
+const kSFBody = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlueDark,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
-const kSFNormalBold = TextStyle(
+const kSFBodyBold = TextStyle(
   fontWeight: FontWeight.w700,
   color: kBlueDark,
   fontSize: 16,

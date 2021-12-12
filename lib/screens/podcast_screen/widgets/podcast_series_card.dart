@@ -2,15 +2,17 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
-class PodcastCard extends StatelessWidget {
+class PodcastSeriesCard extends StatelessWidget {
   final String image;
   final String title;
   final int episodes;
-  const PodcastCard({
+  final VoidCallback? onTap;
+  const PodcastSeriesCard({
     Key? key,
     required this.image,
     required this.title,
     required this.episodes,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -60,6 +62,15 @@ class PodcastCard extends StatelessWidget {
               ),
             ),
           ),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: kBlueLight.withOpacity(0.3),
+                onTap: onTap,
+              ),
+            ),
+          )
         ],
       ),
     );
