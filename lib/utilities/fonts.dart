@@ -1,4 +1,4 @@
-import 'package:cop_belgium/utilities/colors.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';

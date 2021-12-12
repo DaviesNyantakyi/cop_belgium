@@ -2,7 +2,7 @@ import 'package:cop_belgium/screens/fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen.dart';
-import 'package:cop_belgium/utilities/colors.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -50,6 +50,8 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
     unselectedItemColor: kYellow,
     showSelectedLabels: false,
     showUnselectedLabels: false,
+    selectedFontSize: 0, // if not set to 0 exception bug
+    unselectedFontSize: 0, // if not set to 0 exception bug
     selectedIconTheme: const IconThemeData(
       color: kBlueDark,
     ),
@@ -61,44 +63,48 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
     onTap: onTap,
     items: [
       BottomNavigationBarItem(
-        icon: Image.asset(
-          'assets/images/icons/home_icon.png',
-          color: _bottomNavColor,
-        ),
+        tooltip: 'Home',
         label: 'Home',
+        icon: Image.asset(
+          'assets/images/icons/home_icon.png',
+          color: _bottomNavColor,
+        ),
         activeIcon: Image.asset(
           'assets/images/icons/home_icon.png',
           color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
-        icon: Image.asset(
-          'assets/images/icons/testimony_icon.png',
-          color: _bottomNavColor,
-        ),
         label: 'Testimonies',
+        tooltip: 'Testimonies',
+        icon: Image.asset(
+          'assets/images/icons/testimony_icon.png',
+          color: _bottomNavColor,
+        ),
         activeIcon: Image.asset(
           'assets/images/icons/testimony_icon.png',
           color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
+        label: 'Fasting',
+        tooltip: 'Fasting',
         icon: Image.asset(
           'assets/images/icons/fasting_icon.png',
           color: _bottomNavColor,
         ),
-        label: 'Fasting',
         activeIcon: Image.asset(
           'assets/images/icons/fasting_icon.png',
           color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
+        label: 'Profile',
+        tooltip: 'Profile',
         icon: Image.asset(
           'assets/images/icons/profile_icon.png',
           color: _bottomNavColor,
         ),
-        label: 'Profile',
         activeIcon: Image.asset(
           'assets/images/icons/profile_icon.png',
           color: kBlueDark,
@@ -112,7 +118,7 @@ PreferredSizeWidget _buildAppbar({VoidCallback? onTap}) {
   return AppBar(
     actions: [
       Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
         child: InkWell(
           splashColor: kBlueLight,
           child: Image.asset(

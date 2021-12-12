@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cop Belgium',
-      home: const HomeScreen(),
+      home: const WelcomeScreen(),
       theme: _theme,
       routes: {
         WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),

@@ -1,4 +1,5 @@
-import 'package:cop_belgium/utilities/colors.dart';
+import 'package:cop_belgium/screens/testimonies_screen.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:cop_belgium/widgets/podcast_card.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class _BuildBodyState extends State<_BuildBody> {
       title: 'The Paradigm',
     ),
   ];
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -87,6 +89,10 @@ class _BuildBodyState extends State<_BuildBody> {
                     image: const AssetImage('assets/images/Rectangle 269.png'),
                     onTap: () {
                       debugPrint('The Paradigm');
+                      Navigator.pushNamed(
+                        context,
+                        TestimoniesScreen.testimoniesScreen,
+                      );
                     },
                   ),
                 ],

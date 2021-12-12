@@ -1,4 +1,5 @@
-import 'package:cop_belgium/utilities/colors.dart';
+import 'package:cop_belgium/screens/home_screen.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: [
                 _buildLogo(),
                 const SizedBox(height: 60),
-                _buildTextForm(
+                _buildTf(
                   inputLabel: 'Email',
                   hintText: 'JohnSmith@yourmail.com',
                   obscureText: false,
@@ -34,7 +35,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
-                _buildTextForm(
+                _buildTf(
                   inputLabel: 'Password',
                   hintText: 'Password',
                   obscureText: true,
@@ -46,7 +47,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 _buildBt(
                   btText: 'Sign In',
                   onPressed: () {
-                    debugPrint('Sing in');
+                    Navigator.pushReplacementNamed(
+                      context,
+                      HomeScreen.homeScreen,
+                    );
                   },
                 ),
                 const SizedBox(height: 19),
@@ -62,8 +66,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const Text('Or login with', style: kSFNormal),
                 const SizedBox(height: 24),
                 _buildSocialBt(
-                  onPressedGoogle: () {},
-                  onPressedApple: () {},
+                  onPressedGoogle: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      HomeScreen.homeScreen,
+                    );
+                  },
+                  onPressedApple: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      HomeScreen.homeScreen,
+                    );
+                  },
                 )
               ],
             ),
@@ -81,6 +95,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         FloatingActionButton(
+          heroTag: 'bt1',
           elevation: 1,
           backgroundColor: kBlueLight,
           child: Image.asset(
@@ -91,6 +106,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         ),
         const SizedBox(width: 16),
         FloatingActionButton(
+          heroTag: 'bt2',
           elevation: 1,
           backgroundColor: kBlueLight,
           child: Image.asset(
@@ -162,7 +178,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildTextForm({
+  Widget _buildTf({
     required String inputLabel,
     required String hintText,
     required bool obscureText,
