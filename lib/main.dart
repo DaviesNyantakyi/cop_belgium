@@ -1,3 +1,5 @@
+import 'package:cop_belgium/screens/fasting_screen/fasting_history.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
@@ -11,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/home_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
@@ -31,36 +33,39 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const HomeScreen(),
+      home: const WelcomeScreen(),
       theme: _theme,
-      routes: {
-        WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),
-        HomeScreen.homeScreen: (context) => const HomeScreen(),
-        PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
-        PlayPodcastScreen.playPodcastScreen: (context) =>
-            const PlayPodcastScreen(),
-        PodcastDetailScreen.podcastDetailScreen: (context) =>
-            const PodcastDetailScreen(),
-        AnnouncementScreen.announcementScreen: (context) =>
-            const AnnouncementScreen(),
-        TestimoniesScreen.testimoniesScreen: (context) =>
-            const TestimoniesScreen(),
-        FastingScreens.fastingScreens: (context) => const FastingScreens(),
-        ProfileScreens.profileScreens: (context) => const ProfileScreens(),
-        EditProfileScreen.editProfileScreen: (context) =>
-            const EditProfileScreen(),
-        SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
-        CreateTestimonyScreen.editTestimonyScreen: (context) =>
-            const CreateTestimonyScreen(),
-        UserSavedPodcastView.userSavedPodcastView: (context) =>
-            const UserSavedPodcastView(),
-        UserTestimoniesView.userTestimoniesView: (context) =>
-            const UserTestimoniesView(),
-        UserFastingView.userFastingView: (context) => const UserFastingView(),
-      },
+      routes: _routes,
     );
   }
 }
+
+Map<String, WidgetBuilder> _routes = {
+  WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),
+  HomeScreen.homeScreen: (context) => const HomeScreen(),
+  AnnouncementScreen.announcementScreen: (context) =>
+      const AnnouncementScreen(),
+  PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
+  PlayPodcastScreen.playPodcastScreen: (context) => const PlayPodcastScreen(),
+  PodcastDetailScreen.podcastDetailScreen: (context) =>
+      const PodcastDetailScreen(),
+  UserSavedPodcastView.userSavedPodcastView: (context) =>
+      const UserSavedPodcastView(),
+  CreateFastingScreens.createFastingScreens: (context) =>
+      const CreateFastingScreens(),
+  FastingScreen.fastingScreen: (context) => const FastingScreen(),
+  FastingHistoryScreen.fastingHistoryScreen: (context) =>
+      const FastingHistoryScreen(),
+  UserFastingView.userFastingView: (context) => const UserFastingView(),
+  ProfileScreens.profileScreens: (context) => const ProfileScreens(),
+  EditProfileScreen.editProfileScreen: (context) => const EditProfileScreen(),
+  SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
+  CreateTestimonyScreen.editTestimonyScreen: (context) =>
+      const CreateTestimonyScreen(),
+  TestimoniesScreen.testimoniesScreen: (context) => const TestimoniesScreen(),
+  UserTestimoniesView.userTestimoniesView: (context) =>
+      const UserTestimoniesView(),
+};
 
 ThemeData _theme = ThemeData(
   splashColor: kBlueLight,

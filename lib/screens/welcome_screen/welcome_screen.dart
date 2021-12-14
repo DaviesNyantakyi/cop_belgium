@@ -45,7 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
                 const SizedBox(height: kTextFieldSpacing),
-                _buildBt(
+                _buildBtn(
                   btText: 'Sign In',
                   onPressed: () {
                     Navigator.pushReplacementNamed(
@@ -155,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildBt({required String btText, VoidCallback? onPressed}) {
+  Widget _buildBtn({required String btText, VoidCallback? onPressed}) {
     return SizedBox(
       width: double.infinity,
       height: 48,

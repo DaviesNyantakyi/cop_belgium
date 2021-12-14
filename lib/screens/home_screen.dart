@@ -1,4 +1,4 @@
-import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = const [
     PodcastScreen(),
     TestimoniesScreen(),
-    FastingScreens(),
+    CreateFastingScreens(),
     ProfileScreens(),
   ];
 
