@@ -2,6 +2,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String _text =
     '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. In placerat adipiscing nulla tempus facilisi. Semper tempor eu a, libero magnis.
@@ -21,9 +22,7 @@ class AnnouncementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(onTap: () {
-        Navigator.pop(context);
-      }),
+      appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -47,7 +46,7 @@ class AnnouncementScreen extends StatelessWidget {
                       timeAgo: '15 Min Ago',
                       announcement:
                           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Eu vestibulum volutpat habitasse augue aliquam. Eget non hac nibh feugiat vestibulum nisi, consectetur viverra. ',
-                      onTap: () {
+                      onPressed: () {
                         _showBottomSheet(
                           context: context,
                           title: 'Announcements Lorem ipsum',
@@ -65,6 +64,86 @@ class AnnouncementScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildAnnoncementCard({
+    required String title,
+    required String announcement,
+    required String timeAgo,
+    VoidCallback? onPressed,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      width: double.infinity,
+      height: 180,
+      decoration: const BoxDecoration(
+        color: kBlueLight,
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      child: TextButton(
+        onPressed: onPressed,
+        style: kTextButtonStyle,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20)
+              .copyWith(left: 20, right: 23),
+          child: Column(
+            children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      title,
+                      style: kSFCaption,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      timeAgo,
+                      style: kSFSubtitle2,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                announcement,
+                style: kSFBody,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  dynamic _buildAppbar({required BuildContext context}) {
+    return AppBar(
+      centerTitle: true,
+      title: const Text(
+        'Announcements',
+        style: kSFHeadLine2,
+      ),
+      leading: TextButton(
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: kTextButtonStyle,
+      ),
+    );
+  }
+
   Future<void> _showBottomSheet({
     required BuildContext context,
     required String title,
@@ -77,8 +156,8 @@ class AnnouncementScreen extends StatelessWidget {
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: const Text(
-              'Announcements Lorem ipsum',
+            child: Text(
+              title,
               style: kSFHeadLine2,
             ),
           ),
@@ -91,93 +170,6 @@ class AnnouncementScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAnnoncementCard({
-    required String title,
-    required String announcement,
-    required String timeAgo,
-    VoidCallback? onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      width: double.infinity,
-      height: 180,
-      decoration: const BoxDecoration(
-        color: kBlueLight,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-      child: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20)
-                .copyWith(left: 20, right: 23),
-            child: Column(
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        title,
-                        style: kSFCaption,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        timeAgo,
-                        style: kSFSubtitle2,
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  announcement,
-                  style: kSFBody,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                )
-              ],
-            ),
-          ),
-          Positioned.fill(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                splashColor: kBlueLight.withOpacity(0.3),
-                onTap: onTap,
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppbar({VoidCallback? onTap}) {
-    return AppBar(
-      centerTitle: true,
-      title: const Text(
-        'Announcements',
-        style: kSFHeadLine2,
-      ),
-      leading: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-        child: InkWell(
-          splashColor: kBlueLight,
-          child: Image.asset('assets/images/icons/arrow_left_icon.png'),
-          onTap: onTap,
-        ),
       ),
     );
   }

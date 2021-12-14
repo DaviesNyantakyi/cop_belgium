@@ -15,14 +15,11 @@ class PlayPodcastScreen extends StatefulWidget {
 }
 
 class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
+  bool isPlaying = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(
-        onTap: () {
-          Navigator.pop(context);
-        },
-      ),
+      appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
@@ -55,13 +52,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
                       const SizedBox(height: 32),
                       const _MySilder(),
                       const SizedBox(height: 32),
-                      _buildMediaControl(
-                        redo: () {},
-                        fastBackward: () {},
-                        play: () {},
-                        fastForward: () {},
-                        stop: () {},
-                      )
+                      _buildMediaControl()
                     ],
                   ),
                 ),
@@ -72,59 +63,56 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
       ),
     );
   }
-}
 
-Widget _buildMediaControl({
-  required VoidCallback redo,
-  required VoidCallback fastBackward,
-  required VoidCallback play,
-  required VoidCallback fastForward,
-  required VoidCallback stop,
-}) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    children: [
-      IconButton(
-        icon: const Icon(
-          FontAwesomeIcons.redoAlt,
-          size: 32,
-        ),
-        color: Colors.grey,
-        onPressed: redo,
-      ),
-      IconButton(
-        icon: const Icon(
-          FontAwesomeIcons.backward,
-          size: 32,
-        ),
-        color: Colors.grey,
-        onPressed: fastBackward,
-      ),
-      FloatingActionButton(
-        backgroundColor: kBlue,
-        child: const Padding(
-          padding: EdgeInsets.only(left: 5),
-          child: Icon(
-            FontAwesomeIcons.play,
+  Widget _buildMediaControl() {
+    bool isPlaying = false;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.redoAlt,
+            size: 32,
           ),
+          color: Colors.grey,
+          onPressed: () {},
         ),
-        onPressed: play,
-      ),
-      IconButton(
-        icon: const Icon(
-          FontAwesomeIcons.forward,
-          size: 32,
+        IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.backward,
+            size: 32,
+          ),
+          color: Colors.grey,
+          onPressed: () {},
         ),
-        color: Colors.grey,
-        onPressed: fastForward,
-      ),
-      IconButton(
-        icon: const Icon(FontAwesomeIcons.stop, size: 32),
-        color: Colors.grey,
-        onPressed: stop,
-      ),
-    ],
-  );
+        FloatingActionButton(
+          backgroundColor: kBlue,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: Icon(
+              isPlaying == true
+                  ? FontAwesomeIcons.pause
+                  : FontAwesomeIcons.play,
+            ),
+          ),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(
+            FontAwesomeIcons.forward,
+            size: 32,
+          ),
+          color: Colors.grey,
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.stop, size: 32),
+          color: Colors.grey,
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
 }
 
 class _MySilder extends StatefulWidget {
@@ -193,16 +181,19 @@ Widget _buildTitle() {
   );
 }
 
-dynamic _buildAppbar({VoidCallback? onTap}) {
+dynamic _buildAppbar({required BuildContext context}) {
   return AppBar(
     leading: Container(
       margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-      child: InkWell(
-        splashColor: kBlueLight,
-        child: Image.asset(
-          'assets/images/icons/arrow_left_icon.png',
+      child: TextButton(
+        style: kTextButtonStyle,
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
         ),
-        onTap: onTap,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
     ),
   );

@@ -1,10 +1,10 @@
-import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   static String homeScreen = 'HomeScreen';
@@ -27,12 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(
-        selectedIndex: _selectedIndex,
-        onTap: () {
-          Navigator.pushNamed(context, AnnouncementScreen.announcementScreen);
-        },
-      ),
       body: SafeArea(
         child: _screens[_selectedIndex],
       ),
@@ -71,72 +65,53 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
       BottomNavigationBarItem(
         tooltip: 'Home',
         label: 'Home',
-        icon: Image.asset(
-          'assets/images/icons/home_icon.png',
+        icon: Icon(
+          Icons.home_outlined,
           color: _bottomNavColor,
+          size: 35,
         ),
-        activeIcon: Image.asset(
-          'assets/images/icons/home_icon.png',
+        activeIcon: const Icon(
+          Icons.home_outlined,
           color: kBlueDark,
+          size: 35,
         ),
       ),
       BottomNavigationBarItem(
         label: 'Testimonies',
         tooltip: 'Testimonies',
-        icon: Image.asset(
-          'assets/images/icons/testimony_icon.png',
+        icon: Icon(
+          FontAwesomeIcons.clipboard,
           color: _bottomNavColor,
         ),
-        activeIcon: Image.asset(
-          'assets/images/icons/testimony_icon.png',
+        activeIcon: const Icon(
+          FontAwesomeIcons.clipboard,
           color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
         label: 'Fasting',
         tooltip: 'Fasting',
-        icon: Image.asset(
-          'assets/images/icons/fasting_icon.png',
+        icon: Icon(
+          FontAwesomeIcons.utensils,
           color: _bottomNavColor,
         ),
-        activeIcon: Image.asset(
-          'assets/images/icons/fasting_icon.png',
+        activeIcon: const Icon(
+          FontAwesomeIcons.utensils,
           color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
         label: 'Profile',
         tooltip: 'Profile',
-        icon: Image.asset(
-          'assets/images/icons/profile_icon.png',
+        icon: Icon(
+          FontAwesomeIcons.user,
           color: _bottomNavColor,
         ),
-        activeIcon: Image.asset(
-          'assets/images/icons/profile_icon.png',
+        activeIcon: const Icon(
+          FontAwesomeIcons.user,
           color: kBlueDark,
         ),
       ),
     ],
   );
-}
-
-dynamic _buildAppbar({VoidCallback? onTap, required int selectedIndex}) {
-  if (selectedIndex == 0) {
-    return AppBar(
-      actions: [
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-          child: InkWell(
-            splashColor: kBlueLight,
-            child: Image.asset(
-              'assets/images/icons/notification_icon.png',
-            ),
-            onTap: onTap,
-          ),
-        ),
-      ],
-    );
-  } else {
-    return null;
-  }
 }

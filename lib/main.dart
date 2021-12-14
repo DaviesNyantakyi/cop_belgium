@@ -1,5 +1,10 @@
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
+import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
+import 'package:cop_belgium/screens/profile_screen/fasting_view.dart';
+import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
+import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
+import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -42,19 +47,41 @@ class MyApp extends StatelessWidget {
             const TestimoniesScreen(),
         FastingScreens.fastingScreens: (context) => const FastingScreens(),
         ProfileScreens.profileScreens: (context) => const ProfileScreens(),
-        EditTestimonyScreen.editTestimonyScreen: (context) =>
-            const EditTestimonyScreen(),
+        EditProfileScreen.editProfileScreen: (context) =>
+            const EditProfileScreen(),
+        SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
+        CreateTestimonyScreen.editTestimonyScreen: (context) =>
+            const CreateTestimonyScreen(),
+        UserSavedPodcastView.userSavedPodcastView: (context) =>
+            const UserSavedPodcastView(),
+        UserTestimoniesView.userTestimoniesView: (context) =>
+            const UserTestimoniesView(),
+        UserFastingView.userFastingView: (context) => const UserFastingView(),
       },
     );
   }
 }
 
 ThemeData _theme = ThemeData(
+  splashColor: kBlueLight,
+  iconTheme: const IconThemeData(
+    color: kBlueDark,
+    size: 25,
+  ),
   appBarTheme: const AppBarTheme(
+    iconTheme: IconThemeData(
+      size: 25,
+      color: kBlueDark,
+      opacity: 0.5,
+    ),
     elevation: 0,
     backgroundColor: Colors.white,
   ),
   scaffoldBackgroundColor: Colors.white,
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: kBlueDark,
+    selectionHandleColor: kBlueDark,
+  ),
   sliderTheme: SliderThemeData(
     activeTrackColor: kBlue,
     thumbColor: kBlue,

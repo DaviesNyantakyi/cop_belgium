@@ -2,39 +2,45 @@ import 'package:cop_belgium/utilities/color_picker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-String _text =
-    '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. In placerat adipiscing nulla tempus facilisi. Semper tempor eu a, libero magnis.
-
-Egestas amet, at sit dapibus tortor, lacus orci aliquet. Odio elit vitae sagittis ac sem aenean nisl pretium sagittis. Vitae hac dictum faucibus fringilla faucibus morbi. Sed nisl tempus est vulputate enim convallis consectetur. Convallis eget lacus, integer enim accumsan.
-
-Mollis sed faucibus volutpat accumsan justo tempor lectus eu quis. Interdum adipiscing et quam nunc elementum volutpat eu. Diam nibh sit lobortis nisl scelerisque eu. Odio pulvinar quis vitae ut. Justo lacus vitae pretium dolor sed cursus venenatis.''';
-
-class EditTestimonyScreen extends StatefulWidget {
+class CreateTestimonyScreen extends StatefulWidget {
+  final Color? backgroundColor;
+  final String? title;
+  final String? text;
+  final bool? editable; // if the screen is editable or not
   static String editTestimonyScreen = 'editTestimonyScreen';
-  const EditTestimonyScreen({Key? key}) : super(key: key);
+  const CreateTestimonyScreen({
+    Key? key,
+    this.backgroundColor = kBlueLight,
+    this.title,
+    this.text,
+    this.editable = false,
+  }) : super(key: key);
 
   @override
-  State<EditTestimonyScreen> createState() => _EditTestimonyScreenState();
+  State<CreateTestimonyScreen> createState() => _CreateTestimonyScreenState();
 }
 
-class _EditTestimonyScreenState extends State<EditTestimonyScreen> {
+class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   String? testimonyTitle;
   String? testimonyText;
-  Color? color = kBlueLight;
+  Color? color;
+
+  @override
+  void initState() {
+    super.initState();
+
+    color = widget.backgroundColor;
+    testimonyTitle = widget.title;
+    testimonyText = widget.text;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: color,
-      appBar: _buildAppbar(
-        onTapBack: () {
-          Navigator.pop(context);
-        },
-        onTapSave: () {
-          debugPrint('Save');
-        },
-      ),
+      appBar: _buildAppbar(editable: widget.editable!),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -101,37 +107,65 @@ class _EditTestimonyScreenState extends State<EditTestimonyScreen> {
     );
   }
 
-  dynamic _buildAppbar({
-    VoidCallback? onTapBack,
-    VoidCallback? onTapSave,
-  }) {
+  dynamic _buildAppbar({required bool editable}) {
     return AppBar(
+      title: !editable
+          ? const Text(
+              'Create Testimony',
+              style: kSFCaption,
+            )
+          : const Text(
+              'Edit Testimony',
+              style: kSFCaption,
+            ),
       backgroundColor: color,
-      leading: InkWell(
-        splashColor: kBlueLight,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            'assets/images/icons/arrow_left_icon.png',
+      leading: TextButton(
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Icon(
+            FontAwesomeIcons.chevronLeft,
+            color: kBlueDark,
           ),
         ),
-        onTap: onTapBack,
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
       actions: [
         Container(
           alignment: Alignment.center,
-          child: InkWell(
-            splashColor: kBlueLight,
-            child: Padding(
-              padding: EdgeInsets.all(kAppbarPadding).copyWith(right: 20),
-              child: Text(
-                'Save',
-                style: kSFBody,
-              ),
+          child: TextButton(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.only(right: kAppbarPadding),
             ),
-            onTap: onTapSave,
+            child: Text(
+              editable
+                  ? 'Save'
+                  : 'Post', // screen is editable show Save instead of post
+              style: kSFCaption,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
+        editable
+            ? Container(
+                alignment: Alignment.center,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.only(right: kAppbarPadding),
+                  ),
+                  child: Text(
+                    'Delete',
+                    style: kSFCaption.copyWith(color: kRed),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              )
+            : Container(),
       ],
     );
   }

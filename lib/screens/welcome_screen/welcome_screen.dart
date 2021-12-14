@@ -1,6 +1,7 @@
 import 'package:cop_belgium/screens/home_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
+import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -25,8 +26,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               children: [
                 _buildLogo(),
                 const SizedBox(height: 60),
-                _buildTf(
-                  inputLabel: 'Email',
+                MyTextField.buildTF(
+                  label: 'Email',
                   hintText: 'JohnSmith@yourmail.com',
                   obscureText: false,
                   keyboardType: TextInputType.emailAddress,
@@ -34,16 +35,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     debugPrint(value);
                   },
                 ),
-                const SizedBox(height: 24),
-                _buildTf(
-                  inputLabel: 'Password',
+                const SizedBox(height: kTextFieldSpacing),
+                MyTextField.buildTF(
+                  label: 'Password',
                   hintText: 'Password',
                   obscureText: true,
                   onChanged: (value) {
                     debugPrint(value);
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: kTextFieldSpacing),
                 _buildBt(
                   btText: 'Sign In',
                   onPressed: () {
@@ -126,8 +127,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        InkWell(
-          splashColor: kBlueLight,
+        TextButton(
+          style: kTextButtonStyle,
           child: Row(
             children: [
               const Text(
@@ -140,15 +141,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             ],
           ),
-          onTap: onTapSingUp,
+          onPressed: onTapSingUp,
         ),
-        InkWell(
-          splashColor: kBlueLight,
+        TextButton(
+          style: kTextButtonStyle,
           child: const Text(
             'Forgot Password?',
             style: kSFBody,
           ),
-          onTap: onTapForgotP,
+          onPressed: onTapForgotP,
         ),
       ],
     );
@@ -164,7 +165,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
-                Radius.circular(10),
+                Radius.circular(kButtonRadius),
               ),
             ),
           ),
@@ -178,33 +179,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildTf({
-    required String inputLabel,
-    required String hintText,
-    required bool obscureText,
-    TextInputType? keyboardType,
-    Function(String)? onChanged,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(bottom: 20),
-          child: Text(
-            inputLabel,
-            style: kSFBody,
-          ),
-        ),
-        _buildTF(
-            hintText: hintText,
-            keyboardType: keyboardType,
-            onChanged: onChanged,
-            obscureText: obscureText),
-      ],
-    );
-  }
-
   SizedBox _buildLogo() {
     return SizedBox(
       child: Image.asset(
@@ -212,33 +186,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         width: 158.15,
         height: 158.15,
       ),
-    );
-  }
-
-  Widget _buildTF({
-    required String hintText,
-    TextInputType? keyboardType,
-    Function(String)? onChanged,
-    required bool obscureText,
-  }) {
-    return TextField(
-      style: kSFBody,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        filled: true,
-        hintText: hintText,
-        hintStyle: kSFBody,
-        fillColor: kBlueLight,
-        border: InputBorder.none,
-        focusColor: Colors.yellow,
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-      ),
-      onChanged: onChanged,
     );
   }
 }

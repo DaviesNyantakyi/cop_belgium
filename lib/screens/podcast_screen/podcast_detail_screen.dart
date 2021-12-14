@@ -3,6 +3,7 @@ import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String _profileImage =
     'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
@@ -16,11 +17,7 @@ class PodcastDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(
-        onTap: () {
-          Navigator.pop(context);
-        },
-      ),
+      appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(bottom: kBodyPadding),
@@ -64,12 +61,12 @@ Widget _buildEpisodes() {
         child: const Text('Episodes', style: kSFCaption),
       ),
       const SizedBox(height: 12),
-      _buildSeriesList(),
+      _buildEpisodesList(),
     ],
   );
 }
 
-SizedBox _buildSeriesList() {
+SizedBox _buildEpisodesList() {
   return SizedBox(
     height: 200,
     child: ListView.builder(
@@ -84,7 +81,7 @@ SizedBox _buildSeriesList() {
             image: 'assets/images/Rectangle 269.png',
             episodes: 12,
             title: 'Humans are Trees?',
-            onTap: () {
+            onPressed: () {
               Navigator.pushNamed(context, PlayPodcastScreen.playPodcastScreen);
             },
           ),
@@ -128,32 +125,24 @@ Widget _buildSpeakers() {
 }
 
 Widget _buildAvatar({VoidCallback? onTap}) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Stack(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(_profileImage),
-          ),
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  splashColor: kBlueLight.withOpacity(0.3),
-                  onTap: onTap,
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-      const SizedBox(height: 8),
-      const Text('John Smith', style: kSFSubtitle2),
-    ],
+  return TextButton(
+    onPressed: () {},
+    style: TextButton.styleFrom(
+      minimumSize: Size.zero,
+      padding: EdgeInsets.zero,
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    ),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircleAvatar(
+          radius: 20,
+          backgroundImage: NetworkImage(_profileImage),
+        ),
+        const SizedBox(height: 8),
+        const Text('John Smith', style: kSFSubtitle2),
+      ],
+    ),
   );
 }
 
@@ -206,10 +195,9 @@ Widget _buildDetail({
     children: [
       Row(
         children: [
-          Image.asset(
-            'assets/images/icons/calendar_icon.png',
-            width: 16,
-            height: 17,
+          const Icon(
+            FontAwesomeIcons.calendar,
+            size: 20,
           ),
           const SizedBox(width: 8),
           Text(
@@ -219,35 +207,44 @@ Widget _buildDetail({
         ],
       ),
       const SizedBox(width: 19),
-      Row(
-        children: [
-          Image.asset(
-            'assets/images/icons/hand_clap_icon.png',
-            width: 16,
-            height: 17,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            '${likes}K',
-            style: kSFBody,
-          ),
-        ],
+      TextButton(
+        onPressed: () {},
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              'assets/images/icons/hand_clap_icon.png',
+              width: 20,
+              filterQuality: FilterQuality.high,
+              color: kBlueDark,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${likes}K',
+              style: kSFBody,
+            ),
+          ],
+        ),
       ),
     ],
   );
 }
 
-dynamic _buildAppbar({VoidCallback? onTap}) {
+dynamic _buildAppbar({required BuildContext context}) {
   return AppBar(
-    leading: Container(
-      margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-      child: InkWell(
-        splashColor: kBlueLight,
-        child: Image.asset(
-          'assets/images/icons/arrow_left_icon.png',
-        ),
-        onTap: onTap,
+    leading: TextButton(
+      child: const Icon(
+        FontAwesomeIcons.chevronLeft,
+        color: kBlueDark,
       ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      style: kTextButtonStyle,
     ),
   );
 }

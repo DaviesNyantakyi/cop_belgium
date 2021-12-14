@@ -6,13 +6,13 @@ class PodcastEpisodesCard extends StatelessWidget {
   final String image;
   final String title;
   final int episodes;
-  final VoidCallback? onTap;
+  final VoidCallback? onPressed;
   const PodcastEpisodesCard({
     Key? key,
     required this.image,
     required this.title,
     required this.episodes,
-    this.onTap,
+    this.onPressed,
   }) : super(key: key);
 
   @override
@@ -32,61 +32,56 @@ class PodcastEpisodesCard extends StatelessWidget {
           ),
         ),
       ),
-      child: Stack(
-        children: [
-          const Positioned(
-            right: 12.0,
-            top: 14.0,
-            child: Text(
-              '5:30',
-              style: kSFSubtitle2,
+      child: TextButton(
+        onPressed: onPressed,
+        style: kTextButtonStyle,
+        child: Stack(
+          children: [
+            const Positioned(
+              right: 12.0,
+              top: 14.0,
+              child: Text(
+                '5:30',
+                style: kSFSubtitle2,
+              ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            child: Container(
-              height: 89,
-              width: 143,
-              decoration: BoxDecoration(
-                color: kBlueLight.withOpacity(0.8),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
+            Positioned(
+              bottom: 0,
+              child: Container(
+                height: 89,
+                width: 143,
+                decoration: BoxDecoration(
+                  color: kBlueLight.withOpacity(0.8),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        title,
+                        style: kSFSubtitle1,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        '12 December 2021',
+                        style: kSFSubtitle2,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: kSFSubtitle1,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      '12 December 2021',
-                      style: kSFSubtitle2,
-                    ),
-                  ],
-                ),
-              ),
             ),
-          ),
-          Positioned.fill(
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                splashColor: kBlueLight.withOpacity(0.3),
-                onTap: onTap,
-              ),
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

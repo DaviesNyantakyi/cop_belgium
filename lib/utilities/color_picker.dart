@@ -30,7 +30,7 @@ class FastColorPicker extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // selected color indicator
+              // preview of the selected color
               /*Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 8,
@@ -94,7 +94,7 @@ class FastColorPicker extends StatelessWidget {
             child: AnimatedContainer(
               width: size,
               height: size,
-              duration: Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 100),
               decoration: BoxDecoration(
                 color: c,
                 shape: BoxShape.circle,
@@ -164,8 +164,8 @@ class SelectedColor extends StatelessWidget {
           width: 2,
           color: Colors.white,
         ),
-        boxShadow: [
-          const BoxShadow(
+        boxShadow: const [
+          BoxShadow(
             blurRadius: 6,
             color: Colors.black38,
           ),

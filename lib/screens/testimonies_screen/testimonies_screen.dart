@@ -1,7 +1,6 @@
 import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/my_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
-import 'package:cop_belgium/screens/testimonies_screen/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
@@ -38,14 +37,25 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Testify',
-        backgroundColor: kBlue,
-        child: const Icon(FontAwesomeIcons.plus),
-        onPressed: () {
-          Navigator.pushNamed(context, EditTestimonyScreen.editTestimonyScreen);
-        },
-      ),
+      floatingActionButton: _builFloActionBtn(),
+    );
+  }
+
+  Widget _builFloActionBtn() {
+    return FloatingActionButton(
+      tooltip: 'Testify',
+      backgroundColor: kBlue,
+      child: const Icon(FontAwesomeIcons.plus),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const CreateTestimonyScreen();
+            },
+          ),
+        );
+      },
     );
   }
 

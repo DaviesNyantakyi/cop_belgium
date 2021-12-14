@@ -1,9 +1,7 @@
+import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
-
-String _text =
-    'Consequat magna fugiat dolor sit aliquip cupidatat sunt cillum proident. Ex adipisicing minim irure mollit. Anim minim deserunt irure est nostrud irure ullamco sit laborum id nostrud exercitation velit. Pariatur pariatur voluptate veniam ex minim ullamco. Tempor ex quis voluptate dolor ut aliqua quis ea minim. Ea mollit Lorem enim enim velit qui ea labore aute. Do aliqua ullamco duis deserunt deserunt excepteur tempor tempor eu commodo.';
 
 class MyTestimoniesView extends StatefulWidget {
   const MyTestimoniesView({Key? key}) : super(key: key);
@@ -13,7 +11,11 @@ class MyTestimoniesView extends StatefulWidget {
 }
 
 class _MyTestimoniesViewState extends State<MyTestimoniesView> {
-  int likes = 100;
+  int likes = 255;
+  Color cardColor = kBlueLight;
+  String title = 'Announcements Lorem ipsum';
+  String testimony =
+      'Consequat magna fugiat dolor sit aliquip ksnkfqnfkqnf qnlfkqfknfanlan alfalknfkncksqnfk lqfnaplfnckzlfnzflfnndqd,aveisc davis';
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,19 +30,28 @@ class _MyTestimoniesViewState extends State<MyTestimoniesView> {
             padding: const EdgeInsets.only(bottom: 20),
             child: TestimonyCard(
               editable: true,
-              title: 'Announcements Lorem ipsum',
-              testimony: _text,
+              title: title,
+              testimony: testimony,
               likes: likes,
-              cardColor: kYellowLight,
-              textColor: kYellowDark,
+              cardColor: cardColor,
               timeAgo: '6 Hours Ago',
-              onTapLike: () {
+              onPressedLike: () {
                 setState(() {
                   likes++;
                 });
+                debugPrint('Likes');
               },
-              onTapCard: () {
-                print('cliked card');
+              onPressedCard: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const CreateTestimonyScreen(
+                        editable: true,
+                      );
+                    },
+                  ),
+                );
               },
             ),
           );
