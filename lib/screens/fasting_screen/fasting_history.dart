@@ -5,6 +5,7 @@ import 'package:dart_date/src/dart_date.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+// this will display the fasting history from the user firebase in a acending order
 class FastingHistoryScreen extends StatefulWidget {
   final FastingInfo? fastingInfo;
   static String fastingHistoryScreen = 'fastingHistoryScreen';
@@ -151,7 +152,7 @@ class FastingHistoryCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      'Start Time',
+                      'End Time',
                       style: kSFSubtitle2,
                     ),
                     const SizedBox(height: 4),

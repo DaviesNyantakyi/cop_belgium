@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const WelcomeScreen(),
+      home: const CreateFastingScreens(),
       theme: _theme,
       routes: _routes,
     );

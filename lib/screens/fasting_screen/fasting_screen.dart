@@ -130,6 +130,21 @@ class _FastingScreenState extends State<FastingScreen> {
                                     //pauses the fasting timer using the conroller
                                     _controller.pause();
                                   });
+                                  //before adding to user account in firebase show popup asking to save
+                                  // fast. When save is true save to firebase user history
+                                  // before pushing add to firebase history screen ad to firebase
+                                  // nothing will be passed in the fasting history object
+                                  // because it will show the history form firebase
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return FastingHistoryScreen(
+                                          fastingInfo: fastingInfo,
+                                        );
+                                      },
+                                    ),
+                                  );
                                 }
                               },
                             )
@@ -151,7 +166,7 @@ class _FastingScreenState extends State<FastingScreen> {
                   itemBuilder: (context, index) {
                     return _buildFooterText(
                       passage: _text,
-                      verse: '-Paslm 46:10',
+                      verse: '-Psalm 46:10',
                     );
                   },
                 ),
@@ -194,7 +209,7 @@ class _FastingScreenState extends State<FastingScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Start Time',
+                  'Goal',
                   style: kSFSubtitle2,
                 ),
                 const SizedBox(height: 4),
