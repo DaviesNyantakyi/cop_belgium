@@ -1,9 +1,11 @@
-import 'package:cop_belgium/screens/fasting_screen/fasting_history.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
-import 'package:cop_belgium/screens/profile_screen/fasting_view.dart';
+import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
@@ -33,7 +35,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const CreateFastingScreens(),
+      home: const WelcomeScreen(),
       theme: _theme,
       routes: _routes,
     );
@@ -56,9 +58,11 @@ Map<String, WidgetBuilder> _routes = {
   FastingScreen.fastingScreen: (context) => const FastingScreen(),
   FastingHistoryScreen.fastingHistoryScreen: (context) =>
       const FastingHistoryScreen(),
-  UserFastingView.userFastingView: (context) => const UserFastingView(),
+  UserFastingHistoryView.userFastingHistoryView: (context) =>
+      const UserFastingHistoryView(),
   ProfileScreens.profileScreens: (context) => const ProfileScreens(),
-  EditProfileScreen.editProfileScreen: (context) => const EditProfileScreen(),
+  EditProfileScreen.editProfileScreen: (context) =>
+      const EditProfileScreen(user: null),
   SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
   CreateTestimonyScreen.editTestimonyScreen: (context) =>
       const CreateTestimonyScreen(),
@@ -70,13 +74,13 @@ Map<String, WidgetBuilder> _routes = {
 ThemeData _theme = ThemeData(
   splashColor: kBlueLight,
   iconTheme: const IconThemeData(
-    color: kBlueDark,
+    color: kDarkBlue,
     size: 25,
   ),
   appBarTheme: const AppBarTheme(
     iconTheme: IconThemeData(
       size: 25,
-      color: kBlueDark,
+      color: kDarkBlue,
       opacity: 0.5,
     ),
     elevation: 0,
@@ -84,8 +88,8 @@ ThemeData _theme = ThemeData(
   ),
   scaffoldBackgroundColor: Colors.white,
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: kBlueDark,
-    selectionHandleColor: kBlueDark,
+    cursorColor: kDarkBlue,
+    selectionHandleColor: kDarkBlue,
   ),
   sliderTheme: SliderThemeData(
     activeTrackColor: kBlue,
@@ -95,3 +99,14 @@ ThemeData _theme = ThemeData(
     overlayShape: SliderComponentShape.noThumb, // removes padding
   ),
 );
+
+class Test extends StatelessWidget {
+  const Test({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: null),
+    );
+  }
+}

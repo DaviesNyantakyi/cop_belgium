@@ -189,7 +189,7 @@ dynamic _buildAppbar({required BuildContext context}) {
         style: kTextButtonStyle,
         child: const Icon(
           FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          color: kDarkBlue,
         ),
         onPressed: () {
           Navigator.pop(context);

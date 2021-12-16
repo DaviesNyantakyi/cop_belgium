@@ -10,241 +10,276 @@ String _profileImage =
 String _text =
     '''What do we do with the passages in the Bible that are really difficult? Violence, slavery, the treatment of women—what the Bible has to say about these topics has, at times, been misinterpreted and misused. ''';
 
-class PodcastDetailScreen extends StatelessWidget {
+class PodcastDetailScreen extends StatefulWidget {
   static String podcastDetailScreen = 'podcastDetailScreen';
   const PodcastDetailScreen({Key? key}) : super(key: key);
 
   @override
+  State<PodcastDetailScreen> createState() => _PodcastDetailScreenState();
+}
+
+class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
+  bool bookMark = false;
+  String? dateTime = '2 Dec 2021';
+  double? likes = 200;
+  String? podcastImage;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppbar(context: context),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: kBodyPadding),
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kBodyPadding,
-                    vertical: kBodyPadding,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildTitle(),
-                      const SizedBox(height: 32),
-                      _buildDescription(),
-                      const SizedBox(height: 32),
-                    ],
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: kBodyPadding),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(top: 10),
+                height: 170,
+                decoration: BoxDecoration(
+                  color: kBlue,
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: podcastImage != null
+                        ? AssetImage(podcastImage!)
+                        : const AssetImage(
+                            'assets/images/Rectangle 269.png',
+                          ),
                   ),
                 ),
-                _buildSpeakers(),
-                const SizedBox(height: 36),
-                _buildEpisodes(),
-              ],
-            ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: kBodyPadding,
+                  vertical: kBodyPadding,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _buildTitle(),
+                    const SizedBox(height: 32),
+                    _buildDescription(),
+                    const SizedBox(height: 32),
+                  ],
+                ),
+              ),
+              _buildSpeakers(),
+              const SizedBox(height: 36),
+              _buildEpisodes(),
+            ],
           ),
         ),
       ),
     );
   }
-}
 
-Widget _buildEpisodes() {
-  return Column(
-    children: [
-      Container(
-        margin: const EdgeInsets.only(left: kBodyPadding),
-        alignment: Alignment.centerLeft,
-        child: const Text('Episodes', style: kSFCaption),
+  Widget _buildEpisodes() {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: kBodyPadding),
+          alignment: Alignment.centerLeft,
+          child: const Text('Episodes', style: kSFCaption),
+        ),
+        const SizedBox(height: 12),
+        _buildEpisodesList(),
+      ],
+    );
+  }
+
+  SizedBox _buildEpisodesList() {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        itemCount: 15,
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(left: kBodyPadding),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: PodcastEpisodesCard(
+              image: 'assets/images/Rectangle 269.png',
+              episodes: 12,
+              title: 'Humans are Trees?',
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, PlayPodcastScreen.playPodcastScreen);
+              },
+            ),
+          );
+        },
       ),
-      const SizedBox(height: 12),
-      _buildEpisodesList(),
-    ],
-  );
-}
+    );
+  }
 
-SizedBox _buildEpisodesList() {
-  return SizedBox(
-    height: 200,
-    child: ListView.builder(
-      itemCount: 15,
-      scrollDirection: Axis.horizontal,
-      physics: const BouncingScrollPhysics(),
-      padding: const EdgeInsets.only(left: kBodyPadding),
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(right: 16),
-          child: PodcastEpisodesCard(
-            image: 'assets/images/Rectangle 269.png',
-            episodes: 12,
-            title: 'Humans are Trees?',
-            onPressed: () {
-              Navigator.pushNamed(context, PlayPodcastScreen.playPodcastScreen);
+  Widget _buildSpeakers() {
+    return Column(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(left: kBodyPadding),
+          alignment: Alignment.centerLeft,
+          child: const Text('Speakers', style: kSFCaption),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 73,
+          child: ListView.builder(
+            padding: const EdgeInsets.only(left: kBodyPadding),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(
+                  right: kBodyPadding,
+                ),
+                child: _buildAvatar(
+                  onTap: () {},
+                ),
+              );
             },
           ),
-        );
-      },
-    ),
-  );
-}
-
-Widget _buildSpeakers() {
-  return Column(
-    children: [
-      Container(
-        margin: const EdgeInsets.only(left: kBodyPadding),
-        alignment: Alignment.centerLeft,
-        child: const Text('Speakers', style: kSFCaption),
-      ),
-      const SizedBox(height: 12),
-      SizedBox(
-        height: 73,
-        child: ListView.builder(
-          padding: const EdgeInsets.only(left: kBodyPadding),
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                right: kBodyPadding,
-              ),
-              child: _buildAvatar(
-                onTap: () {},
-              ),
-            );
-          },
         ),
-      ),
-    ],
-  );
-}
-
-Widget _buildAvatar({VoidCallback? onTap}) {
-  return TextButton(
-    onPressed: () {},
-    style: TextButton.styleFrom(
-      minimumSize: Size.zero,
-      padding: EdgeInsets.zero,
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        CircleAvatar(
-          radius: 20,
-          backgroundImage: NetworkImage(_profileImage),
-        ),
-        const SizedBox(height: 8),
-        const Text('John Smith', style: kSFSubtitle2),
       ],
-    ),
-  );
-}
+    );
+  }
 
-Widget _buildTitle() {
-  return Column(
-    children: [
-      Container(
-        alignment: Alignment.centerLeft,
-        child: const Text(
-          'Tree Of Life',
-          style: kSFHeadLine1,
-        ),
+  Widget _buildAvatar({VoidCallback? onTap}) {
+    return TextButton(
+      onPressed: () {},
+      style: TextButton.styleFrom(
+        minimumSize: Size.zero,
+        padding: EdgeInsets.zero,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      const SizedBox(height: 12),
-      _buildDetail(
-        dateTime: 'December 6, 2021',
-        likes: 250,
-      ),
-    ],
-  );
-}
-
-Widget _buildDescription() {
-  return Column(
-    children: [
-      Container(
-        alignment: Alignment.centerLeft,
-        child: const Text(
-          'Description',
-          style: kSFCaption,
-        ),
-      ),
-      const SizedBox(height: 12),
-      Container(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          _text,
-          style: kSFBody,
-        ),
-      )
-    ],
-  );
-}
-
-Widget _buildDetail({
-  required String dateTime,
-  required int likes,
-}) {
-  return Row(
-    children: [
-      Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            FontAwesomeIcons.calendar,
-            size: 20,
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(_profileImage),
           ),
-          const SizedBox(width: 8),
-          Text(
-            dateTime,
-            style: kSFBody,
-          ),
+          const SizedBox(height: 8),
+          const Text('John Smith', style: kSFSubtitle2),
         ],
       ),
-      const SizedBox(width: 19),
-      TextButton(
-        onPressed: () {},
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero,
-          minimumSize: Size.zero,
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  Widget _buildTitle() {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            'Tree Of Life',
+            style: kSFHeadLine1,
+          ),
         ),
-        child: Row(
+        const SizedBox(height: 12),
+        _buildDetail(),
+      ],
+    );
+  }
+
+  Widget _buildDescription() {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            'Description',
+            style: kSFCaption,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            _text,
+            style: kSFBody,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildDetail() {
+    return Row(
+      children: [
+        Row(
           children: [
-            Image.asset(
-              'assets/images/icons/hand_clap_icon.png',
-              width: 20,
-              filterQuality: FilterQuality.high,
-              color: kBlueDark,
+            const Icon(
+              FontAwesomeIcons.calendar,
+              size: 20,
             ),
             const SizedBox(width: 8),
             Text(
-              '${likes}K',
+              '$dateTime',
               style: kSFBody,
             ),
           ],
         ),
-      ),
-    ],
-  );
-}
+        const SizedBox(width: 19),
+        TextButton(
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Row(
+            children: [
+              Image.asset(
+                'assets/images/icons/hand_clap_icon.png',
+                width: 20,
+                filterQuality: FilterQuality.high,
+                color: kDarkBlue,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '$likes',
+                style: kSFBody,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 19),
+        TextButton(
+          style: kTextButtonStyle,
+          child: Icon(
+            bookMark == false
+                ? FontAwesomeIcons.bookmark
+                : FontAwesomeIcons.solidBookmark,
+            size: 20,
+            color: kDarkBlue,
+          ),
+          onPressed: () {
+            setState(() {
+              bookMark = !bookMark;
+            });
+          },
+        ),
+      ],
+    );
+  }
 
-dynamic _buildAppbar({required BuildContext context}) {
-  return AppBar(
-    leading: TextButton(
-      child: const Icon(
-        FontAwesomeIcons.chevronLeft,
-        color: kBlueDark,
+  dynamic _buildAppbar({required BuildContext context}) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      leading: TextButton(
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kDarkBlue,
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: kTextButtonStyle,
       ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      style: kTextButtonStyle,
-    ),
-  );
+    );
+  }
 }

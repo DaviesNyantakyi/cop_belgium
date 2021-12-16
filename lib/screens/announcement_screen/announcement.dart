@@ -64,6 +64,7 @@ class AnnouncementScreen extends StatelessWidget {
     );
   }
 
+  //TODO: This need to be a widget
   Widget _buildAnnoncementCard({
     required String title,
     required String announcement,
@@ -134,7 +135,7 @@ class AnnouncementScreen extends StatelessWidget {
       leading: TextButton(
         child: const Icon(
           FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          color: kDarkBlue,
         ),
         onPressed: () {
           Navigator.pop(context);

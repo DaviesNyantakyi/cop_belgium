@@ -52,7 +52,7 @@ Future<void> showMyFastingBottomSheet(
             topRight: Radius.circular(10),
           ),
         ),
-        height: MediaQuery.of(context).size.height * 0.40,
+        height: kBottomSheetHeight,
         child: child,
       );
     },

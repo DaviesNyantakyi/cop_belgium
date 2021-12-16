@@ -8,46 +8,46 @@ const String _sfDisplayFont = 'SFDisplay';
 const kSFHeadLine1 = TextStyle(
   fontWeight: FontWeight.w700,
   fontSize: 36,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontFamily: _sfDisplayFont,
 );
 const kSFHeadLine2 = TextStyle(
   fontWeight: FontWeight.w700,
   fontSize: 24,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontFamily: _sfDisplayFont,
 );
 
 const kSFBody = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBodyBold = TextStyle(
   fontWeight: FontWeight.w700,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFCaption = TextStyle(
   fontWeight: FontWeight.w700,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontSize: 18,
   fontFamily: _sfDisplayFont,
 );
 const kSFSubtitle1 = TextStyle(
   fontWeight: FontWeight.w600,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontSize: 16,
   fontFamily: _sfDisplayFont,
 );
 
 const kSFSubtitle2 = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kDarkBlue,
   fontSize: 14,
   fontFamily: _sfDisplayFont,
 );

@@ -12,7 +12,8 @@ class TestimonyCard extends StatelessWidget {
   final VoidCallback? onPressedCard;
 
   final Color? cardColor;
-  final bool editable;
+  //show the edit icon
+  final bool? editable;
 
   const TestimonyCard({
     Key? key,
@@ -20,7 +21,7 @@ class TestimonyCard extends StatelessWidget {
     required this.testimony,
     required this.likes,
     required this.timeAgo,
-    required this.editable,
+    this.editable = false,
     this.cardColor = kBlueLight,
     this.onPressedLike,
     this.onPressedCard,
@@ -28,18 +29,18 @@ class TestimonyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressedCard,
-      style: kTextButtonStyle,
-      child: Container(
-        width: double.infinity,
-        height: 215,
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10),
-          ),
+    return Container(
+      width: double.infinity,
+      height: 215,
+      decoration: BoxDecoration(
+        color: cardColor,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(10),
         ),
+      ),
+      child: TextButton(
+        onPressed: onPressedCard,
+        style: kTextButtonStyle,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 23),
           child: Column(
@@ -55,7 +56,7 @@ class TestimonyCard extends StatelessWidget {
                       Text(
                         title,
                         style: kSFCaption.copyWith(
-                          color: kBlueDark,
+                          color: kDarkBlue,
                         ),
                       ),
                       _showEditIcon() // pas in note
@@ -65,13 +66,13 @@ class TestimonyCard extends StatelessWidget {
                   Text(
                     timeAgo,
                     style: kSFSubtitle2.copyWith(
-                      color: kBlueDark,
+                      color: kDarkBlue,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     testimony,
-                    style: kSFBody.copyWith(color: kBlueDark),
+                    style: kSFBody.copyWith(color: kDarkBlue),
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -79,7 +80,7 @@ class TestimonyCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               TextButton(
-                onPressed: !editable
+                onPressed: editable!
                     ? onPressedLike
                     : null, // disable the like button on edit
                 style: kTextButtonStyle,
@@ -91,12 +92,12 @@ class TestimonyCard extends StatelessWidget {
                       Image.asset(
                         'assets/images/icons/hand_clap_icon.png',
                         filterQuality: FilterQuality.high,
-                        color: kBlueDark,
+                        color: kDarkBlue,
                       ),
                       const SizedBox(width: 7),
                       Text(
                         likes.toString(),
-                        style: kSFSubtitle2.copyWith(color: kBlueDark),
+                        style: kSFSubtitle2.copyWith(color: kDarkBlue),
                       ),
                     ],
                   ),
@@ -110,13 +111,13 @@ class TestimonyCard extends StatelessWidget {
   }
 
   Widget _showEditIcon() {
-    if (editable) {
+    if (editable!) {
       return const SizedBox(
         width: 30,
         child: Icon(
           FontAwesomeIcons.edit,
           size: 20,
-          color: kBlueDark,
+          color: kDarkBlue,
         ),
       );
     } else {

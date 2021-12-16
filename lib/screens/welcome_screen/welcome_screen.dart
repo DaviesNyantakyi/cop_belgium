@@ -45,15 +45,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   },
                 ),
                 const SizedBox(height: kTextFieldSpacing),
-                _buildBtn(
-                  btText: 'Sign In',
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      HomeScreen.homeScreen,
-                    );
-                  },
-                ),
+                _buildBtn(btText: 'Sign In'),
                 const SizedBox(height: 19),
                 _buildAccountQuestion(
                   onTapSingUp: () {
@@ -98,7 +90,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         FloatingActionButton(
           heroTag: 'bt1',
           elevation: 1,
-          backgroundColor: kBlueLight,
+          backgroundColor: kBlueLight1,
           child: Image.asset(
             'assets/images/logos/google.png',
             height: 28,
@@ -109,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         FloatingActionButton(
           heroTag: 'bt2',
           elevation: 1,
-          backgroundColor: kBlueLight,
+          backgroundColor: kBlueLight1,
           child: Image.asset(
             'assets/images/logos/apple.png',
             height: 28,
@@ -155,7 +147,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildBtn({required String btText, VoidCallback? onPressed}) {
+  Widget _buildBtn({required String btText}) {
     return SizedBox(
       width: double.infinity,
       height: 48,
@@ -170,7 +162,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ),
           ),
         ),
-        onPressed: onPressed,
+        onPressed: () {
+          Navigator.pushReplacementNamed(
+            context,
+            HomeScreen.homeScreen,
+          );
+        },
         child: Text(
           btText,
           style: kSFBodyBold,

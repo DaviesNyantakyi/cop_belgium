@@ -14,7 +14,7 @@ class PresetFastingCard extends StatelessWidget {
     required this.duration,
     required this.onPressed,
     required this.backgroundColor,
-    this.fontColor = kBlueDark,
+    this.fontColor = kDarkBlue,
   }) : super(key: key);
 
   @override
@@ -84,7 +84,7 @@ class CustomFastingCard extends StatelessWidget {
     required this.typeFast,
     required this.onPressed,
     required this.backgroundColor,
-    this.fontColor = kBlueDark,
+    this.fontColor = kDarkBlue,
   }) : super(key: key);
 
   @override

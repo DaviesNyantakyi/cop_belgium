@@ -1,4 +1,4 @@
-import 'package:cop_belgium/screens/testimonies_screen/widgets/testimony_card.dart';
+import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';

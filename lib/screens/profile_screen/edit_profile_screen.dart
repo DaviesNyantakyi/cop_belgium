@@ -1,26 +1,45 @@
+import 'package:cop_belgium/models/user_model.dart';
+import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
+import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-String _profileImage =
-    'https://images.unsplash.com/photo-1584473457409-ae5c91d7d8b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YmxhY2slMjBnaXJsfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60';
+List<String> cities = [
+  'Turnhout',
+  'Brussel',
+];
 
 class EditProfileScreen extends StatefulWidget {
+  final CopUser? user;
   static String editProfileScreen = 'editProfileScreen';
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  bool isChecked = false;
-
+  final String _deleteText =
+      'Are you sure you want to delete your whole account? All saved data will be lost.';
+  String? profileImage;
   String? firstName;
   String? lastName;
   String? email;
+  String? gender;
+  String? churchLocation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      gender = widget.user!.gender;
+      churchLocation = widget.user!.churchLocation;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +54,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(_profileImage),
+                  backgroundImage: NetworkImage(profilePhoto),
                   radius: 50,
-                  backgroundColor: kBlueDark,
+                  backgroundColor: kDarkBlue,
+                  child: TextButton(
+                    // splash effect
+                    style: kTextButtonStyle.copyWith(
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100),
+                          ),
+                        ),
+                      ),
+                    ),
+                    child: Container(),
+                    onPressed: () {},
+                  ),
                 ),
                 MyTextField.buildTF(
+                  initialValue: widget.user!.firstName,
                   label: 'First Name',
                   hintText: 'John',
                   obscureText: false,
@@ -47,6 +81,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: kTextFieldSpacing),
                 MyTextField.buildTF(
+                  initialValue: widget.user!.lastName,
                   label: 'Last Name',
                   hintText: 'John',
                   obscureText: false,
@@ -54,30 +89,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: kTextFieldSpacing),
                 MyTextField.buildTF(
+                  initialValue: widget.user!.email,
                   label: 'Email',
                   hintText: 'John',
                   obscureText: false,
                   onChanged: (value) {},
                 ),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: 20),
                 _buildGenderSelector(),
-                const SizedBox(height: 21),
+                const SizedBox(height: 20),
                 _buildLocationSelector(),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     _buildBt(
                       btText: 'Delete Account',
                       textColor: kRed,
                       backgroundColor: kRedLight,
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _showDeleteAlert();
+                      },
                     ),
+                    const SizedBox(width: 20),
                     _buildBt(
-                      btText: 'Send Password Recovery',
+                      btText: 'Reset Password',
                       textColor: kGreen,
-                      backgroundColor: kGreen1Light,
-                      onPressed: () {},
+                      backgroundColor: kGreenLight,
+                      onPressed: () async {
+                        await _showConformationAlert();
+                      },
                     ),
                   ],
                 )
@@ -86,6 +127,103 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<String?> _showConformationAlert() async {
+    return await showDialog<String?>(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        title: const Text(
+          'Check Your email',
+          style: kSFHeadLine2,
+        ),
+        content: const Text(
+            'We have send password recovery instruction to your email.',
+            style: kSFBody),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('OK', style: kSFCaption),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> _showDeleteAlert() async {
+    return await showDialog<String?>(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        title: const Text(
+          'Now just a minute',
+          style: kSFHeadLine2,
+        ),
+        content: Text(_deleteText, style: kSFBody),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'ok'),
+            child: Text(
+              'Delete Account',
+              style: kSFCaption.copyWith(
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('Cancel', style: kSFCaption),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<String?> _showLocationSelectorBottomSheet(
+      {required BuildContext context}) async {
+    return await showModalBottomSheet<String?>(
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: SizedBox(
+            height: kBottomSheetHeight,
+            child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: cities.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: Text(
+                    cities[index],
+                    style: kSFBody,
+                  ),
+                  onTap: () {
+                    Navigator.pop(context, cities[index]);
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -131,73 +269,62 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         const SizedBox(height: 10),
-        Container(
-          height: 45,
-          width: 195,
-          color: kBlueDark,
-          child: Row(
-            children: [],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            MyCheckBox(
+              label: 'Male',
+              value: 'male',
+              groupsValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value;
+                });
+              },
+            ),
+            const SizedBox(width: 10),
+            MyCheckBox(
+              label: 'Female',
+              value: 'female',
+              groupsValue: gender,
+              onChanged: (value) {
+                setState(() {
+                  gender = value;
+                });
+              },
+            ),
+          ],
         ),
       ],
     );
   }
 
   Widget _buildLocationSelector() {
-    return TextButton(
-      onPressed: () {},
-      style: kTextButtonStyle,
-      child: Container(
-        decoration: const BoxDecoration(
-          color: kBlueLight,
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        height: 58,
-        child: Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.all(16),
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                'Turnhout',
-                style: kSFBody,
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-            Container(
-              alignment: Alignment.centerRight,
-              child: _buildPopupMenu(),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPopupMenu() {
-    return PopupMenuButton<Locations>(
+    return ListTile(
+      tileColor: kBlueLight1,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
-          Radius.circular(7),
+          Radius.circular(kButtonRadius),
         ),
       ),
-      elevation: 4,
-      icon: const Icon(
-        FontAwesomeIcons.chevronDown,
-        size: 20,
-        color: kBlueDark,
-      ),
-      onSelected: (Locations result) {},
-      itemBuilder: (BuildContext context) {
-        return <PopupMenuEntry<Locations>>[
-          const PopupMenuItem<Locations>(
-            value: Locations.turnhout,
-            child: Text('Turnhout'),
-          ),
-        ];
+      onTap: () async {
+        churchLocation =
+            await _showLocationSelectorBottomSheet(context: context);
+        setState(() {});
       },
+      leading: const Text(
+        'Church Location',
+        style: kSFBody,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '$churchLocation',
+            style: kSFBody,
+          ),
+        ],
+      ),
     );
   }
 
@@ -213,7 +340,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           padding: EdgeInsets.all(8.0),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
+            color: kDarkBlue,
           ),
         ),
         onPressed: () {

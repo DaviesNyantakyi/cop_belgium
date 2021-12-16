@@ -21,7 +21,7 @@ class PodcastEpisodesCard extends StatelessWidget {
       height: 200,
       width: 143,
       decoration: BoxDecoration(
-        color: kBlueDark,
+        color: kDarkBlue,
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
@@ -72,7 +72,7 @@ class PodcastEpisodesCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        '12 December 2021',
+                        '12 Dec 2021',
                         style: kSFSubtitle2,
                       ),
                     ],

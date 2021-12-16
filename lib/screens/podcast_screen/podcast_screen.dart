@@ -1,6 +1,6 @@
 import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_series_card.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +41,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
             ),
             child: const Icon(
               FontAwesomeIcons.bell,
-              color: kBlueDark,
+              color: kDarkBlue,
             ),
             onPressed: () {
               Navigator.pushNamed(
@@ -82,7 +82,15 @@ class _BuildBodyState extends State<_BuildBody> {
                 children: [
                   _buildGreeting(userName: 'Sophia Smith'),
                   const SizedBox(height: 20),
-                  _buildReleaseTitle(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        'Latest Release',
+                        style: kSFCaption,
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 16),
                   _buildLatestCard(),
                 ],
@@ -115,7 +123,7 @@ class _BuildBodyState extends State<_BuildBody> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: PodcastSeriesCard(
+            child: PodcastCard(
               image: 'assets/images/Rectangle 269.png',
               episodes: 12,
               title: 'The Paradigm',
@@ -131,175 +139,169 @@ class _BuildBodyState extends State<_BuildBody> {
       ),
     );
   }
-}
 
-Widget _buildGreeting({required String userName}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        'Good morning,',
-        style: kSFBody,
-      ),
-      Row(
-        children: [
-          Text(
-            userName,
-            style: kSFHeadLine2.copyWith(color: kYellow),
-          ),
-          const SizedBox(width: 6),
-          Image.asset('assets/images/icons/smile.png'),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buildSeriesTitle({required String text, required VoidCallback onTap}) {
-  return Column(
-    children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: kSFCaption,
-          ),
-          TextButton(
-            child: const Text(
-              'See All',
-              style: kSFSubtitle2,
+  Widget _buildGreeting({required String userName}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Good morning,',
+          style: kSFBody,
+        ),
+        Row(
+          children: [
+            Text(
+              userName,
+              style: kSFHeadLine2.copyWith(color: kYellow),
             ),
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              minimumSize: Size.zero,
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            const SizedBox(width: 6),
+            Image.asset('assets/images/icons/smile.png'),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSeriesTitle(
+      {required String text, required VoidCallback onTap}) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              text,
+              style: kSFCaption,
+            ),
+            TextButton(
+              child: const Text(
+                'See All',
+                style: kSFSubtitle2,
+              ),
+              onPressed: () {},
+              style: TextButton.styleFrom(
+                minimumSize: Size.zero,
+                padding: EdgeInsets.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLatestCard() {
+    return Container(
+      //background image
+      width: 380,
+      height: 180,
+
+      decoration: const BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/Rectangle 269.png'),
+        ),
+      ),
+      child: TextButton(
+        onPressed: () {
+          Navigator.pushNamed(context, PodcastDetailScreen.podcastDetailScreen);
+        },
+        style: kTextButtonStyle,
+        child: Container(
+          //this container is used for the gradient
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                kDarkBlue.withOpacity(1),
+                kDarkBlue.withOpacity(0.1),
+              ],
             ),
           ),
-        ],
-      ),
-    ],
-  );
-}
-
-Widget _buildReleaseTitle() {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: const [
-      Text(
-        'Latest Release',
-        style: kSFCaption,
-      ),
-    ],
-  );
-}
-
-Widget _buildLatestCard() {
-  return Container(
-    //background image
-    width: 380,
-    height: 180,
-    decoration: const BoxDecoration(
-      color: Colors.blue,
-      borderRadius: BorderRadius.all(
-        Radius.circular(15),
-      ),
-      image: DecorationImage(
-        fit: BoxFit.cover,
-        image: AssetImage('assets/images/Rectangle 269.png'),
-      ),
-    ),
-    child: TextButton(
-      onPressed: () {},
-      style: kTextButtonStyle,
-      child: Container(
-        //gradient
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(15),
-          ),
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              kBlueDark.withOpacity(1),
-              kBlueDark.withOpacity(0.1),
+          child: Column(
+            // content
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 23)
+                    .copyWith(left: 22, right: 89),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'The Paradigm',
+                      style: kSFHeadLine2.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
+                      style: kSFBody.copyWith(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildPlayBt()
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-        child: Column(
-          // content
+      ),
+    );
+  }
+
+  Widget _buildPlayBt() {
+    return SizedBox(
+      height: 40,
+      width: 121,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            Colors.white,
+          ),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+          ),
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, PodcastDetailScreen.podcastDetailScreen);
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 23)
-                  .copyWith(left: 22, right: 89),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'The Paradigm',
-                    style: kSFHeadLine2.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
-                    style: kSFBody.copyWith(color: Colors.white),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildPlayBt()
-                ],
+            Text(
+              'Play Now',
+              style: kSFBody.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Flexible(
+              child: Icon(
+                FontAwesomeIcons.chevronRight,
+                size: 16,
+                color: kDarkBlue,
               ),
             ),
           ],
         ),
       ),
-    ),
-  );
-}
-
-Widget _buildPlayBt() {
-  return SizedBox(
-    height: 40,
-    width: 121,
-    child: ElevatedButton(
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(
-          Colors.white,
-        ),
-        shape: MaterialStateProperty.all(
-          const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-        ),
-      ),
-      onPressed: () {},
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Play Now',
-            style: kSFBody.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(width: 10),
-          const Flexible(
-            child: Icon(
-              FontAwesomeIcons.chevronRight,
-              size: 16,
-              color: kBlueDark,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+    );
+  }
 }

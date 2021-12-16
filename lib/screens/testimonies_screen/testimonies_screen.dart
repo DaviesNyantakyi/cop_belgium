@@ -76,7 +76,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
             labelColor: kBlue,
             isScrollable: true,
             controller: controller,
-            unselectedLabelColor: kBlueDark,
+            unselectedLabelColor: kDarkBlue,
             tabs: const [
               Tab(text: 'Tesimonies'),
               Tab(text: 'My Tesimonies'),

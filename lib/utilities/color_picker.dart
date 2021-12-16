@@ -49,7 +49,7 @@ class FastColorPicker extends StatelessWidget {
                     children: [
                       // List of colors to be used in the picker
                       Row(
-                        children: createColors(context, Constants.colors1),
+                        children: createColors(context, kLightColors),
                       ),
                       /*
                       Row(

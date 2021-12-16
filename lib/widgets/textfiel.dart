@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   final String? hintText;
+  final String? initialValue;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+
   final bool obscureText;
   const MyTextField({
     Key? key,
     this.hintText,
+    this.initialValue,
     this.keyboardType,
     this.onChanged,
     required this.obscureText,
@@ -17,7 +20,8 @@ class MyTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      initialValue: initialValue,
       style: kSFCaption,
       keyboardType: keyboardType,
       obscureText: obscureText,
@@ -25,7 +29,7 @@ class MyTextField extends StatelessWidget {
         filled: true,
         hintText: hintText,
         hintStyle: kSFBody,
-        fillColor: kBlueLight,
+        fillColor: kBlueLight1,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(
@@ -45,6 +49,7 @@ class MyTextField extends StatelessWidget {
   }
 
   static Widget buildTF({
+    String? initialValue,
     required String label,
     required String hintText,
     required bool obscureText,
@@ -63,9 +68,10 @@ class MyTextField extends StatelessWidget {
           ),
         ),
         MyTextField(
-          obscureText: obscureText,
           hintText: hintText,
           onChanged: onChanged,
+          initialValue: initialValue,
+          obscureText: obscureText,
           keyboardType: keyboardType,
         )
       ],

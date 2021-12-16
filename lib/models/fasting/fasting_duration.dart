@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
-
 class FastingInfo {
   // chosen custom fast duration
-  final Duration? duration;
-  final String? type;
-  final DateTime? dateStart;
-  final DateTime? dateEnd;
+  Duration? duration;
+  String? type;
+  DateTime? dateStart;
+  DateTime? dateEnd;
 
   FastingInfo({
     required this.duration,

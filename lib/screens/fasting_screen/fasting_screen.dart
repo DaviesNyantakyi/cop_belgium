@@ -1,6 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cop_belgium/models/fasting/fasting_duration.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_history.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +39,6 @@ class _FastingScreenState extends State<FastingScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fastingInfo = widget.fastingInfo;
   }
@@ -49,23 +48,24 @@ class _FastingScreenState extends State<FastingScreen> {
     return Scaffold(
       appBar: _buildAppbar(),
       body: SafeArea(
-        child: Center(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
                       width: double.infinity,
                       decoration: const BoxDecoration(
-                        color: kGreen1Light,
+                        color: kGreenLight,
                         borderRadius: BorderRadius.all(
                           Radius.circular(kButtonRadius),
                         ),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(30),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           children: [
                             _buildHeader(people: peopleFasting),
@@ -73,8 +73,8 @@ class _FastingScreenState extends State<FastingScreen> {
                             CircularCountDownTimer(
                               initialDuration: 0,
                               controller: _controller,
-                              width: 250,
-                              height: 250,
+                              width: 240,
+                              height: 240,
                               duration: fastingInfo!.duration!.inSeconds,
                               isReverse: true,
                               strokeWidth: 20,
@@ -130,6 +130,9 @@ class _FastingScreenState extends State<FastingScreen> {
                                     //pauses the fasting timer using the conroller
                                     _controller.pause();
                                   });
+                                  //TODO: get the current time when the fast has ended early
+
+                                  //TODO:
                                   //before adding to user account in firebase show popup asking to save
                                   // fast. When save is true save to firebase user history
                                   // before pushing add to firebase history screen ad to firebase
@@ -155,7 +158,7 @@ class _FastingScreenState extends State<FastingScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               SizedBox(
                 height: 140,
                 child: ListView.builder(
@@ -227,7 +230,7 @@ class _FastingScreenState extends State<FastingScreen> {
 
   Widget _buildFooterText({required String passage, required String verse}) {
     return Container(
-      margin: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: kBodyPadding),
       padding: const EdgeInsets.only(
         left: 21,
         top: 22,
@@ -235,9 +238,9 @@ class _FastingScreenState extends State<FastingScreen> {
         bottom: 20,
       ),
       height: 140,
-      width: 378,
+      width: 358,
       decoration: const BoxDecoration(
-        color: kGreen1Light,
+        color: kGreenLight,
         borderRadius: BorderRadius.all(
           Radius.circular(kButtonRadius),
         ),
@@ -311,7 +314,7 @@ class _FastingScreenState extends State<FastingScreen> {
           padding: EdgeInsets.all(8.0),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
+            color: kDarkBlue,
           ),
         ),
         onPressed: () {
