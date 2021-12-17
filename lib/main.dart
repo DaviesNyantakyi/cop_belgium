@@ -2,14 +2,15 @@ import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
+import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
+import 'package:cop_belgium/screens/welcome_screen/forgot_password_screen.dart';
+import 'package:cop_belgium/screens/welcome_screen/sign_up_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -44,6 +45,9 @@ class MyApp extends StatelessWidget {
 
 Map<String, WidgetBuilder> _routes = {
   WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),
+  SignUpScreen.signUpScreen: (context) => const SignUpScreen(),
+  ForgotPasswordScreen.forgotPasswordScreen: (context) =>
+      const ForgotPasswordScreen(),
   HomeScreen.homeScreen: (context) => const HomeScreen(),
   AnnouncementScreen.announcementScreen: (context) =>
       const AnnouncementScreen(),
@@ -64,6 +68,7 @@ Map<String, WidgetBuilder> _routes = {
   EditProfileScreen.editProfileScreen: (context) =>
       const EditProfileScreen(user: null),
   SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
+  AboutChruchScreen.aboutChruchScreen: (context) => const AboutChruchScreen(),
   CreateTestimonyScreen.editTestimonyScreen: (context) =>
       const CreateTestimonyScreen(),
   TestimoniesScreen.testimoniesScreen: (context) => const TestimoniesScreen(),
@@ -72,6 +77,9 @@ Map<String, WidgetBuilder> _routes = {
 };
 
 ThemeData _theme = ThemeData(
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: kDarkBlue,
+  ),
   splashColor: kBlueLight,
   iconTheme: const IconThemeData(
     color: kDarkBlue,
@@ -92,8 +100,8 @@ ThemeData _theme = ThemeData(
     selectionHandleColor: kDarkBlue,
   ),
   sliderTheme: SliderThemeData(
-    activeTrackColor: kBlue,
-    thumbColor: kBlue,
+    activeTrackColor: kDarkBlue,
+    thumbColor: kDarkBlue,
     inactiveTrackColor: Colors.grey,
     thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
     overlayShape: SliderComponentShape.noThumb, // removes padding

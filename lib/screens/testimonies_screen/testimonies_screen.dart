@@ -2,7 +2,6 @@ import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dar
 import 'package:cop_belgium/screens/testimonies_screen/my_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -44,7 +43,6 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
   Widget _builFloActionBtn() {
     return FloatingActionButton(
       tooltip: 'Testify',
-      backgroundColor: kBlue,
       child: const Icon(FontAwesomeIcons.plus),
       onPressed: () {
         Navigator.push(
@@ -72,7 +70,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
             indicator: const UnderlineTabIndicator(
               borderSide: BorderSide(color: kBlue, width: 2),
             ),
-            labelStyle: kSFCaption,
+            labelStyle: kSFCaptionBold,
             labelColor: kBlue,
             isScrollable: true,
             controller: controller,

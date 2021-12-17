@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
 class PodcastCard extends StatelessWidget {
@@ -42,7 +41,7 @@ class PodcastCard extends StatelessWidget {
               height: 70,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: kBlueLight.withOpacity(0.8),
+                color: kBlueLight.withOpacity(0.9),
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15),

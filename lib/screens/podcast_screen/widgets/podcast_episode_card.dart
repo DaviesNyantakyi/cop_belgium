@@ -1,18 +1,19 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
 class PodcastEpisodesCard extends StatelessWidget {
   final String image;
   final String title;
-  final int episodes;
+  final String date;
+  final String length;
   final VoidCallback? onPressed;
   const PodcastEpisodesCard({
     Key? key,
     required this.image,
     required this.title,
-    required this.episodes,
     this.onPressed,
+    required this.date,
+    required this.length,
   }) : super(key: key);
 
   @override
@@ -37,12 +38,12 @@ class PodcastEpisodesCard extends StatelessWidget {
         style: kTextButtonStyle,
         child: Stack(
           children: [
-            const Positioned(
+            Positioned(
               right: 12.0,
               top: 14.0,
               child: Text(
-                '5:30',
-                style: kSFSubtitle2,
+                length,
+                style: kSFSubtitle2Bold,
               ),
             ),
             Positioned(
@@ -71,8 +72,8 @@ class PodcastEpisodesCard extends StatelessWidget {
                         maxLines: 2,
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        '12 Dec 2021',
+                      Text(
+                        date,
                         style: kSFSubtitle2,
                       ),
                     ],

@@ -3,7 +3,7 @@ import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
-String _text =
+String _testimony =
     'Consequat magna fugiat dolor sit aliquip cupidatat sunt cillum proident. Ex adipisicing minim irure mollit. Anim minim deserunt irure est nostrud irure ullamco sit laborum id nostrud exercitation velit. Pariatur pariatur voluptate veniam ex minim ullamco. Tempor ex quis voluptate dolor ut aliqua quis ea minim. Ea mollit Lorem enim enim velit qui ea labore aute. Do aliqua ullamco duis deserunt deserunt excepteur tempor tempor eu commodo.';
 
 String _title = 'Announcements Lorem ipsum';
@@ -37,7 +37,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
             child: TestimonyCard(
               editable: true,
               title: _title,
-              testimony: _text,
+              testimony: _testimony,
               likes: likes,
               cardColor: cardColor,
               timeAgo: '6 Hours Ago',

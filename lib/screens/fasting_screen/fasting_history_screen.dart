@@ -1,6 +1,6 @@
-import 'package:cop_belgium/models/fasting/fasting_duration.dart';
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
 import 'package:dart_date/src/dart_date.dart';
 import 'package:flutter/material.dart';
@@ -24,16 +24,6 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
   DateTime currenDate = DateTime.now();
   FastingInfo? fastingInfo;
 
-  String getStartDate() {
-    return currenDate.format('dd MMM H:mm');
-  }
-
-  String getEndDate() {
-    return currenDate
-        .add(Duration(seconds: fastingInfo!.duration!.inSeconds))
-        .format('dd MMM H:mm');
-  }
-
   @override
   void initState() {
     super.initState();
@@ -55,8 +45,11 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
               padding: const EdgeInsets.only(bottom: 16),
               child: FastingHistoryCard(
                 duration: fastingInfo!.duration!.inHours,
-                startDate: getStartDate(),
-                endDate: getEndDate(),
+                startDate: FormalDates.getStartDate(date: currenDate),
+                endDate: FormalDates.getEndDate(
+                  date: currenDate,
+                  fastingInfo: fastingInfo,
+                ),
               ),
             );
           },
@@ -70,7 +63,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
       centerTitle: true,
       title: const Text(
         'Fasting History',
-        style: kSFCaption,
+        style: kSFCaptionBold,
       ),
       leading: TextButton(
         child: const Padding(

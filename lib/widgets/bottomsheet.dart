@@ -13,14 +13,14 @@ Future<void> showMyBottomSheet(
     ),
     builder: (BuildContext context) {
       return Container(
+        height: kBottomSheetHeight,
         decoration: const BoxDecoration(
           color: kBlueLight,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+            topLeft: Radius.circular(kButtonRadius),
+            topRight: Radius.circular(kButtonRadius),
           ),
         ),
-        height: MediaQuery.of(context).size.height * 0.60,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
@@ -45,14 +45,14 @@ Future<void> showMyFastingBottomSheet(
     ),
     builder: (BuildContext context) {
       return Container(
+        height: 300,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: kBlueLight,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),
           ),
         ),
-        height: kBottomSheetHeight,
         child: child,
       );
     },

@@ -11,6 +11,7 @@ class UserSavedPodcastView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      physics: const BouncingScrollPhysics(),
       padding: const EdgeInsets.symmetric(
         horizontal: kBodyPadding,
         vertical: kBodyPadding,
@@ -37,23 +38,3 @@ class UserSavedPodcastView extends StatelessWidget {
     );
   }
 }
-
-
-/*GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 200,
-        childAspectRatio: 1,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
-      ),
-      itemCount: 150,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return const PodcastSeriesCard(
-          image: 'assets/images/Rectangle 269.png',
-          title: 'Why did eve ',
-          episodes: 12,
-        );
-      },
-    );*/

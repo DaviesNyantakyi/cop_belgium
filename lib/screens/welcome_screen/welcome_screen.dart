@@ -1,8 +1,11 @@
-import 'package:cop_belgium/screens/home_screen.dart';
-import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cop_belgium/screens/home_screen.dart';
+import 'package:cop_belgium/screens/welcome_screen/forgot_password_screen.dart';
+import 'package:cop_belgium/screens/welcome_screen/sign_up_screen.dart';
+import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/textfiel.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String welcomeScreen = 'welcomeScreen';
@@ -20,15 +23,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 40),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildLogo(),
-                const SizedBox(height: 60),
+                const SizedBox(height: 40),
                 MyTextField.buildTF(
                   label: 'Email',
-                  hintText: 'JohnSmith@yourmail.com',
+                  hintText: 'Email',
                   obscureText: false,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
@@ -44,34 +48,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     debugPrint(value);
                   },
                 ),
-                const SizedBox(height: kTextFieldSpacing),
-                _buildBtn(btText: 'Sign In'),
-                const SizedBox(height: 19),
-                _buildAccountQuestion(
-                  onTapSingUp: () {
-                    debugPrint('Sing in');
-                  },
-                  onTapForgotP: () {
-                    debugPrint('Forgot Password');
-                  },
+                const SizedBox(height: kButtonSpacing),
+                Buttons.buildBtn(
+                  context: context,
+                  color: kYellow,
+                  btnText: 'Sign In',
                 ),
-                const SizedBox(height: 40),
-                const Text('Or login with', style: kSFBody),
+                const SizedBox(height: kButtonSpacing),
+                _buildAccountQuestion(),
                 const SizedBox(height: 24),
-                _buildSocialBt(
-                  onPressedGoogle: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      HomeScreen.homeScreen,
-                    );
-                  },
-                  onPressedApple: () {
-                    Navigator.pushReplacementNamed(
-                      context,
-                      HomeScreen.homeScreen,
-                    );
-                  },
-                )
+                const Text('Or continue with', style: kSFBody),
+                const SizedBox(height: 24),
+                _buildSocialBtns()
               ],
             ),
           ),
@@ -80,10 +68,72 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildSocialBt({
-    required VoidCallback onPressedGoogle,
-    required VoidCallback onPressedApple,
-  }) {
+  Widget _buildLogo() {
+    return Column(
+      children: [
+        SizedBox(
+          child: Image.asset(
+            'assets/images/logos/cop_logo.png',
+            width: 140.15,
+            height: 140.15,
+            filterQuality: FilterQuality.high,
+          ),
+        ),
+        const SizedBox(height: 23),
+        Text(
+          'THE CHURCH OF',
+          style: kSFCaptionBold.copyWith(fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        ),
+        Text(
+          'PENTECOST BELGIUM',
+          style: kSFCaptionBold.copyWith(fontWeight: FontWeight.w500),
+          textAlign: TextAlign.center,
+        )
+      ],
+    );
+  }
+
+  Widget _buildAccountQuestion() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          style: kTextButtonStyle,
+          child: Row(
+            children: [
+              const Text(
+                'Not a member? ',
+                style: kSFBody,
+              ),
+              Text(
+                'Sing Up',
+                style: kSFBodyBold.copyWith(color: kBlue),
+              ),
+            ],
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, SignUpScreen.signUpScreen);
+          },
+        ),
+        TextButton(
+          style: kTextButtonStyle,
+          child: const Text(
+            'Forgot Password?',
+            style: kSFBody,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              ForgotPasswordScreen.forgotPasswordScreen,
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSocialBtns() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -95,7 +145,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             'assets/images/logos/google.png',
             height: 28,
           ),
-          onPressed: onPressedApple,
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              HomeScreen.homeScreen,
+            );
+          },
         ),
         const SizedBox(width: 16),
         FloatingActionButton(
@@ -106,83 +161,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             'assets/images/logos/apple.png',
             height: 28,
           ),
-          onPressed: onPressedApple,
+          onPressed: () {
+            Navigator.pushReplacementNamed(
+              context,
+              HomeScreen.homeScreen,
+            );
+          },
         ),
       ],
-    );
-  }
-
-  Widget _buildAccountQuestion({
-    required VoidCallback onTapForgotP,
-    required VoidCallback onTapSingUp,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        TextButton(
-          style: kTextButtonStyle,
-          child: Row(
-            children: [
-              const Text(
-                'Not a Meber? ',
-                style: kSFBody,
-              ),
-              Text(
-                'Sing Up',
-                style: kSFBodyBold.copyWith(color: kBlue),
-              ),
-            ],
-          ),
-          onPressed: onTapSingUp,
-        ),
-        TextButton(
-          style: kTextButtonStyle,
-          child: const Text(
-            'Forgot Password?',
-            style: kSFBody,
-          ),
-          onPressed: onTapForgotP,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBtn({required String btText}) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(kYellow),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(kButtonRadius),
-              ),
-            ),
-          ),
-        ),
-        onPressed: () {
-          Navigator.pushReplacementNamed(
-            context,
-            HomeScreen.homeScreen,
-          );
-        },
-        child: Text(
-          btText,
-          style: kSFBodyBold,
-        ),
-      ),
-    );
-  }
-
-  SizedBox _buildLogo() {
-    return SizedBox(
-      child: Image.asset(
-        'assets/images/logos/cop_logo.png',
-        width: 158.15,
-        height: 158.15,
-      ),
     );
   }
 }

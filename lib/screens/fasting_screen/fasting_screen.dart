@@ -1,8 +1,7 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-import 'package:cop_belgium/models/fasting/fasting_duration.dart';
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dart_date/dart_date.dart';
@@ -200,7 +199,7 @@ class _FastingScreenState extends State<FastingScreen> {
                 const SizedBox(height: 4),
                 Text(
                   startDate,
-                  style: kSFCaption,
+                  style: kSFCaptionBold,
                 ),
               ],
             )
@@ -218,7 +217,7 @@ class _FastingScreenState extends State<FastingScreen> {
                 const SizedBox(height: 4),
                 Text(
                   endDate,
-                  style: kSFCaption,
+                  style: kSFCaptionBold,
                 ),
               ],
             )

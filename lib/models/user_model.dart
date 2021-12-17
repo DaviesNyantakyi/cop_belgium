@@ -1,19 +1,31 @@
+import 'package:cop_belgium/models/fasting_model.dart';
+
 class CopUser {
-  String? profileImage;
+  String? photo;
   String firstName;
   String lastName;
   String email;
   String gender;
-  String? churchLocation;
-  bool isFasting;
+  String churchLocation;
+  String? title;
+  bool? isFasting;
+  List<FastingInfo>? fastingHistory;
+  Map<String, dynamic>? preferences;
+  String? address;
+  String? phoneNumber;
 
   CopUser({
-    required this.profileImage,
+    this.photo,
+    this.title,
     required this.firstName,
     required this.lastName,
     required this.email,
+    this.phoneNumber,
     required this.gender,
     required this.churchLocation,
-    required this.isFasting,
+    this.isFasting,
+    this.fastingHistory,
+    this.preferences,
+    this.address,
   });
 }

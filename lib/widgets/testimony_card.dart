@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -12,6 +11,7 @@ class TestimonyCard extends StatelessWidget {
   final VoidCallback? onPressedCard;
 
   final Color? cardColor;
+
   //show the edit icon
   final bool? editable;
 
@@ -47,62 +47,23 @@ class TestimonyCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        title,
-                        style: kSFCaption.copyWith(
-                          color: kDarkBlue,
-                        ),
-                      ),
-                      _showEditIcon() // pas in note
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    timeAgo,
-                    style: kSFSubtitle2.copyWith(
-                      color: kDarkBlue,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    testimony,
-                    style: kSFBody.copyWith(color: kDarkBlue),
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+              _buildTitleIcon(),
+              const SizedBox(height: 8),
+              Text(
+                timeAgo,
+                style: kSFSubtitle2.copyWith(
+                  color: kDarkBlue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                testimony,
+                style: kSFBody.copyWith(color: kDarkBlue),
+                maxLines: 4,
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 10),
-              TextButton(
-                onPressed: editable!
-                    ? onPressedLike
-                    : null, // disable the like button on edit
-                style: kTextButtonStyle,
-                child: SizedBox(
-                  height: 23,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset(
-                        'assets/images/icons/hand_clap_icon.png',
-                        filterQuality: FilterQuality.high,
-                        color: kDarkBlue,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        likes.toString(),
-                        style: kSFSubtitle2.copyWith(color: kDarkBlue),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+              _buildLikeButton()
             ],
           ),
         ),
@@ -110,8 +71,52 @@ class TestimonyCard extends StatelessWidget {
     );
   }
 
+  Widget _buildLikeButton() {
+    return Flexible(
+      child: TextButton(
+        onPressed: editable == false
+            ? onPressedLike
+            : null, // disable  like button when card is editable
+        style: kTextButtonStyle,
+        child: SizedBox(
+          height: 25,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/icons/hand_clap_icon.png',
+                filterQuality: FilterQuality.high,
+                color: kDarkBlue,
+              ),
+              const SizedBox(width: 7),
+              Text(
+                likes.toString(),
+                style: kSFSubtitle2.copyWith(color: kDarkBlue),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitleIcon() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: kSFCaptionBold.copyWith(
+            color: kDarkBlue,
+          ),
+        ),
+        _showEditIcon()
+      ],
+    );
+  }
+
   Widget _showEditIcon() {
-    if (editable!) {
+    if (editable == true) {
       return const SizedBox(
         width: 30,
         child: Icon(

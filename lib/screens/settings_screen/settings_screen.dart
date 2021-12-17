@@ -1,5 +1,5 @@
+import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +93,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   ListTile(
-                    onTap: () {},
                     leading: const Icon(
                       FontAwesomeIcons.solidQuestionCircle,
                       color: kDarkBlue,
@@ -106,6 +105,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       FontAwesomeIcons.chevronRight,
                       color: kDarkBlue,
                     ),
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        AboutChruchScreen.aboutChruchScreen,
+                      );
+                    },
                   ),
                   const SizedBox(height: 5),
                   const Divider(),
@@ -243,8 +248,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      title: const Text('Settings', style: kSFCaption),
-      centerTitle: true,
+      title: const Text('Settings', style: kSFCaptionBold),
       leading: Container(
         margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
         child: TextButton(

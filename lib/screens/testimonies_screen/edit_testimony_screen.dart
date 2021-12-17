@@ -1,6 +1,5 @@
 import 'package:cop_belgium/utilities/color_picker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -116,11 +115,11 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       title: !editable
           ? const Text(
               'Create Testimony',
-              style: kSFCaption,
+              style: kSFCaptionBold,
             )
           : const Text(
               'Edit Testimony',
-              style: kSFCaption,
+              style: kSFCaptionBold,
             ),
       backgroundColor: color,
       leading: TextButton(
@@ -146,7 +145,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               editable
                   ? 'Save'
                   : 'Post', // screen is editable show Save instead of post
-              style: kSFCaption,
+              style: kSFCaptionBold,
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -162,7 +161,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                   ),
                   child: Text(
                     'Delete',
-                    style: kSFCaption.copyWith(color: kRed),
+                    style: kSFCaptionBold.copyWith(color: kRed),
                   ),
                   onPressed: () {
                     Navigator.pop(context);

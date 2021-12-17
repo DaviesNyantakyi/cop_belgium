@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
 class PresetFastingCard extends StatelessWidget {
@@ -58,7 +57,7 @@ class PresetFastingCard extends StatelessWidget {
                   const SizedBox(width: 7),
                   Text(
                     'Hours',
-                    style: kSFCaption.copyWith(
+                    style: kSFCaptionBold.copyWith(
                       fontWeight: FontWeight.w400,
                       color: fontColor,
                     ),
@@ -119,7 +118,7 @@ class CustomFastingCard extends StatelessWidget {
               const SizedBox(height: 19),
               Text(
                 'Custom Fast',
-                style: kSFCaption.copyWith(
+                style: kSFCaptionBold.copyWith(
                   fontWeight: FontWeight.w400,
                   color: fontColor,
                 ),

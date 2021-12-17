@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -16,6 +15,8 @@ class PlayPodcastScreen extends StatefulWidget {
 
 class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   bool isPlaying = false;
+  bool stopPlaying = false;
+  bool repeat = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,26 +36,21 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
                     color: kBlue,
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: AssetImage('assets/images/Rectangle 269.png'),
+                      image: AssetImage('assets/images/meeting.jpg'),
                     ),
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: kBodyPadding,
-                    vertical: kBodyPadding,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      _buildTitle(),
-                      const SizedBox(height: 32),
-                      const _MySilder(),
-                      const SizedBox(height: 32),
-                      _buildMediaControl()
-                    ],
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildTitleDescription(),
+                    const SizedBox(height: 32),
+                    const _MySilder(),
+                    const SizedBox(height: 32),
+                    _buildMediaControl()
+                  ],
                 ),
               ],
             ),
@@ -65,9 +61,8 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Widget _buildMediaControl() {
-    bool isPlaying = false;
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
           icon: const Icon(
@@ -75,8 +70,13 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
             size: 32,
           ),
           color: Colors.grey,
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              repeat = !repeat;
+            });
+          },
         ),
+        const SizedBox(width: kBodyPadding),
         IconButton(
           icon: const Icon(
             FontAwesomeIcons.backward,
@@ -85,18 +85,25 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
           color: Colors.grey,
           onPressed: () {},
         ),
+        const SizedBox(width: kBodyPadding),
         FloatingActionButton(
-          backgroundColor: kBlue,
+          backgroundColor: kDarkBlue,
           child: Padding(
-            padding: const EdgeInsets.only(left: 5),
+            padding: const EdgeInsets.all(8.0),
             child: Icon(
               isPlaying == true
                   ? FontAwesomeIcons.pause
                   : FontAwesomeIcons.play,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              isPlaying = !isPlaying;
+              stopPlaying = false;
+            });
+          },
         ),
+        const SizedBox(width: kBodyPadding),
         IconButton(
           icon: const Icon(
             FontAwesomeIcons.forward,
@@ -105,10 +112,15 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
           color: Colors.grey,
           onPressed: () {},
         ),
+        const SizedBox(width: kBodyPadding),
         IconButton(
           icon: const Icon(FontAwesomeIcons.stop, size: 32),
           color: Colors.grey,
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              stopPlaying = true;
+            });
+          },
         ),
       ],
     );
@@ -141,14 +153,14 @@ class __MySilderState extends State<_MySilder> {
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+          children: const [
             Text(
               '00:00',
-              style: kSFSubtitle2.copyWith(color: kBlue),
+              style: kSFBody,
             ),
             Text(
               '00:00',
-              style: kSFSubtitle2.copyWith(color: kBlue),
+              style: kSFBody,
             ),
           ],
         ),
@@ -157,7 +169,7 @@ class __MySilderState extends State<_MySilder> {
   }
 }
 
-Widget _buildTitle() {
+Widget _buildTitleDescription() {
   return Column(
     children: [
       Container(

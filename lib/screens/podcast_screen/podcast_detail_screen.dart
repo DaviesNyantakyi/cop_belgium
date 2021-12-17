@@ -1,13 +1,12 @@
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-String _profileImage =
+String _speaker =
     'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
-String _text =
+String _description =
     '''What do we do with the passages in the Bible that are really difficult? Violence, slavery, the treatment of women—what the Bible has to say about these topics has, at times, been misinterpreted and misused. ''';
 
 class PodcastDetailScreen extends StatefulWidget {
@@ -23,6 +22,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   String? dateTime = '2 Dec 2021';
   double? likes = 200;
   String? podcastImage;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,22 +33,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.only(top: 10),
-                height: 170,
-                decoration: BoxDecoration(
-                  color: kBlue,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: podcastImage != null
-                        ? AssetImage(podcastImage!)
-                        : const AssetImage(
-                            'assets/images/Rectangle 269.png',
-                          ),
-                  ),
-                ),
-              ),
+              _buildHeaderImage(),
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: kBodyPadding,
@@ -66,7 +51,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
               ),
               _buildSpeakers(),
               const SizedBox(height: 36),
-              _buildEpisodes(),
+              _buildEpisodesList()
             ],
           ),
         ),
@@ -74,43 +59,68 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     );
   }
 
-  Widget _buildEpisodes() {
+  Widget _buildHeaderImage() {
+    if (podcastImage != null) {
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 10),
+        height: 170,
+        decoration: BoxDecoration(
+          color: kBlue,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: AssetImage(podcastImage!),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        width: double.infinity,
+        margin: const EdgeInsets.only(top: 10),
+        height: 170,
+        decoration: const BoxDecoration(
+          color: kDarkBlue,
+        ),
+      );
+    }
+  }
+
+  Column _buildEpisodesList() {
     return Column(
       children: [
         Container(
           margin: const EdgeInsets.only(left: kBodyPadding),
           alignment: Alignment.centerLeft,
-          child: const Text('Episodes', style: kSFCaption),
+          child: const Text('Episodes', style: kSFCaptionBold),
         ),
         const SizedBox(height: 12),
-        _buildEpisodesList(),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            itemCount: 15,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(left: kBodyPadding),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: PodcastEpisodesCard(
+                  image: 'assets/images/meeting.jpg',
+                  title: 'Humans are Trees?',
+                  length: '10:00',
+                  date: '12 Dec 2021',
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      PlayPodcastScreen.playPodcastScreen,
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ),
       ],
-    );
-  }
-
-  SizedBox _buildEpisodesList() {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        itemCount: 15,
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(left: kBodyPadding),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: PodcastEpisodesCard(
-              image: 'assets/images/Rectangle 269.png',
-              episodes: 12,
-              title: 'Humans are Trees?',
-              onPressed: () {
-                Navigator.pushNamed(
-                    context, PlayPodcastScreen.playPodcastScreen);
-              },
-            ),
-          );
-        },
-      ),
     );
   }
 
@@ -120,7 +130,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         Container(
           margin: const EdgeInsets.only(left: kBodyPadding),
           alignment: Alignment.centerLeft,
-          child: const Text('Speakers', style: kSFCaption),
+          child: const Text('Speakers', style: kSFCaptionBold),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -160,7 +170,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(_profileImage),
+            backgroundImage: NetworkImage(_speaker),
           ),
           const SizedBox(height: 8),
           const Text('John Smith', style: kSFSubtitle2),
@@ -192,14 +202,14 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           alignment: Alignment.centerLeft,
           child: const Text(
             'Description',
-            style: kSFCaption,
+            style: kSFCaptionBold,
           ),
         ),
         const SizedBox(height: 12),
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            _text,
+            _description,
             style: kSFBody,
           ),
         )

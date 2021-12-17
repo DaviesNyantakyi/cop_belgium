@@ -1,16 +1,12 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
+import 'package:cop_belgium/screens/welcome_screen/welcome_screen.dart';
+import 'package:cop_belgium/utilities/church_selector.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-List<String> cities = [
-  'Turnhout',
-  'Brussel',
-];
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
@@ -29,7 +25,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? lastName;
   String? email;
   String? gender;
-  String? churchLocation;
+  String? selectedChurch;
 
   @override
   void initState() {
@@ -37,7 +33,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {
       gender = widget.user!.gender;
-      churchLocation = widget.user!.churchLocation;
+      selectedChurch = widget.user!.churchLocation;
     });
   }
 
@@ -72,6 +68,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onPressed: () {},
                   ),
                 ),
+                const SizedBox(height: 20),
                 MyTextField.buildTF(
                   initialValue: widget.user!.firstName,
                   label: 'First Name',
@@ -98,21 +95,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 20),
                 _buildGenderSelector(),
                 const SizedBox(height: 20),
-                _buildLocationSelector(),
+                ChurchSelctor().buildChurchSelectorTile(
+                  city: selectedChurch,
+                  context: context,
+                  onChanged: (city) {
+                    setState(() {
+                      selectedChurch = city;
+                    });
+                  },
+                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildBt(
+                    _buildBtn(
                       btText: 'Delete Account',
-                      textColor: kRed,
-                      backgroundColor: kRedLight,
+                      textColor: kDarkRed.withOpacity(0.9),
+                      backgroundColor: kRedLight.withOpacity(0.4),
                       onPressed: () async {
-                        await _showDeleteAlert();
+                        String? x = await _showDeleteAlert();
+                        if (x == 'ok') {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            WelcomeScreen.welcomeScreen,
+                            ModalRoute.withName('/'),
+                          );
+                        }
                       },
                     ),
                     const SizedBox(width: 20),
-                    _buildBt(
+                    _buildBtn(
                       btText: 'Reset Password',
                       textColor: kGreen,
                       backgroundColor: kGreenLight,
@@ -150,7 +162,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('OK', style: kSFCaption),
+            child: const Text('OK', style: kSFCaptionBold),
           ),
         ],
       ),
@@ -177,57 +189,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () => Navigator.pop(context, 'ok'),
             child: Text(
               'Delete Account',
-              style: kSFCaption.copyWith(
+              style: kSFCaptionBold.copyWith(
                 fontWeight: FontWeight.normal,
               ),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel', style: kSFCaption),
+            child: const Text('Cancel', style: kSFCaptionBold),
           ),
         ],
       ),
     );
   }
 
-  Future<String?> _showLocationSelectorBottomSheet(
-      {required BuildContext context}) async {
-    return await showModalBottomSheet<String?>(
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: SizedBox(
-            height: kBottomSheetHeight,
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: cities.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Text(
-                    cities[index],
-                    style: kSFBody,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context, cities[index]);
-                  },
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBt({
+  Widget _buildBtn({
     required String btText,
     VoidCallback? onPressed,
     Color? backgroundColor,
@@ -299,40 +275,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildLocationSelector() {
-    return ListTile(
-      tileColor: kBlueLight1,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(kButtonRadius),
-        ),
-      ),
-      onTap: () async {
-        churchLocation =
-            await _showLocationSelectorBottomSheet(context: context);
-        setState(() {});
-      },
-      leading: const Text(
-        'Church Location',
-        style: kSFBody,
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '$churchLocation',
-            style: kSFBody,
-          ),
-        ],
-      ),
-    );
-  }
-
   dynamic _buildAppbar() {
     return AppBar(
       title: const Text(
         'Edit Profile',
-        style: kSFCaption,
+        style: kSFCaptionBold,
       ),
       centerTitle: true,
       leading: TextButton(
@@ -353,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Save',
-              style: kSFCaption,
+              style: kSFCaptionBold,
             ),
           ),
           onPressed: () {

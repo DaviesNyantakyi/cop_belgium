@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
@@ -22,7 +21,7 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       initialValue: initialValue,
-      style: kSFCaption,
+      style: kSFCaptionBold,
       keyboardType: keyboardType,
       obscureText: obscureText,
       decoration: InputDecoration(
@@ -59,14 +58,6 @@ class MyTextField extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          margin: const EdgeInsets.only(bottom: 10),
-          child: Text(
-            label,
-            style: kSFBody,
-          ),
-        ),
         MyTextField(
           hintText: hintText,
           onChanged: onChanged,

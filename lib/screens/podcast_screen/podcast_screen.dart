@@ -2,7 +2,7 @@ import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
+import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -45,7 +45,9 @@ class _PodcastScreenState extends State<PodcastScreen> {
             ),
             onPressed: () {
               Navigator.pushNamed(
-                  context, AnnouncementScreen.announcementScreen);
+                context,
+                AnnouncementScreen.announcementScreen,
+              );
             },
           ),
         ),
@@ -66,6 +68,8 @@ class _BuildBodyState extends State<_BuildBody> {
     //create a model with the podcast details not the cards
   ];*/
 
+  String? userName = 'Davies Nyantakyi';
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -80,16 +84,11 @@ class _BuildBodyState extends State<_BuildBody> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildGreeting(userName: 'Sophia Smith'),
+                  _buildGreeting(),
                   const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        'Latest Release',
-                        style: kSFCaption,
-                      ),
-                    ],
+                  const Text(
+                    'Latest Release',
+                    style: kSFCaptionBold,
                   ),
                   const SizedBox(height: 16),
                   _buildLatestCard(),
@@ -99,10 +98,7 @@ class _BuildBodyState extends State<_BuildBody> {
             const SizedBox(height: 42),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: _buildSeriesTitle(
-                text: 'Series',
-                onTap: () {},
-              ),
+              child: _buildSeriesTitle(),
             ),
             const SizedBox(height: 16),
             _buildSeriesList(),
@@ -124,13 +120,17 @@ class _BuildBodyState extends State<_BuildBody> {
           return Padding(
             padding: const EdgeInsets.only(right: 16),
             child: PodcastCard(
-              image: 'assets/images/Rectangle 269.png',
+              image: 'assets/images/meeting.jpg',
               episodes: 12,
               title: 'The Paradigm',
               onPressed: () {
-                Navigator.pushNamed(
+                Navigator.push(
                   context,
-                  PodcastDetailScreen.podcastDetailScreen,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const PodcastDetailScreen();
+                    },
+                  ),
                 );
               },
             ),
@@ -140,18 +140,18 @@ class _BuildBodyState extends State<_BuildBody> {
     );
   }
 
-  Widget _buildGreeting({required String userName}) {
+  Widget _buildGreeting() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Good morning,',
+        Text(
+          YonoGreetings.showGreetings(),
           style: kSFBody,
         ),
         Row(
           children: [
             Text(
-              userName,
+              '$userName',
               style: kSFHeadLine2.copyWith(color: kYellow),
             ),
             const SizedBox(width: 6),
@@ -162,16 +162,15 @@ class _BuildBodyState extends State<_BuildBody> {
     );
   }
 
-  Widget _buildSeriesTitle(
-      {required String text, required VoidCallback onTap}) {
+  Widget _buildSeriesTitle() {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              text,
-              style: kSFCaption,
+            const Text(
+              'Series',
+              style: kSFCaptionBold,
             ),
             TextButton(
               child: const Text(
@@ -204,7 +203,7 @@ class _BuildBodyState extends State<_BuildBody> {
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage('assets/images/Rectangle 269.png'),
+          image: AssetImage('assets/images/meeting.jpg'),
         ),
       ),
       child: TextButton(
@@ -222,8 +221,8 @@ class _BuildBodyState extends State<_BuildBody> {
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                kDarkBlue.withOpacity(1),
-                kDarkBlue.withOpacity(0.1),
+                Colors.black.withOpacity(0.9),
+                Colors.black.withOpacity(0.1),
               ],
             ),
           ),
@@ -251,7 +250,12 @@ class _BuildBodyState extends State<_BuildBody> {
                       maxLines: 2,
                     ),
                     const SizedBox(height: 16),
-                    _buildPlayBt()
+                    _buildPlayBt(onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        PodcastDetailScreen.podcastDetailScreen,
+                      );
+                    })
                   ],
                 ),
               ),
@@ -262,7 +266,7 @@ class _BuildBodyState extends State<_BuildBody> {
     );
   }
 
-  Widget _buildPlayBt() {
+  Widget _buildPlayBt({VoidCallback? onPressed}) {
     return SizedBox(
       height: 40,
       width: 121,
@@ -279,9 +283,7 @@ class _BuildBodyState extends State<_BuildBody> {
             ),
           ),
         ),
-        onPressed: () {
-          Navigator.pushNamed(context, PodcastDetailScreen.podcastDetailScreen);
-        },
+        onPressed: onPressed,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

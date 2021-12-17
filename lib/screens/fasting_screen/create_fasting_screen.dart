@@ -1,13 +1,11 @@
-import 'package:cop_belgium/models/fasting/fasting_duration.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/fonts.dart';
+
 import 'package:cop_belgium/utilities/remove_scroll_glow.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class CreateFastingScreens extends StatefulWidget {
@@ -21,22 +19,27 @@ class CreateFastingScreens extends StatefulWidget {
 class _CreateFastingScreensState extends State<CreateFastingScreens> {
   List<FastingInfo> fastingPresets = [
     FastingInfo(
+      type: 'Custom',
       duration: const Duration(hours: 13),
       dateStart: DateTime.now(),
     ),
     FastingInfo(
+      type: 'Custom',
       duration: const Duration(hours: 16),
       dateStart: DateTime.now(),
     ),
     FastingInfo(
+      type: 'Custom',
       duration: const Duration(hours: 18),
       dateStart: DateTime.now(),
     ),
     FastingInfo(
+      type: 'Custom',
       duration: const Duration(hours: 20),
       dateStart: DateTime.now(),
     ),
     FastingInfo(
+      type: 'Custom',
       duration: const Duration(hours: 36),
       dateStart: DateTime.now(),
     ),
@@ -48,92 +51,68 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 25).copyWith(top: 15),
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    'Choose Fast',
-                    style: kSFHeadLine2,
-                  ),
-                ),
-                GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(top: 25),
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 20,
-                    mainAxisSpacing: 20,
-                  ),
-                  itemCount: fastingPresets.length + 1,
-                  itemBuilder: (BuildContext ctx, index) {
-                    if (index != 5) {
-                      return PresetFastingCard(
-                        typeFast: 'Preset',
-                        duration: fastingPresets[index].duration!.inHours,
-                        backgroundColor: kLightColors[index],
-                        fontColor: kDefaultColors[index],
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return FastingScreen(
-                                fastingInfo: fastingPresets[index],
-                              );
-                            },
-                          ));
-                        },
-                      );
-                    } else {
-                      return CustomFastingCard(
-                        typeFast: 'Custom',
-                        onPressed: () {
-                          showMyFastingBottomSheet(
-                            context: context,
-                            child: const FastingPicker(),
-                          );
-                        },
-                        backgroundColor: kIndigoLight2,
-                        fontColor: kDarkBlue,
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
+      appBar: AppBar(
+        title: const Padding(
+          padding: EdgeInsets.only(left: kBodyPadding),
+          child: Text(
+            'Choose Fast',
+            style: kSFHeadLine2,
           ),
         ),
       ),
-    );
-  }
-
-  dynamic _buildAppbar() {
-    return AppBar(
-      centerTitle: true,
-      actions: [
-        TextButton(
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: kAppbarPadding),
-            child: Icon(
-              FontAwesomeIcons.calendar,
-              color: kDarkBlue,
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: kBodyPadding)
+                    .copyWith(top: kBodyPadding),
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  childAspectRatio: 1,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemCount: fastingPresets.length + 1,
+                itemBuilder: (BuildContext ctx, index) {
+                  if (index != 5) {
+                    return PresetFastingCard(
+                      typeFast: 'Preset',
+                      duration: fastingPresets[index].duration!.inHours,
+                      backgroundColor: kLightColors[index],
+                      fontColor: kDefaultColors[index],
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return FastingScreen(
+                              fastingInfo: fastingPresets[index],
+                            );
+                          },
+                        ));
+                      },
+                    );
+                  } else {
+                    return CustomFastingCard(
+                      typeFast: 'Custom',
+                      onPressed: () {
+                        showMyFastingBottomSheet(
+                          context: context,
+                          child: const FastingPicker(),
+                        );
+                      },
+                      backgroundColor: kIndigoLight2,
+                      fontColor: kDarkBlue,
+                    );
+                  }
+                },
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.pushNamed(
-                context, FastingHistoryScreen.fastingHistoryScreen);
-          },
-          style: kTextButtonStyle,
         ),
-      ],
+      ),
     );
   }
 }
@@ -266,21 +245,3 @@ class _FastingPickerState extends State<FastingPicker> {
     );
   }
 }
-
-/* PresetFastingCard(
-                duration: 13,
-                backgroundColor: kGreen1Light,
-                typeFast: 'Preset',
-                onPressed: () {},
-                fontColor: kGreen,
-              ),
-              const SizedBox(height: 30),
-              CustomFastingCard(
-                typeFast: 'Custom',
-                onPressed: () {},
-                backgroundColor: kRedLight,
-                fontColor: kRedDark,
-              )*/
-// fasting card
-// type of fast String
-// hours

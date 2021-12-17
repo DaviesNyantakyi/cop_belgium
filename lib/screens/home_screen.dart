@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // selected bottom navigation bar item
   int _selectedIndex = 0;
+
   final List<Widget> _screens = const [
     PodcastScreen(),
     TestimoniesScreen(),
@@ -50,8 +51,8 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
     unselectedItemColor: kYellow,
     showSelectedLabels: false,
     showUnselectedLabels: false,
-    selectedFontSize: 0, // if not set to 0 exception bug
-    unselectedFontSize: 0, // if not set to 0 exception bug
+    selectedFontSize: 0, // if not set to 0 bottom nav exception bug
+    unselectedFontSize: 0, // if not set to 0 bottom nav exception bug
     selectedIconTheme: const IconThemeData(
       color: kDarkBlue,
     ),
