@@ -32,7 +32,7 @@ class FastingHistoryCard extends StatelessWidget {
       width: 60,
       height: _cardHeight,
       decoration: const BoxDecoration(
-        color: kGreenLight,
+        color: kGreenLight2,
         borderRadius: BorderRadius.all(
           Radius.circular(kButtonRadius),
         ),
@@ -60,7 +60,7 @@ class FastingHistoryCard extends StatelessWidget {
         height: _cardHeight,
         width: 310,
         decoration: const BoxDecoration(
-          color: kGreenLight,
+          color: kGreenLight2,
           borderRadius: BorderRadius.all(
             Radius.circular(kButtonRadius),
           ),

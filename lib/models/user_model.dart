@@ -1,4 +1,5 @@
 import 'package:cop_belgium/models/fasting_model.dart';
+import 'package:cop_belgium/models/podcast_model.dart';
 
 class CopUser {
   String? photo;
@@ -10,6 +11,7 @@ class CopUser {
   String? title;
   bool? isFasting;
   List<FastingInfo>? fastingHistory;
+  List<PodCast>? favoratePodcast;
   Map<String, dynamic>? preferences;
   String? address;
   String? phoneNumber;

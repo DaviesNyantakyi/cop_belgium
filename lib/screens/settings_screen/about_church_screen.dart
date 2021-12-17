@@ -25,7 +25,7 @@ class AboutChruchScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(
                   FontAwesomeIcons.chevronRight,
-                  color: kDarkBlue,
+                  color: kBlueDark,
                 ),
               ),
               ListTile(
@@ -36,7 +36,7 @@ class AboutChruchScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(
                   FontAwesomeIcons.chevronRight,
-                  color: kDarkBlue,
+                  color: kBlueDark,
                 ),
               ),
               ListTile(
@@ -47,7 +47,7 @@ class AboutChruchScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(
                   FontAwesomeIcons.chevronRight,
-                  color: kDarkBlue,
+                  color: kBlueDark,
                 ),
               ),
               ListTile(
@@ -58,7 +58,7 @@ class AboutChruchScreen extends StatelessWidget {
                 ),
                 trailing: const Icon(
                   FontAwesomeIcons.chevronRight,
-                  color: kDarkBlue,
+                  color: kBlueDark,
                 ),
               ),
             ],
@@ -77,7 +77,7 @@ class AboutChruchScreen extends StatelessWidget {
           style: kTextButtonStyle,
           child: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
           onPressed: () {
             Navigator.pop(context);

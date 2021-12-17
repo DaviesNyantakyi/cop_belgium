@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CreateTestimonyScreen extends StatefulWidget {
-  static String editTestimonyScreen = 'editTestimonyScreen';
+  static String createTestimonyScreen = 'editTestimonyScreen';
 
   final Color? backgroundColor;
   final String? title;
@@ -15,7 +15,7 @@ class CreateTestimonyScreen extends StatefulWidget {
 
   const CreateTestimonyScreen({
     Key? key,
-    this.backgroundColor = kBlueLight,
+    this.backgroundColor = kBlueLight2,
     this.title,
     this.text,
     this.editable = false,
@@ -99,7 +99,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       style: style,
       minLines: 1,
       cursorWidth: 3,
-      cursorColor: kDarkBlue,
+      cursorColor: kBlueDark,
       maxLines: null,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
@@ -127,7 +127,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
           padding: EdgeInsets.all(8.0),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ),
         onPressed: () {

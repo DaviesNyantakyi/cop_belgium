@@ -1,10 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PodcastScreen extends StatefulWidget {
   static String podcastScreen = 'podcastScreen';
@@ -41,7 +43,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
             ),
             child: const Icon(
               FontAwesomeIcons.bell,
-              color: kDarkBlue,
+              color: kBlueDark,
             ),
             onPressed: () {
               Navigator.pushNamed(
@@ -118,10 +120,10 @@ class _BuildBodyState extends State<_BuildBody> {
         padding: const EdgeInsets.only(left: kBodyPadding),
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 12),
             child: PodcastCard(
               image: 'assets/images/meeting.jpg',
-              episodes: 12,
+              episodes: 19,
               title: 'The Paradigm',
               onPressed: () {
                 Navigator.push(
@@ -169,7 +171,7 @@ class _BuildBodyState extends State<_BuildBody> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
-              'Series',
+              'Podcasts',
               style: kSFCaptionBold,
             ),
             TextButton(
@@ -177,7 +179,12 @@ class _BuildBodyState extends State<_BuildBody> {
                 'See All',
                 style: kSFSubtitle2,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(
+                  context,
+                  SeeAllPodCastScreen.seeAllPodCastScreen,
+                );
+              },
               style: TextButton.styleFrom(
                 minimumSize: Size.zero,
                 padding: EdgeInsets.zero,
@@ -269,7 +276,7 @@ class _BuildBodyState extends State<_BuildBody> {
   Widget _buildPlayBt({VoidCallback? onPressed}) {
     return SizedBox(
       height: 40,
-      width: 121,
+      width: 123,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
@@ -288,7 +295,7 @@ class _BuildBodyState extends State<_BuildBody> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Play Now',
+              'Listen Now',
               style: kSFBody.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -298,7 +305,7 @@ class _BuildBodyState extends State<_BuildBody> {
               child: Icon(
                 FontAwesomeIcons.chevronRight,
                 size: 16,
-                color: kDarkBlue,
+                color: kBlueDark,
               ),
             ),
           ],

@@ -108,7 +108,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
               Text(
                 'Sing Up',
-                style: kSFBodyBold.copyWith(color: kBlue),
+                style: kSFBodyBold.copyWith(color: kBlueLight),
               ),
             ],
           ),
@@ -140,7 +140,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         FloatingActionButton(
           heroTag: 'bt1',
           elevation: 1,
-          backgroundColor: kBlueLight1,
+          backgroundColor: kBlueLight2,
           child: Image.asset(
             'assets/images/logos/google.png',
             height: 28,
@@ -156,7 +156,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         FloatingActionButton(
           heroTag: 'bt2',
           elevation: 1,
-          backgroundColor: kBlueLight1,
+          backgroundColor: kBlueLight2,
           child: Image.asset(
             'assets/images/logos/apple.png',
             height: 28,

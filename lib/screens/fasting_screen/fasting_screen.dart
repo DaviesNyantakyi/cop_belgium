@@ -2,6 +2,7 @@ import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dart_date/dart_date.dart';
@@ -58,7 +59,7 @@ class _FastingScreenState extends State<FastingScreen> {
                     Container(
                       width: double.infinity,
                       decoration: const BoxDecoration(
-                        color: kGreenLight,
+                        color: kGreenLight2,
                         borderRadius: BorderRadius.all(
                           Radius.circular(kButtonRadius),
                         ),
@@ -167,8 +168,8 @@ class _FastingScreenState extends State<FastingScreen> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return _buildFooterText(
-                      passage: _text,
-                      verse: '-Psalm 46:10',
+                      verse: _text,
+                      chapter: '-Psalm 46:10',
                     );
                   },
                 ),
@@ -227,35 +228,72 @@ class _FastingScreenState extends State<FastingScreen> {
     );
   }
 
-  Widget _buildFooterText({required String passage, required String verse}) {
-    return Container(
-      margin: const EdgeInsets.only(right: kBodyPadding),
-      padding: const EdgeInsets.only(
-        left: 21,
-        top: 22,
-        right: 30,
-        bottom: 20,
-      ),
-      height: 140,
-      width: 358,
-      decoration: const BoxDecoration(
-        color: kGreenLight,
-        borderRadius: BorderRadius.all(
-          Radius.circular(kButtonRadius),
+  Widget _buildFooterText({required String verse, required String chapter}) {
+    return TextButton(
+      onPressed: () {
+        _showBottomSheet(context: context, chapter: chapter, verse: verse);
+      },
+      style: kTextButtonStyle,
+      child: Container(
+        margin: const EdgeInsets.only(right: kBodyPadding),
+        padding: const EdgeInsets.only(
+          left: 20,
+          top: 21,
+          right: 29,
+          bottom: 19,
+        ),
+        height: 140,
+        width: 358,
+        decoration: BoxDecoration(
+          color: kGreenLight2,
+          border: Border.all(color: kGreenLight),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              verse,
+              style: kSFBody,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              chapter,
+              style: kSFBody,
+            )
+          ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showBottomSheet({
+    required BuildContext context,
+    required String chapter,
+    required String verse,
+  }) {
+    return showMyBottomSheet(
+      context: context,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            passage,
-            style: kSFBody,
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              chapter,
+              style: kSFHeadLine2,
+            ),
           ),
-          const SizedBox(height: 10),
-          Text(
-            verse,
-            style: kSFBody,
-          )
+          const SizedBox(height: 16),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _text,
+              style: kSFBody,
+            ),
+          ),
         ],
       ),
     );
@@ -295,7 +333,7 @@ class _FastingScreenState extends State<FastingScreen> {
       children: [
         Text(
           'You\'r Fasting!',
-          style: kSFHeadLine2.copyWith(color: kGreen),
+          style: kSFHeadLine2.copyWith(color: kGreenLight),
         ),
         Text(
           '$people People are fasting right now',
@@ -313,7 +351,7 @@ class _FastingScreenState extends State<FastingScreen> {
           padding: EdgeInsets.all(8.0),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ),
         onPressed: () {

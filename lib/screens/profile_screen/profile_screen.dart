@@ -1,6 +1,7 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
+import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 import 'package:cop_belgium/screens/welcome_screen/welcome_screen.dart';
@@ -28,7 +29,7 @@ class _ProfileScreensState extends State<ProfileScreens>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(initialIndex: 1, vsync: this, length: 2);
+    tabController = TabController(initialIndex: 1, vsync: this, length: 3);
   }
 
   @override
@@ -45,6 +46,7 @@ class _ProfileScreensState extends State<ProfileScreens>
           physics: const NeverScrollableScrollPhysics(),
           controller: tabController,
           children: const <Widget>[
+            UserSavedPodcastView(),
             UserTestimoniesView(),
             UserFastingHistoryView()
           ],
@@ -65,12 +67,14 @@ class _ProfileScreensState extends State<ProfileScreens>
         labelStyle: kSFSubtitle1,
         labelColor: kBlue,
         indicatorColor: kBlue,
+        isScrollable: true,
         padding: const EdgeInsets.symmetric(horizontal: 25),
-        unselectedLabelColor: kDarkBlue,
+        unselectedLabelColor: kBlueDark,
         indicator: const UnderlineTabIndicator(
           borderSide: BorderSide(color: kBlue, width: 2),
         ),
         tabs: const [
+          Tab(text: 'Podcast'),
           Tab(text: 'Testimonies'),
           Tab(text: 'Fasting History'),
         ],
@@ -91,7 +95,7 @@ class _ProfileScreensState extends State<ProfileScreens>
         CircleAvatar(
           backgroundImage: NetworkImage(profilePhoto),
           radius: 40,
-          backgroundColor: kDarkBlue,
+          backgroundColor: kBlueDark,
         ),
         const SizedBox(height: 10),
         const Text(

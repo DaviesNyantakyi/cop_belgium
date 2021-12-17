@@ -7,6 +7,7 @@ class Buttons {
     required BuildContext context,
     required String btnText,
     Color color = kYellow,
+    Color fontColor = kBlueDark,
   }) {
     return SizedBox(
       width: double.infinity,
@@ -30,7 +31,7 @@ class Buttons {
         },
         child: Text(
           btnText,
-          style: kSFBodyBold,
+          style: kSFBodyBold.copyWith(color: fontColor),
         ),
       ),
     );

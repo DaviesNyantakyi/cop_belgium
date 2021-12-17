@@ -134,7 +134,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           style: kTextButtonStyle,
           child: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
           onPressed: () {
             Navigator.pop(context);

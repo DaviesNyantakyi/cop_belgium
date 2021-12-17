@@ -47,14 +47,14 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
   final Color _bottomNavColor = Colors.blueGrey.shade300;
   return BottomNavigationBar(
     backgroundColor: Colors.white,
-    selectedItemColor: kDarkBlue,
+    selectedItemColor: kBlueDark,
     unselectedItemColor: kYellow,
     showSelectedLabels: false,
     showUnselectedLabels: false,
     selectedFontSize: 0, // if not set to 0 bottom nav exception bug
     unselectedFontSize: 0, // if not set to 0 bottom nav exception bug
     selectedIconTheme: const IconThemeData(
-      color: kDarkBlue,
+      color: kBlueDark,
     ),
     unselectedIconTheme: const IconThemeData(
       color: kBlueLight,
@@ -73,7 +73,7 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         ),
         activeIcon: const Icon(
           Icons.home_outlined,
-          color: kDarkBlue,
+          color: kBlueDark,
           size: 35,
         ),
       ),
@@ -86,7 +86,7 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         ),
         activeIcon: const Icon(
           FontAwesomeIcons.clipboard,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
@@ -98,7 +98,7 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         ),
         activeIcon: const Icon(
           FontAwesomeIcons.utensils,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
       ),
       BottomNavigationBarItem(
@@ -110,7 +110,7 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         ),
         activeIcon: const Icon(
           FontAwesomeIcons.user,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
       ),
     ],

@@ -70,20 +70,18 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                 padding: const EdgeInsets.symmetric(horizontal: kBodyPadding)
                     .copyWith(top: kBodyPadding),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
-                  childAspectRatio: 1,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 14,
+                  crossAxisSpacing: 14,
                 ),
-                itemCount: fastingPresets.length + 1,
+                itemCount: fastingPresets.length + 1, //  +1 for the custom card
                 itemBuilder: (BuildContext ctx, index) {
                   if (index != 5) {
                     return PresetFastingCard(
                       typeFast: 'Preset',
                       duration: fastingPresets[index].duration!.inHours,
                       backgroundColor: kLightColors[index],
-                      fontColor: kDefaultColors[index],
                       onPressed: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
@@ -103,8 +101,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                           child: const FastingPicker(),
                         );
                       },
-                      backgroundColor: kIndigoLight2,
-                      fontColor: kDarkBlue,
+                      fontColor: kBlueDark,
                     );
                   }
                 },

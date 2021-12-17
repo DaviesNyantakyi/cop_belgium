@@ -19,8 +19,8 @@ class UserSavedPodcastView extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        crossAxisSpacing: 15,
+        mainAxisSpacing: 15,
       ),
       itemBuilder: (context, index) {
         return PodcastCard(

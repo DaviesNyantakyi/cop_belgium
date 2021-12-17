@@ -25,7 +25,7 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
             horizontal: kBodyPadding, vertical: kBodyPadding),
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 15),
             child: FastingHistoryCard(
               startDate: startDate,
               endDate: endDate,

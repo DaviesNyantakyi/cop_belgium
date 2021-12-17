@@ -19,8 +19,9 @@ class PodcastDetailScreen extends StatefulWidget {
 
 class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   bool bookMark = false;
+  bool isLiked = false;
   String? dateTime = '2 Dec 2021';
-  double? likes = 200;
+  int? likes = 200;
   String? podcastImage;
 
   @override
@@ -79,7 +80,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         margin: const EdgeInsets.only(top: 10),
         height: 170,
         decoration: const BoxDecoration(
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
       );
     }
@@ -235,7 +236,11 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         ),
         const SizedBox(width: 19),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              isLiked = !isLiked;
+            });
+          },
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,
@@ -243,11 +248,10 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
           child: Row(
             children: [
-              Image.asset(
-                'assets/images/icons/hand_clap_icon.png',
-                width: 20,
-                filterQuality: FilterQuality.high,
-                color: kDarkBlue,
+              Icon(
+                isLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                color: kBlueDark,
+                size: 20,
               ),
               const SizedBox(width: 8),
               Text(
@@ -265,7 +269,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                 ? FontAwesomeIcons.bookmark
                 : FontAwesomeIcons.solidBookmark,
             size: 20,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
           onPressed: () {
             setState(() {
@@ -283,7 +287,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       leading: TextButton(
         child: const Icon(
           FontAwesomeIcons.chevronLeft,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
         onPressed: () {
           Navigator.pop(context);

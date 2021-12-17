@@ -17,10 +17,10 @@ class PodcastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 160,
       height: 200,
-      width: 143,
       decoration: BoxDecoration(
-        color: kDarkBlue,
+        color: kBlueLight, // card background color
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
@@ -38,31 +38,35 @@ class PodcastCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Container(
+              // bottom card
               height: 70,
               width: double.infinity,
-              decoration: BoxDecoration(
-                color: kBlueLight.withOpacity(0.9),
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                color: kBlueDark,
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(15),
                   bottomRight: Radius.circular(15),
                 ),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: kSFSubtitle1,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '$episodes Episodes',
-                    style: kSFSubtitle2,
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: kSFSubtitle1.copyWith(color: Colors.white),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      '$episodes Episodes',
+                      style: kSFSubtitle2.copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

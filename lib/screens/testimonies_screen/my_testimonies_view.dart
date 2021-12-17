@@ -1,4 +1,4 @@
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
+import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ class MyTestimoniesView extends StatefulWidget {
 
 class _MyTestimoniesViewState extends State<MyTestimoniesView> {
   int likes = 255;
-  Color cardColor = kBlueLight;
+  Color cardColor = kRedLight2;
   String title = 'Announcements Lorem ipsum';
   String testimony =
       'Consequat magna fugiat dolor sit aliquip ksnkfqnfkqnf qnlfkqfknfanlan alfalknfkncksqnfk lqfnaplfnckzlfnzflfnndqd,aveisc davis';
@@ -27,7 +27,7 @@ class _MyTestimoniesViewState extends State<MyTestimoniesView> {
         padding: const EdgeInsets.only(top: 20),
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.only(bottom: 15),
             child: TestimonyCard(
               editable: true,
               title: title,
@@ -39,7 +39,6 @@ class _MyTestimoniesViewState extends State<MyTestimoniesView> {
                 setState(() {
                   likes++;
                 });
-                debugPrint('Likes');
               },
               onPressedCard: () {
                 Navigator.push(

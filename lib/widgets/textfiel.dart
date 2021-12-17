@@ -28,7 +28,7 @@ class MyTextField extends StatelessWidget {
         filled: true,
         hintText: hintText,
         hintStyle: kSFBody,
-        fillColor: kBlueLight1,
+        fillColor: kBlueLight2,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(

@@ -40,12 +40,12 @@ class _MyCheckBoxState extends State<MyCheckBox> {
                         ? FontAwesomeIcons.check
                         : null,
                     size: 15,
-                    color: kDarkBlue,
+                    color: kBlueDark,
                   )
                 : Container(),
           ),
           decoration: const BoxDecoration(
-            color: kBlueLight,
+            color: kBlueLight2,
             borderRadius: BorderRadius.all(
               Radius.circular(5),
             ),

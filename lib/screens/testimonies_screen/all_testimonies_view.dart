@@ -17,7 +17,8 @@ class TestimoniesView extends StatefulWidget {
 
 class _TestimoniesViewState extends State<TestimoniesView> {
   int likes = 255;
-  Color cardColor = kBlueLight;
+  Color cardColor = kBlueLight2;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,7 +30,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
         padding: const EdgeInsets.only(top: 20),
         itemBuilder: (context, index) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 20),
+            padding: const EdgeInsets.only(bottom: 15),
             child: TestimonyCard(
               editable: false,
               title: _title,

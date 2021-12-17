@@ -1,8 +1,10 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
-Future<void> showMyBottomSheet(
-    {required BuildContext context, Widget? child}) async {
+Future<void> showMyBottomSheet({
+  required BuildContext context,
+  Widget? child,
+}) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
@@ -15,7 +17,7 @@ Future<void> showMyBottomSheet(
       return Container(
         height: kBottomSheetHeight,
         decoration: const BoxDecoration(
-          color: kBlueLight,
+          color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(kButtonRadius),
             topRight: Radius.circular(kButtonRadius),
@@ -47,7 +49,7 @@ Future<void> showMyFastingBottomSheet(
       return Container(
         height: 300,
         decoration: const BoxDecoration(
-          color: kBlueLight,
+          color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(10),
             topRight: Radius.circular(10),

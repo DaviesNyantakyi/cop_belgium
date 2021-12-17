@@ -20,7 +20,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(context: context),
+      appBar: buildAppbar(context: context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
@@ -60,6 +60,24 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
     );
   }
 
+  dynamic buildAppbar({required BuildContext context}) {
+    return AppBar(
+      leading: Container(
+        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
+        child: TextButton(
+          style: kTextButtonStyle,
+          child: const Icon(
+            FontAwesomeIcons.chevronLeft,
+            color: kBlueDark,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _buildMediaControl() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -87,7 +105,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         ),
         const SizedBox(width: kBodyPadding),
         FloatingActionButton(
-          backgroundColor: kDarkBlue,
+          backgroundColor: kBlueDark,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Icon(
@@ -190,23 +208,5 @@ Widget _buildTitleDescription() {
         ),
       )
     ],
-  );
-}
-
-dynamic _buildAppbar({required BuildContext context}) {
-  return AppBar(
-    leading: Container(
-      margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-      child: TextButton(
-        style: kTextButtonStyle,
-        child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kDarkBlue,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-    ),
   );
 }

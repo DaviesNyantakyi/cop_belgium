@@ -6,27 +6,34 @@ class PresetFastingCard extends StatelessWidget {
   final int duration;
   final VoidCallback onPressed;
   final Color backgroundColor;
-  final Color fontColor;
+
   const PresetFastingCard({
     Key? key,
     required this.typeFast,
     required this.duration,
     required this.onPressed,
     required this.backgroundColor,
-    this.fontColor = kDarkBlue,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     int day = 24;
     return Container(
-      width: 180,
-      height: 169,
+      width: 160,
+      height: 167,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: const BorderRadius.all(
-          Radius.circular(15),
+          Radius.circular(20),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 0.5,
+            blurRadius: 10,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: TextButton(
         onPressed: onPressed,
@@ -39,30 +46,27 @@ class PresetFastingCard extends StatelessWidget {
             bottom: 22,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   '$duration:${day - duration} TRF',
-                  style: kSFBody.copyWith(color: fontColor),
+                  style: kSFBody.copyWith(color: Colors.white),
                 ),
               ),
-              const Expanded(child: SizedBox()),
-              Row(
-                children: [
-                  Text(
-                    '$duration',
-                    style: kSFHeadLine1.copyWith(color: fontColor),
-                  ),
-                  const SizedBox(width: 7),
-                  Text(
-                    'Hours',
-                    style: kSFCaptionBold.copyWith(
-                      fontWeight: FontWeight.w400,
-                      color: fontColor,
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 15),
+              Text(
+                '$duration',
+                style: kSFHeadLine1.copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 7),
+              Text(
+                'Hours',
+                style: kSFCaptionBold.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               )
             ],
           ),
@@ -76,26 +80,33 @@ class CustomFastingCard extends StatelessWidget {
   final String typeFast;
 
   final VoidCallback onPressed;
-  final Color backgroundColor;
+
   final Color fontColor;
   const CustomFastingCard({
     Key? key,
     required this.typeFast,
     required this.onPressed,
-    required this.backgroundColor,
-    this.fontColor = kDarkBlue,
+    this.fontColor = kBlueDark,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 180,
-      height: 169,
+      width: 160,
+      height: 167,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: kGrey,
         borderRadius: const BorderRadius.all(
-          Radius.circular(15),
+          Radius.circular(20),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            spreadRadius: 0.5,
+            blurRadius: 10,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: TextButton(
         onPressed: onPressed,
@@ -110,17 +121,17 @@ class CustomFastingCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(
+              const Icon(
                 Icons.add,
                 size: 60,
-                color: fontColor,
+                color: Colors.white,
               ),
               const SizedBox(height: 19),
               Text(
                 'Custom Fast',
                 style: kSFCaptionBold.copyWith(
                   fontWeight: FontWeight.w400,
-                  color: fontColor,
+                  color: Colors.white,
                 ),
               )
             ],

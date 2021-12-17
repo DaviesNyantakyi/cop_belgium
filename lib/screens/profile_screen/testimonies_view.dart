@@ -1,4 +1,4 @@
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
+import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
           return Padding(
             padding:
                 const EdgeInsets.symmetric(horizontal: kBodyPadding).copyWith(
-              bottom: 10,
+              bottom: 15,
             ),
             child: TestimonyCard(
               editable: true,

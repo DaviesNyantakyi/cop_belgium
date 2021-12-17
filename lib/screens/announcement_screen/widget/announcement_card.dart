@@ -18,11 +18,11 @@ class AnnouncementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 14),
       width: double.infinity,
       height: 170,
       decoration: const BoxDecoration(
-        color: kBlueLight,
+        color: kBlueLight2,
         borderRadius: BorderRadius.all(
           Radius.circular(10),
         ),

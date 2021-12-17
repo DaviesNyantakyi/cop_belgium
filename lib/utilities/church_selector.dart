@@ -14,7 +14,7 @@ class ChurchSelctor {
     required BuildContext context,
   }) {
     return ListTile(
-      tileColor: kBlueLight1,
+      tileColor: kBlueLight2,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(kButtonRadius),
@@ -39,7 +39,7 @@ class ChurchSelctor {
           const SizedBox(width: 10),
           const Icon(
             FontAwesomeIcons.chevronRight,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ],
       ),

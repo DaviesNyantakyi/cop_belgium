@@ -2,7 +2,7 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
-import 'package:dart_date/src/dart_date.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -70,7 +70,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
           padding: EdgeInsets.symmetric(horizontal: kAppbarPadding),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ),
         onPressed: () {

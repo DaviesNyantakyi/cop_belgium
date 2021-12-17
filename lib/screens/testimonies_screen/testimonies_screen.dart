@@ -1,4 +1,4 @@
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
+import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/my_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -74,7 +74,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
             labelColor: kBlue,
             isScrollable: true,
             controller: controller,
-            unselectedLabelColor: kDarkBlue,
+            unselectedLabelColor: kBlueDark,
             tabs: const [
               Tab(text: 'Tesimonies'),
               Tab(text: 'My Tesimonies'),

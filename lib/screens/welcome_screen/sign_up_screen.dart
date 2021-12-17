@@ -172,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           style: kTextButtonStyle,
           child: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -193,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         FloatingActionButton(
           heroTag: 'bt1',
           elevation: 1,
-          backgroundColor: kBlueLight1,
+          backgroundColor: kBlueLight2,
           child: Image.asset(
             'assets/images/logos/google.png',
             height: 28,
@@ -209,7 +209,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         FloatingActionButton(
           heroTag: 'bt2',
           elevation: 1,
-          backgroundColor: kBlueLight1,
+          backgroundColor: kBlueLight2,
           child: Image.asset(
             'assets/images/logos/apple.png',
             height: 28,
@@ -241,11 +241,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         onPressed: () async {
-          print(selectedChurch);
-          /* await Navigator.pushReplacementNamed(
+          await Navigator.pushReplacementNamed(
             context,
             HomeScreen.homeScreen,
-          );*/
+          );
         },
         child: const Text(
           'Sing Up',

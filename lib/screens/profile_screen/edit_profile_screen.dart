@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
-import 'package:cop_belgium/screens/welcome_screen/welcome_screen.dart';
 import 'package:cop_belgium/utilities/church_selector.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
@@ -52,7 +52,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 CircleAvatar(
                   backgroundImage: NetworkImage(profilePhoto),
                   radius: 50,
-                  backgroundColor: kDarkBlue,
+                  backgroundColor: kBlueDark,
                   child: TextButton(
                     // splash effect
                     style: kTextButtonStyle.copyWith(
@@ -108,26 +108,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildBtn(
-                      btText: 'Delete Account',
-                      textColor: kDarkRed.withOpacity(0.9),
-                      backgroundColor: kRedLight.withOpacity(0.4),
-                      onPressed: () async {
-                        String? x = await _showDeleteAlert();
-                        if (x == 'ok') {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            WelcomeScreen.welcomeScreen,
-                            ModalRoute.withName('/'),
-                          );
-                        }
-                      },
+                    SizedBox(
+                      height: 45,
+                      child: OutlinedButton(
+                        style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(kButtonRadius),
+                              ),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          _showDeleteAlert();
+                        },
+                        child: const Text(
+                          'Delete Account',
+                          style: kSFBodyBold,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 20),
                     _buildBtn(
                       btText: 'Reset Password',
-                      textColor: kGreen,
-                      backgroundColor: kGreenLight,
+                      textColor: kBlueDark,
+                      backgroundColor: kGreenLight2,
                       onPressed: () async {
                         await _showConformationAlert();
                       },
@@ -210,7 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     Color? textColor,
   }) {
     return SizedBox(
-      height: 48,
+      height: kButtonSize,
       child: TextButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
@@ -287,7 +293,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           padding: EdgeInsets.all(8.0),
           child: Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ),
         onPressed: () {

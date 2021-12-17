@@ -22,7 +22,7 @@ class PodcastEpisodesCard extends StatelessWidget {
       height: 200,
       width: 143,
       decoration: BoxDecoration(
-        color: kDarkBlue,
+        color: kBlueDark,
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
@@ -43,17 +43,22 @@ class PodcastEpisodesCard extends StatelessWidget {
               top: 14.0,
               child: Text(
                 length,
-                style: kSFSubtitle2Bold,
+                style: kSFSubtitle2Bold.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                ),
               ),
             ),
             Positioned(
               bottom: 0,
               child: Container(
+                // bottom card
+
                 height: 89,
                 width: 143,
-                decoration: BoxDecoration(
-                  color: kBlueLight.withOpacity(0.8),
-                  borderRadius: const BorderRadius.only(
+                decoration: const BoxDecoration(
+                  color: kBlueDark,
+                  borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
                   ),
@@ -67,14 +72,14 @@ class PodcastEpisodesCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: kSFSubtitle1,
+                        style: kSFSubtitle1.copyWith(color: Colors.white),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),
                       const SizedBox(height: 10),
                       Text(
                         date,
-                        style: kSFSubtitle2,
+                        style: kSFSubtitle2.copyWith(color: Colors.white),
                       ),
                     ],
                   ),

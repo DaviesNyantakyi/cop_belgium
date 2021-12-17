@@ -1,14 +1,17 @@
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
+import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/screens/welcome_screen/forgot_password_screen.dart';
 import 'package:cop_belgium/screens/welcome_screen/sign_up_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -52,6 +55,8 @@ Map<String, WidgetBuilder> _routes = {
   AnnouncementScreen.announcementScreen: (context) =>
       const AnnouncementScreen(),
   PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
+  SeeAllPodCastScreen.seeAllPodCastScreen: (context) =>
+      const SeeAllPodCastScreen(),
   PlayPodcastScreen.playPodcastScreen: (context) => const PlayPodcastScreen(),
   PodcastDetailScreen.podcastDetailScreen: (context) =>
       const PodcastDetailScreen(),
@@ -69,7 +74,7 @@ Map<String, WidgetBuilder> _routes = {
       const EditProfileScreen(user: null),
   SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
   AboutChruchScreen.aboutChruchScreen: (context) => const AboutChruchScreen(),
-  CreateTestimonyScreen.editTestimonyScreen: (context) =>
+  CreateTestimonyScreen.createTestimonyScreen: (context) =>
       const CreateTestimonyScreen(),
   TestimoniesScreen.testimoniesScreen: (context) => const TestimoniesScreen(),
   UserTestimoniesView.userTestimoniesView: (context) =>
@@ -78,17 +83,17 @@ Map<String, WidgetBuilder> _routes = {
 
 ThemeData _theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
-    backgroundColor: kDarkBlue,
+    backgroundColor: kBlueDark,
   ),
   splashColor: kBlueLight,
   iconTheme: const IconThemeData(
-    color: kDarkBlue,
+    color: kBlueDark,
     size: 25,
   ),
   appBarTheme: const AppBarTheme(
     iconTheme: IconThemeData(
       size: 25,
-      color: kDarkBlue,
+      color: kBlueDark,
       opacity: 0.5,
     ),
     elevation: 0,
@@ -96,12 +101,12 @@ ThemeData _theme = ThemeData(
   ),
   scaffoldBackgroundColor: Colors.white,
   textSelectionTheme: const TextSelectionThemeData(
-    cursorColor: kDarkBlue,
-    selectionHandleColor: kDarkBlue,
+    cursorColor: kBlueDark,
+    selectionHandleColor: kBlueDark,
   ),
   sliderTheme: SliderThemeData(
-    activeTrackColor: kDarkBlue,
-    thumbColor: kDarkBlue,
+    activeTrackColor: kBlueDark,
+    thumbColor: kBlueDark,
     inactiveTrackColor: Colors.grey,
     thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
     overlayShape: SliderComponentShape.noThumb, // removes padding
@@ -113,8 +118,36 @@ class Test extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: null),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: PresetFastingCard(
+                    onPressed: () {},
+                    duration: 10,
+                    backgroundColor: kIndigo,
+                    typeFast: 'Preset',
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(10),
+                  child: PodcastCard(
+                    image: 'assets/images/Rectangle 269.png',
+                    title:
+                        'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+                    episodes: 3,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

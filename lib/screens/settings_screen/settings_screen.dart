@@ -45,7 +45,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     leading: const Icon(
                       FontAwesomeIcons.solidBell,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'Notifications',
@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                     leading: const Icon(
                       FontAwesomeIcons.globeAfrica,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'Language',
@@ -87,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         const SizedBox(width: 11),
                         const Icon(
                           FontAwesomeIcons.chevronRight,
-                          color: kDarkBlue,
+                          color: kBlueDark,
                         ),
                       ],
                     ),
@@ -95,7 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ListTile(
                     leading: const Icon(
                       FontAwesomeIcons.solidQuestionCircle,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'About Church',
@@ -103,7 +103,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     trailing: const Icon(
                       FontAwesomeIcons.chevronRight,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     onTap: () {
                       Navigator.pushNamed(
@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onTap: () {},
                     leading: const Icon(
                       FontAwesomeIcons.headset,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'Help & Support',
@@ -127,14 +127,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     trailing: const Icon(
                       FontAwesomeIcons.chevronRight,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                   ),
                   ListTile(
                     onTap: () {},
                     leading: const Icon(
                       FontAwesomeIcons.lock,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'Privacy Policy',
@@ -142,7 +142,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     trailing: const Icon(
                       FontAwesomeIcons.chevronRight,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                   ),
                   ListTile(
@@ -151,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                     leading: const Icon(
                       FontAwesomeIcons.solidFileAlt,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                     title: const Text(
                       'Terms Of Service',
@@ -159,7 +159,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     trailing: const Icon(
                       FontAwesomeIcons.chevronRight,
-                      color: kDarkBlue,
+                      color: kBlueDark,
                     ),
                   ),
                 ],
@@ -255,7 +255,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           style: kTextButtonStyle,
           child: const Icon(
             FontAwesomeIcons.chevronLeft,
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
           onPressed: () {
             Navigator.pop(context);

@@ -22,7 +22,7 @@ class TestimonyCard extends StatelessWidget {
     required this.likes,
     required this.timeAgo,
     this.editable = false,
-    this.cardColor = kBlueLight,
+    this.cardColor,
     this.onPressedLike,
     this.onPressedCard,
   }) : super(key: key);
@@ -31,7 +31,7 @@ class TestimonyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 215,
+      height: 170,
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: const BorderRadius.all(
@@ -52,14 +52,14 @@ class TestimonyCard extends StatelessWidget {
               Text(
                 timeAgo,
                 style: kSFSubtitle2.copyWith(
-                  color: kDarkBlue,
+                  color: kBlueDark,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 testimony,
-                style: kSFBody.copyWith(color: kDarkBlue),
-                maxLines: 4,
+                style: kSFBody.copyWith(color: kBlueDark),
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 10),
@@ -86,12 +86,12 @@ class TestimonyCard extends StatelessWidget {
               Image.asset(
                 'assets/images/icons/hand_clap_icon.png',
                 filterQuality: FilterQuality.high,
-                color: kDarkBlue,
+                color: kBlueDark,
               ),
               const SizedBox(width: 7),
               Text(
                 likes.toString(),
-                style: kSFSubtitle2.copyWith(color: kDarkBlue),
+                style: kSFSubtitle2.copyWith(color: kBlueDark),
               ),
             ],
           ),
@@ -107,7 +107,7 @@ class TestimonyCard extends StatelessWidget {
         Text(
           title,
           style: kSFCaptionBold.copyWith(
-            color: kDarkBlue,
+            color: kBlueDark,
           ),
         ),
         _showEditIcon()
@@ -122,7 +122,7 @@ class TestimonyCard extends StatelessWidget {
         child: Icon(
           FontAwesomeIcons.edit,
           size: 20,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
       );
     } else {

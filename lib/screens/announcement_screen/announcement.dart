@@ -71,7 +71,7 @@ class AnnouncementScreen extends StatelessWidget {
       leading: TextButton(
         child: const Icon(
           FontAwesomeIcons.chevronLeft,
-          color: kDarkBlue,
+          color: kBlueDark,
         ),
         onPressed: () {
           Navigator.pop(context);
