@@ -1,3 +1,4 @@
+import 'package:cop_belgium/models/user_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,6 +20,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   String? gender;
   String? selectedChurch;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,18 +42,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hintText: 'Email',
                   obscureText: false,
                   keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    debugPrint(value);
-                  },
+                  onChanged: (value) {},
                 ),
                 const SizedBox(height: kTextFieldSpacing),
                 MyTextField.buildTF(
                   label: 'Password',
                   hintText: 'Password',
                   obscureText: true,
-                  onChanged: (value) {
-                    debugPrint(value);
-                  },
+                  onChanged: (value) {},
                 ),
                 const SizedBox(height: kTextFieldSpacing),
                 ChurchSelctor().buildChurchSelectorTile(

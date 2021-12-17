@@ -1,3 +1,4 @@
+import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/home_screen.dart';
@@ -53,6 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   context: context,
                   color: kYellow,
                   btnText: 'Sign In',
+                  onPressed: () {},
                 ),
                 const SizedBox(height: kButtonSpacing),
                 _buildAccountQuestion(),

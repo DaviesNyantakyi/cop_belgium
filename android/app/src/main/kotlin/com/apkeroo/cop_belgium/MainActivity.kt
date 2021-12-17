@@ -1,4 +1,4 @@
-package com.example.cop_belgium
+package com.apkeroo.cop_belgium
 
 import io.flutter.embedding.android.FlutterActivity
 

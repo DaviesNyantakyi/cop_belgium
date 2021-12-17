@@ -8,6 +8,7 @@ class Buttons {
     required String btnText,
     Color color = kYellow,
     Color fontColor = kBlueDark,
+    VoidCallback? onPressed,
   }) {
     return SizedBox(
       width: double.infinity,
@@ -23,12 +24,7 @@ class Buttons {
             ),
           ),
         ),
-        onPressed: () {
-          Navigator.pushReplacementNamed(
-            context,
-            HomeScreen.homeScreen,
-          );
-        },
+        onPressed: onPressed,
         child: Text(
           btnText,
           style: kSFBodyBold.copyWith(color: fontColor),

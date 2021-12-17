@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "51863063676",
+    "project_id": "cop-belgium",
+    "storage_bucket": "cop-belgium.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51863063676:android:6067fbd898b46a60640df9",
+        "android_client_info": {
+          "package_name": "com.apkeroo.cop_belgium"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51863063676-mov95k7s1j6mot2pvlh915t23p5lrfnm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3BZs_OVJcnQ-xXdD0G9dvVa_-qge96DA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51863063676-mov95k7s1j6mot2pvlh915t23p5lrfnm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

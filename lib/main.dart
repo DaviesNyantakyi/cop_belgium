@@ -15,6 +15,7 @@ import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.d
 import 'package:cop_belgium/screens/welcome_screen/forgot_password_screen.dart';
 import 'package:cop_belgium/screens/welcome_screen/sign_up_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -25,8 +26,11 @@ import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/screens/welcome_screen/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const WelcomeScreen(),
+      home: const SignUpScreen(),
       theme: _theme,
       routes: _routes,
     );
