@@ -1,7 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
+import 'package:cop_belgium/screens/announcement_screen/announcement_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
@@ -66,6 +67,8 @@ class _BuildBody extends StatefulWidget {
 }
 
 class _BuildBodyState extends State<_BuildBody> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   /* final List<PodcastSeriesCard> _series = const [
     //create a model with the podcast details not the cards
   ];*/
@@ -153,7 +156,7 @@ class _BuildBodyState extends State<_BuildBody> {
         Row(
           children: [
             Text(
-              '$userName',
+              'Davies Nyantakyi',
               style: kSFHeadLine2.copyWith(color: kYellow),
             ),
             const SizedBox(width: 6),

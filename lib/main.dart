@@ -1,32 +1,11 @@
-import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
-import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
-import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
-import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
-import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
-import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
-import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
-import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
-import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
-import 'package:cop_belgium/screens/welcome_screen/forgot_password_screen.dart';
-import 'package:cop_belgium/screens/welcome_screen/sign_up_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:cop_belgium/screens/announcement_screen/announcement.dart';
-import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
-import 'package:cop_belgium/screens/home_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
-import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
-import 'package:cop_belgium/screens/welcome_screen/welcome_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,16 +15,15 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const SignUpScreen(),
+      home: const CreateTestimonyScreen(),
       theme: _theme,
       routes: _routes,
+      builder: EasyLoading.init(),
     );
   }
 }
@@ -53,9 +31,12 @@ class MyApp extends StatelessWidget {
 Map<String, WidgetBuilder> _routes = {
   WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),
   SignUpScreen.signUpScreen: (context) => const SignUpScreen(),
+  AuthScreenSwitcher.authScreenSwitcher: (context) =>
+      const AuthScreenSwitcher(),
   ForgotPasswordScreen.forgotPasswordScreen: (context) =>
       const ForgotPasswordScreen(),
-  HomeScreen.homeScreen: (context) => const HomeScreen(),
+  BottomNavSelectorPage.bottomNavSelectorPage: (context) =>
+      const BottomNavSelectorPage(),
   AnnouncementScreen.announcementScreen: (context) =>
       const AnnouncementScreen(),
   PodcastScreen.podcastScreen: (context) => const PodcastScreen(),

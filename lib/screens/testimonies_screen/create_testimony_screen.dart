@@ -1,5 +1,9 @@
+import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/color_picker.dart';
+import 'package:cop_belgium/utilities/color_to_hex.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -10,7 +14,7 @@ class CreateTestimonyScreen extends StatefulWidget {
   final String? title;
   final String? text;
 
-  // changes the view to editable screen
+  // enabled edit mode
   final bool? editable;
 
   const CreateTestimonyScreen({
@@ -26,23 +30,25 @@ class CreateTestimonyScreen extends StatefulWidget {
 }
 
 class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
-  String? testimonyTitle;
-  String? testimonyText;
-  Color? color;
+  String? userId;
+  String? title;
+  String? testimony;
+  DateTime? date;
+  Color? cardColor;
 
   @override
   void initState() {
     super.initState();
 
-    color = widget.backgroundColor;
-    testimonyTitle = widget.title;
-    testimonyText = widget.text;
+    cardColor = widget.backgroundColor;
+    title = widget.title;
+    testimony = widget.text;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: color,
+      backgroundColor: cardColor,
       appBar: _buildAppbar(editable: widget.editable!),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -56,28 +62,27 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               children: [
                 FastColorPicker(
                   onColorSelected: (value) {
-                    color = value;
-                    setState(() {});
+                    setState(() {
+                      cardColor = value;
+                    });
                   },
                 ),
                 const SizedBox(height: 20),
                 _buildTF(
-                  initialValue: testimonyTitle,
+                  initialValue: title,
                   hintText: 'Testimony Title',
                   style: kSFHeadLine1,
                   onChanged: (value) {
-                    testimonyTitle = value;
-                    debugPrint(testimonyTitle);
+                    title = value;
                   },
                 ),
                 const SizedBox(height: 16),
                 _buildTF(
-                  initialValue: testimonyText,
+                  initialValue: testimony,
                   style: kSFBody,
                   hintText: 'Your testimony',
                   onChanged: (value) {
-                    testimonyText = value;
-                    debugPrint(testimonyText);
+                    testimony = value;
                   },
                 ),
               ],
@@ -110,18 +115,96 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     );
   }
 
+  Widget _buildAppbarTitle() {
+    if (widget.editable == false) {
+      return const Text(
+        'Create Testimony',
+        style: kSFCaptionBold,
+      );
+    } else {
+      return const Text(
+        'Edit Testimony',
+        style: kSFCaptionBold,
+      );
+    }
+  }
+
+  Widget _buildSubmitButton() {
+    if (widget.editable == false) {
+      return Container(
+        alignment: Alignment.center,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.only(right: kAppbarPadding),
+          ),
+          child: const Text(
+            'Post',
+            style: kSFCaptionBold,
+          ),
+          onPressed: () async {
+            setState(() {
+              date = DateTime.now();
+            });
+
+            final createdTestimony = Testimony(
+              userId: 'userId',
+              title: title,
+              testimony: testimony,
+              date: date,
+              cardColor: colorToHex(color: cardColor),
+            );
+
+            try {
+              await CloudFireStore()
+                  .createTestimony(testimony: createdTestimony);
+            } on FirebaseException catch (e) {
+              debugPrint(e.toString() + 'davies');
+            }
+          },
+        ),
+      );
+    } else {
+      return Row(
+        children: [
+          Container(
+            alignment: Alignment.center,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.only(right: kAppbarPadding),
+              ),
+              child: Text(
+                'Delete',
+                style: kSFCaptionBold.copyWith(color: kRed),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.only(right: kAppbarPadding),
+              ),
+              child: const Text(
+                'Save',
+                style: kSFCaptionBold,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ],
+      );
+    }
+  }
+
   dynamic _buildAppbar({required bool editable}) {
     return AppBar(
-      title: !editable
-          ? const Text(
-              'Create Testimony',
-              style: kSFCaptionBold,
-            )
-          : const Text(
-              'Edit Testimony',
-              style: kSFCaptionBold,
-            ),
-      backgroundColor: color,
+      title: _buildAppbarTitle(),
+      backgroundColor: cardColor,
       leading: TextButton(
         child: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -135,40 +218,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         },
       ),
       actions: [
-        Container(
-          alignment: Alignment.center,
-          child: TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.only(right: kAppbarPadding),
-            ),
-            child: Text(
-              editable
-                  ? 'Save'
-                  : 'Post', // screen is editable show Save instead of post
-              style: kSFCaptionBold,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
-        editable
-            ? Container(
-                alignment: Alignment.center,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.only(right: kAppbarPadding),
-                  ),
-                  child: Text(
-                    'Delete',
-                    style: kSFCaptionBold.copyWith(color: kRed),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              )
-            : Container(),
+        _buildSubmitButton(),
       ],
     );
   }

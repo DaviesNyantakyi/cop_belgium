@@ -6,6 +6,7 @@ class MyTextField extends StatelessWidget {
   final String? initialValue;
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
+  final String? Function(String?)? validator;
 
   final bool obscureText;
   const MyTextField({
@@ -15,17 +16,22 @@ class MyTextField extends StatelessWidget {
     this.keyboardType,
     this.onChanged,
     required this.obscureText,
+    this.validator,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: key,
+      validator: validator,
       initialValue: initialValue,
       style: kSFCaptionBold,
       keyboardType: keyboardType,
       obscureText: obscureText,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         filled: true,
+        errorMaxLines: 2,
         hintText: hintText,
         hintStyle: kSFBody,
         fillColor: kBlueLight2,
@@ -44,28 +50,6 @@ class MyTextField extends StatelessWidget {
         ),
       ),
       onChanged: onChanged,
-    );
-  }
-
-  static Widget buildTF({
-    String? initialValue,
-    required String label,
-    required String hintText,
-    required bool obscureText,
-    TextInputType? keyboardType,
-    Function(String)? onChanged,
-  }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        MyTextField(
-          hintText: hintText,
-          onChanged: onChanged,
-          initialValue: initialValue,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-        )
-      ],
     );
   }
 }

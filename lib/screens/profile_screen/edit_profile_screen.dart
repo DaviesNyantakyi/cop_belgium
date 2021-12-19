@@ -69,26 +69,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                MyTextField.buildTF(
+                MyTextField(
                   initialValue: widget.user!.firstName,
-                  label: 'First Name',
-                  hintText: 'John',
+                  hintText: 'First Name',
                   obscureText: false,
                   onChanged: (value) {},
                 ),
                 const SizedBox(height: kTextFieldSpacing),
-                MyTextField.buildTF(
+                MyTextField(
                   initialValue: widget.user!.lastName,
-                  label: 'Last Name',
-                  hintText: 'John',
+                  hintText: 'Last Name',
                   obscureText: false,
                   onChanged: (value) {},
                 ),
                 const SizedBox(height: kTextFieldSpacing),
-                MyTextField.buildTF(
+                MyTextField(
                   initialValue: widget.user!.email,
-                  label: 'Email',
-                  hintText: 'John',
+                  hintText: 'Email',
                   obscureText: false,
                   onChanged: (value) {},
                 ),

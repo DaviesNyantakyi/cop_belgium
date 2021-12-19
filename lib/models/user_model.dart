@@ -3,13 +3,14 @@ import 'package:cop_belgium/models/podcast_model.dart';
 
 class CopUser {
   String? photo;
+  String? title;
   String firstName;
   String lastName;
   String email;
   String gender;
   String churchLocation;
-  String? title;
   bool? isFasting;
+  bool isAdmin;
   List<FastingInfo>? fastingHistory;
   List<PodCast>? favoratePodcast;
   Map<String, dynamic>? preferences;
@@ -19,6 +20,7 @@ class CopUser {
   CopUser({
     this.photo,
     this.title,
+    required this.isAdmin,
     required this.firstName,
     required this.lastName,
     required this.email,

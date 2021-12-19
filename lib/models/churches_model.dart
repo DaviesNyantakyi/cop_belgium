@@ -5,8 +5,8 @@ class Church {
   final String postcode;
   final String street;
   final String city;
-  final String? telephoneNumber;
-  final String? email;
+  final String telephoneNumber;
+  final String email;
   final List<String> languages;
   final int? totalMembers;
   final List<CopUser> leaders;
@@ -16,8 +16,8 @@ class Church {
     required this.postcode,
     required this.street,
     required this.city,
-    this.telephoneNumber,
-    this.email,
+    required this.telephoneNumber,
+    required this.email,
     required this.languages,
     this.totalMembers,
     required this.leaders,

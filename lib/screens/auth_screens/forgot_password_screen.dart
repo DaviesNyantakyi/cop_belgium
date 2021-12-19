@@ -1,7 +1,12 @@
+import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:regexpattern/src/regex_extension.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static String forgotPasswordScreen = 'forgotPasswordScreen';
@@ -12,6 +17,65 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  String? email;
+  bool isLoading = false;
+
+  final _emailFormKey = GlobalKey<FormState>();
+
+  Future<void> submit() async {
+    bool validEmail = _emailFormKey.currentState!.validate();
+
+    if (validEmail) {
+      try {
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+
+        await EasyLoading.show(
+          maskType: EasyLoadingMaskType.black,
+          indicator: const CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        );
+
+        await Authentication().sendResetPassword(email: email);
+
+        await EasyLoading.dismiss();
+        FocusScope.of(context).unfocus();
+        _showMailConformationAlert();
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } on FirebaseAuthException catch (e) {
+        await EasyLoading.dismiss();
+        kshowSnackbar(
+          backgroundColor: kRedLight2,
+          context: context,
+          child: Text(
+            e.message.toString(),
+            style: kSFBody,
+          ),
+        );
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } finally {
+        if (mounted) {
+          await EasyLoading.dismiss();
+          setState(() {
+            isLoading = false;
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,21 +92,36 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               children: [
                 _buildFrgPassText(),
                 const SizedBox(height: 29),
-                MyTextField.buildTF(
-                  label: 'Email',
-                  hintText: 'Email',
-                  obscureText: false,
-                  keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) {
-                    debugPrint(value);
-                  },
-                ),
+                _buildEmailForm(),
                 const SizedBox(height: kButtonSpacing),
                 _buildSendBtn(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildEmailForm() {
+    return Form(
+      key: _emailFormKey,
+      child: MyTextField(
+        hintText: 'Email',
+        obscureText: false,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter email';
+          }
+          if (!value.isEmail()) {
+            return 'Please enter valid email address';
+          }
+          return null;
+        },
+        keyboardType: TextInputType.emailAddress,
+        onChanged: (value) {
+          email = value;
+        },
       ),
     );
   }
@@ -79,7 +158,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       height: 48,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(kYellow),
+          backgroundColor: MaterialStateProperty.all(
+            isLoading ? kGrey : kYellow,
+          ),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -88,9 +169,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
         ),
-        onPressed: () async {
-          _showMailConformationAlert();
-        },
+        onPressed: isLoading ? null : submit,
         child: const Text(
           'Send',
           style: kSFBodyBold,

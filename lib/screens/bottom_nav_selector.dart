@@ -6,15 +6,15 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class HomeScreen extends StatefulWidget {
-  static String homeScreen = 'HomeScreen';
-  const HomeScreen({Key? key}) : super(key: key);
+class BottomNavSelectorPage extends StatefulWidget {
+  static String bottomNavSelectorPage = 'bottomNavSelectorPage';
+  const BottomNavSelectorPage({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _BottomNavSelectorPageState createState() => _BottomNavSelectorPageState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
   // selected bottom navigation bar item
   int _selectedIndex = 0;
 

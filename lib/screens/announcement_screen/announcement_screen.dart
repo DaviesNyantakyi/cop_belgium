@@ -1,8 +1,8 @@
-import 'package:cop_belgium/screens/announcement_screen/widget/announcement_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
 
 String _title =
     'Announcements Lorem ipsumuievbiiiiiiiihvizoeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee';
