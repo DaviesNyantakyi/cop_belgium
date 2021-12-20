@@ -2,19 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 //TODO: overflow error on no testimonies image on small screen
-class MyTestimoniesView extends StatefulWidget {
-  const MyTestimoniesView({Key? key}) : super(key: key);
+class EditTestimoniesView extends StatefulWidget {
+  const EditTestimoniesView({Key? key}) : super(key: key);
 
   @override
-  State<MyTestimoniesView> createState() => _MyTestimoniesViewState();
+  State<EditTestimoniesView> createState() => _EditTestimoniesViewState();
 }
 
-class _MyTestimoniesViewState extends State<MyTestimoniesView> {
+class _EditTestimoniesViewState extends State<EditTestimoniesView> {
   User? currentUser = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -24,8 +25,10 @@ class _MyTestimoniesViewState extends State<MyTestimoniesView> {
         vertical: kBodyPadding,
       ),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream:
-            FirebaseFirestore.instance.collection('testimonies').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('testimonies')
+            .orderBy('date', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           List<TestimonyInfo> allTestmonies = [];
 
@@ -100,26 +103,58 @@ class _MyTestimoniesViewState extends State<MyTestimoniesView> {
             itemBuilder: (context, index) {
               return TestimonyCard(
                 editable: true,
-                title: allTestmonies[index].title,
-                testimony: allTestmonies[index].testimony,
-                likes: allTestmonies[index].likes,
-                date: allTestmonies[index].date,
-                cardColor: Color(
-                  int.parse(allTestmonies[index].cardColor.toString()),
-                ),
+                testimonyInfo: allTestmonies[index],
                 onPressedLike: () {},
-                onPressedCard: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                onPressedEdit: () async {
+                  await Navigator.push(context,
+                      MaterialPageRoute(builder: (context) {
                     return CreateTestimonyScreen(
                       editable: true,
                       testimonyInfo: allTestmonies[index],
                     );
                   }));
                 },
+                onPressedCard: () {
+                  _showBottomSheet(
+                    context: context,
+                    title: allTestmonies[index].title!,
+                    testimony: allTestmonies[index].testimony!,
+                  );
+                },
               );
             },
           );
         },
+      ),
+    );
+  }
+
+  Future<void> _showBottomSheet({
+    required BuildContext context,
+    required String title,
+    required String testimony,
+  }) {
+    return showMyBottomSheet(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: kSFHeadLine2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              testimony,
+              style: kSFBody,
+            ),
+          ),
+        ],
       ),
     );
   }

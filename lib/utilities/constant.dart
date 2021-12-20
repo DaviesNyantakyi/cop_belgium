@@ -125,7 +125,7 @@ const double kAppbarPadding = 20.0;
 const double kBodyPadding = 15.0;
 
 const double kBodyBottomPadding = 40.0;
-const double kBottomSheetHeight = 400;
+const double kBottomSheetHeight = 470;
 
 // spacing between each textfield
 const double kTextFieldSpacing = 12;

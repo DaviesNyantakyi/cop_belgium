@@ -1,40 +1,34 @@
+import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TestimonyCard extends StatelessWidget {
-  final String? title;
-  final String? testimony;
-  final DateTime? date;
-  final int? likes;
   final VoidCallback? onPressedLike;
   final VoidCallback? onPressedCard;
-
-  final Color? cardColor;
+  final VoidCallback? onPressedEdit;
+  final TestimonyInfo testimonyInfo;
 
   //show the edit icon
   final bool? editable;
 
   const TestimonyCard({
     Key? key,
-    required this.title,
-    required this.testimony,
-    required this.likes,
-    required this.date,
     this.editable = false,
-    this.cardColor,
     this.onPressedLike,
     this.onPressedCard,
+    this.onPressedEdit,
+    required this.testimonyInfo,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 170,
+      height: 185,
       decoration: BoxDecoration(
-        color: cardColor,
+        color: Color(int.parse(testimonyInfo.cardColor.toString())),
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
@@ -49,16 +43,17 @@ class TestimonyCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTitleIcon(),
+              _buildName(),
               const SizedBox(height: 8),
               Text(
-                FormalDates.format(date: date),
+                FormalDates.format(date: testimonyInfo.date),
                 style: kSFSubtitle2.copyWith(
                   color: kBlueDark,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                testimony!,
+                testimonyInfo.testimony.toString(),
                 style: kSFBody.copyWith(color: kBlueDark),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -72,12 +67,23 @@ class TestimonyCard extends StatelessWidget {
     );
   }
 
+  Widget _buildName() {
+    if (testimonyInfo.anonymous == false) {
+      return Text(
+        'by ${testimonyInfo.userName}',
+        style: kSFSubtitle2.copyWith(
+          color: kBlueDark,
+        ),
+      );
+    } else {
+      return Container();
+    }
+  }
+
   Widget _buildLikeButton() {
     return Flexible(
       child: TextButton(
-        onPressed: editable == false
-            ? onPressedLike
-            : null, // disable  like button when card is editable
+        onPressed: onPressedLike,
         style: kTextButtonStyle,
         child: SizedBox(
           height: 25,
@@ -91,7 +97,7 @@ class TestimonyCard extends StatelessWidget {
               ),
               const SizedBox(width: 7),
               Text(
-                likes.toString(),
+                testimonyInfo.likes.toString(),
                 style: kSFSubtitle2.copyWith(color: kBlueDark),
               ),
             ],
@@ -103,31 +109,43 @@ class TestimonyCard extends StatelessWidget {
 
   Widget _buildTitleIcon() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(
+        Expanded(
+          flex: 8,
           child: Text(
-            title!,
+            testimonyInfo.title.toString(),
             style: kSFCaptionBold.copyWith(
               color: kBlueDark,
             ),
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        _showEditIcon()
+        const Expanded(
+          flex: 1,
+          child: SizedBox(width: 10),
+        ),
+        Expanded(
+          flex: 1,
+          child: _showEditIcon(),
+        )
       ],
     );
   }
 
   Widget _showEditIcon() {
     if (editable == true) {
-      return const SizedBox(
+      return SizedBox(
         width: 30,
-        child: Icon(
-          FontAwesomeIcons.edit,
-          size: 20,
-          color: kBlueDark,
+        height: 40,
+        child: TextButton(
+          style: kTextButtonStyle,
+          child: const Icon(
+            FontAwesomeIcons.edit,
+            size: 20,
+            color: kBlueDark,
+          ),
+          onPressed: onPressedEdit,
         ),
       );
     } else {

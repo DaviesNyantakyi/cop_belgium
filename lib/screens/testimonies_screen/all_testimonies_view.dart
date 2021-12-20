@@ -20,8 +20,10 @@ class _TestimoniesViewState extends State<TestimoniesView> {
       padding: const EdgeInsets.symmetric(
           horizontal: kBodyPadding, vertical: kBodyPadding),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream:
-            FirebaseFirestore.instance.collection('testimonies').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('testimonies')
+            .orderBy('date', descending: true)
+            .snapshots(),
         builder: (context, snapshot) {
           List<TestimonyInfo> allTestimonies = [];
 
@@ -88,10 +90,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
             itemCount: allTestimonies.length,
             itemBuilder: (context, index) {
               return TestimonyCard(
-                title: allTestimonies[index].title,
-                testimony: allTestimonies[index].testimony,
-                likes: allTestimonies[index].likes,
-                date: allTestimonies[index].date,
+                testimonyInfo: allTestimonies[index],
                 onPressedCard: () {
                   _showBottomSheet(
                     context: context,
@@ -100,11 +99,6 @@ class _TestimoniesViewState extends State<TestimoniesView> {
                   );
                 },
                 onPressedLike: () {},
-                cardColor: Color(
-                  int.parse(
-                    allTestimonies[index].cardColor.toString(),
-                  ),
-                ),
               );
             },
           );

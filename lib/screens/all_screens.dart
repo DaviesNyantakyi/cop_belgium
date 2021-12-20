@@ -40,5 +40,5 @@ export 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 //Testimonies Screens
 export 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
 export 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
-export 'package:cop_belgium/screens/testimonies_screen/my_testimonies_view.dart';
+export 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
 export 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';

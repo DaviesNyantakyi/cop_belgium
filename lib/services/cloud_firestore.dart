@@ -30,11 +30,9 @@ class CloudFireStore {
 
   Future<void> updateTestimony({required TestimonyInfo testimony}) async {
     try {
-      _firestore.collection('testimonies').doc(testimony.id).update({
-        'title': testimony.title,
-        'testimony': testimony.testimony,
-        'cardColor': testimony.cardColor,
-      });
+      await _firestore.collection('testimonies').doc(testimony.id).update(
+            TestimonyInfo.toMap(map: testimony),
+          );
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

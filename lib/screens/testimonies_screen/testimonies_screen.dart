@@ -1,5 +1,5 @@
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen/my_testimonies_view.dart';
+import 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
           controller: _tabController,
           children: const [
             TestimoniesView(),
-            MyTestimoniesView(),
+            EditTestimoniesView(),
           ],
         ),
       ),

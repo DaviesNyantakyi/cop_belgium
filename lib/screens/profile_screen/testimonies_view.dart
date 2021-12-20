@@ -103,13 +103,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
             itemBuilder: (context, index) {
               return TestimonyCard(
                 editable: true,
-                title: allTestmonies[index].title,
-                testimony: allTestmonies[index].testimony,
-                likes: allTestmonies[index].likes,
-                date: allTestmonies[index].date,
-                cardColor: Color(
-                  int.parse(allTestmonies[index].cardColor.toString()),
-                ),
+                testimonyInfo: allTestmonies[index],
                 onPressedLike: () {},
                 onPressedCard: () {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
