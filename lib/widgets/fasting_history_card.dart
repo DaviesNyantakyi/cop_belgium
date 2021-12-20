@@ -1,18 +1,16 @@
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 
 const double _cardHeight = 87.13;
 
 class FastingHistoryCard extends StatelessWidget {
-  final String startDate;
-  final String endDate;
-  final int duration;
+  final FastingInfo fastingInfo;
 
   const FastingHistoryCard({
     Key? key,
-    required this.startDate,
-    required this.endDate,
-    required this.duration,
+    required this.fastingInfo,
   }) : super(key: key);
 
   @override
@@ -20,9 +18,12 @@ class FastingHistoryCard extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildHeader(duration: duration),
+        _buildHeader(duration: fastingInfo.duration.inHours),
         const SizedBox(width: 10),
-        _buildTrailing(startDate: startDate, endDate: endDate),
+        _buildTrailing(
+          startDate: FormalDates.format(date: fastingInfo.startDate),
+          endDate: FormalDates.format(date: fastingInfo.endDate),
+        ),
       ],
     );
   }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,24 @@ class CloudFireStore {
       }
     } catch (e) {
       debugPrint(e.toString() + ' davies');
+      rethrow;
+    }
+  }
+
+  Future<void> createFast({required FastingInfo fastingInfo}) async {
+    try {
+      if (fastingInfo.userId != null &&
+          fastingInfo.startDate != null &&
+          fastingInfo.endDate != null &&
+          fastingInfo.goalDate != null) {
+        final docRef = await _firestore
+            .collection('Fasting Histories')
+            .add(FastingInfo.toMap(map: fastingInfo));
+
+        await docRef.update({'id': docRef.id});
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }

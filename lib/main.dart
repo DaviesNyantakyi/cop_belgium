@@ -76,12 +76,12 @@ ThemeData _theme = ThemeData(
     size: 25,
   ),
   appBarTheme: const AppBarTheme(
+    elevation: 0,
     iconTheme: IconThemeData(
       size: 25,
       color: kBlueDark,
       opacity: 0.5,
     ),
-    elevation: 0,
     backgroundColor: Colors.white,
   ),
   scaffoldBackgroundColor: Colors.white,

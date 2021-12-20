@@ -6,12 +6,11 @@ class FormalDates {
     return date!.format('dd MMM H:mm');
   }
 
-  static String getEndDate({
-    required DateTime date,
+  static String getFastGoalDate({
     required FastingInfo? fastingInfo,
   }) {
-    return date
-        .add(Duration(seconds: fastingInfo!.duration!.inSeconds))
+    return fastingInfo!.startDate!
+        .add(Duration(seconds: fastingInfo.duration.inSeconds))
         .format('dd MMM H:mm');
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
@@ -5,6 +6,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 
 import 'package:cop_belgium/utilities/remove_scroll_glow.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -17,41 +19,34 @@ class CreateFastingScreens extends StatefulWidget {
 }
 
 class _CreateFastingScreensState extends State<CreateFastingScreens> {
+  User? auth = FirebaseAuth.instance.currentUser;
+
   List<FastingInfo> fastingPresets = [
+    //When the user presses the card the startDate and endDate are set.
+    // If set in object the time can differ from the acctual time the user presses the button.
     FastingInfo(
       type: 'Custom',
-      duration: const Duration(hours: 13),
-      dateStart: DateTime.now(),
+      duration: const Duration(hours: 10),
     ),
     FastingInfo(
       type: 'Custom',
       duration: const Duration(hours: 16),
-      dateStart: DateTime.now(),
     ),
     FastingInfo(
       type: 'Custom',
       duration: const Duration(hours: 18),
-      dateStart: DateTime.now(),
     ),
     FastingInfo(
       type: 'Custom',
-      duration: const Duration(hours: 20),
-      dateStart: DateTime.now(),
-    ),
-    FastingInfo(
-      type: 'Custom',
-      duration: const Duration(hours: 36),
-      dateStart: DateTime.now(),
+      duration: const Duration(hours: 24),
     ),
   ];
-
-  //fasting card
-  //fasting info
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 3,
         title: const Padding(
           padding: EdgeInsets.only(left: kBodyPadding),
           child: Text(
@@ -77,12 +72,15 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                 ),
                 itemCount: fastingPresets.length + 1, //  +1 for the custom card
                 itemBuilder: (BuildContext ctx, index) {
-                  if (index != 5) {
+                  if (index != 4) {
                     return PresetFastingCard(
                       typeFast: 'Preset',
-                      duration: fastingPresets[index].duration!.inHours,
+                      duration: fastingPresets[index].duration.inHours,
                       backgroundColor: kLightColors[index],
                       onPressed: () {
+                        //when the user selects card the start date and goal are calculated.
+                        _calculateStartGoalDate(index: index);
+
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
                             return FastingScreen(
@@ -94,6 +92,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                     );
                   } else {
                     return CustomFastingCard(
+                      //Todo: fix this
                       typeFast: 'Custom',
                       onPressed: () {
                         showMyFastingBottomSheet(
@@ -111,6 +110,20 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
         ),
       ),
     );
+  }
+
+  void _calculateStartGoalDate({required int index}) {
+    //when the user selects a card the startDate and goalDate are calculated.
+    //before going to the fasting screen.
+    setState(() {
+      final currentDate = DateTime.now();
+      fastingPresets[index].startDate = currentDate;
+      fastingPresets[index].goalDate = currentDate.add(
+        Duration(
+          seconds: fastingPresets[index].duration.inSeconds,
+        ),
+      );
+    });
   }
 }
 
@@ -151,7 +164,7 @@ class FastingPicker extends StatefulWidget {
 }
 
 class _FastingPickerState extends State<FastingPicker> {
-  Duration? duration = const Duration(days: 1, hours: 0);
+  Duration? chosenDuration = const Duration(days: 1, hours: 0);
   DateTime startDate = DateTime.now();
 
   // chosen custom fast values passed in in the duration oject
@@ -179,7 +192,7 @@ class _FastingPickerState extends State<FastingPicker> {
                     onChanged: (value) {
                       setState(() {
                         days = value;
-                        duration = Duration(days: days, hours: hours);
+                        chosenDuration = Duration(days: days, hours: hours);
                       });
                     },
                   ),
@@ -203,7 +216,7 @@ class _FastingPickerState extends State<FastingPicker> {
                     onChanged: (value) {
                       setState(() {
                         hours = value;
-                        duration = Duration(days: days, hours: hours);
+                        chosenDuration = Duration(days: days, hours: hours);
                       });
                     },
                   ),
@@ -221,19 +234,22 @@ class _FastingPickerState extends State<FastingPicker> {
           child: _buildBtn(
             btText: 'Start Fast',
             onPressed: () async {
+              final currentDate = DateTime.now();
+
               Navigator.pop(context);
-              await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) {
+              await Navigator.push(context, MaterialPageRoute(
+                builder: (context) {
                   return FastingScreen(
                     fastingInfo: FastingInfo(
-                      duration: duration,
-                      dateStart: startDate,
+                      userId: FirebaseAuth.instance.currentUser!.uid,
                       type: 'Custom',
+                      duration: chosenDuration!,
+                      startDate: currentDate,
+                      goalDate: currentDate.add(chosenDuration!),
                     ),
                   );
-                }),
-              );
+                },
+              ));
             },
             buttonColor: kGreen,
           ),

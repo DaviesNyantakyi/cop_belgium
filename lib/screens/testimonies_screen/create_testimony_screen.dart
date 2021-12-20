@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/color_picker.dart';
-import 'package:cop_belgium/utilities/color_to_hex.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';

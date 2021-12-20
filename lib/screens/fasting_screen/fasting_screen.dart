@@ -1,8 +1,12 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/fasting_history_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dart_date/dart_date.dart';
@@ -21,26 +25,29 @@ class FastingScreen extends StatefulWidget {
 
 class _FastingScreenState extends State<FastingScreen> {
   final CountDownController _controller = CountDownController();
+
+  // if fasle not started fasting
   bool isFasting = false;
   int peopleFasting = 0;
+  DateTime? endDate;
+  String? note;
 
   FastingInfo? fastingInfo;
-  DateTime currenDate = DateTime.now();
 
   String getStartDate() {
-    return currenDate.format('dd MMM H:mm');
+    return FormalDates.format(date: fastingInfo!.startDate);
   }
 
   String getEndDate() {
-    return currenDate
-        .add(Duration(seconds: fastingInfo!.duration!.inSeconds))
-        .format('dd MMM H:mm');
+    return FormalDates.getFastGoalDate(fastingInfo: fastingInfo);
   }
 
   @override
   void initState() {
     super.initState();
-    fastingInfo = widget.fastingInfo;
+    setState(() {
+      fastingInfo = widget.fastingInfo;
+    });
   }
 
   @override
@@ -75,7 +82,7 @@ class _FastingScreenState extends State<FastingScreen> {
                               controller: _controller,
                               width: 240,
                               height: 240,
-                              duration: fastingInfo!.duration!.inSeconds,
+                              duration: fastingInfo!.duration.inSeconds,
                               isReverse: true,
                               strokeWidth: 20,
                               fillColor:
@@ -89,7 +96,8 @@ class _FastingScreenState extends State<FastingScreen> {
                                 setState(() {
                                   // reset the fasting timer
                                   isFasting = false;
-                                  Navigator.push(
+                                  //Save fasting info to firstore
+                                  /* Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
@@ -98,7 +106,7 @@ class _FastingScreenState extends State<FastingScreen> {
                                         );
                                       },
                                     ),
-                                  );
+                                  );*/
                                 });
                               },
                             ),
@@ -113,9 +121,10 @@ class _FastingScreenState extends State<FastingScreen> {
                                   ? 'Start Fasting'
                                   : 'End Fast Early',
                               buttonColor: kGreen,
-                              onPressed: () {
+                              onPressed: () async {
                                 if (isFasting == false) {
-                                  // has started fasting
+                                  // isnot started fasting
+
                                   setState(() {
                                     isFasting = true;
                                     peopleFasting++;
@@ -138,15 +147,22 @@ class _FastingScreenState extends State<FastingScreen> {
                                   // before pushing add to firebase history screen ad to firebase
                                   // nothing will be passed in the fasting history object
                                   // because it will show the history form firebase
-                                  Navigator.push(
+                                  setState(() {
+                                    endDate = DateTime.now();
+                                    fastingInfo!.endDate = endDate;
+                                    fastingInfo!.userId =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    fastingInfo!.note = note;
+                                  });
+
+                                  try {
+                                    await CloudFireStore()
+                                        .createFast(fastingInfo: fastingInfo!);
+                                  } on FirebaseException catch (e) {}
+
+                                  await Navigator.pushNamed(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return FastingHistoryScreen(
-                                          fastingInfo: fastingInfo,
-                                        );
-                                      },
-                                    ),
+                                    FastingHistoryScreen.fastingHistoryScreen,
                                   );
                                 }
                               },
