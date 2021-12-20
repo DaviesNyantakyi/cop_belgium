@@ -37,6 +37,7 @@ class _ProfileScreensState extends State<ProfileScreens>
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
+        physics: const BouncingScrollPhysics(),
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, value) {
           return [
@@ -44,7 +45,7 @@ class _ProfileScreensState extends State<ProfileScreens>
           ];
         },
         body: TabBarView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           controller: tabController,
           children: const <Widget>[
             UserSavedPodcastView(),

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const CreateTestimonyScreen(),
+      home: const AuthScreenSwitcher(),
       theme: _theme,
       routes: _routes,
       builder: EasyLoading.init(),

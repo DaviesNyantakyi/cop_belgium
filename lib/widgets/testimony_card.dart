@@ -1,12 +1,13 @@
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TestimonyCard extends StatelessWidget {
-  final String title;
-  final String testimony;
-  final String timeAgo;
-  final int likes;
+  final String? title;
+  final String? testimony;
+  final DateTime? date;
+  final int? likes;
   final VoidCallback? onPressedLike;
   final VoidCallback? onPressedCard;
 
@@ -20,7 +21,7 @@ class TestimonyCard extends StatelessWidget {
     required this.title,
     required this.testimony,
     required this.likes,
-    required this.timeAgo,
+    required this.date,
     this.editable = false,
     this.cardColor,
     this.onPressedLike,
@@ -50,14 +51,14 @@ class TestimonyCard extends StatelessWidget {
               _buildTitleIcon(),
               const SizedBox(height: 8),
               Text(
-                timeAgo,
+                FormalDates.format(date: date),
                 style: kSFSubtitle2.copyWith(
                   color: kBlueDark,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
-                testimony,
+                testimony!,
                 style: kSFBody.copyWith(color: kBlueDark),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -104,10 +105,14 @@ class TestimonyCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: kSFCaptionBold.copyWith(
-            color: kBlueDark,
+        Flexible(
+          child: Text(
+            title!,
+            style: kSFCaptionBold.copyWith(
+              color: kBlueDark,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         _showEditIcon()

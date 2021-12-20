@@ -2,8 +2,8 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:dart_date/src/dart_date.dart';
 
 class FormalDates {
-  static String getStartDate({required DateTime date}) {
-    return date.format('dd MMM H:mm');
+  static String format({required DateTime? date}) {
+    return date!.format('dd MMM H:mm');
   }
 
   static String getEndDate({

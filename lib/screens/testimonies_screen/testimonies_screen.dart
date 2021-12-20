@@ -20,7 +20,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 2);
+    _tabController = TabController(vsync: this, length: 2, initialIndex: 0);
   }
 
   @override
@@ -29,6 +29,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
       appBar: _buildAppbar(controller: _tabController),
       body: SafeArea(
         child: TabBarView(
+          physics: const BouncingScrollPhysics(),
           controller: _tabController,
           children: const [
             TestimoniesView(),
@@ -76,8 +77,8 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
             controller: controller,
             unselectedLabelColor: kBlueDark,
             tabs: const [
-              Tab(text: 'Tesimonies'),
-              Tab(text: 'My Tesimonies'),
+              Tab(text: 'Testimonies'),
+              Tab(text: 'Edit Testimonies'),
             ],
           ),
         ),

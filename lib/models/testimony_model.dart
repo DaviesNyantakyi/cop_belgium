@@ -1,15 +1,14 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-
-class Testimony {
-  final String? userId;
+class TestimonyInfo {
+  String? id;
+  final String userId;
   String? title;
   String? testimony;
-  double? likes;
+  int? likes;
   final DateTime? date;
   String? cardColor;
 
-  Testimony({
+  TestimonyInfo({
+    this.id,
     required this.userId,
     required this.title,
     required this.testimony,
@@ -18,14 +17,27 @@ class Testimony {
     this.cardColor,
   });
 
-  static Map<String, dynamic> toMap({required Testimony testimony}) {
+  static Map<String, dynamic> toMap({required TestimonyInfo map}) {
     return {
-      'userId': testimony.userId,
-      'title': testimony.title,
-      'testimony': testimony.testimony,
-      'likes': testimony.likes,
-      'date': testimony.date,
-      'cardColor': testimony.cardColor,
+      'id': map.id,
+      'userId': map.userId,
+      'title': map.title,
+      'testimony': map.testimony,
+      'likes': map.likes,
+      'date': map.date,
+      'cardColor': map.cardColor,
     };
+  }
+
+  static TestimonyInfo fromMap({required Map<String, dynamic> map}) {
+    return TestimonyInfo(
+      id: map['id'],
+      userId: map['userId'],
+      title: map['title'],
+      testimony: map['testimony'],
+      date: map['date'].toDate(),
+      cardColor: map['cardColor'],
+      likes: map['likes'],
+    );
   }
 }

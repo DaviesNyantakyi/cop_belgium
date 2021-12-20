@@ -45,7 +45,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
               padding: const EdgeInsets.only(bottom: 16),
               child: FastingHistoryCard(
                 duration: fastingInfo!.duration!.inHours,
-                startDate: FormalDates.getStartDate(date: currenDate),
+                startDate: FormalDates.format(date: currenDate),
                 endDate: FormalDates.getEndDate(
                   date: currenDate,
                   fastingInfo: fastingInfo,

@@ -8,10 +8,11 @@ class Church {
   final String telephoneNumber;
   final String email;
   final List<String> languages;
-  final int? totalMembers;
+  final List<CopUser> members;
   final List<CopUser> leaders;
 
   Church({
+    required this.leaders,
     required this.name,
     required this.postcode,
     required this.street,
@@ -19,7 +20,6 @@ class Church {
     required this.telephoneNumber,
     required this.email,
     required this.languages,
-    this.totalMembers,
-    required this.leaders,
+    required this.members,
   });
 }

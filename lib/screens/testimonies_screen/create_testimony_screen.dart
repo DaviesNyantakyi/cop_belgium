@@ -1,28 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/color_picker.dart';
 import 'package:cop_belgium/utilities/color_to_hex.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CreateTestimonyScreen extends StatefulWidget {
   static String createTestimonyScreen = 'editTestimonyScreen';
 
-  final Color? backgroundColor;
-  final String? title;
-  final String? text;
-
   // enabled edit mode
   final bool? editable;
+  final TestimonyInfo? testimonyInfo;
 
   const CreateTestimonyScreen({
     Key? key,
-    this.backgroundColor = kBlueLight2,
-    this.title,
-    this.text,
     this.editable = false,
+    this.testimonyInfo,
   }) : super(key: key);
 
   @override
@@ -34,15 +33,22 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   String? title;
   String? testimony;
   DateTime? date;
-  Color? cardColor;
+  Color? cardColor = kBlueLight2;
 
   @override
   void initState() {
     super.initState();
 
-    cardColor = widget.backgroundColor;
-    title = widget.title;
-    testimony = widget.text;
+    setState(() {
+      if (widget.testimonyInfo != null) {
+        title = widget.testimonyInfo!.title;
+        testimony = widget.testimonyInfo!.testimony;
+        date = widget.testimonyInfo!.date;
+        cardColor = Color(
+          int.parse(widget.testimonyInfo!.cardColor.toString()),
+        );
+      }
+    });
   }
 
   @override
@@ -70,7 +76,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 const SizedBox(height: 20),
                 _buildTF(
                   initialValue: title,
-                  hintText: 'Testimony Title',
+                  hintText: 'Title',
                   style: kSFHeadLine1,
                   onChanged: (value) {
                     title = value;
@@ -80,7 +86,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 _buildTF(
                   initialValue: testimony,
                   style: kSFBody,
-                  hintText: 'Your testimony',
+                  hintText: 'Testimony',
                   onChanged: (value) {
                     testimony = value;
                   },
@@ -146,19 +152,34 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               date = DateTime.now();
             });
 
-            final createdTestimony = Testimony(
-              userId: 'userId',
+            final createdTestimony = TestimonyInfo(
+              userId: FirebaseAuth.instance.currentUser!.uid,
               title: title,
               testimony: testimony,
               date: date,
-              cardColor: colorToHex(color: cardColor),
+              cardColor: cardColor!.value.toString(),
+              likes: 0,
             );
 
             try {
-              await CloudFireStore()
-                  .createTestimony(testimony: createdTestimony);
+              if (title != null &&
+                  title!.isNotEmpty &&
+                  testimony != null &&
+                  testimony!.isNotEmpty) {
+                await CloudFireStore()
+                    .createTestimony(testimony: createdTestimony);
+                Navigator.pop(context);
+              } else {
+                kshowSnackbar(
+                  context: context,
+                  child: Text(
+                    'Please add title and testimony',
+                    style: kSFBody.copyWith(color: Colors.black),
+                  ),
+                );
+              }
             } on FirebaseException catch (e) {
-              debugPrint(e.toString() + 'davies');
+              debugPrint(e.toString());
             }
           },
         ),
@@ -176,8 +197,16 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 'Delete',
                 style: kSFCaptionBold.copyWith(color: kRed),
               ),
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                var result = await _showDeleteAlert();
+                if (result == 'ok') {
+                  // get doc id to delete from collection
+
+                  CloudFireStore()
+                      .deleteTestimony(testimony: widget.testimonyInfo);
+
+                  Navigator.pop(context);
+                }
               },
             ),
           ),
@@ -191,14 +220,74 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 'Save',
                 style: kSFCaptionBold,
               ),
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                final createdTestimony = TestimonyInfo(
+                  userId: widget.testimonyInfo!.userId,
+                  id: widget.testimonyInfo!.id,
+                  title: title,
+                  testimony: testimony,
+                  date: widget.testimonyInfo!.date,
+                  cardColor: cardColor!.value.toString(),
+                );
+                try {
+                  if (title != null &&
+                      title!.isNotEmpty &&
+                      testimony != null &&
+                      testimony!.isNotEmpty) {
+                    await CloudFireStore()
+                        .updateTestimony(testimony: createdTestimony);
+                    Navigator.pop(context);
+                  } else {
+                    kshowSnackbar(
+                      context: context,
+                      child: Text(
+                        'Please add title and testimony',
+                        style: kSFBody.copyWith(color: Colors.black),
+                      ),
+                    );
+                  }
+                } on FirebaseException catch (e) {
+                  debugPrint(e.toString());
+                }
               },
             ),
           ),
         ],
       );
     }
+  }
+
+  Future<String?> _showDeleteAlert() async {
+    return await showDialog<String?>(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        title: const Text(
+          'Delete this testimony?',
+          style: kSFHeadLine2,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'ok'),
+            child: Text(
+              'Delete',
+              style: kSFCaptionBold.copyWith(
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('Cancel', style: kSFCaptionBold),
+          ),
+        ],
+      ),
+    );
   }
 
   dynamic _buildAppbar({required bool editable}) {

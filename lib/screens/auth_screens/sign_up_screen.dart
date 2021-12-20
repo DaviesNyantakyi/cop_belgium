@@ -5,7 +5,6 @@ import 'package:regexpattern/regexpattern.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/utilities/church_selector.dart';
@@ -81,17 +80,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugPrint(e.toString());
         await EasyLoading.dismiss();
         kshowSnackbar(
-          backgroundColor: kRedLight2,
+          backgroundColor: kRedLight,
           context: context,
           child: Text(
             e.message.toString(),
-            style: kSFBody,
+            style: kSFBody.copyWith(color: Colors.black),
           ),
         );
       } finally {
         if (mounted) {
           setState(() {
             isSubmit = false;
+            isLoading = false;
           });
         }
         await EasyLoading.dismiss();
@@ -137,6 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onChanged: (value) {
         setState(() {
           selectedLocation = value;
+          FocusScope.of(context).unfocus();
         });
       },
       context: context,
@@ -329,45 +330,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'Sing Up',
         style: kSFCaptionBold,
       ),
-    );
-  }
-
-  Widget _buildSocialBt() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FloatingActionButton(
-          heroTag: 'bt1',
-          elevation: 1,
-          backgroundColor: kBlueLight2,
-          child: Image.asset(
-            'assets/images/logos/google.png',
-            height: 28,
-          ),
-          onPressed: () async {
-            await Navigator.pushReplacementNamed(
-              context,
-              BottomNavSelectorPage.bottomNavSelectorPage,
-            );
-          },
-        ),
-        const SizedBox(width: 16),
-        FloatingActionButton(
-          heroTag: 'bt2',
-          elevation: 1,
-          backgroundColor: kBlueLight2,
-          child: Image.asset(
-            'assets/images/logos/apple.png',
-            height: 28,
-          ),
-          onPressed: () async {
-            await Navigator.pushReplacementNamed(
-              context,
-              BottomNavSelectorPage.bottomNavSelectorPage,
-            );
-          },
-        ),
-      ],
     );
   }
 

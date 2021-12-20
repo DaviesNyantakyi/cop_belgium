@@ -18,8 +18,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final String _deleteText =
-      'Are you sure you want to delete your whole account? All saved data will be lost.';
   String? profileImage;
   String? firstName;
   String? lastName;
@@ -173,6 +171,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<String?> _showDeleteAlert() async {
+    const String _deleteText =
+        'Are you sure you want to delete your whole account? All saved data will be lost.';
     return await showDialog<String?>(
       barrierDismissible: false,
       context: context,
@@ -186,7 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'Now just a minute',
           style: kSFHeadLine2,
         ),
-        content: Text(_deleteText, style: kSFBody),
+        content: const Text(_deleteText, style: kSFBody),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'ok'),

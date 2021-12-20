@@ -1,12 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
-
-String _text =
-    'Consequat magna fugiat dolor sit aliquip cupidatat sunt cillum proident. Ex adipisicing minim irure mollit. Anim minim deserunt irure est nostrud irure ullamco sit laborum id nostrud exercitation velit. Pariatur pariatur voluptate veniam ex minim ullamco. Tempor ex quis voluptate dolor ut aliqua quis ea minim. Ea mollit Lorem enim enim velit qui ea labore aute. Do aliqua ullamco duis deserunt deserunt excepteur tempor tempor eu commodo.';
-
-String _title = 'Announcements Lorem ipsum';
 
 class TestimoniesView extends StatefulWidget {
   const TestimoniesView({Key? key}) : super(key: key);
@@ -16,41 +14,99 @@ class TestimoniesView extends StatefulWidget {
 }
 
 class _TestimoniesViewState extends State<TestimoniesView> {
-  int likes = 255;
-  Color cardColor = kBlueLight2;
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-      child: ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: 20,
-        padding: const EdgeInsets.only(top: 20),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: TestimonyCard(
-              editable: false,
-              title: _title,
-              testimony: _text,
-              likes: likes,
-              cardColor: cardColor,
-              timeAgo: '6 Hours Ago',
-              onPressedLike: () {
-                setState(() {
-                  likes++;
-                });
-              },
-              onPressedCard: () {
-                _showBottomSheet(
+      padding: const EdgeInsets.symmetric(
+          horizontal: kBodyPadding, vertical: kBodyPadding),
+      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream:
+            FirebaseFirestore.instance.collection('testimonies').snapshots(),
+        builder: (context, snapshot) {
+          List<TestimonyInfo> allTestimonies = [];
+
+          if (snapshot.data != null) {
+            if (snapshot.data!.docs.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/add_testimony.png',
+                      height: 220,
+                      width: 220,
+                    ),
+                    const SizedBox(height: 40),
+                    const Text(
+                      'Be the first to add a testimony',
+                      style: kSFBody,
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
+          }
+          if (snapshot.hasError) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/error.png',
+                  height: 220,
+                  width: 220,
+                ),
+                const Text('OOops', style: kSFHeadLine1),
+                const Text('Something went wrong.', style: kSFBody),
+                const SizedBox(height: 30),
+                Buttons.buildBtn(
                   context: context,
-                  title: _title,
-                  testimony: _text,
-                );
-              },
-            ),
+                  btnText: 'Try again',
+                  onPressed: () {
+                    //TODO: add try again option
+                  },
+                ),
+              ],
+            );
+          }
+
+          final testimnoies = snapshot.data!.docs;
+
+          for (var doc in testimnoies) {
+            final testimony = TestimonyInfo.fromMap(map: doc.data());
+
+            allTestimonies.add(testimony);
+          }
+          return ListView.separated(
+            physics: const BouncingScrollPhysics(),
+            separatorBuilder: (BuildContext context, int index) =>
+                const SizedBox(height: 14),
+            itemCount: allTestimonies.length,
+            itemBuilder: (context, index) {
+              return TestimonyCard(
+                title: allTestimonies[index].title,
+                testimony: allTestimonies[index].testimony,
+                likes: allTestimonies[index].likes,
+                date: allTestimonies[index].date,
+                onPressedCard: () {
+                  _showBottomSheet(
+                    context: context,
+                    title: allTestimonies[index].title!,
+                    testimony: allTestimonies[index].testimony!,
+                  );
+                },
+                onPressedLike: () {},
+                cardColor: Color(
+                  int.parse(
+                    allTestimonies[index].cardColor.toString(),
+                  ),
+                ),
+              );
+            },
           );
         },
       ),
@@ -79,7 +135,7 @@ Future<void> _showBottomSheet({
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            _text,
+            testimony,
             style: kSFBody,
           ),
         ),

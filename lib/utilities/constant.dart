@@ -95,6 +95,7 @@ const Color kIndigoLight2 = Color(0xFFF1DCED);
 
 //Grey
 const Color kGrey = Color(0xFF5F656D);
+const Color kGreyLight = Color(0xFFF8F8F8);
 
 const List<Color> kDefaultColors = [
   kBlue,

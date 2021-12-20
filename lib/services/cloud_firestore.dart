@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class CloudFireStore {
@@ -10,18 +11,41 @@ class CloudFireStore {
   // create function with input testimony object.
   // upload to tesimonies collection
 
-  Future<void> createTestimony({required Testimony testimony}) async {
+  Future<void> createTestimony({required TestimonyInfo testimony}) async {
     try {
-      if (testimony.userId != null &&
+      if (testimony.userId.isNotEmpty &&
           testimony.title != null &&
           testimony.testimony != null &&
           testimony.date != null) {
-        await _firestore.collection('testimonies').add(
-              Testimony.toMap(testimony: testimony),
+        final docRef = await _firestore.collection('testimonies').add(
+              TestimonyInfo.toMap(map: testimony),
             );
+        await docRef.update({'id': docRef.id});
       }
-    } on FirebaseException catch (e) {
+    } catch (e) {
       debugPrint(e.toString() + ' davies');
+      rethrow;
+    }
+  }
+
+  Future<void> updateTestimony({required TestimonyInfo testimony}) async {
+    try {
+      _firestore.collection('testimonies').doc(testimony.id).update({
+        'title': testimony.title,
+        'testimony': testimony.testimony,
+        'cardColor': testimony.cardColor,
+      });
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteTestimony({required TestimonyInfo? testimony}) async {
+    try {
+      await _firestore.collection('testimonies').doc(testimony!.id).delete();
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }

@@ -76,6 +76,13 @@ class _BuildBodyState extends State<_BuildBody> {
   String? userName = 'Davies Nyantakyi';
 
   @override
+  void initState() {
+    super.initState();
+
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -156,7 +163,7 @@ class _BuildBodyState extends State<_BuildBody> {
         Row(
           children: [
             Text(
-              'Davies Nyantakyi',
+              auth.currentUser!.displayName.toString(),
               style: kSFHeadLine2.copyWith(color: kYellow),
             ),
             const SizedBox(width: 6),

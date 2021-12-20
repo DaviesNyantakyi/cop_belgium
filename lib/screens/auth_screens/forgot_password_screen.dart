@@ -53,11 +53,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       } on FirebaseAuthException catch (e) {
         await EasyLoading.dismiss();
         kshowSnackbar(
-          backgroundColor: kRedLight2,
+          backgroundColor: kRedLight,
           context: context,
           child: Text(
             e.message.toString(),
-            style: kSFBody,
+            style: kSFBody.copyWith(color: Colors.black),
           ),
         );
         if (mounted) {
