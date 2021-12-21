@@ -1,6 +1,6 @@
 **Privacy Policy**
 
-Davies Nyantakyi built the Cop Belgium app as a Commercial app. This SERVICE is provided by Davies Nyantakyi and is intended for use as is.
+Apkeroo built the Cop Belgium app as a Commercial app. This SERVICE is provided by Apkeroo and is intended for use as is.
 
 This page is used to inform visitors regarding my policies with the collection, use, and disclosure of Personal Information if anyone decided to use my Service.
 
