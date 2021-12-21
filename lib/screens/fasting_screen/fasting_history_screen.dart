@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -132,6 +131,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
           ),
         ),
         onPressed: () {
+          Navigator.pop(context);
           Navigator.pop(context);
         },
         style: kTextButtonStyle,

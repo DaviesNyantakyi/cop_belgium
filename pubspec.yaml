@@ -48,6 +48,9 @@ dependencies:
   cloud_firestore: ^3.1.5
   regexpattern: ^2.0.1
   flutter_easyloading: ^3.0.3
+  flutter_markdown: ^0.6.9
+  flutter_email_sender: ^5.0.2
+
 
 
 
@@ -91,6 +94,8 @@ flutter:
     - assets/images/
     - assets/images/logos/
     - assets/images/icons/
+    - assets/about_church/
+    - assets/privacy/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
@@ -26,7 +25,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
     // If set in object the time can differ from the acctual time the user presses the button.
     FastingInfo(
       type: 'Custom',
-      duration: const Duration(hours: 10),
+      duration: const Duration(minutes: 2),
     ),
     FastingInfo(
       type: 'Custom',

@@ -1,5 +1,7 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 Future<void> showMyBottomSheet({
   required BuildContext context,
@@ -58,5 +60,28 @@ Future<void> showMyFastingBottomSheet(
         child: child,
       );
     },
+  );
+}
+
+void loadMdFile({required BuildContext context, required String mdFile}) {
+  showMyBottomSheet(
+    context: context,
+    child: FutureBuilder(
+      future: rootBundle.loadString(mdFile),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          return MarkdownBody(
+            styleSheet: MarkdownStyleSheet(
+              p: kSFBody,
+            ),
+            data: snapshot.data!,
+          );
+        }
+
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    ),
   );
 }

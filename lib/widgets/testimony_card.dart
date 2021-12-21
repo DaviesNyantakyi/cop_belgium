@@ -46,7 +46,7 @@ class TestimonyCard extends StatelessWidget {
               _buildName(),
               const SizedBox(height: 8),
               Text(
-                FormalDates.format(date: testimonyInfo.date),
+                FormalDates.formatDm(date: testimonyInfo.date),
                 style: kSFSubtitle2.copyWith(
                   color: kBlueDark,
                 ),

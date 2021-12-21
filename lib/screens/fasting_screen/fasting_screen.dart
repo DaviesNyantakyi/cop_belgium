@@ -5,11 +5,9 @@ import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/fasting_history_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:dart_date/dart_date.dart';
 
 String _text =
     'Be still, and know that I am God. I will be exalted among the nations, I will be exalted in the earth!';
@@ -35,7 +33,7 @@ class _FastingScreenState extends State<FastingScreen> {
   FastingInfo? fastingInfo;
 
   String getStartDate() {
-    return FormalDates.format(date: fastingInfo!.startDate);
+    return FormalDates.formatDm(date: fastingInfo!.startDate);
   }
 
   String getEndDate() {
@@ -92,22 +90,29 @@ class _FastingScreenState extends State<FastingScreen> {
                               textFormat: CountdownTextFormat.HH_MM_SS,
                               textStyle: kSFHeadLine1,
                               autoStart: false,
-                              onComplete: () {
+                              onComplete: () async {
                                 setState(() {
                                   // reset the fasting timer
                                   isFasting = false;
-                                  //Save fasting info to firstore
-                                  /* Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return FastingHistoryScreen(
-                                          fastingInfo: fastingInfo,
-                                        );
-                                      },
-                                    ),
-                                  );*/
+
+                                  endDate = DateTime.now();
+                                  fastingInfo!.endDate = endDate;
+                                  fastingInfo!.userId =
+                                      FirebaseAuth.instance.currentUser!.uid;
+                                  fastingInfo!.note = note;
                                 });
+
+                                try {
+                                  await CloudFireStore()
+                                      .createFast(fastingInfo: fastingInfo!);
+                                } on FirebaseException catch (e) {
+                                  debugPrint(e.toString());
+                                }
+
+                                await Navigator.pushNamed(
+                                  context,
+                                  FastingHistoryScreen.fastingHistoryScreen,
+                                );
                               },
                             ),
                             const SizedBox(height: 30),
@@ -127,19 +132,20 @@ class _FastingScreenState extends State<FastingScreen> {
 
                                   setState(() {
                                     isFasting = true;
+                                    //TODO: increase the fasting people firstore
                                     peopleFasting++;
-                                    //starts the fasting timer using the conroller
+
                                     _controller.start();
                                   });
                                 } else {
                                   // fasting has been ended
                                   setState(() {
                                     isFasting = false;
+                                    //TODO: Decrease the fasting people firstore
                                     peopleFasting--;
                                     //pauses the fasting timer using the conroller
                                     _controller.pause();
                                   });
-                                  //TODO: get the current time when the fast has ended early
 
                                   //TODO:
                                   //before adding to user account in firebase show popup asking to save
@@ -158,7 +164,9 @@ class _FastingScreenState extends State<FastingScreen> {
                                   try {
                                     await CloudFireStore()
                                         .createFast(fastingInfo: fastingInfo!);
-                                  } on FirebaseException catch (e) {}
+                                  } on FirebaseException catch (e) {
+                                    debugPrint(e.toString());
+                                  }
 
                                   await Navigator.pushNamed(
                                     context,

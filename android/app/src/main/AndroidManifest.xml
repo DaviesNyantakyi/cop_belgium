@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.apkeroo.cop_belgium">
+    <queries>
+    <intent>
+      <action android:name="android.intent.action.SENDTO" />
+      <data android:scheme="mailto" />
+    </intent>
+    </queries>
+    
    <application
         android:label="Cop Belgium"
         android:icon="@mipmap/ic_launcher">

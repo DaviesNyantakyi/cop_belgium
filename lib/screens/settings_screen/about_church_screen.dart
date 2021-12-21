@@ -1,4 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,48 +19,52 @@ class AboutChruchScreen extends StatelessWidget {
               Image.asset('assets/images/logos/cop_logo.png'),
               const SizedBox(height: 39),
               ListTile(
-                onTap: () async {},
                 title: const Text(
                   'Abous us',
                   style: kSFBody,
                 ),
-                trailing: const Icon(
-                  FontAwesomeIcons.chevronRight,
-                  color: kBlueDark,
-                ),
+                onTap: () async {
+                  loadMdFile(
+                    context: context,
+                    mdFile: "assets/about_church/about_us.md",
+                  );
+                },
               ),
               ListTile(
-                onTap: () async {},
                 title: const Text(
                   'Values',
                   style: kSFBody,
                 ),
-                trailing: const Icon(
-                  FontAwesomeIcons.chevronRight,
-                  color: kBlueDark,
-                ),
+                onTap: () async {
+                  loadMdFile(
+                    context: context,
+                    mdFile: "assets/about_church/core_values.md",
+                  );
+                },
               ),
               ListTile(
-                onTap: () async {},
                 title: const Text(
                   'Mission & Vission',
                   style: kSFBody,
                 ),
-                trailing: const Icon(
-                  FontAwesomeIcons.chevronRight,
-                  color: kBlueDark,
-                ),
+                onTap: () async {
+                  loadMdFile(
+                    context: context,
+                    mdFile: "assets/about_church/mission_and_vission.md",
+                  );
+                },
               ),
               ListTile(
-                onTap: () async {},
                 title: const Text(
                   'Tenets',
                   style: kSFBody,
                 ),
-                trailing: const Icon(
-                  FontAwesomeIcons.chevronRight,
-                  color: kBlueDark,
-                ),
+                onTap: () async {
+                  loadMdFile(
+                    context: context,
+                    mdFile: "assets/about_church/about_us.md",
+                  );
+                },
               ),
             ],
           ),
@@ -70,7 +75,7 @@ class AboutChruchScreen extends StatelessWidget {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      title: const Text('Abbout Church', style: kSFCaptionBold),
+      title: const Text('About Church', style: kSFCaptionBold),
       leading: Container(
         margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
         child: TextButton(
