@@ -1,11 +1,15 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TestimonyCard extends StatelessWidget {
-  final VoidCallback? onPressedLike;
   final VoidCallback? onPressedCard;
   final VoidCallback? onPressedEdit;
   final TestimonyInfo testimonyInfo;
@@ -16,7 +20,6 @@ class TestimonyCard extends StatelessWidget {
   const TestimonyCard({
     Key? key,
     this.editable = false,
-    this.onPressedLike,
     this.onPressedCard,
     this.onPressedEdit,
     required this.testimonyInfo,
@@ -53,7 +56,7 @@ class TestimonyCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                testimonyInfo.testimony.toString(),
+                testimonyInfo.description.toString(),
                 style: kSFBody.copyWith(color: kBlueDark),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -83,7 +86,13 @@ class TestimonyCard extends StatelessWidget {
   Widget _buildLikeButton() {
     return Flexible(
       child: TextButton(
-        onPressed: onPressedLike,
+        onPressed: () async {
+          try {
+            await CloudFireStore().likeTestimony(testimonyInfo: testimonyInfo);
+          } on FirebaseException catch (e) {
+            debugPrint(e.toString());
+          }
+        },
         style: kTextButtonStyle,
         child: SizedBox(
           height: 25,
@@ -96,10 +105,7 @@ class TestimonyCard extends StatelessWidget {
                 color: kBlueDark,
               ),
               const SizedBox(width: 7),
-              Text(
-                testimonyInfo.likes.toString(),
-                style: kSFSubtitle2.copyWith(color: kBlueDark),
-              ),
+              _buildLikeCount()
             ],
           ),
         ),
@@ -107,28 +113,44 @@ class TestimonyCard extends StatelessWidget {
     );
   }
 
+  Widget _buildLikeCount() {
+    final collection = FirebaseFirestore.instance.collection('Testimonies');
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: collection
+          .doc(testimonyInfo.id)
+          .collection('likes')
+          .where('testimonyId', isEqualTo: testimonyInfo.id)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final list = snapshot.data!.docs;
+
+          return Text(
+            '${list.length}',
+            style: kSFSubtitle2,
+          );
+        }
+        return const Text(
+          '',
+          style: kSFSubtitle2,
+        );
+      },
+    );
+  }
+
   Widget _buildTitleIcon() {
     return Row(
       children: [
-        Expanded(
-          flex: 8,
-          child: Text(
-            testimonyInfo.title.toString(),
-            style: kSFCaptionBold.copyWith(
-              color: kBlueDark,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+        Text(
+          testimonyInfo.title.toString(),
+          style: kSFCaptionBold.copyWith(
+            color: kBlueDark,
           ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
-        const Expanded(
-          flex: 1,
-          child: SizedBox(width: 10),
-        ),
-        Expanded(
-          flex: 1,
-          child: _showEditIcon(),
-        )
+        const SizedBox(width: 10),
+        _showEditIcon()
       ],
     );
   }

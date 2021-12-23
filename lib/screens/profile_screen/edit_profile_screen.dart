@@ -1,4 +1,9 @@
+import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
@@ -18,12 +23,18 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  String? profileImage;
+  final _nameFormKey = GlobalKey<FormState>();
+  final _emailFormKey = GlobalKey<FormState>();
+  final _passwordFormKey = GlobalKey<FormState>();
+  bool isSubmit = false;
+
+  bool isLoading = false;
   String? firstName;
   String? lastName;
   String? email;
+  String? password;
+  String? selectedChurchLocation;
   String? gender;
-  String? selectedChurch;
 
   @override
   void initState() {
@@ -31,8 +42,73 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {
       gender = widget.user!.gender;
-      selectedChurch = widget.user!.churchLocation;
+      selectedChurchLocation = widget.user!.churchLocation;
     });
+  }
+
+  Future<void> submit() async {
+    setState(() {
+      isSubmit = true;
+    });
+    bool nameIsValid = _nameFormKey.currentState!.validate();
+    bool emailIsValid = _emailFormKey.currentState!.validate();
+    bool passworIsValid = _passwordFormKey.currentState!.validate();
+
+    if (nameIsValid &&
+        emailIsValid &&
+        passworIsValid &&
+        gender != null &&
+        selectedChurchLocation != null) {
+      try {
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+        await EasyLoading.show(
+          maskType: EasyLoadingMaskType.black,
+          indicator: const CircularProgressIndicator(
+            color: kBlueDark,
+          ),
+        );
+        final user = await Authentication().signUpWithEmail(
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          selectedChurch: selectedChurchLocation,
+          gender: gender,
+        );
+
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        if (user != null) {
+          Navigator.pop(context);
+        }
+      } on FirebaseAuthException catch (e) {
+        debugPrint(e.toString());
+        await EasyLoading.dismiss();
+        kshowSnackbar(
+          backgroundColor: kRedLight,
+          context: context,
+          child: Text(
+            e.message.toString(),
+            style: kSFBody.copyWith(color: Colors.black),
+          ),
+        );
+      } finally {
+        if (mounted) {
+          setState(() {
+            isSubmit = false;
+            isLoading = false;
+          });
+        }
+        await EasyLoading.dismiss();
+      }
+    }
   }
 
   @override
@@ -66,80 +142,148 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     onPressed: () {},
                   ),
                 ),
-                const SizedBox(height: 20),
-                MyTextField(
-                  initialValue: widget.user!.firstName,
-                  hintText: 'First Name',
-                  obscureText: false,
-                  onChanged: (value) {},
-                ),
+                const SizedBox(height: kButtonSpacing),
+                _buildForm(),
                 const SizedBox(height: kTextFieldSpacing),
-                MyTextField(
-                  initialValue: widget.user!.lastName,
-                  hintText: 'Last Name',
-                  obscureText: false,
-                  onChanged: (value) {},
-                ),
+                _buildLocationSelector(),
+                const SizedBox(height: 5),
+                _locationValidator(),
                 const SizedBox(height: kTextFieldSpacing),
-                MyTextField(
-                  initialValue: widget.user!.email,
-                  hintText: 'Email',
-                  obscureText: false,
-                  onChanged: (value) {},
-                ),
-                const SizedBox(height: 20),
                 _buildGenderSelector(),
-                const SizedBox(height: 20),
-                ChurchSelctor().buildChurchSelectorTile(
-                  city: selectedChurch,
-                  context: context,
-                  onChanged: (city) {
-                    setState(() {
-                      selectedChurch = city;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 45,
-                      child: OutlinedButton(
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(kButtonRadius),
-                              ),
-                            ),
-                          ),
-                        ),
-                        onPressed: () {
-                          _showDeleteAlert();
-                        },
-                        child: const Text(
-                          'Delete Account',
-                          style: kSFBodyBold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    _buildBtn(
-                      btText: 'Reset Password',
-                      textColor: kBlueDark,
-                      backgroundColor: kGreenLight2,
-                      onPressed: () async {
-                        await _showConformationAlert();
-                      },
-                    ),
-                  ],
-                )
+                const SizedBox(height: kTextFieldSpacing),
+                _buildDeleteReset()
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildDeleteReset() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 45,
+          child: OutlinedButton(
+            style: ButtonStyle(
+              shape: MaterialStateProperty.all(
+                const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(kButtonRadius),
+                  ),
+                ),
+              ),
+            ),
+            onPressed: () {
+              _showDeleteAlert();
+            },
+            child: const Text(
+              'Delete Account',
+              style: kSFBodyBold,
+            ),
+          ),
+        ),
+        const SizedBox(width: 20),
+        _buildBtn(
+          btText: 'Reset Password',
+          textColor: kBlueDark,
+          backgroundColor: kGreenLight2,
+          onPressed: () async {
+            await _showConformationAlert();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _locationValidator() {
+    // shows error text if the location is null
+
+    if (selectedChurchLocation == null && isSubmit == true) {
+      return Text(
+        'Please select church location',
+        style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget _buildLocationSelector() {
+    return ChurchSelctor().buildChurchSelectorTile(
+      city: selectedChurchLocation,
+      onChanged: (value) {
+        setState(() {
+          selectedChurchLocation = value;
+          FocusScope.of(context).unfocus();
+        });
+      },
+      context: context,
+    );
+  }
+
+  Widget _buildForm() {
+    return Column(
+      children: [
+        Form(
+          key: _nameFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MyTextField(
+                hintText: 'First Name',
+                obscureText: false,
+                validator: Validators.nameValidator,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  firstName = value;
+                },
+              ),
+              const SizedBox(height: kTextFieldSpacing),
+              MyTextField(
+                hintText: 'Last Name',
+                obscureText: false,
+                validator: Validators.nameValidator,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  lastName = value;
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        Form(
+          key: _emailFormKey,
+          child: MyTextField(
+            hintText: 'Email',
+            obscureText: false,
+            validator: Validators.emailTextValidator,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onChanged: (value) {
+              email = value;
+            },
+          ),
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        Form(
+          key: _passwordFormKey,
+          child: MyTextField(
+            validator: Validators.passwordTextValidator,
+            hintText: 'Password',
+            obscureText: true,
+            textInputAction: TextInputAction.next,
+            onChanged: (value) {
+              password = value;
+            },
+          ),
+        ),
+      ],
     );
   }
 

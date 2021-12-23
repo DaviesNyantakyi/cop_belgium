@@ -46,7 +46,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     setState(() {
       if (widget.testimonyInfo != null) {
         title = widget.testimonyInfo!.title;
-        testimony = widget.testimonyInfo!.testimony;
+        testimony = widget.testimonyInfo!.description;
         date = widget.testimonyInfo!.date;
         isAnon = widget.testimonyInfo!.anonymous;
         cardColor = Color(
@@ -191,7 +191,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 anonymous: isAnon,
                 userName: widget.testimonyInfo!.userName,
                 title: title,
-                testimony: testimony,
+                description: testimony,
                 date: widget.testimonyInfo!.date,
                 cardColor: cardColor!.value.toString(),
                 likes: widget.testimonyInfo!.likes,
@@ -267,7 +267,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             userName: FirebaseAuth.instance.currentUser!.displayName,
             title: title,
             anonymous: isAnon,
-            testimony: testimony,
+            description: testimony,
             date: date,
             cardColor: cardColor!.value.toString(),
             likes: 0,

@@ -1,4 +1,6 @@
+import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:regexpattern/regexpattern.dart';
@@ -25,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final _passwordFormKey = GlobalKey<FormState>();
   bool isLoading = false;
 
-  void submit() async {
+  Future<void> submit() async {
     FocusScope.of(context).unfocus();
     bool _validPassword = _passwordFormKey.currentState!.validate();
     bool validEmail = _emailFormKey.currentState!.validate();
@@ -86,7 +88,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const SizedBox(height: 40),
                 _buildForm(),
                 const SizedBox(height: kButtonSpacing),
-                _buildSignUpBtn(),
+                _buildSignInBtn(),
                 const SizedBox(height: kButtonSpacing),
                 _buildAccountQuestion(),
               ],
@@ -97,7 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildSignUpBtn() {
+  Widget _buildSignInBtn() {
     return Buttons.buildBtn(
       context: context,
       color: isLoading ? kGrey : kYellow,
@@ -113,41 +115,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           key: _emailFormKey,
           child: MyTextField(
             hintText: 'Email',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter email';
-              }
-              if (!value.isEmail()) {
-                return 'Please enter valid email address';
-              }
-              return null;
-            },
-            obscureText: false,
+            validator: Validators.emailTextValidator,
             keyboardType: TextInputType.emailAddress,
             onChanged: (value) {
               email = value;
             },
+            textInputAction: TextInputAction.next,
           ),
         ),
         const SizedBox(height: kTextFieldSpacing),
         Form(
           key: _passwordFormKey,
           child: MyTextField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter password';
-              }
-
-              if (!value.isPasswordEasy()) {
-                return 'Password must contain at least 8 characters';
-              }
-              return null;
-            },
+            validator: Validators.passwordTextValidator,
             hintText: 'Password',
             obscureText: true,
             onChanged: (value) {
               password = value;
             },
+            textInputAction: TextInputAction.done,
           ),
         ),
       ],
@@ -199,7 +185,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ],
           ),
           onPressed: () {
-            Navigator.pushNamed(context, SignUpScreen.signUpScreen);
+            Navigator.push(
+              context,
+              CupertinoPageRoute(builder: (context) => const SignUpScreen()),
+            );
           },
         ),
         TextButton(
@@ -209,9 +198,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             style: kSFBody,
           ),
           onPressed: () {
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              ForgotPasswordScreen.forgotPasswordScreen,
+              CupertinoPageRoute(
+                builder: (context) => const ForgotPasswordScreen(),
+              ),
             );
           },
         ),

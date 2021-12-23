@@ -10,6 +10,7 @@ import 'package:cop_belgium/screens/all_screens.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 

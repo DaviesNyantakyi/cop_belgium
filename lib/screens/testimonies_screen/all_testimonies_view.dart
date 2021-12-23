@@ -21,7 +21,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
           horizontal: kBodyPadding, vertical: kBodyPadding),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('testimonies')
+            .collection('Testimonies')
             .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -76,13 +76,12 @@ class _TestimoniesViewState extends State<TestimoniesView> {
             );
           }
 
-          final testimnoies = snapshot.data!.docs;
+          final listDocQSnap = snapshot.data!.docs;
 
-          for (var doc in testimnoies) {
-            final testimony = TestimonyInfo.fromMap(map: doc.data());
-
-            allTestimonies.add(testimony);
+          for (var doc in listDocQSnap) {
+            allTestimonies.add(TestimonyInfo.fromMap(map: doc.data()));
           }
+
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
             separatorBuilder: (BuildContext context, int index) =>
@@ -95,10 +94,9 @@ class _TestimoniesViewState extends State<TestimoniesView> {
                   _showBottomSheet(
                     context: context,
                     title: allTestimonies[index].title!,
-                    testimony: allTestimonies[index].testimony!,
+                    testimony: allTestimonies[index].description!,
                   );
                 },
-                onPressedLike: () {},
               );
             },
           );

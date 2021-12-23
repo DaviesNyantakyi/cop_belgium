@@ -26,7 +26,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
       ),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('testimonies')
+            .collection('Testimonies')
             .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -104,7 +104,6 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
               return TestimonyCard(
                 editable: true,
                 testimonyInfo: allTestmonies[index],
-                onPressedLike: () {},
                 onPressedEdit: () async {
                   await Navigator.push(context,
                       MaterialPageRoute(builder: (context) {
@@ -118,7 +117,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
                   _showBottomSheet(
                     context: context,
                     title: allTestmonies[index].title!,
-                    testimony: allTestmonies[index].testimony!,
+                    testimony: allTestmonies[index].description!,
                   );
                 },
               );

@@ -135,6 +135,7 @@ class _ProfileScreensState extends State<ProfileScreens>
                   photo: profilePhoto,
                   firstName: 'Melisa',
                   lastName: 'Shanses',
+                  isOnline: true,
                   email: 'MelisaShanses@outlook.com',
                   gender: 'female',
                   churchLocation: 'Turnhout',

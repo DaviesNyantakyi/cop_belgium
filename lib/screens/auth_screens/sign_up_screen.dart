@@ -1,3 +1,4 @@
+import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _nameFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
+
   bool isSubmit = false;
   bool isLoading = false;
 
@@ -31,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? lastName;
   String? email;
   String? password;
-  String? selectedLocation;
+  String? selectedChurchLocation;
   String? gender;
 
   Future<void> submit() async {
@@ -46,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailIsValid &&
         passworIsValid &&
         gender != null &&
-        selectedLocation != null) {
+        selectedChurchLocation != null) {
       try {
         if (mounted) {
           setState(() {
@@ -59,15 +61,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: kBlueDark,
           ),
         );
-
         final user = await Authentication().signUpWithEmail(
           firstName: firstName,
           lastName: lastName,
           email: email,
           password: password,
-          selectedChurch: selectedLocation,
+          selectedChurch: selectedChurchLocation,
           gender: gender,
         );
+
         if (mounted) {
           setState(() {
             isLoading = false;
@@ -112,8 +114,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTfFirstLastName(),
-                const SizedBox(height: kTextFieldSpacing),
                 _buildForm(),
                 const SizedBox(height: kTextFieldSpacing),
                 _buildLocationSelector(),
@@ -133,10 +133,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildLocationSelector() {
     return ChurchSelctor().buildChurchSelectorTile(
-      city: selectedLocation,
+      city: selectedChurchLocation,
       onChanged: (value) {
         setState(() {
-          selectedLocation = value;
+          selectedChurchLocation = value;
           FocusScope.of(context).unfocus();
         });
       },
@@ -148,20 +148,43 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Column(
       children: [
         Form(
+          key: _nameFormKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MyTextField(
+                hintText: 'First Name',
+                obscureText: false,
+                validator: Validators.nameValidator,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  firstName = value;
+                },
+              ),
+              const SizedBox(height: kTextFieldSpacing),
+              MyTextField(
+                hintText: 'Last Name',
+                obscureText: false,
+                validator: Validators.nameValidator,
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                onChanged: (value) {
+                  lastName = value;
+                },
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        Form(
           key: _emailFormKey,
           child: MyTextField(
             hintText: 'Email',
             obscureText: false,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter email';
-              }
-              if (!value.isEmail()) {
-                return 'Please enter valid email address';
-              }
-              return null;
-            },
+            validator: Validators.emailTextValidator,
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
             onChanged: (value) {
               email = value;
             },
@@ -171,75 +194,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
         Form(
           key: _passwordFormKey,
           child: MyTextField(
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter password';
-              }
-
-              if (!value.isPasswordEasy()) {
-                return 'Password must contain at least 8 characters';
-              }
-
-              return null;
-            },
+            validator: Validators.passwordTextValidator,
             hintText: 'Password',
             obscureText: true,
+            textInputAction: TextInputAction.next,
             onChanged: (value) {
               password = value;
             },
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTfFirstLastName() {
-    return Form(
-      key: _nameFormKey,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          MyTextField(
-            hintText: 'First Name',
-            obscureText: false,
-            validator: (value) {
-              firstName = value;
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name';
-              }
-
-              // only letters
-              if (!value.isAlphabet()) {
-                return 'Name must contain only letters ';
-              }
-            },
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              debugPrint(value);
-            },
-          ),
-          const SizedBox(height: kTextFieldSpacing),
-          MyTextField(
-            hintText: 'Last Name',
-            obscureText: false,
-            validator: (value) {
-              lastName = value;
-              if (value == null || value.isEmpty) {
-                return 'Please enter your name';
-              }
-
-              // only letters
-              if (!value.isAlphabet()) {
-                return 'Name must contain only letters ';
-              }
-            },
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              debugPrint(value);
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -282,26 +246,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ],
         ),
         const SizedBox(height: 5),
-        _genderValidator()
+        Validators.genderValidator(gender: gender, submitForm: isSubmit)
       ],
     );
-  }
-
-  dynamic _genderValidator() {
-    if (gender == null && isSubmit == true) {
-      return Text(
-        'Please select your gender',
-        style: TextStyle(color: Colors.red.shade700, fontSize: 13),
-      );
-    } else {
-      return Container();
-    }
   }
 
   dynamic _locationValidator() {
     // shows error text if the location is null
 
-    if (selectedLocation == null && isSubmit == true) {
+    if (selectedChurchLocation == null && isSubmit == true) {
       return Text(
         'Please select church location',
         style: TextStyle(color: Colors.red.shade700, fontSize: 13),

@@ -20,12 +20,11 @@ class _AuthScreenSwitcherState extends State<AuthScreenSwitcher> {
       stream: auth.authStateChanges(),
       builder: (context, snaphot) {
         if (snaphot.connectionState == ConnectionState.active) {
-          final user = snaphot.data;
-          if (user == null) {
-            return const WelcomeScreen();
+          if (snaphot.hasData) {
+            return const BottomNavSelectorPage();
           }
 
-          return const BottomNavSelectorPage();
+          return const WelcomeScreen();
         } else {
           return const Scaffold(
             body: Center(

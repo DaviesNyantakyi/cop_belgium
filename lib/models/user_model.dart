@@ -5,6 +5,7 @@ class CopUser {
   String? photo;
   String? title;
   String firstName;
+  bool isOnline;
   String lastName;
   String email;
   String gender;
@@ -20,6 +21,7 @@ class CopUser {
   CopUser({
     this.photo,
     this.title,
+    required this.isOnline,
     required this.isAdmin,
     required this.firstName,
     required this.lastName,

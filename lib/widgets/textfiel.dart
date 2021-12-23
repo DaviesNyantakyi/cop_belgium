@@ -7,16 +7,18 @@ class MyTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
+  bool? obscureText;
 
-  final bool obscureText;
-  const MyTextField({
+  MyTextField({
     Key? key,
     this.hintText,
     this.initialValue,
     this.keyboardType,
     this.onChanged,
-    required this.obscureText,
+    this.obscureText = false,
     this.validator,
+    this.textInputAction,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,8 @@ class MyTextField extends StatelessWidget {
       initialValue: initialValue,
       style: kSFCaptionBold,
       keyboardType: keyboardType,
-      obscureText: obscureText,
+      obscureText: obscureText!,
+      textInputAction: textInputAction,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         filled: true,

@@ -3,7 +3,7 @@ class TestimonyInfo {
   final String userId;
   String? title;
   final String? userName;
-  String? testimony;
+  String? description;
   int? likes;
   final DateTime? date;
   String? cardColor;
@@ -15,7 +15,7 @@ class TestimonyInfo {
     required this.anonymous,
     required this.userId,
     required this.title,
-    required this.testimony,
+    required this.description,
     this.likes,
     required this.date,
     this.cardColor,
@@ -28,7 +28,7 @@ class TestimonyInfo {
       'userId': map.userId,
       'anonymous': map.anonymous,
       'title': map.title,
-      'testimony': map.testimony,
+      'description': map.description,
       'likes': map.likes,
       'date': map.date,
       'cardColor': map.cardColor,
@@ -42,7 +42,7 @@ class TestimonyInfo {
       userId: map['userId'],
       title: map['title'],
       anonymous: map['anonymous'],
-      testimony: map['testimony'],
+      description: map['description'],
       date: map['date'].toDate(),
       cardColor: map['cardColor'],
       likes: map['likes'],
