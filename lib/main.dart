@@ -1,3 +1,4 @@
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +23,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const AuthScreenSwitcher(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ConnectionChecker>(
+            create: (_) => ConnectionChecker(),
+          ),
+        ],
+        child: const AuthScreenSwitcher(),
+      ),
       theme: _theme,
       routes: _routes,
       builder: EasyLoading.init(),

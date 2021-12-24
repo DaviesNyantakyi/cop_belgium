@@ -3,10 +3,23 @@ import 'package:flutter/material.dart';
 
 dynamic kshowSnackbar({
   required BuildContext context,
+  required String type,
   required Widget child,
-  Color backgroundColor = kGreyLight,
 }) {
-  ScaffoldMessenger.of(context).clearSnackBars();
+  Color? backgroundColor;
+  switch (type) {
+    case 'error':
+      backgroundColor = kRedLight2;
+      break;
+    case 'succes':
+      backgroundColor = kGreyLight;
+      break;
+
+    default:
+      backgroundColor = kGreyLight;
+      break;
+  }
+  ScaffoldMessenger.of(context).removeCurrentSnackBar();
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: SnackBarBehavior.floating,

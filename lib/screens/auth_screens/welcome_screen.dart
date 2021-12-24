@@ -54,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       } on FirebaseAuthException catch (e) {
         await EasyLoading.dismiss();
         kshowSnackbar(
-          backgroundColor: kRedLight,
+          type: 'error',
           context: context,
           child: Text(
             e.message.toString(),

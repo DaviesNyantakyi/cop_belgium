@@ -82,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugPrint(e.toString());
         await EasyLoading.dismiss();
         kshowSnackbar(
-          backgroundColor: kRedLight,
+          type: 'error',
           context: context,
           child: Text(
             e.message.toString(),

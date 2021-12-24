@@ -92,7 +92,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         debugPrint(e.toString());
         await EasyLoading.dismiss();
         kshowSnackbar(
-          backgroundColor: kRedLight,
+          type: 'error',
           context: context,
           child: Text(
             e.message.toString(),

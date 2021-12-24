@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/color_picker.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -10,10 +11,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-//TODO: Can create testimony whiles offline:
-// if user is offline and create a testimony it will be added to firebase when they are online.
-// screen also does not pop.
+import 'package:provider/provider.dart';
 
 class CreateTestimonyScreen extends StatefulWidget {
   static String createTestimonyScreen = 'editTestimonyScreen';
@@ -43,6 +41,10 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   void initState() {
     super.initState();
 
+    intitTestimonyInfo();
+  }
+
+  void intitTestimonyInfo() {
     setState(() {
       if (widget.testimonyInfo != null) {
         title = widget.testimonyInfo!.title;
@@ -185,28 +187,19 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         onSelected: (String result) async {
           if (result == 'save') {
             try {
-              final updatedTestimony = TestimonyInfo(
-                id: widget.testimonyInfo!.id,
-                userId: widget.testimonyInfo!.userId,
-                isAnonymous: isAnon,
-                userName: widget.testimonyInfo!.userName,
-                title: title,
-                description: testimony,
-                date: widget.testimonyInfo!.date,
-                cardColor: cardColor!.value.toString(),
-                totalLikes: widget.testimonyInfo!.totalLikes,
-              );
+              TestimonyInfo updatedTInfo = createTestimonyInfoObject();
               setState(() {});
 
               if (title != null &&
                   title!.isNotEmpty &&
                   testimony != null &&
                   testimony!.isNotEmpty) {
-                await CloudFireStore().updateTestimony(tInfo: updatedTestimony);
+                await CloudFireStore().updateTestimonyInfo(tInfo: updatedTInfo);
 
                 Navigator.pop(context);
               } else {
                 kshowSnackbar(
+                  type: 'normal',
                   context: context,
                   child: Text(
                     'Please add title and testimony',
@@ -216,7 +209,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               }
             } on FirebaseException catch (e) {
               kshowSnackbar(
-                backgroundColor: kRedLight,
+                type: 'error',
                 context: context,
                 child: Text(
                   '${e.message}',
@@ -282,6 +275,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               Navigator.pop(context);
             } else {
               kshowSnackbar(
+                type: 'error',
                 context: context,
                 child: Text(
                   'Please add title and testimony',
@@ -291,10 +285,36 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             }
           } on FirebaseException catch (e) {
             debugPrint(e.toString());
+
+            kshowSnackbar(
+              type: 'error',
+              context: context,
+              child: Text(
+                e.message!,
+                style: kSFBody.copyWith(color: Colors.black),
+              ),
+            );
+          } catch (e) {
+            debugPrint(e.toString());
           }
         },
       );
     }
+  }
+
+  TestimonyInfo createTestimonyInfoObject() {
+    final updatedTestimony = TestimonyInfo(
+      id: widget.testimonyInfo!.id,
+      userId: widget.testimonyInfo!.userId,
+      isAnonymous: isAnon,
+      userName: widget.testimonyInfo!.userName,
+      title: title,
+      description: testimony,
+      date: widget.testimonyInfo!.date,
+      cardColor: cardColor!.value.toString(),
+      totalLikes: widget.testimonyInfo!.totalLikes,
+    );
+    return updatedTestimony;
   }
 
   dynamic _buildAppbar({required bool editable}) {

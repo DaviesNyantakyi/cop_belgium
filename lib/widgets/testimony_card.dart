@@ -5,6 +5,7 @@ import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -57,7 +58,7 @@ class TestimonyCard extends StatelessWidget {
               const SizedBox(height: 8),
               _buildTestimonyDescription(),
               const Flexible(child: SizedBox(height: 10)),
-              _buildLikeButton(),
+              _buildLikeButton(context: context),
             ],
           ),
         ),
@@ -99,13 +100,21 @@ class TestimonyCard extends StatelessWidget {
     }
   }
 
-  Widget _buildLikeButton() {
+  Widget _buildLikeButton({required BuildContext context}) {
     return TextButton(
       onPressed: () async {
         try {
           await CloudFireStore().likeDislikeTestimony(tInfo: testimonyInfo);
         } on FirebaseException catch (e) {
           debugPrint(e.toString());
+          kshowSnackbar(
+            context: context,
+            type: 'error',
+            child: Text(
+              e.message.toString(),
+              style: kSFBody,
+            ),
+          );
         }
       },
       style: kTextButtonStyle,
@@ -145,7 +154,7 @@ class TestimonyCard extends StatelessWidget {
           );
         }
         return const Text(
-          '',
+          '...',
           style: kSFSubtitle2,
         );
       },
