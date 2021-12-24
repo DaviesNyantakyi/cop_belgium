@@ -132,13 +132,14 @@ class _ProfileScreensState extends State<ProfileScreens>
             builder: (context) {
               return EditProfileScreen(
                 user: CopUser(
-                  photo: profilePhoto,
+                  title: 'user',
+                  photoUrl: profilePhoto,
                   firstName: 'Melisa',
                   lastName: 'Shanses',
                   isOnline: true,
                   email: 'MelisaShanses@outlook.com',
                   gender: 'female',
-                  churchLocation: 'Turnhout',
+                  church: 'Turnhout',
                   isFasting: false,
                   isAdmin: false,
                 ),

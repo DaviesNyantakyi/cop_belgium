@@ -42,7 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {
       gender = widget.user!.gender;
-      selectedChurchLocation = widget.user!.churchLocation;
+      selectedChurchLocation = widget.user!.church;
     });
   }
 

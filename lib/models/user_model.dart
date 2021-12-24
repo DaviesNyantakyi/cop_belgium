@@ -2,25 +2,22 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 
 class CopUser {
-  String? photo;
-  String? title;
+  String? photoUrl;
   String firstName;
-  bool isOnline;
   String lastName;
+  String title;
+  bool isOnline;
   String email;
   String gender;
-  String churchLocation;
+  String church;
   bool? isFasting;
   bool isAdmin;
-  List<FastingInfo>? fastingHistory;
-  List<PodCast>? favoratePodcast;
-  Map<String, dynamic>? preferences;
   String? address;
   String? phoneNumber;
 
   CopUser({
-    this.photo,
-    this.title,
+    this.photoUrl,
+    required this.title,
     required this.isOnline,
     required this.isAdmin,
     required this.firstName,
@@ -28,10 +25,8 @@ class CopUser {
     required this.email,
     this.phoneNumber,
     required this.gender,
-    required this.churchLocation,
+    required this.church,
     this.isFasting,
-    this.fastingHistory,
-    this.preferences,
     this.address,
   });
 }

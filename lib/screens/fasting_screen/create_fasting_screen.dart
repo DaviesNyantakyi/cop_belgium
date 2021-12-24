@@ -1,5 +1,5 @@
 import 'package:cop_belgium/models/fasting_model.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_timer_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 
@@ -45,7 +45,6 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 3,
         title: const Padding(
           padding: EdgeInsets.only(left: kBodyPadding),
           child: Text(
@@ -82,7 +81,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
 
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return FastingScreen(
+                            return FastingTimerScreen(
                               fastingInfo: fastingPresets[index],
                             );
                           },
@@ -238,7 +237,7 @@ class _FastingPickerState extends State<FastingPicker> {
               Navigator.pop(context);
               await Navigator.push(context, MaterialPageRoute(
                 builder: (context) {
-                  return FastingScreen(
+                  return FastingTimerScreen(
                     fastingInfo: FastingInfo(
                       userId: FirebaseAuth.instance.currentUser!.uid,
                       type: 'Custom',

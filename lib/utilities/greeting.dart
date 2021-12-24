@@ -1,7 +1,7 @@
 library flutter_greetings;
 
 class YonoGreetings {
-  // package
+  // from package
   static String showGreetings() {
     String greeting() {
       var timeNow = DateTime.now().hour;

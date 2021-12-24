@@ -59,7 +59,8 @@ Map<String, WidgetBuilder> _routes = {
       const UserSavedPodcastView(),
   CreateFastingScreens.createFastingScreens: (context) =>
       const CreateFastingScreens(),
-  FastingScreen.fastingScreen: (context) => const FastingScreen(),
+  FastingTimerScreen.fastingTimerScreen: (context) =>
+      const FastingTimerScreen(),
   FastingHistoryScreen.fastingHistoryScreen: (context) =>
       const FastingHistoryScreen(),
   UserFastingHistoryView.userFastingHistoryView: (context) =>

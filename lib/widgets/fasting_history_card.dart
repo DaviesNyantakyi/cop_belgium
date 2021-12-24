@@ -133,53 +133,73 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Started fasting',
-                      style: kSFSubtitle2,
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Flexible(
+                          child: Text(
+                            'Started fasting',
+                            style: kSFSubtitle2,
+                          ),
+                        ),
+                        const Flexible(child: SizedBox(height: 4)),
+                        Flexible(
+                          child: Text(
+                            startedDate,
+                            style: kSFBodyBold,
+                          ),
+                        ),
+                        Flexible(
+                          child: Text(
+                            startedTime,
+                            style: kSFBody,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      startedDate,
-                      style: kSFBodyBold,
-                    ),
-                    Text(
-                      startedTime,
-                      style: kSFBody,
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'End',
-                      style: kSFSubtitle2,
+            Flexible(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Flexible(
+                          child: Text(
+                            'End',
+                            style: kSFSubtitle2,
+                          ),
+                        ),
+                        const Flexible(child: SizedBox(height: 4)),
+                        Flexible(
+                          child: Text(
+                            endDate,
+                            style: kSFBodyBold,
+                          ),
+                        ),
+                        Flexible(
+                          child: Text(
+                            endTime,
+                            style: kSFBody,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      endDate,
-                      style: kSFBodyBold,
-                    ),
-                    Text(
-                      endTime,
-                      style: kSFBody,
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ],
         ),

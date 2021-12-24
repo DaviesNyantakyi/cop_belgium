@@ -109,7 +109,7 @@ class TestimonyCard extends StatelessWidget {
           debugPrint(e.toString());
           kshowSnackbar(
             context: context,
-            type: 'error',
+            type: 'normal',
             child: Text(
               e.message.toString(),
               style: kSFBody,
