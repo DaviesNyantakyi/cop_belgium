@@ -71,7 +71,7 @@ ThemeData _theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kBlueDark,
   ),
-  splashColor: kBlueLight,
+  splashColor: kBlueLight2,
   iconTheme: const IconThemeData(
     color: kBlueDark,
     size: 25,

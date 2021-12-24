@@ -104,7 +104,7 @@ class _FastingScreenState extends State<FastingScreen> {
 
                                 try {
                                   await CloudFireStore()
-                                      .createFast(fastingInfo: fastingInfo!);
+                                      .createFast(fInfo: fastingInfo!);
                                 } on FirebaseException catch (e) {
                                   debugPrint(e.toString());
                                 }
@@ -163,7 +163,7 @@ class _FastingScreenState extends State<FastingScreen> {
 
                                   try {
                                     await CloudFireStore()
-                                        .createFast(fastingInfo: fastingInfo!);
+                                        .createFast(fInfo: fastingInfo!);
                                   } on FirebaseException catch (e) {
                                     debugPrint(e.toString());
                                   }

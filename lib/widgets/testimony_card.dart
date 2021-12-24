@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+//TODO: fix overflow error title text and edit icon
+
 class TestimonyCard extends StatelessWidget {
   final VoidCallback? onPressedCard;
   final VoidCallback? onPressedEdit;
@@ -29,9 +31,10 @@ class TestimonyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 185,
+      height: 210,
       decoration: BoxDecoration(
-        color: Color(int.parse(testimonyInfo.cardColor.toString())),
+        color:
+            Color(int.parse(testimonyInfo.cardColor.toString())).withAlpha(170),
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
@@ -44,25 +47,17 @@ class TestimonyCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildTitleIcon(),
+              _buildTitleAndEditIcon(),
+              const SizedBox(height: 7),
               _buildName(),
+              const SizedBox(height: 3),
+              _buildDateCreated(),
               const SizedBox(height: 8),
-              Text(
-                FormalDates.formatDm(date: testimonyInfo.date),
-                style: kSFSubtitle2.copyWith(
-                  color: kBlueDark,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                testimonyInfo.description.toString(),
-                style: kSFBody.copyWith(color: kBlueDark),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 10),
-              _buildLikeButton()
+              _buildTestimonyDescription(),
+              const Flexible(child: SizedBox(height: 10)),
+              _buildLikeButton(),
             ],
           ),
         ),
@@ -70,13 +65,34 @@ class TestimonyCard extends StatelessWidget {
     );
   }
 
+  Widget _buildTestimonyDescription() {
+    return Text(
+      testimonyInfo.description.toString(),
+      style: kSFBody.copyWith(color: kBlueDark.withAlpha(180)),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget _buildDateCreated() {
+    return Text(
+      FormalDates.formatDm(date: testimonyInfo.date),
+      style: kSFSubtitle2.copyWith(
+        color: kBlueDark.withOpacity(0.50),
+      ),
+    );
+  }
+
   Widget _buildName() {
-    if (testimonyInfo.anonymous == false) {
+    if (testimonyInfo.isAnonymous == false) {
+      String? name =
+          FirebaseAuth.instance.currentUser!.uid == testimonyInfo.userId
+              ? 'by you'
+              : 'by ${testimonyInfo.userName}';
+
       return Text(
-        'by ${testimonyInfo.userName}',
-        style: kSFSubtitle2.copyWith(
-          color: kBlueDark,
-        ),
+        name,
+        style: kSFSubtitle2.copyWith(color: kBlueDark),
       );
     } else {
       return Container();
@@ -84,30 +100,28 @@ class TestimonyCard extends StatelessWidget {
   }
 
   Widget _buildLikeButton() {
-    return Flexible(
-      child: TextButton(
-        onPressed: () async {
-          try {
-            await CloudFireStore().likeTestimony(testimonyInfo: testimonyInfo);
-          } on FirebaseException catch (e) {
-            debugPrint(e.toString());
-          }
-        },
-        style: kTextButtonStyle,
-        child: SizedBox(
-          height: 25,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                'assets/images/icons/hand_clap_icon.png',
-                filterQuality: FilterQuality.high,
-                color: kBlueDark,
-              ),
-              const SizedBox(width: 7),
-              _buildLikeCount()
-            ],
-          ),
+    return TextButton(
+      onPressed: () async {
+        try {
+          await CloudFireStore().likeDislikeTestimony(tInfo: testimonyInfo);
+        } on FirebaseException catch (e) {
+          debugPrint(e.toString());
+        }
+      },
+      style: kTextButtonStyle,
+      child: SizedBox(
+        height: 25,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset(
+              'assets/images/icons/hand_clap_icon.png',
+              filterQuality: FilterQuality.high,
+              color: kBlueDark,
+            ),
+            const SizedBox(width: 7),
+            _buildLikeCount(),
+          ],
         ),
       ),
     );
@@ -115,6 +129,7 @@ class TestimonyCard extends StatelessWidget {
 
   Widget _buildLikeCount() {
     final collection = FirebaseFirestore.instance.collection('Testimonies');
+
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: collection
           .doc(testimonyInfo.id)
@@ -124,7 +139,6 @@ class TestimonyCard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           final list = snapshot.data!.docs;
-
           return Text(
             '${list.length}',
             style: kSFSubtitle2,
@@ -138,19 +152,26 @@ class TestimonyCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleIcon() {
+  Widget _buildTitleAndEditIcon() {
     return Row(
       children: [
-        Text(
-          testimonyInfo.title.toString(),
-          style: kSFCaptionBold.copyWith(
-            color: kBlueDark,
+        Expanded(
+          flex: 9,
+          child: Text(
+            testimonyInfo.title.toString(),
+            style: kSFCaptionBold.copyWith(color: kBlueDark),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(width: 10),
-        _showEditIcon()
+        const Expanded(
+          flex: 1,
+          child: SizedBox(width: 10),
+        ),
+        Expanded(
+          flex: 1,
+          child: _showEditIcon(),
+        )
       ],
     );
   }

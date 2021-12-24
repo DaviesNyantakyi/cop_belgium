@@ -4,19 +4,19 @@ class TestimonyInfo {
   String? title;
   final String? userName;
   String? description;
-  int? likes;
+  int? totalLikes;
   final DateTime? date;
   String? cardColor;
-  final bool anonymous;
+  final bool isAnonymous;
 
   TestimonyInfo({
     this.id,
     this.userName,
-    required this.anonymous,
+    required this.isAnonymous,
     required this.userId,
     required this.title,
     required this.description,
-    this.likes,
+    this.totalLikes,
     required this.date,
     this.cardColor,
   });
@@ -26,10 +26,10 @@ class TestimonyInfo {
       'id': map.id,
       'userName': map.userName,
       'userId': map.userId,
-      'anonymous': map.anonymous,
+      'isAnonymous': map.isAnonymous,
       'title': map.title,
       'description': map.description,
-      'likes': map.likes,
+      'totalLikes': map.totalLikes,
       'date': map.date,
       'cardColor': map.cardColor,
     };
@@ -41,11 +41,11 @@ class TestimonyInfo {
       userName: map['userName'],
       userId: map['userId'],
       title: map['title'],
-      anonymous: map['anonymous'],
+      isAnonymous: map['isAnonymous'],
       description: map['description'],
       date: map['date'].toDate(),
       cardColor: map['cardColor'],
-      likes: map['likes'],
+      totalLikes: map['totalLikes'],
     );
   }
 }

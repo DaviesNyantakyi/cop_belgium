@@ -32,10 +32,10 @@ class CloudFireStore {
     }
   }
 
-  Future<void> updateTestimony({required TestimonyInfo testimony}) async {
+  Future<void> updateTestimony({required TestimonyInfo tInfo}) async {
     try {
-      await _firestore.collection('Testimonies').doc(testimony.id).update(
-            TestimonyInfo.toMap(map: testimony),
+      await _firestore.collection('Testimonies').doc(tInfo.id).update(
+            TestimonyInfo.toMap(map: tInfo),
           );
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
@@ -52,27 +52,27 @@ class CloudFireStore {
     }
   }
 
-  Future<void> likeTestimony({required TestimonyInfo testimonyInfo}) async {
+  Future<void> likeDislikeTestimony({required TestimonyInfo tInfo}) async {
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-      String docRef = testimonyInfo.id.toString() + currentUser!.uid;
+      //Create a uniek document id  basen on the testimonyInfo id and the userId.
+      // (this can also be done with the .where() where filter and get only the doc with the tInfo.id and userId)
+      String docRef = tInfo.id.toString() + _user!.uid;
 
-      final docSnap = await FirebaseFirestore.instance
-          .collection('Testimonies')
-          .doc(testimonyInfo.id)
-          .collection('likes')
-          .doc(docRef)
-          .get();
+      // Try to get the document in the likes collection.
+      final docSnap = await getTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
 
+      // the user has clicked on the like button:
+      // If the doc does not exits in the Testimony likes collection.
+      // Then it means that the user has not liked the testimony.
+      // So a document is created with a uniek id in the likes collection.
       if (docSnap.exists == false) {
-        createTestimonyLikeDoc(testimonyInfo: testimonyInfo);
+        // Liked.
+        createTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
       } else {
-        await FirebaseFirestore.instance
-            .collection('Testimonies')
-            .doc(testimonyInfo.id)
-            .collection('likes')
-            .doc(docRef)
-            .delete();
+        // Disliked.
+        // If doc exist then it means the user has disliked.
+        // So we delete the document in the likes collection.
+        deleteTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
       }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
@@ -80,22 +80,44 @@ class CloudFireStore {
     }
   }
 
-  Future<void> createTestimonyLikeDoc(
-      {required TestimonyInfo testimonyInfo}) async {
-    final currenDate = DateTime.now();
+  Future<void> deleteTestimonyLikeDoc(
+      {required TestimonyInfo tInfo, required String docRef}) async {
+    return await FirebaseFirestore.instance
+        .collection('Testimonies')
+        .doc(tInfo.id)
+        .collection('likes')
+        .doc(docRef)
+        .delete();
+  }
 
-    // create a documet ref with the testimonyInfo + userId
-    String docRef = testimonyInfo.id.toString() + _user!.uid;
+  Future<DocumentSnapshot<Map<String, dynamic>>> getTestimonyLikeDoc({
+    required TestimonyInfo tInfo,
+    required String docRef,
+  }) async {
+    // This gets the document with the uniek ref in the likes collection.
+    return await FirebaseFirestore.instance
+        .collection('Testimonies')
+        .doc(tInfo.id)
+        .collection('likes')
+        .doc(docRef)
+        .get();
+  }
+
+  Future<void> createTestimonyLikeDoc({
+    required TestimonyInfo tInfo,
+    required String docRef,
+  }) async {
+    final currenDate = DateTime.now();
     try {
-      // upload to fireStore
+      // Upload a document with a unqiek id to the specific testimony likes collection.
       await _firestore
           .collection('Testimonies')
-          .doc(testimonyInfo.id)
+          .doc(tInfo.id)
           .collection('likes')
           .doc(docRef)
           .set(({
             'id': docRef,
-            'testimonyId': testimonyInfo.id,
+            'testimonyId': tInfo.id,
             'userId': _user!.uid,
             'date': currenDate
           }));
@@ -105,15 +127,15 @@ class CloudFireStore {
     }
   }
 
-  Future<void> createFast({required FastingInfo fastingInfo}) async {
+  Future<void> createFast({required FastingInfo fInfo}) async {
     try {
-      if (fastingInfo.userId != null &&
-          fastingInfo.startDate != null &&
-          fastingInfo.endDate != null &&
-          fastingInfo.goalDate != null) {
+      if (fInfo.userId != null &&
+          fInfo.startDate != null &&
+          fInfo.endDate != null &&
+          fInfo.goalDate != null) {
         final docRef = await _firestore
             .collection('Fasting Histories')
-            .add(FastingInfo.toMap(map: fastingInfo));
+            .add(FastingInfo.toMap(map: fInfo));
 
         await docRef.update({'id': docRef.id});
       }

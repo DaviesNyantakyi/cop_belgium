@@ -3,7 +3,7 @@ import 'package:dart_date/src/dart_date.dart';
 
 class FormalDates {
   static String formatDm({required DateTime? date}) {
-    return date!.format('dd MMMM H:mm');
+    return date!.format('dd MMM H:mm');
   }
 
   static String formatDmy({required DateTime? date}) {

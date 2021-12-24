@@ -85,7 +85,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
           return ListView.separated(
             physics: const BouncingScrollPhysics(),
             separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: 14),
+                const SizedBox(height: 20),
             itemCount: allTestimonies.length,
             itemBuilder: (context, index) {
               return TestimonyCard(

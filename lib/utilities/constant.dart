@@ -115,7 +115,6 @@ List<Color> kLightColors2 = [
   kBlueLight2,
   kRedLight2,
   kYellowLight2,
-  kGreenLight2,
   kIndigoLight2,
 ];
 

@@ -47,7 +47,8 @@ class FastColorPicker extends StatelessWidget {
                     controller: pageController,
                     physics: const BouncingScrollPhysics(),
                     children: [
-                      // List of colors to be used in the picker
+                      // List of colors to be used in the picker.
+                      // For more colors add anthor row and inscrease the smoothPage indicqtor count.
                       Row(
                         children: createColors(context, kLightColors2),
                       ),

@@ -48,7 +48,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         title = widget.testimonyInfo!.title;
         testimony = widget.testimonyInfo!.description;
         date = widget.testimonyInfo!.date;
-        isAnon = widget.testimonyInfo!.anonymous;
+        isAnon = widget.testimonyInfo!.isAnonymous;
         cardColor = Color(
           int.parse(widget.testimonyInfo!.cardColor.toString()),
         );
@@ -188,13 +188,13 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               final updatedTestimony = TestimonyInfo(
                 id: widget.testimonyInfo!.id,
                 userId: widget.testimonyInfo!.userId,
-                anonymous: isAnon,
+                isAnonymous: isAnon,
                 userName: widget.testimonyInfo!.userName,
                 title: title,
                 description: testimony,
                 date: widget.testimonyInfo!.date,
                 cardColor: cardColor!.value.toString(),
-                likes: widget.testimonyInfo!.likes,
+                totalLikes: widget.testimonyInfo!.totalLikes,
               );
               setState(() {});
 
@@ -202,8 +202,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                   title!.isNotEmpty &&
                   testimony != null &&
                   testimony!.isNotEmpty) {
-                await CloudFireStore()
-                    .updateTestimony(testimony: updatedTestimony);
+                await CloudFireStore().updateTestimony(tInfo: updatedTestimony);
 
                 Navigator.pop(context);
               } else {
@@ -266,11 +265,11 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             userId: FirebaseAuth.instance.currentUser!.uid,
             userName: FirebaseAuth.instance.currentUser!.displayName,
             title: title,
-            anonymous: isAnon,
+            isAnonymous: isAnon,
             description: testimony,
             date: date,
             cardColor: cardColor!.value.toString(),
-            likes: 0,
+            totalLikes: 0,
           );
 
           try {
