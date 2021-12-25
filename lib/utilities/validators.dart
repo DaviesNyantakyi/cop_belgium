@@ -15,11 +15,9 @@ class Validators {
 
   static String? emailTextValidator(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please enter email';
-    }
-    if (!value.isEmail()) {
       return 'Please enter valid email address.';
     }
+
     return null;
   }
 

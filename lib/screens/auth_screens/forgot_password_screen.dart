@@ -198,7 +198,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'ok'),
-            child: const Text('OK', style: kSFCaptionBold),
+            child: const Text('Ok', style: kSFCaptionBold),
           ),
         ],
       ),

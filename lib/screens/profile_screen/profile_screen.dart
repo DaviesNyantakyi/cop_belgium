@@ -7,6 +7,7 @@ import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -85,6 +86,7 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Widget _buildProfilInfo({required BuildContext context}) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Column(
       children: [
         AppBar(
@@ -100,12 +102,12 @@ class _ProfileScreensState extends State<ProfileScreens>
           backgroundColor: kBlueDark,
         ),
         const SizedBox(height: 10),
-        const Text(
-          'Jullia Hernandez',
+        Text(
+          user.displayName ?? ' ',
           style: kSFCaptionBold,
         ),
-        const Text(
-          'Jullia.Hernandez@outlook.com',
+        Text(
+          user.email ?? ' ',
           style: kSFSubtitle2,
         ),
       ],

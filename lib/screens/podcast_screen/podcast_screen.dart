@@ -211,7 +211,7 @@ class _BuildBodyState extends State<_BuildBody> {
     return Container(
       //background image
       width: 380,
-      height: 180,
+      height: 189,
 
       decoration: const BoxDecoration(
         color: Colors.blue,
@@ -243,40 +243,35 @@ class _BuildBodyState extends State<_BuildBody> {
               ],
             ),
           ),
-          child: Column(
-            // content
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 23)
-                    .copyWith(left: 22, right: 89),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'The Paradigm',
-                      style: kSFHeadLine2.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
-                      style: kSFBody.copyWith(color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildPlayBt(onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        PodcastDetailScreen.podcastDetailScreen,
-                      );
-                    })
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 23)
+                .copyWith(left: 22, right: 50),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'The Paradigm',
+                  style: kSFHeadLine2.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 5),
+                Text(
+                  'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
+                  style: kSFBody.copyWith(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+                const SizedBox(height: 16),
+                _buildPlayBt(onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    PodcastDetailScreen.podcastDetailScreen,
+                  );
+                })
+              ],
+            ),
           ),
         ),
       ),
@@ -304,14 +299,17 @@ class _BuildBodyState extends State<_BuildBody> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              'Listen Now',
-              style: kSFBody.copyWith(
-                fontWeight: FontWeight.w600,
+            Expanded(
+              flex: 100,
+              child: Text(
+                'Listen Now',
+                style: kSFBody.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-            const SizedBox(width: 10),
-            const Flexible(
+            const Expanded(child: SizedBox(width: 10)),
+            const Expanded(
               child: Icon(
                 FontAwesomeIcons.chevronRight,
                 size: 16,

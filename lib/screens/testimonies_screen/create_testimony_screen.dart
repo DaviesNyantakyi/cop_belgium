@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/color_picker.dart';
-import 'package:cop_belgium/utilities/connection_checker.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 
 class CreateTestimonyScreen extends StatefulWidget {
   static String createTestimonyScreen = 'editTestimonyScreen';
@@ -220,7 +218,8 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
           } else {
             var result = await _showDeleteAlert();
             if (result == 'ok') {
-              CloudFireStore().deleteTestimony(testimony: widget.testimonyInfo);
+              await CloudFireStore()
+                  .deleteTestimony(testimony: widget.testimonyInfo);
               Navigator.pop(context);
             }
           }
@@ -262,7 +261,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             description: testimony,
             date: date,
             cardColor: cardColor!.value.toString(),
-            totalLikes: 0,
+            likes: 0,
           );
 
           try {
@@ -312,7 +311,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       description: testimony,
       date: widget.testimonyInfo!.date,
       cardColor: cardColor!.value.toString(),
-      totalLikes: widget.testimonyInfo!.totalLikes,
+      likes: widget.testimonyInfo!.likes,
     );
     return updatedTestimony;
   }

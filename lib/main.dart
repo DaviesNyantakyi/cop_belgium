@@ -8,11 +8,11 @@ import 'package:flutter/widgets.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:provider/provider.dart';
+//import 'package:splash_screen_view/SplashScreenView.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(const MyApp());
 }
 
@@ -20,6 +20,20 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    /*Widget splashScreen = SplashScreenView(
+      navigateRoute: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ConnectionChecker>(
+            create: (_) => ConnectionChecker(),
+          ),
+        ],
+        child: const AuthScreenSwitcher(),
+      ),
+      duration: 2000,
+      imageSize: 130,
+      imageSrc: "assets/images/logos/splash_logo.png",
+      backgroundColor: Colors.white,
+    );*/
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',

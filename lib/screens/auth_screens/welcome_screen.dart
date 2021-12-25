@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:regexpattern/regexpattern.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -145,23 +144,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       children: [
         SizedBox(
           child: Image.asset(
-            'assets/images/logos/logotest.jpg',
-            width: 140.15,
-            height: 140.15,
+            'assets/images/logos/cop_logo.png',
+            width: 200,
+            height: 200,
             filterQuality: FilterQuality.high,
           ),
         ),
-        const SizedBox(height: 23),
-        Text(
-          'THE CHURCH OF',
-          style: kSFCaptionBold.copyWith(fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          'PENTECOST BELGIUM',
-          style: kSFCaptionBold.copyWith(fontWeight: FontWeight.w500),
-          textAlign: TextAlign.center,
-        )
       ],
     );
   }

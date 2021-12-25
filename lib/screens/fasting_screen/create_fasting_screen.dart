@@ -25,7 +25,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
     // If set in object the time can differ from the acctual time the user presses the button.
     FastingInfo(
       type: 'Custom',
-      duration: const Duration(minutes: 2),
+      duration: const Duration(seconds: 14),
     ),
     FastingInfo(
       type: 'Custom',

@@ -173,27 +173,117 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       textStyle: kSFHeadLine1,
       autoStart: false,
       onComplete: () async {
-        setState(() {
-          // reset the fasting timer
-          isFasting = false;
+        await submitFast();
+      },
+    );
+  }
 
-          endDate = DateTime.now();
-          fastingInfo!.endDate = endDate;
-          fastingInfo!.userId = FirebaseAuth.instance.currentUser!.uid;
-          fastingInfo!.note = note;
-        });
+  Future<void> submitFast() async {
+    // fasting has ended.
+    setState(() {
+      _controller.pause();
+      isFasting = false;
+      peopleFasting--;
 
-        try {
-          await CloudFireStore().createFast(fInfo: fastingInfo!);
-        } on FirebaseException catch (e) {
-          debugPrint(e.toString());
-        }
+      endDate = DateTime.now();
+      fastingInfo!.endDate = endDate;
+      fastingInfo!.userId = FirebaseAuth.instance.currentUser!.uid;
+      fastingInfo!.note = note;
+    });
 
+    try {
+      String? saveFile = await _showSaveConformationAlert();
+
+      if (saveFile == 'save') {
+        await CloudFireStore().createFastHistory(fInfo: fastingInfo!);
         await Navigator.pushNamed(
           context,
           FastingHistoryScreen.fastingHistoryScreen,
         );
-      },
+      }
+
+      if (saveFile == 'delete') {
+        Navigator.pop(context);
+      }
+
+      if (saveFile == null) {
+        _controller.resume();
+        setState(() {
+          peopleFasting++;
+          isFasting = true;
+        });
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> startFasting() async {
+    setState(() {
+      isFasting = true;
+      //TODO: increase the fasting people firstore
+      peopleFasting++;
+
+      _controller.start();
+    });
+  }
+
+  Widget _buildBtn() {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(kGreen),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(kButtonRadius),
+              ),
+            ),
+          ),
+        ),
+        onPressed: () async {
+          if (isFasting == false) {
+            // isnot started fasting
+            startFasting();
+          } else {
+            await submitFast();
+          }
+        },
+        child: Text(
+          !isFasting ? 'Start Fasting' : 'End Fast Early',
+          style: kSFBodyBold.copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Future<String?> _showSaveConformationAlert() async {
+    return await showDialog<String?>(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        title: const Text(
+          'You completed your fast!',
+          style: kSFHeadLine2,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'delete'),
+            child: const Text('Delete', style: kSFCaptionNormal),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'save'),
+            child: const Text('Save Fast', style: kSFCaptionBold),
+          ),
+        ],
+      ),
     );
   }
 
@@ -276,75 +366,6 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBtn() {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(kGreen),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(kButtonRadius),
-              ),
-            ),
-          ),
-        ),
-        onPressed: () async {
-          if (isFasting == false) {
-            // isnot started fasting
-
-            setState(() {
-              isFasting = true;
-              //TODO: increase the fasting people firstore
-              peopleFasting++;
-
-              _controller.start();
-            });
-          } else {
-            // fasting has been ended
-            setState(() {
-              isFasting = false;
-              //TODO: Decrease the fasting people firstore
-              peopleFasting--;
-              //pauses the fasting timer using the conroller
-              _controller.pause();
-            });
-
-            //TODO:
-            //before adding to user account in firebase show popup asking to save
-            // fast. When save is true save to firebase user history
-            // before pushing add to firebase history screen ad to firebase
-            // nothing will be passed in the fasting history object
-            // because it will show the history form firebase
-            setState(() {
-              endDate = DateTime.now();
-              fastingInfo!.endDate = endDate;
-              fastingInfo!.userId = FirebaseAuth.instance.currentUser!.uid;
-              fastingInfo!.note = note;
-            });
-
-            try {
-              await CloudFireStore().createFast(fInfo: fastingInfo!);
-            } on FirebaseException catch (e) {
-              debugPrint(e.toString());
-            }
-
-            await Navigator.pushNamed(
-              context,
-              FastingHistoryScreen.fastingHistoryScreen,
-            );
-          }
-        },
-        child: Text(
-          !isFasting ? 'Start Fasting' : 'End Fast Early',
-          style: kSFBodyBold.copyWith(color: Colors.white),
-        ),
       ),
     );
   }

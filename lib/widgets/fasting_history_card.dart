@@ -1,4 +1,5 @@
 import 'package:cop_belgium/models/fasting_model.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
@@ -37,15 +38,33 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildGoalDuration(fastingInfo: widget.fastingInfo),
-        const SizedBox(width: 10),
-        _buildTotalDuration(fastingInfo: widget.fastingInfo),
-        const SizedBox(width: 10),
-        _buildEstimatedTimes(fastingInfo: widget.fastingInfo),
-      ],
+    return SizedBox(
+      height: 82,
+      child: Stack(
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildGoalDuration(fastingInfo: widget.fastingInfo),
+              const SizedBox(width: 10),
+              _buildTotalDuration(fastingInfo: widget.fastingInfo),
+              const SizedBox(width: 10),
+              _buildEstimatedTimes(fastingInfo: widget.fastingInfo),
+            ],
+          ),
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                splashColor: kBlueLight2,
+                onTap: () async {
+                  CloudFireStore().deleteFastHistory(fInfo: widget.fastingInfo);
+                },
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

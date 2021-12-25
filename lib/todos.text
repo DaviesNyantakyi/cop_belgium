@@ -1,0 +1,20 @@
+
+Firebase project setup
+ -iOS Firebase Project Setup
+
+
+Testimony Screen 
+  -try again option if testimony fails to load
+
+Fasting Screen
+  -Save timer
+  
+
+FastingHistoryScreen
+  -Fix: When you click to delete the top card the last one get's deleted because the index is reversed.
+
+
+
+
+
+ 

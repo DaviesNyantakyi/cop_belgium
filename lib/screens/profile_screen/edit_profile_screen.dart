@@ -1,9 +1,5 @@
-import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
-import 'package:cop_belgium/widgets/snackbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
@@ -44,71 +40,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       gender = widget.user!.gender;
       selectedChurchLocation = widget.user!.church;
     });
-  }
-
-  Future<void> submit() async {
-    setState(() {
-      isSubmit = true;
-    });
-    bool nameIsValid = _nameFormKey.currentState!.validate();
-    bool emailIsValid = _emailFormKey.currentState!.validate();
-    bool passworIsValid = _passwordFormKey.currentState!.validate();
-
-    if (nameIsValid &&
-        emailIsValid &&
-        passworIsValid &&
-        gender != null &&
-        selectedChurchLocation != null) {
-      try {
-        if (mounted) {
-          setState(() {
-            isLoading = true;
-          });
-        }
-        await EasyLoading.show(
-          maskType: EasyLoadingMaskType.black,
-          indicator: const CircularProgressIndicator(
-            color: kBlueDark,
-          ),
-        );
-        final user = await Authentication().signUpWithEmail(
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-          selectedChurch: selectedChurchLocation,
-          gender: gender,
-        );
-
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (user != null) {
-          Navigator.pop(context);
-        }
-      } on FirebaseAuthException catch (e) {
-        debugPrint(e.toString());
-        await EasyLoading.dismiss();
-        kshowSnackbar(
-          type: 'error',
-          context: context,
-          child: Text(
-            e.message.toString(),
-            style: kSFBody.copyWith(color: Colors.black),
-          ),
-        );
-      } finally {
-        if (mounted) {
-          setState(() {
-            isSubmit = false;
-            isLoading = false;
-          });
-        }
-        await EasyLoading.dismiss();
-      }
-    }
   }
 
   @override

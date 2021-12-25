@@ -1,3 +1,5 @@
+import 'package:cop_belgium/models/user_model.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -5,35 +7,26 @@ import 'package:flutter/widgets.dart';
 
 class Authentication {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CloudFireStore _fireStore = CloudFireStore();
 
-  Future<User?> signUpWithEmail({
-    required String? firstName,
-    required String? lastName,
-    required String? email,
-    required String? password,
-    required String? selectedChurch,
-    required String? gender,
-  }) async {
+  Future<User?> signUpWithEmail(
+      {required CopUser user, String? password}) async {
     try {
-      if (firstName != null &&
-          firstName.isNotEmpty &&
-          lastName != null &&
-          lastName.isNotEmpty &&
-          email != null &&
-          email.isNotEmpty &&
+      if (user.firstName != null &&
+          user.lastName != null &&
+          user.email != null &&
           password != null &&
-          password.isNotEmpty &&
-          selectedChurch != null &&
-          selectedChurch.isNotEmpty &&
-          gender != null &&
-          gender.isNotEmpty) {
-        String? displayName = '$firstName ' + lastName;
+          user.church != null &&
+          user.gender != null) {
+        String? displayName = '${user.firstName} ${user.lastName}';
+
         await _auth.createUserWithEmailAndPassword(
-          email: email,
+          email: user.email!,
           password: password,
         );
         await _auth.currentUser!.updateDisplayName(displayName);
-
+        user.id = _auth.currentUser!.uid;
+        await _fireStore.createUserDoc(user: user);
         return _auth.currentUser;
       }
     } on FirebaseAuthException catch (e) {

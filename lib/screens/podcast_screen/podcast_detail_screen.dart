@@ -65,7 +65,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 10),
-        height: 170,
+        height: MediaQuery.of(context).size.height * 0.25,
         decoration: BoxDecoration(
           color: kBlue,
           image: DecorationImage(
@@ -78,12 +78,27 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 10),
-        height: 170,
+        height: MediaQuery.of(context).size.height * 0.25,
         decoration: const BoxDecoration(
           color: kBlueDark,
         ),
       );
     }
+  }
+
+  Widget _buildImage() {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.40,
+      decoration: const BoxDecoration(
+        color: kBlue,
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/meeting.jpg'),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+    );
   }
 
   Column _buildEpisodesList() {

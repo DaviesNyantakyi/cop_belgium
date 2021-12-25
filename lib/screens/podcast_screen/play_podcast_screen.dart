@@ -17,30 +17,22 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   bool isPlaying = false;
   bool stopPlaying = false;
   bool repeat = false;
+
+  void _stop() {}
+  void _play() {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppbar(context: context),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+          padding: const EdgeInsets.symmetric(
+              horizontal: kBodyPadding, vertical: kBodyPadding),
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 10),
-                  height: 360,
-                  decoration: const BoxDecoration(
-                    color: kBlue,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/meeting.jpg'),
-                    ),
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                  ),
-                ),
+                _buildImage(),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -49,13 +41,28 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
                     const SizedBox(height: 32),
                     const _MySilder(),
                     const SizedBox(height: 32),
-                    _buildMediaControl()
+                    _buildMediaControls()
                   ],
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.40,
+      decoration: const BoxDecoration(
+        color: kBlue,
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: AssetImage('assets/images/meeting.jpg'),
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
     );
   }
@@ -78,67 +85,76 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
     );
   }
 
-  Widget _buildMediaControl() {
+  Widget _buildMediaControls() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.redoAlt,
-            size: 32,
-          ),
-          color: Colors.grey,
-          onPressed: () {
-            setState(() {
-              repeat = !repeat;
-            });
-          },
-        ),
-        const SizedBox(width: kBodyPadding),
-        IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.backward,
-            size: 32,
-          ),
-          color: Colors.grey,
-          onPressed: () {},
-        ),
-        const SizedBox(width: kBodyPadding),
-        FloatingActionButton(
-          backgroundColor: kBlueDark,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              isPlaying == true
-                  ? FontAwesomeIcons.pause
-                  : FontAwesomeIcons.play,
+        Flexible(
+          child: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.redoAlt,
+              size: 32,
             ),
+            color: Colors.grey,
+            onPressed: () {
+              setState(() {
+                repeat = !repeat;
+              });
+            },
           ),
+        ),
+        const Flexible(child: SizedBox(width: kBodyPadding)),
+        Flexible(
+          child: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.backward,
+              size: 32,
+            ),
+            color: Colors.grey,
+            onPressed: () {},
+          ),
+        ),
+        const Flexible(child: SizedBox(width: kBodyPadding)),
+        IconButton(
+          icon: Icon(
+            isPlaying == true ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
+            size: 32,
+          ),
+          color: Colors.grey,
           onPressed: () {
+            if (isPlaying) {
+              _stop();
+            } else {
+              _play();
+            }
+
             setState(() {
               isPlaying = !isPlaying;
-              stopPlaying = false;
             });
           },
         ),
-        const SizedBox(width: kBodyPadding),
-        IconButton(
-          icon: const Icon(
-            FontAwesomeIcons.forward,
-            size: 32,
+        const Flexible(child: SizedBox(width: kBodyPadding)),
+        Flexible(
+          child: IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.forward,
+              size: 32,
+            ),
+            color: Colors.grey,
+            onPressed: () {},
           ),
-          color: Colors.grey,
-          onPressed: () {},
         ),
-        const SizedBox(width: kBodyPadding),
-        IconButton(
-          icon: const Icon(FontAwesomeIcons.stop, size: 32),
-          color: Colors.grey,
-          onPressed: () {
-            setState(() {
-              stopPlaying = true;
-            });
-          },
+        const Flexible(child: SizedBox(width: kBodyPadding)),
+        Flexible(
+          child: IconButton(
+            icon: const Icon(FontAwesomeIcons.stop, size: 32),
+            color: Colors.grey,
+            onPressed: () {
+              setState(() {
+                stopPlaying = true;
+              });
+            },
+          ),
         ),
       ],
     );

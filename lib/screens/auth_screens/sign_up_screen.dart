@@ -1,8 +1,8 @@
+import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:regexpattern/regexpattern.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -33,7 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? lastName;
   String? email;
   String? password;
-  String? selectedChurchLocation;
+  String? selectedChurch;
   String? gender;
 
   Future<void> submit() async {
@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailIsValid &&
         passworIsValid &&
         gender != null &&
-        selectedChurchLocation != null) {
+        selectedChurch != null) {
       try {
         if (mounted) {
           setState(() {
@@ -61,13 +61,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             color: kBlueDark,
           ),
         );
-        final user = await Authentication().signUpWithEmail(
+
+        final userObject = CopUser(
+          title: 'member',
+          isOnline: true,
+          isAdmin: false,
           firstName: firstName,
           lastName: lastName,
           email: email,
-          password: password,
-          selectedChurch: selectedChurchLocation,
           gender: gender,
+          church: selectedChurch,
+        );
+
+        final user = await Authentication().signUpWithEmail(
+          user: userObject,
+          password: password,
         );
 
         if (mounted) {
@@ -133,10 +141,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildLocationSelector() {
     return ChurchSelctor().buildChurchSelectorTile(
-      city: selectedChurchLocation,
+      city: selectedChurch,
       onChanged: (value) {
         setState(() {
-          selectedChurchLocation = value;
+          selectedChurch = value;
           FocusScope.of(context).unfocus();
         });
       },
@@ -254,7 +262,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   dynamic _locationValidator() {
     // shows error text if the location is null
 
-    if (selectedChurchLocation == null && isSubmit == true) {
+    if (selectedChurch == null && isSubmit == true) {
       return Text(
         'Please select church location',
         style: TextStyle(color: Colors.red.shade700, fontSize: 13),
@@ -280,7 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       title: const Text(
-        'Sing Up',
+        'Sign Up',
         style: kSFCaptionBold,
       ),
     );

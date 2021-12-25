@@ -139,17 +139,13 @@ class TestimonyCard extends StatelessWidget {
   Widget _buildLikeCount() {
     final collection = FirebaseFirestore.instance.collection('Testimonies');
 
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: collection
-          .doc(testimonyInfo.id)
-          .collection('likes')
-          .where('testimonyId', isEqualTo: testimonyInfo.id)
-          .snapshots(),
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream: collection.doc(testimonyInfo.id).snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final list = snapshot.data!.docs;
+          int likes = snapshot.data!['likes'];
           return Text(
-            '${list.length}',
+            '$likes',
             style: kSFSubtitle2,
           );
         }

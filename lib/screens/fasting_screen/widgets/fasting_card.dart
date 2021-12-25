@@ -47,25 +47,35 @@ class PresetFastingCard extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '$duration:${day - duration} TRF',
-                  style: kSFBody.copyWith(color: Colors.white),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '$duration:${day - duration} TRF',
+                    style: kSFBody.copyWith(color: Colors.white),
+                  ),
                 ),
               ),
-              const SizedBox(height: 15),
-              Text(
-                '$duration',
-                style: kSFHeadLine1.copyWith(color: Colors.white),
+              const Flexible(child: SizedBox(height: 15)),
+              Expanded(
+                flex: 2,
+                child: Text(
+                  '$duration',
+                  style: kSFHeadLine1.copyWith(color: Colors.white),
+                ),
               ),
-              const SizedBox(height: 7),
-              Text(
-                'Hours',
-                style: kSFCaptionBold.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              const Flexible(child: SizedBox(height: 7)),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  'Hours',
+                  style: kSFCaptionBold.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
                 ),
               )
             ],
@@ -120,18 +130,23 @@ class CustomFastingCard extends StatelessWidget {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.add,
-                size: 60,
-                color: Colors.white,
-              ),
-              const SizedBox(height: 19),
-              Text(
-                'Custom Fast',
-                style: kSFCaptionBold.copyWith(
-                  fontWeight: FontWeight.w400,
+              const Expanded(
+                child: Icon(
+                  Icons.add,
+                  size: 60,
                   color: Colors.white,
+                ),
+              ),
+              const Flexible(child: SizedBox(height: 19)),
+              Expanded(
+                child: Text(
+                  'Custom Fast',
+                  style: kSFCaptionBold.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
                 ),
               )
             ],

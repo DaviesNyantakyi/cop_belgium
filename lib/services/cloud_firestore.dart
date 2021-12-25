@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cop_belgium/main.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -61,7 +61,18 @@ class CloudFireStore {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
-        await _firestore.collection('Testimonies').doc(testimony!.id).delete();
+        // delete likers collection first otherwise the doc will still remain
+        final collection = _firestore
+            .collection('Testimonies')
+            .doc(testimony!.id)
+            .collection('likers');
+        final snapshots = await collection.get();
+        for (var doc in snapshots.docs) {
+          await doc.reference.delete();
+        }
+
+        // delete doc
+        await _firestore.collection('Testimonies').doc(testimony.id).delete();
       } else {
         throw ConnectionChecker.connectionException;
       }
@@ -85,13 +96,16 @@ class CloudFireStore {
         // the user has clicked on the like button:
         // If the doc does not exits in the Testimony likes collection.
         // Then it means that the user has not liked the testimony.
-        // So a document is created with a uniek id in the likes collection.
         if (docSnap.exists == false) {
           // Liked.
-          createTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
+          updateDocLikeCount(tInfo: tInfo, hasLiked: true);
+          //  document is created with a uniek id in the likes collection.
+          await createTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
         } else {
           // Disliked.
           // If doc exist then it means the user has disliked.
+
+          updateDocLikeCount(tInfo: tInfo, hasLiked: false);
           // So we delete the document in the likes collection.
           deleteTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
         }
@@ -104,6 +118,29 @@ class CloudFireStore {
     }
   }
 
+  Future<void> updateDocLikeCount({
+    required TestimonyInfo tInfo,
+    required hasLiked,
+  }) async {
+    int likeCount;
+
+    // Get the totalLikes ount form the doc.
+    final likeDocRef =
+        await _firestore.collection('Testimonies').doc(tInfo.id).get();
+    likeCount = likeDocRef.data()!['likes'];
+
+    // If hasLiked is true then it increment de likeCount
+    if (hasLiked) {
+      await _firestore.collection('Testimonies').doc(tInfo.id).update({
+        'likes': likeCount + 1,
+      });
+    } else {
+      await _firestore.collection('Testimonies').doc(tInfo.id).update({
+        'likes': likeCount - 1,
+      });
+    }
+  }
+
   Future<DocumentSnapshot<Map<String, dynamic>>> getTestimonyLikeDoc({
     required TestimonyInfo tInfo,
     required String docRef,
@@ -112,7 +149,7 @@ class CloudFireStore {
     return await FirebaseFirestore.instance
         .collection('Testimonies')
         .doc(tInfo.id)
-        .collection('likes')
+        .collection('likers')
         .doc(docRef)
         .get();
   }
@@ -123,11 +160,12 @@ class CloudFireStore {
   }) async {
     final currenDate = DateTime.now();
     try {
+      // This method allows us to soo ho liked the post.
       // Upload a document with a unqiek id to the specific testimony likes collection.
       await _firestore
           .collection('Testimonies')
           .doc(tInfo.id)
-          .collection('likes')
+          .collection('likers')
           .doc(docRef)
           .set(({
             'id': docRef,
@@ -156,17 +194,48 @@ class CloudFireStore {
     }
   }
 
-  Future<void> createFast({required FastingInfo fInfo}) async {
+  Future<void> createFastHistory({required FastingInfo fInfo}) async {
     try {
       if (fInfo.userId != null &&
           fInfo.startDate != null &&
           fInfo.endDate != null &&
           fInfo.goalDate != null) {
         final docRef = await _firestore
-            .collection('Fasting Histories')
+            .collection('Users')
+            .doc(_user!.uid)
+            .collection('Fasting history')
             .add(FastingInfo.toMap(map: fInfo));
-
         await docRef.update({'id': docRef.id});
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFastHistory({required FastingInfo fInfo}) async {
+    try {
+      await _firestore
+          .collection('Users')
+          .doc(_user!.uid)
+          .collection('Fasting history')
+          .doc(fInfo.id)
+          .delete();
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> createUserDoc({required CopUser user}) async {
+    try {
+      if (user.id != null &&
+          user.lastName != null &&
+          user.firstName != null &&
+          user.email != null) {
+        await _firestore.collection('Users').doc(user.id).set(
+              CopUser.toMap(copUser: user),
+            );
       }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());

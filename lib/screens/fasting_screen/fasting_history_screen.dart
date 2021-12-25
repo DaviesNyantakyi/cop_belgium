@@ -8,10 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-//TODO: Fix overflow errow on smaller device
-
-//TODO: this will display the fasting history from the user firebase in a acending order
-
 class FastingHistoryScreen extends StatefulWidget {
   static String fastingHistoryScreen = 'fastingHistoryScreen';
 
@@ -22,6 +18,8 @@ class FastingHistoryScreen extends StatefulWidget {
 }
 
 class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
+  User? currentUser = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +27,12 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
-              .collection('Fasting Histories')
+              .collection('Users')
+              .doc(currentUser!.uid)
+              .collection('Fasting history')
               .orderBy('startDate', descending: true)
               .snapshots(),
           builder: (context, snapshot) {
-            List<FastingInfo> allFastingInfo = [];
-
             if (snapshot.data != null) {
               if (snapshot.data!.docs.isEmpty) {
                 return Center(
@@ -84,6 +82,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
                 ],
               );
             }
+            List<FastingInfo> allFastingInfo = [];
 
             final fastingDoc = snapshot.data!.docs;
 
@@ -105,7 +104,9 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
                   const SizedBox(height: 14),
               itemCount: allFastingInfo.length,
               itemBuilder: (context, index) {
-                return FastingHistoryCard(fastingInfo: allFastingInfo[index]);
+                return FastingHistoryCard(
+                  fastingInfo: allFastingInfo[index],
+                );
               },
             );
           },
