@@ -94,19 +94,17 @@ class CloudFireStore {
         final docSnap = await getTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
 
         // the user has clicked on the like button:
-        // If the doc does not exits in the Testimony likes collection.
+        // If the doc does not exits in the Testimony likers collection.
         // Then it means that the user has not liked the testimony.
         if (docSnap.exists == false) {
-          // Liked.
-          updateDocLikeCount(tInfo: tInfo, hasLiked: true);
+          // Like
+
           //  document is created with a uniek id in the likes collection.
           await createTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
         } else {
-          // Disliked.
+          // Dislike
           // If doc exist then it means the user has disliked.
-
-          updateDocLikeCount(tInfo: tInfo, hasLiked: false);
-          // So we delete the document in the likes collection.
+          // So we delete the document in the likers collection.
           deleteTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
         }
       } else {
@@ -161,7 +159,7 @@ class CloudFireStore {
     final currenDate = DateTime.now();
     try {
       // This method allows us to soo ho liked the post.
-      // Upload a document with a unqiek id to the specific testimony likes collection.
+      // Upload a document with a unqiek id to the specific testimony doc likers collection.
       await _firestore
           .collection('Testimonies')
           .doc(tInfo.id)
@@ -173,6 +171,9 @@ class CloudFireStore {
             'userId': _user!.uid,
             'date': currenDate
           }));
+
+      // update testimony info like count
+      updateDocLikeCount(tInfo: tInfo, hasLiked: true);
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -182,12 +183,16 @@ class CloudFireStore {
   Future<void> deleteTestimonyLikeDoc(
       {required TestimonyInfo tInfo, required String docRef}) async {
     try {
+      // delete the doc with the liker info in the likers collection.
       await FirebaseFirestore.instance
           .collection('Testimonies')
           .doc(tInfo.id)
-          .collection('likes')
+          .collection('likers')
           .doc(docRef)
           .delete();
+
+      // update testimony info like count
+      updateDocLikeCount(tInfo: tInfo, hasLiked: false);
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

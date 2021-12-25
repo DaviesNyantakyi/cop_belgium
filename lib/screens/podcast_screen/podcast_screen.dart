@@ -73,8 +73,6 @@ class _BuildBodyState extends State<_BuildBody> {
     //create a model with the podcast details not the cards
   ];*/
 
-  String? userName = 'Davies Nyantakyi';
-
   @override
   void initState() {
     super.initState();

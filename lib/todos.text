@@ -13,6 +13,9 @@ Fasting Screen
 FastingHistoryScreen
   -Fix: When you click to delete the top card the last one get's deleted because the index is reversed.
 
+PlayPodcastScreen
+  - Test audio controlles just audio package
+
 
 
 

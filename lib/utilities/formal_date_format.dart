@@ -14,6 +14,10 @@ class FormalDates {
     return date!.format('HH:mm');
   }
 
+  static String formatMs({required DateTime? date}) {
+    return date!.format('mm:ss');
+  }
+
   static String getFastGoalDate({
     required FastingInfo? fastingInfo,
   }) {

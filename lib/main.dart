@@ -20,20 +20,6 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    /*Widget splashScreen = SplashScreenView(
-      navigateRoute: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ConnectionChecker>(
-            create: (_) => ConnectionChecker(),
-          ),
-        ],
-        child: const AuthScreenSwitcher(),
-      ),
-      duration: 2000,
-      imageSize: 130,
-      imageSrc: "assets/images/logos/splash_logo.png",
-      backgroundColor: Colors.white,
-    );*/
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
@@ -43,7 +29,7 @@ class MyApp extends StatelessWidget {
             create: (_) => ConnectionChecker(),
           ),
         ],
-        child: const AuthScreenSwitcher(),
+        child: const PlayPodcastScreen(),
       ),
       theme: _theme,
       routes: _routes,

@@ -144,15 +144,9 @@ class TestimonyCard extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           int likes = snapshot.data!['likes'];
-          return Text(
-            '$likes',
-            style: kSFSubtitle2,
-          );
+          return Text('$likes', style: kSFSubtitle2);
         }
-        return const Text(
-          '...',
-          style: kSFSubtitle2,
-        );
+        return const Text('...', style: kSFSubtitle2);
       },
     );
   }
