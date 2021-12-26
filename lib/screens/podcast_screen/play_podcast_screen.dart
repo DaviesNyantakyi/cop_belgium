@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +22,13 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   AudioPlayer player = AudioPlayer();
 
   bool isPlaying = false;
-  String? totalDuration;
-  String? currentPostion;
+  String? totalDurationText;
+  String? currentPostionText;
+  double totalDuration = 0;
+  double currentposition = 0;
+  double? draggable;
+
+  Duration? newPosition;
 
   Future<void> stop() async {
     await player.stop();
@@ -38,30 +45,37 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Future<void> init() async {
-    Duration? duration = await player.setUrl(
-        'https://file-examples-com.github.io/uploads/2017/11/file_example_MP3_5MG.mp3');
-    getTotalAudioDuation(duration: duration);
+    Duration? duration = await player.setAsset('assets/Revelation.mp3');
 
-    getcurretAudioPostion();
+    getTotalDuration(duration: duration);
+    getcurretPostion();
   }
 
-  void getTotalAudioDuation({Duration? duration}) {
+  void getTotalDuration({Duration? duration}) {
     DateTime date =
         DateTime.fromMillisecondsSinceEpoch(duration!.inMilliseconds.toInt());
     setState(() {
-      totalDuration = FormalDates.formatMs(date: date);
+      totalDurationText = FormalDates.formatMs(date: date);
+      totalDuration = duration.inMilliseconds.toDouble();
     });
   }
 
-  void getcurretAudioPostion() {
+  void getcurretPostion() {
     player.positionStream.listen((Duration duration) {
       DateTime date =
           DateTime.fromMillisecondsSinceEpoch(duration.inMilliseconds.toInt());
-
       setState(() {
-        currentPostion = FormalDates.formatMs(date: date);
+        currentposition = duration.inMilliseconds.toDouble();
+        currentPostionText = FormalDates.formatMs(date: date);
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    player.dispose();
   }
 
   @override
@@ -100,21 +114,30 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
     return Column(
       children: [
         Slider(
-          min: 0,
-          max: 100,
-          value: 0,
-          onChanged: (value) {},
+          min: 0.0,
+          max: totalDuration,
+          value: min(
+              currentposition, player.duration?.inMilliseconds.toDouble() ?? 0),
+          // if you only use the currentposition as the value you will get an error when the player reaches the end.
+          //So the min function is used. This returns the min value between 2 numbers.
+          // So when the player reaches the end and the  current position is greater the the total duration the total duration will be return as the value.
+          onChanged: (value) {
+            player.setVolume(0.0);
+            player.seek(Duration(milliseconds: value.toInt()));
+            player.setVolume(1);
+          },
+          onChangeEnd: (value) {},
         ),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              currentPostion ?? '00:00',
+              currentPostionText ?? '00:00',
               style: kSFBody,
             ),
             Text(
-              totalDuration ?? '00:00',
+              totalDurationText ?? '00:00',
               style: kSFBody,
             ),
           ],
@@ -163,22 +186,20 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.redoAlt,
+              FontAwesomeIcons.fastBackward,
               size: 32,
             ),
             color: Colors.grey,
-            onPressed: () {},
-          ),
-        ),
-        const Flexible(child: SizedBox(width: kBodyPadding)),
-        Flexible(
-          child: IconButton(
-            icon: const Icon(
-              FontAwesomeIcons.backward,
-              size: 32,
-            ),
-            color: Colors.grey,
-            onPressed: () {},
+            onPressed: () {
+              var x = player.position - const Duration(milliseconds: 10000);
+
+              if (x > Duration.zero) {
+                player.seek(x);
+              }
+              if (x.inMilliseconds < 0) {
+                player.seek(Duration.zero);
+              }
+            },
           ),
         ),
         const Flexible(child: SizedBox(width: kBodyPadding)),
@@ -204,19 +225,20 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.forward,
+              FontAwesomeIcons.fastForward,
               size: 32,
             ),
             color: Colors.grey,
-            onPressed: () {},
-          ),
-        ),
-        const Flexible(child: SizedBox(width: kBodyPadding)),
-        Flexible(
-          child: IconButton(
-            icon: const Icon(FontAwesomeIcons.stop, size: 32),
-            color: Colors.grey,
-            onPressed: () {},
+            onPressed: () {
+              newPosition =
+                  player.position + const Duration(milliseconds: 10000);
+
+              player.seek(newPosition);
+
+              if (newPosition! > player.duration!) {
+                player.seek(player.duration);
+              }
+            },
           ),
         ),
       ],

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             create: (_) => ConnectionChecker(),
           ),
         ],
-        child: const PlayPodcastScreen(),
+        child: const AuthScreenSwitcher(),
       ),
       theme: _theme,
       routes: _routes,
