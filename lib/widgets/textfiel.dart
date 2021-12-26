@@ -8,9 +8,9 @@ class MyTextField extends StatelessWidget {
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
   final TextInputAction? textInputAction;
-  bool? obscureText;
+  final bool? obscureText;
 
-  MyTextField({
+  const MyTextField({
     Key? key,
     this.hintText,
     this.initialValue,

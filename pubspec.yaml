@@ -50,8 +50,10 @@ dependencies:
   flutter_email_sender: ^5.0.2 # open email app. eg contact me
   internet_connection_checker: ^0.0.1+3  # check for actual internet coonection.
   provider: ^6.0.1 # makes passing object arround easer
-  flutter_native_splash: ^1.3.2
-  just_audio: ^0.9.18
+  flutter_native_splash: ^1.3.2 #plash screen
+  just_audio: ^0.9.18 #audio player
+
+
 
 
 flutter_native_splash:

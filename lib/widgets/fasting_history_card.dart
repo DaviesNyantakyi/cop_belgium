@@ -121,7 +121,7 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
             style: kSFSubtitle2,
           ),
           Text(
-            '${totalFastDuration}',
+            '$totalFastDuration',
             style: kSFCaptionBold,
           ),
           const Text(

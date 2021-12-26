@@ -1,4 +1,6 @@
+import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -47,9 +49,11 @@ class _PodcastScreenState extends State<PodcastScreen> {
               color: kBlueDark,
             ),
             onPressed: () {
-              Navigator.pushNamed(
+              Navigator.push(
                 context,
-                AnnouncementScreen.announcementScreen,
+                CupertinoPageRoute(
+                  builder: (context) => const AnnouncementScreen(),
+                ),
               );
             },
           ),
@@ -136,7 +140,7 @@ class _BuildBodyState extends State<_BuildBody> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (context) {
                       return const PodcastDetailScreen();
                     },
@@ -188,9 +192,11 @@ class _BuildBodyState extends State<_BuildBody> {
                 style: kSFSubtitle2,
               ),
               onPressed: () {
-                Navigator.pushNamed(
+                Navigator.push(
                   context,
-                  SeeAllPodCastScreen.seeAllPodCastScreen,
+                  CupertinoPageRoute(
+                    builder: (context) => const SeeAllPodCastScreen(),
+                  ),
                 );
               },
               style: TextButton.styleFrom(
@@ -223,7 +229,12 @@ class _BuildBodyState extends State<_BuildBody> {
       ),
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, PodcastDetailScreen.podcastDetailScreen);
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => const PlayPodcastScreen(),
+            ),
+          );
         },
         style: kTextButtonStyle,
         child: Container(
@@ -262,12 +273,16 @@ class _BuildBodyState extends State<_BuildBody> {
                   maxLines: 2,
                 ),
                 const SizedBox(height: 16),
-                _buildPlayBt(onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    PodcastDetailScreen.podcastDetailScreen,
-                  );
-                })
+                _buildPlayBt(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const PlayPodcastScreen(),
+                      ),
+                    );
+                  },
+                )
               ],
             ),
           ),

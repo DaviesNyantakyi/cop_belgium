@@ -1,6 +1,7 @@
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -8,6 +9,7 @@ String _speaker =
     'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
 String _description =
     '''What do we do with the passages in the Bible that are really difficult? Violence, slavery, the treatment of women—what the Bible has to say about these topics has, at times, been misinterpreted and misused. ''';
+String _title = 'Tree Of Life';
 
 class PodcastDetailScreen extends StatefulWidget {
   static String podcastDetailScreen = 'podcastDetailScreen';
@@ -84,21 +86,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         ),
       );
     }
-  }
-
-  Widget _buildImage() {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.40,
-      decoration: const BoxDecoration(
-        color: kBlue,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/images/meeting.jpg'),
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-    );
   }
 
   Column _buildEpisodesList() {
@@ -200,8 +187,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       children: [
         Container(
           alignment: Alignment.centerLeft,
-          child: const Text(
-            'Tree Of Life',
+          child: Text(
+            _title,
             style: kSFHeadLine1,
           ),
         ),
@@ -222,13 +209,22 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            _description,
-            style: kSFBody,
+        TextButton(
+          style: kTextButtonStyle,
+          onPressed: () {
+            _showBottomSheet(
+                context: context, title: _title, description: _description);
+          },
+          child: Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              _description,
+              style: kSFBody,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -308,6 +304,36 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           Navigator.pop(context);
         },
         style: kTextButtonStyle,
+      ),
+    );
+  }
+
+  Future<void> _showBottomSheet({
+    required BuildContext context,
+    required String title,
+    required String description,
+  }) {
+    return showMyBottomSheet(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              title,
+              style: kSFHeadLine2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              description,
+              style: kSFBody,
+            ),
+          ),
+        ],
       ),
     );
   }

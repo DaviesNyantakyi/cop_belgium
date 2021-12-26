@@ -2,6 +2,7 @@ import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.d
 import 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -48,7 +49,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
+          CupertinoPageRoute(
             builder: (context) {
               return const CreateTestimonyScreen();
             },

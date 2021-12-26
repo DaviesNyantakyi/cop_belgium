@@ -55,140 +55,145 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: _buildAppbar(context: context),
       body: SafeArea(
-        child: Center(
-          child: Column(
-            children: [
-              _buildImage(),
-              const SizedBox(height: 39),
-              Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(
-                      FontAwesomeIcons.solidBell,
-                      color: kBlueDark,
-                    ),
-                    title: const Text(
-                      'Notifications',
-                      style: kSFBody,
-                    ),
-                    trailing: Transform.scale(
-                      scale: 0.9,
-                      child: CupertinoSwitch(
-                        value: notificationOn,
-                        onChanged: (bool value) {
-                          setState(() {
-                            notificationOn = value;
-                          });
-                        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Center(
+            child: Column(
+              children: [
+                _buildImage(),
+                const SizedBox(height: 39),
+                Column(
+                  children: [
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.solidBell,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'Notifications',
+                        style: kSFBody,
+                      ),
+                      trailing: Transform.scale(
+                        scale: 0.9,
+                        child: CupertinoSwitch(
+                          value: notificationOn,
+                          onChanged: (bool value) {
+                            setState(() {
+                              notificationOn = value;
+                            });
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  ListTile(
-                    onTap: () async {
-                      language = await _showLanguagelectorBottomSheet(
-                          context: context);
+                    ListTile(
+                      onTap: () async {
+                        language = await _showLanguagelectorBottomSheet(
+                            context: context);
 
-                      language ??= language;
-                      setState(() {});
-                    },
-                    leading: const Icon(
-                      FontAwesomeIcons.globeAfrica,
-                      color: kBlueDark,
+                        language ??= language;
+                        setState(() {});
+                      },
+                      leading: const Icon(
+                        FontAwesomeIcons.globeAfrica,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'Language',
+                        style: kSFBody,
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '$language',
+                            style: kSFBody,
+                          ),
+                          const SizedBox(width: 11),
+                          const Icon(
+                            FontAwesomeIcons.chevronRight,
+                            color: kBlueDark,
+                          ),
+                        ],
+                      ),
                     ),
-                    title: const Text(
-                      'Language',
-                      style: kSFBody,
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.solidQuestionCircle,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'About Church',
+                        style: kSFBody,
+                      ),
+                      trailing: const Icon(
+                        FontAwesomeIcons.chevronRight,
+                        color: kBlueDark,
+                      ),
+                      onTap: () async {
+                        await Navigator.push(
+                          context,
+                          CupertinoPageRoute(
+                            builder: (context) => const AboutChruchScreen(),
+                          ),
+                        );
+                      },
                     ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          '$language',
-                          style: kSFBody,
-                        ),
-                        const SizedBox(width: 11),
-                        const Icon(
-                          FontAwesomeIcons.chevronRight,
-                          color: kBlueDark,
-                        ),
-                      ],
+                    const SizedBox(height: 5),
+                    const Divider(),
+                    const SizedBox(height: 5),
+                    ListTile(
+                      onTap: () async {
+                        await send();
+                      },
+                      leading: const Icon(
+                        FontAwesomeIcons.solidEnvelope,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'Help & Support',
+                        style: kSFBody,
+                      ),
+                      trailing: const Icon(
+                        FontAwesomeIcons.chevronRight,
+                        color: kBlueDark,
+                      ),
                     ),
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                      FontAwesomeIcons.solidQuestionCircle,
-                      color: kBlueDark,
+                    ListTile(
+                      leading: const Icon(
+                        FontAwesomeIcons.lock,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'Privacy Policy',
+                        style: kSFBody,
+                      ),
+                      onTap: () {
+                        loadMdFile(
+                          context: context,
+                          mdFile: 'assets/privacy/privacy_policy.md',
+                        );
+                      },
                     ),
-                    title: const Text(
-                      'About Church',
-                      style: kSFBody,
+                    ListTile(
+                      onTap: () {
+                        loadMdFile(
+                          context: context,
+                          mdFile: 'assets/privacy/terms_of_service.md',
+                        );
+                      },
+                      leading: const Icon(
+                        FontAwesomeIcons.solidFileAlt,
+                        color: kBlueDark,
+                      ),
+                      title: const Text(
+                        'Terms Of Service',
+                        style: kSFBody,
+                      ),
                     ),
-                    trailing: const Icon(
-                      FontAwesomeIcons.chevronRight,
-                      color: kBlueDark,
-                    ),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        AboutChruchScreen.aboutChruchScreen,
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 5),
-                  const Divider(),
-                  const SizedBox(height: 5),
-                  ListTile(
-                    onTap: () async {
-                      await send();
-                    },
-                    leading: const Icon(
-                      FontAwesomeIcons.solidEnvelope,
-                      color: kBlueDark,
-                    ),
-                    title: const Text(
-                      'Help & Support',
-                      style: kSFBody,
-                    ),
-                    trailing: const Icon(
-                      FontAwesomeIcons.chevronRight,
-                      color: kBlueDark,
-                    ),
-                  ),
-                  ListTile(
-                    leading: const Icon(
-                      FontAwesomeIcons.lock,
-                      color: kBlueDark,
-                    ),
-                    title: const Text(
-                      'Privacy Policy',
-                      style: kSFBody,
-                    ),
-                    onTap: () {
-                      loadMdFile(
-                        context: context,
-                        mdFile: 'assets/privacy/privacy_policy.md',
-                      );
-                    },
-                  ),
-                  ListTile(
-                    onTap: () {
-                      loadMdFile(
-                        context: context,
-                        mdFile: 'assets/privacy/terms_of_service.md',
-                      );
-                    },
-                    leading: const Icon(
-                      FontAwesomeIcons.solidFileAlt,
-                      color: kBlueDark,
-                    ),
-                    title: const Text(
-                      'Terms Of Service',
-                      style: kSFBody,
-                    ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -235,9 +240,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset('assets/images/logos/cop_logo.png'),
-        const SizedBox(height: 10),
-        const Text('v0.02', style: kSFBody)
+        Image.asset(
+          'assets/images/logos/cop_logo.png',
+          height: 140,
+          width: 140,
+        ),
+        const SizedBox(height: 15),
+        const Text(
+          'v0.02',
+          style: kSFBodyBold,
+        )
       ],
     );
   }

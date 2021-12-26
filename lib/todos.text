@@ -3,11 +3,15 @@ Firebase project setup
  -iOS Firebase Project Setup
 
 
+Just audio setup 
+ - Add no microphone usage code so that App store won't ask for microphone usaga 
+
+
 Testimony Screen 
   -try again option if testimony fails to load
 
 Fasting Screen
-  -Save timer
+  -Save timer progress
   
 
 FastingHistoryScreen

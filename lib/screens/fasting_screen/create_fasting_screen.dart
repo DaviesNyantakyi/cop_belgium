@@ -6,6 +6,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/remove_scroll_glow.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
@@ -79,7 +80,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                         //when the user selects card the start date and goal are calculated.
                         _calculateStartGoalDate(index: index);
 
-                        Navigator.push(context, MaterialPageRoute(
+                        Navigator.push(context, CupertinoPageRoute(
                           builder: (context) {
                             return FastingTimerScreen(
                               fastingInfo: fastingPresets[index],
@@ -235,7 +236,7 @@ class _FastingPickerState extends State<FastingPicker> {
               final currentDate = DateTime.now();
 
               Navigator.pop(context);
-              await Navigator.push(context, MaterialPageRoute(
+              await Navigator.push(context, CupertinoPageRoute(
                 builder: (context) {
                   return FastingTimerScreen(
                     fastingInfo: FastingInfo(
