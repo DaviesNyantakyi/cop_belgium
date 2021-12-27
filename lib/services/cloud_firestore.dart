@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
+import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
@@ -30,7 +31,7 @@ class CloudFireStore {
         throw ConnectionChecker.connectionException;
       }
     } catch (e) {
-      debugPrint(e.toString() + ' davies');
+      debugPrint(e.toString());
       rethrow;
     }
   }

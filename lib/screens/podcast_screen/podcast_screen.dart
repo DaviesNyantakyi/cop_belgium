@@ -1,4 +1,8 @@
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
+import 'package:cop_belgium/services/podcast_rss_handler.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/try_again.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +14,8 @@ import 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
+import 'package:skeletons/skeletons.dart';
+import 'package:webfeed/domain/rss_feed.dart';
 
 class PodcastScreen extends StatefulWidget {
   static String podcastScreen = 'podcastScreen';
@@ -73,19 +79,116 @@ class _BuildBody extends StatefulWidget {
 class _BuildBodyState extends State<_BuildBody> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  /* final List<PodcastSeriesCard> _series = const [
-    //create a model with the podcast details not the cards
-  ];*/
-
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<RssFeed>(
+      future: PodcastRssHandler().getPodcastRss(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _loadingSkeleton();
+        }
+
+        if (snapshot.hasError) {
+          return _buildErrorSkeleton();
+        }
+
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildGreeting(),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Latest Release',
+                        style: kSFCaptionBold,
+                      ),
+                      const SizedBox(height: 16),
+                      const LatestReleaseCard()
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 42),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+                  child: _buildSeriesTitle(),
+                ),
+                const SizedBox(height: 16),
+                _buildSeriesList(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildErrorSkeleton() {
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildGreeting(),
+                  const SizedBox(height: 40),
+                  TryAgainButton(
+                    onPressed: () {
+                      setState(() {});
+                    },
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox _buildSeriesList() {
+    return SizedBox(
+      height: 200,
+      child: ListView.builder(
+        itemCount: 15,
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.only(left: kBodyPadding),
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: PodcastCard(
+              title: 'Title',
+              episodes: 100,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const PodcastDetailScreen(),
+                  ),
+                );
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _loadingSkeleton() {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -105,7 +208,7 @@ class _BuildBodyState extends State<_BuildBody> {
                     style: kSFCaptionBold,
                   ),
                   const SizedBox(height: 16),
-                  _buildLatestCard(),
+                  const SkeletonItem(child: LatestReleaseCard())
                 ],
               ),
             ),
@@ -115,41 +218,9 @@ class _BuildBodyState extends State<_BuildBody> {
               child: _buildSeriesTitle(),
             ),
             const SizedBox(height: 16),
-            _buildSeriesList(),
+            SkeletonItem(child: _buildSeriesList()),
           ],
         ),
-      ),
-    );
-  }
-
-  SizedBox _buildSeriesList() {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        itemCount: 15,
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.only(left: kBodyPadding),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: PodcastCard(
-              image: 'assets/images/meeting.jpg',
-              episodes: 19,
-              title: 'The Paradigm',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) {
-                      return const PodcastDetailScreen();
-                    },
-                  ),
-                );
-              },
-            ),
-          );
-        },
       ),
     );
   }
@@ -208,130 +279,6 @@ class _BuildBodyState extends State<_BuildBody> {
           ],
         ),
       ],
-    );
-  }
-
-  Widget _buildLatestCard() {
-    return Container(
-      //background image
-      width: 380,
-      height: 189,
-
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.all(
-          Radius.circular(15),
-        ),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/images/meeting.jpg'),
-        ),
-      ),
-      child: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const PlayPodcastScreen(),
-            ),
-          );
-        },
-        style: kTextButtonStyle,
-        child: Container(
-          //this container is used for the gradient
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Colors.black.withOpacity(0.9),
-                Colors.black.withOpacity(0.1),
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 23)
-                .copyWith(left: 22, right: 50),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'The Paradigm',
-                  style: kSFHeadLine2.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
-                  style: kSFBody.copyWith(color: Colors.white),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 16),
-                _buildPlayBt(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => const PlayPodcastScreen(),
-                      ),
-                    );
-                  },
-                )
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPlayBt({VoidCallback? onPressed}) {
-    return SizedBox(
-      height: 40,
-      width: 123,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            Colors.white,
-          ),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          ),
-        ),
-        onPressed: onPressed,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 100,
-              child: Text(
-                'Listen Now',
-                style: kSFBody.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const Expanded(child: SizedBox(width: 10)),
-            const Expanded(
-              child: Icon(
-                FontAwesomeIcons.chevronRight,
-                size: 16,
-                color: kBlueDark,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

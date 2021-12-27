@@ -1,17 +1,19 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:webfeed/domain/rss_feed.dart';
+import 'package:webfeed/domain/rss_image.dart';
 
 class PodcastCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final int episodes;
-  final VoidCallback? onPressed;
+  final String? title;
+  final int? episodes;
+  final String? image;
+  final Function()? onPressed;
   const PodcastCard({
     Key? key,
-    required this.image,
-    required this.title,
-    required this.episodes,
     this.onPressed,
+    this.title,
+    this.episodes,
+    this.image,
   }) : super(key: key);
 
   @override
@@ -19,16 +21,14 @@ class PodcastCard extends StatelessWidget {
     return Container(
       width: 160,
       height: 200,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: kBlueLight, // card background color
-        borderRadius: const BorderRadius.all(
+        borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage(
-            image,
-          ),
+          image: AssetImage('assets/images/Rectangle 269.png'),
         ),
       ),
       child: TextButton(
@@ -54,7 +54,7 @@ class PodcastCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      title,
+                      '$title',
                       style: kSFSubtitle1.copyWith(color: Colors.white),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

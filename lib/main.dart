@@ -1,5 +1,6 @@
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -20,20 +21,22 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Cop Belgium',
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ConnectionChecker>(
-            create: (_) => ConnectionChecker(),
-          ),
-        ],
-        child: const AuthScreenSwitcher(),
+    return MySkeletonTheme(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Cop Belgium',
+        home: MultiProvider(
+          providers: [
+            ChangeNotifierProvider<ConnectionChecker>(
+              create: (_) => ConnectionChecker(),
+            ),
+          ],
+          child: const AuthScreenSwitcher(),
+        ),
+        theme: _theme,
+        routes: _routes,
+        builder: EasyLoading.init(),
       ),
-      theme: _theme,
-      routes: _routes,
-      builder: EasyLoading.init(),
     );
   }
 }
@@ -109,6 +112,7 @@ ThemeData _theme = ThemeData(
   ),
 );
 
+/*
 class Test extends StatelessWidget {
   const Test({Key? key}) : super(key: key);
 
@@ -132,12 +136,7 @@ class Test extends StatelessWidget {
                 ),
                 const Padding(
                   padding: EdgeInsets.all(10),
-                  child: PodcastCard(
-                    image: 'assets/images/Rectangle 269.png',
-                    title:
-                        'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
-                    episodes: 3,
-                  ),
+                  child: PodcastCard(),
                 ),
               ],
             ),
@@ -146,4 +145,4 @@ class Test extends StatelessWidget {
       ),
     );
   }
-}
+}*/

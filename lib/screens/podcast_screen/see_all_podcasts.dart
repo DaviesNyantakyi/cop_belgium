@@ -1,8 +1,11 @@
-import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
+import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:skeletons/skeletons.dart';
 
 class SeeAllPodCastScreen extends StatefulWidget {
   static String seeAllPodCastScreen = 'seeAllPodCastScreen';
@@ -18,30 +21,68 @@ class _SeeAllPodCastScreenState extends State<SeeAllPodCastScreen> {
     return Scaffold(
       appBar: buildAppbar(context: context),
       body: SafeArea(
-        child: GridView.builder(
-          scrollDirection: Axis.vertical,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(kBodyPadding),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisSpacing: 15,
-            crossAxisCount: 2,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1 / 1,
-          ),
-          itemBuilder: (context, index) {
-            return PodcastCard(
-              image: 'assets/images/Rectangle 269.png',
-              title: 'Connecting the world in the most effective way possible',
-              episodes: 2,
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  PodcastDetailScreen.podcastDetailScreen,
-                );
+        child: FutureBuilder<Object>(
+          future: PodcastRssHandler().getPodcastRss(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _podcastCardSkeleton();
+            }
+
+            if (snapshot.hasError) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text('OOops', style: kSFHeadLine1),
+                    const Text('Something went wrong.', style: kSFBody),
+                    const SizedBox(height: 30),
+                    Buttons.buildBtn(
+                      context: context,
+                      btnText: 'Try again',
+                      onPressed: () {
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              );
+            }
+            return GridView.builder(
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.all(kBodyPadding),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 15,
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1 / 1,
+              ),
+              itemBuilder: (context, index) {
+                return const PodcastCard();
               },
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _podcastCardSkeleton() {
+    return SkeletonItem(
+      child: GridView.builder(
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(kBodyPadding),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisSpacing: 15,
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          childAspectRatio: 1 / 1,
+        ),
+        itemBuilder: (context, index) {
+          return const PodcastCard();
+        },
       ),
     );
   }

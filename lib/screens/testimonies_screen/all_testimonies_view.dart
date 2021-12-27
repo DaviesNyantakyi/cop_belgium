@@ -4,6 +4,7 @@ import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/try_again.dart';
 import 'package:flutter/material.dart';
 
 class TestimoniesView extends StatefulWidget {
@@ -54,25 +55,8 @@ class _TestimoniesViewState extends State<TestimoniesView> {
             );
           }
           if (snapshot.hasError) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/error.png',
-                  height: 220,
-                  width: 220,
-                ),
-                const Text('OOops', style: kSFHeadLine1),
-                const Text('Something went wrong.', style: kSFBody),
-                const SizedBox(height: 30),
-                Buttons.buildBtn(
-                  context: context,
-                  btnText: 'Try again',
-                  onPressed: () {
-                    //TODO: add try again option
-                  },
-                ),
-              ],
+            return TryAgainButton(
+              onPressed: () {},
             );
           }
 
