@@ -1,15 +1,12 @@
+import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-String _speaker =
-    'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
-String _description =
-    '''What do we do with the passages in the Bible that are really difficult? Violence, slavery, the treatment of women—what the Bible has to say about these topics has, at times, been misinterpreted and misused. ''';
-String _title = 'Tree Of Life';
+import 'package:provider/provider.dart';
 
 class PodcastDetailScreen extends StatefulWidget {
   static String podcastDetailScreen = 'podcastDetailScreen';
@@ -20,14 +17,24 @@ class PodcastDetailScreen extends StatefulWidget {
 }
 
 class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
+  String speaker =
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
+
   bool bookMark = false;
   bool isLiked = false;
-  String? dateTime = '2 Dec 2021';
-  int? likes = 200;
-  String? podcastImage;
+  Podcast? podcast;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      podcast = Provider.of<Podcast>(context, listen: false);
+    });
+
     return Scaffold(
       appBar: _buildAppbar(context: context),
       body: Padding(
@@ -48,12 +55,13 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                     _buildTitle(),
                     const SizedBox(height: 32),
                     _buildDescription(),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 30),
+                    // const SizedBox(height: 32),
                   ],
                 ),
               ),
-              _buildSpeakers(),
-              const SizedBox(height: 36),
+              // _buildSpeakers(),
+              // const SizedBox(height: 36),
               _buildEpisodesList()
             ],
           ),
@@ -63,7 +71,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 
   Widget _buildHeaderImage() {
-    if (podcastImage != null) {
+    if (podcast?.image != null) {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 10),
@@ -72,7 +80,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           color: kBlue,
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage(podcastImage!),
+            image: NetworkImage(podcast!.image),
           ),
         ),
       );
@@ -100,24 +108,28 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         SizedBox(
           height: 200,
           child: ListView.builder(
-            itemCount: 15,
+            itemCount: podcast?.episodes!.length,
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(left: kBodyPadding),
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.only(right: 16),
-                child: PodcastEpisodesCard(
-                  image: 'assets/images/meeting.jpg',
-                  title: 'Humans are Trees?',
-                  length: '10:00',
-                  date: '12 Dec 2021',
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      PlayPodcastScreen.playPodcastScreen,
-                    );
-                  },
+                child: Provider.value(
+                  value: podcast!.episodes![index],
+                  child: PodcastEpisodesCard(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (context) => Provider.value(
+                            value: podcast!.episodes![index],
+                            child: const PlayPodcastScreen(),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               );
             },
@@ -127,6 +139,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     );
   }
 
+/*
   Widget _buildSpeakers() {
     return Column(
       children: [
@@ -159,7 +172,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
-
+*/
   Widget _buildAvatar({VoidCallback? onTap}) {
     return TextButton(
       onPressed: () {},
@@ -173,7 +186,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage(_speaker),
+            backgroundImage: NetworkImage(speaker),
           ),
           const SizedBox(height: 8),
           const Text('John Smith', style: kSFSubtitle2),
@@ -188,12 +201,12 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            _title,
+            podcast?.title ?? '',
             style: kSFHeadLine1,
           ),
         ),
         const SizedBox(height: 12),
-        _buildDetail(),
+        //_buildDetail(),
       ],
     );
   }
@@ -213,12 +226,14 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           style: kTextButtonStyle,
           onPressed: () {
             _showBottomSheet(
-                context: context, title: _title, description: _description);
+                context: context,
+                title: podcast?.title ?? '',
+                description: podcast?.description ?? '');
           },
           child: Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              _description,
+              podcast?.description ?? '',
               style: kSFBody,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -228,7 +243,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
-
+/*
   Widget _buildDetail() {
     return Row(
       children: [
@@ -291,6 +306,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
+  */
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(

@@ -55,6 +55,9 @@ dependencies:
   webfeed: ^0.7.0 # for parsing rss 
   http: ^0.13.4 #making http request
   skeletons: ^0.0.3 #body of shimmers 
+  html: ^0.15.0
+
+
 
 
 

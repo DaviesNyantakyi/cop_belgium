@@ -1,3 +1,5 @@
+import 'package:cop_belgium/models/podcast_model.dart';
+import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
@@ -53,8 +55,8 @@ Map<String, WidgetBuilder> _routes = {
   AnnouncementScreen.announcementScreen: (context) =>
       const AnnouncementScreen(),
   PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
-  SeeAllPodCastScreen.seeAllPodCastScreen: (context) =>
-      const SeeAllPodCastScreen(),
+  // SeeAllPodCastScreen.seeAllPodCastScreen: (context) =>
+  //     const SeeAllPodCastScreen(),
   PlayPodcastScreen.playPodcastScreen: (context) => const PlayPodcastScreen(),
   PodcastDetailScreen.podcastDetailScreen: (context) =>
       const PodcastDetailScreen(),

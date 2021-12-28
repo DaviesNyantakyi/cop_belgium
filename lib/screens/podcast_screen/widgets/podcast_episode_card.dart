@@ -1,23 +1,20 @@
+import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PodcastEpisodesCard extends StatelessWidget {
-  final String image;
-  final String title;
-  final String date;
-  final String length;
   final VoidCallback? onPressed;
   const PodcastEpisodesCard({
     Key? key,
-    required this.image,
-    required this.title,
     this.onPressed,
-    required this.date,
-    required this.length,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final episode = context.watch<Episode>();
+
     return Container(
       height: 200,
       width: 143,
@@ -28,8 +25,8 @@ class PodcastEpisodesCard extends StatelessWidget {
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage(
-            image,
+          image: NetworkImage(
+            episode.image!,
           ),
         ),
       ),
@@ -42,7 +39,9 @@ class PodcastEpisodesCard extends StatelessWidget {
               right: 12.0,
               top: 14.0,
               child: Text(
-                length,
+                FormalDates.formatMs(
+                  date: DateTime.fromMillisecondsSinceEpoch(episode.duration),
+                ),
                 style: kSFSubtitle2Bold.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
@@ -53,8 +52,7 @@ class PodcastEpisodesCard extends StatelessWidget {
               bottom: 0,
               child: Container(
                 // bottom card
-
-                height: 89,
+                height: 80,
                 width: 143,
                 decoration: const BoxDecoration(
                   color: kBlueDark,
@@ -65,23 +63,13 @@ class PodcastEpisodesCard extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        title,
-                        style: kSFSubtitle1.copyWith(color: Colors.white),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        date,
-                        style: kSFSubtitle2.copyWith(color: Colors.white),
-                      ),
-                    ],
+                  child: Center(
+                    child: Text(
+                      episode.title,
+                      style: kSFSubtitle1.copyWith(color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
                   ),
                 ),
               ),

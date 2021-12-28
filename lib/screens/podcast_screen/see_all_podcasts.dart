@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletons/skeletons.dart';
-
+/*
 class SeeAllPodCastScreen extends StatefulWidget {
   static String seeAllPodCastScreen = 'seeAllPodCastScreen';
   const SeeAllPodCastScreen({Key? key}) : super(key: key);
@@ -22,7 +22,9 @@ class _SeeAllPodCastScreenState extends State<SeeAllPodCastScreen> {
       appBar: buildAppbar(context: context),
       body: SafeArea(
         child: FutureBuilder<Object>(
-          future: PodcastRssHandler().getPodcastRss(),
+          future: PodcastRssHandler().getPodcastRss(
+              rssLink:
+                  'https://feeds.redcircle.com/cc66bbb2-1317-4712-b52e-28c52854a8a0'),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return _podcastCardSkeleton();
@@ -107,8 +109,4 @@ class _SeeAllPodCastScreenState extends State<SeeAllPodCastScreen> {
   }
 }
 
-/*PodcastCard(
-            image: 'assets/images/Rectangle 269.png',
-            title: 'Connecting the world in the most effective way possible',
-            episodes: 2,
-          ),*/ 
+*/

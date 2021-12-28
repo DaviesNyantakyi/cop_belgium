@@ -1,19 +1,14 @@
+import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:webfeed/domain/rss_feed.dart';
-import 'package:webfeed/domain/rss_image.dart';
 
 class PodcastCard extends StatelessWidget {
-  final String? title;
-  final int? episodes;
-  final String? image;
+  final Podcast podcast;
   final Function()? onPressed;
   const PodcastCard({
     Key? key,
     this.onPressed,
-    this.title,
-    this.episodes,
-    this.image,
+    required this.podcast,
   }) : super(key: key);
 
   @override
@@ -21,14 +16,14 @@ class PodcastCard extends StatelessWidget {
     return Container(
       width: 160,
       height: 200,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: kBlueLight, // card background color
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage('assets/images/Rectangle 269.png'),
+          image: NetworkImage(podcast.image),
         ),
       ),
       child: TextButton(
@@ -54,7 +49,7 @@ class PodcastCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '$title',
+                      podcast.title,
                       style: kSFSubtitle1.copyWith(color: Colors.white),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -62,7 +57,7 @@ class PodcastCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      '$episodes Episodes',
+                      '${podcast.episodes?.length ?? 0} Episodes',
                       style: kSFSubtitle2.copyWith(color: Colors.white),
                     ),
                   ],

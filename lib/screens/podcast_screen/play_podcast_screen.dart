@@ -1,15 +1,14 @@
 import 'dart:math';
 
+import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:just_audio/just_audio.dart';
-
-String _text =
-    '''What do we do with the passages in the Bible that are really difficult? Violence, slavery, the treatment of women—what the Bible has to say about these topics has, at times, been misinterpreted and misused. ''';
-String _title = 'Tree Of Life';
+import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 
 class PlayPodcastScreen extends StatefulWidget {
   static String playPodcastScreen = 'playPodcastScreen';
@@ -27,7 +26,9 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   String? currentPostionText;
   double totalDuration = 0;
   double currentposition = 0;
-
+  Episode? episode;
+  String? title;
+  String? description;
   Duration? newPosition;
 
   Future<void> stop() async {
@@ -45,10 +46,17 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Future<void> init() async {
-    Duration? duration = await player.setAsset('assets/Revelation.mp3');
+    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
+      episode = Provider.of<Episode>(context, listen: false);
 
-    getTotalDuration(duration: duration);
-    getcurretPostion();
+      Duration? duration = await player.setUrl(episode!.audio);
+      title = episode!.title;
+      description = episode!.title;
+
+      getTotalDuration(duration: duration);
+      getcurretPostion();
+      setState(() {});
+    });
   }
 
   void getTotalDuration({Duration? duration}) {
@@ -138,7 +146,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
               style: kSFBody,
             ),
             Text(
-              totalDurationText ?? '00:00',
+              totalDurationText ?? '...',
               style: kSFBody,
             ),
           ],
@@ -148,18 +156,31 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Widget _buildImage() {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.40,
-      decoration: const BoxDecoration(
-        color: kBlue,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: AssetImage('assets/images/meeting.jpg'),
+    if (episode?.image != null) {
+      return Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height * 0.40,
+        decoration: BoxDecoration(
+          color: kBlue,
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(episode!.image!),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-    );
+      );
+    } else {
+      return SkeletonItem(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 0.40,
+          decoration: const BoxDecoration(
+            color: kBlue,
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+        ),
+      );
+    }
   }
 
   dynamic buildAppbar({required BuildContext context}) {
@@ -187,7 +208,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.fastBackward,
+              FontAwesomeIcons.backward,
               size: 32,
             ),
             color: Colors.grey,
@@ -226,14 +247,13 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.fastForward,
+              FontAwesomeIcons.forward,
               size: 32,
             ),
             color: Colors.grey,
             onPressed: () {
               newPosition =
                   player.position + const Duration(milliseconds: 10000);
-
               player.seek(newPosition);
 
               if (newPosition! > player.duration!) {
@@ -247,33 +267,37 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Widget _buildTitleDescription() {
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            _title,
-            style: kSFHeadLine2,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextButton(
-          style: kTextButtonStyle,
-          onPressed: () {
-            _showBottomSheet(
-                context: context, title: _title, description: _text);
-          },
-          child: Container(
+    return TextButton(
+      style: kTextButtonStyle,
+      onPressed: () {
+        _showBottomSheet(
+            context: context,
+            title: title ?? '...',
+            description: description ?? '...');
+      },
+      child: Column(
+        children: [
+          Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              _text,
+              title ?? '...',
+              style: kSFHeadLine2,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              description ?? '...',
               style: kSFBody,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
