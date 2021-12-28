@@ -11,12 +11,6 @@ export 'package:cop_belgium/screens/auth_screens/sign_up_screen.dart';
 export 'package:cop_belgium/screens/auth_screens/auth_screens_switcher_page.dart';
 export 'package:cop_belgium/screens/auth_screens/forgot_password_screen.dart';
 
-//Fasting Screens
-export 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
-export 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
-export 'package:cop_belgium/screens/fasting_screen/fasting_timer_screen.dart';
-export 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
-
 //Podcast Screens
 export 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 export 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';

@@ -1,4 +1,3 @@
-import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
@@ -21,7 +20,6 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
   final List<Widget> _screens = const [
     PodcastScreen(),
     TestimoniesScreen(),
-    CreateFastingScreens(),
     ProfileScreens(),
   ];
 
@@ -86,18 +84,6 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         ),
         activeIcon: const Icon(
           FontAwesomeIcons.clipboard,
-          color: kBlueDark,
-        ),
-      ),
-      BottomNavigationBarItem(
-        label: 'Fasting',
-        tooltip: 'Fasting',
-        icon: Icon(
-          FontAwesomeIcons.utensils,
-          color: _bottomNavColor,
-        ),
-        activeIcon: const Icon(
-          FontAwesomeIcons.utensils,
           color: kBlueDark,
         ),
       ),
