@@ -117,29 +117,6 @@ class CloudFireStore {
     }
   }
 
-  Future<void> updateDocLikeCount({
-    required TestimonyInfo tInfo,
-    required hasLiked,
-  }) async {
-    int likeCount;
-
-    // Get the totalLikes ount form the doc.
-    final likeDocRef =
-        await _firestore.collection('Testimonies').doc(tInfo.id).get();
-    likeCount = likeDocRef.data()!['likes'];
-
-    // If hasLiked is true then it increment de likeCount
-    if (hasLiked) {
-      await _firestore.collection('Testimonies').doc(tInfo.id).update({
-        'likes': likeCount + 1,
-      });
-    } else {
-      await _firestore.collection('Testimonies').doc(tInfo.id).update({
-        'likes': likeCount - 1,
-      });
-    }
-  }
-
   Future<DocumentSnapshot<Map<String, dynamic>>> getTestimonyLikeDoc({
     required TestimonyInfo tInfo,
     required String docRef,
@@ -174,7 +151,24 @@ class CloudFireStore {
           }));
 
       // update testimony info like count
-      updateDocLikeCount(tInfo: tInfo, hasLiked: true);
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<PodcastRssInfo?>> getPodcastRssInfoFireStore() async {
+    // get the podcast rss link and page link from firestore.
+    try {
+      final qSnap =
+          await FirebaseFirestore.instance.collection('podcasts').get();
+      final listQDocSnap = qSnap.docs;
+
+      List<PodcastRssInfo> listPodRssInfo = listQDocSnap.map((doc) {
+        return PodcastRssInfo.fromMap(map: doc.data());
+      }).toList();
+
+      return listPodRssInfo;
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -191,9 +185,6 @@ class CloudFireStore {
           .collection('likers')
           .doc(docRef)
           .delete();
-
-      // update testimony info like count
-      updateDocLikeCount(tInfo: tInfo, hasLiked: false);
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

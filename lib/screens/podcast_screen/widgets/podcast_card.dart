@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +18,13 @@ class PodcastCard extends StatelessWidget {
       width: 160,
       height: 200,
       decoration: BoxDecoration(
-        color: kBlueLight, // card background color
+        color: kBlueLight, // card background color if imgae is null
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(podcast.image),
+          image: CachedNetworkImageProvider(podcast.image, scale: 1),
         ),
       ),
       child: TextButton(

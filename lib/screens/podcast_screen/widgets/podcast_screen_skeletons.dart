@@ -47,7 +47,7 @@ class PodcastScreenSkeleton extends StatelessWidget {
                     style: kSFCaptionBold,
                   ),
                   const SizedBox(height: 16),
-                  const SkeletonItem(child: LatestReleaseCard())
+                  const SkeletonItem(child: LatestReleaseCardSkeleton())
                 ],
               ),
             ),

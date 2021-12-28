@@ -4,7 +4,7 @@ import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/try_again.dart';
+import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:flutter/material.dart';
 
 class TestimoniesView extends StatefulWidget {
@@ -55,7 +55,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
             );
           }
           if (snapshot.hasError) {
-            return TryAgainButton(
+            return TryAgainView(
               onPressed: () {},
             );
           }

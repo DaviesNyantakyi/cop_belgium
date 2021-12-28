@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
@@ -25,9 +26,7 @@ class PodcastEpisodesCard extends StatelessWidget {
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(
-            episode.image!,
-          ),
+          image: CachedNetworkImageProvider(episode.image!, scale: 1),
         ),
       ),
       child: TextButton(
@@ -39,7 +38,7 @@ class PodcastEpisodesCard extends StatelessWidget {
               right: 12.0,
               top: 14.0,
               child: Text(
-                FormalDates.formatMs(
+                FormalDates.calculateTime(
                   date: DateTime.fromMillisecondsSinceEpoch(episode.duration),
                 ),
                 style: kSFSubtitle2Bold.copyWith(

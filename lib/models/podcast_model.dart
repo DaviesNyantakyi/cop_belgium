@@ -27,15 +27,18 @@ class Podcast {
 class PodcastRssInfo {
   final String id;
   final String rssLink;
+  final String? title;
   PodcastRssInfo({
+    this.title,
     required this.id,
     required this.rssLink,
   });
 
-  Map<String, dynamic> toMap({required Podcast podCast}) {
+  Map<String, dynamic> toMap({required PodcastRssInfo podCast}) {
     return {
       'id': podCast.id,
       'rssLink': podCast.rssLink,
+      'title': podCast.title,
     };
   }
 
@@ -43,6 +46,7 @@ class PodcastRssInfo {
     return PodcastRssInfo(
       id: map['id'],
       rssLink: map['rssLink'],
+      title: map['title'],
     );
   }
 }

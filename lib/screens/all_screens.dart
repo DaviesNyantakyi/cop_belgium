@@ -20,7 +20,7 @@ export 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
 //Podcast Screens
 export 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 export 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
-export 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
+export 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 export 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 export 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 export 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';

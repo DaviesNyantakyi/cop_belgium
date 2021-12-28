@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +82,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           color: kBlue,
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: NetworkImage(podcast!.image),
+            image: CachedNetworkImageProvider(podcast!.image),
           ),
         ),
       );
@@ -124,7 +126,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                         CupertinoPageRoute(
                           builder: (context) => Provider.value(
                             value: podcast!.episodes![index],
-                            child: const PlayPodcastScreen(),
+                            child: const PodcastPlayerScreen(),
                           ),
                         ),
                       );
@@ -206,7 +208,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        //_buildDetail(),
+        _buildDetail(),
       ],
     );
   }
@@ -243,7 +245,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
-/*
+
   Widget _buildDetail() {
     return Row(
       children: [
@@ -255,7 +257,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              '$dateTime',
+              FormalDates.formatDmy(date: podcast!.episodes!.last.date),
               style: kSFBody,
             ),
           ],
@@ -280,8 +282,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                 size: 20,
               ),
               const SizedBox(width: 8),
-              Text(
-                '$likes',
+              const Text(
+                'likes',
                 style: kSFBody,
               ),
             ],
@@ -306,7 +308,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
-  */
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(

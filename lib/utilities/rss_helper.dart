@@ -6,7 +6,9 @@ class RssHelper {
   static String getRssPath({required RssFeed rssFeed}) {
     //this returns the podcast path id from redcircle
 
+    // RedCircle VERIFY_TOKEN_cc66bbb2-1317-4712-b52e-28c52854a8a0
     String podcastPath = rssFeed.generator!.split('_')[2];
+    // cc66bbb2-1317-4712-b52e-28c52854a8a0
     return podcastPath;
   }
 

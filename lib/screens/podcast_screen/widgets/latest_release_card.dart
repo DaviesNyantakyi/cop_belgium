@@ -1,27 +1,37 @@
-import 'package:cop_belgium/screens/podcast_screen/play_podcast_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cop_belgium/models/podcast_model.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class LatestReleaseCard extends StatelessWidget {
   const LatestReleaseCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // latest episode
+    final episode = Provider.of<List<Podcast>>(context, listen: false)
+        .first
+        .episodes!
+        .first;
+
     return Container(
       //background image
       width: 380,
       height: 189,
 
-      decoration: const BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.all(
+      decoration: BoxDecoration(
+        color: kGreyLight,
+        borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage('assets/images/meeting.jpg'),
+          image: CachedNetworkImageProvider(episode.image!),
         ),
       ),
       child: TextButton(
@@ -29,13 +39,18 @@ class LatestReleaseCard extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => const PlayPodcastScreen(),
+              builder: (context) => Provider.value(
+                value: episode,
+                child: const PodcastPlayerScreen(),
+              ),
             ),
           );
         },
         style: kTextButtonStyle,
         child: Container(
           //this container is used for the gradient
+          width: 380,
+          height: 189,
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(
               Radius.circular(15),
@@ -50,21 +65,21 @@ class LatestReleaseCard extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 23)
-                .copyWith(left: 22, right: 50),
+            padding: const EdgeInsets.only(left: 22, right: 50),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'The Paradigm',
+                  episode.title,
                   style: kSFHeadLine2.copyWith(
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'What do we do with the passages in the Bible that are really difficult? What do we do with the passages in the Bible that are really difficult? ',
+                  episode.description,
                   style: kSFBody.copyWith(color: Colors.white),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -75,7 +90,10 @@ class LatestReleaseCard extends StatelessWidget {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => const PlayPodcastScreen(),
+                        builder: (context) => Provider.value(
+                          value: episode,
+                          child: const PodcastPlayerScreen(),
+                        ),
                       ),
                     );
                   },
@@ -129,6 +147,26 @@ class LatestReleaseCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class LatestReleaseCardSkeleton extends StatelessWidget {
+  const LatestReleaseCardSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //background image
+      width: 380,
+      height: 189,
+      decoration: const BoxDecoration(
+        color: kGreyLight,
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
+        ),
+      ),
+      child: null,
     );
   }
 }

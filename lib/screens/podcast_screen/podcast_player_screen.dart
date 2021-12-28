@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
@@ -10,15 +11,15 @@ import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
-class PlayPodcastScreen extends StatefulWidget {
-  static String playPodcastScreen = 'playPodcastScreen';
-  const PlayPodcastScreen({Key? key}) : super(key: key);
+class PodcastPlayerScreen extends StatefulWidget {
+  static String podcastPlayerScreen = 'podcastPlayerScreen';
+  const PodcastPlayerScreen({Key? key}) : super(key: key);
 
   @override
-  State<PlayPodcastScreen> createState() => _PlayPodcastScreenState();
+  State<PodcastPlayerScreen> createState() => _PodcastPlayerScreenState();
 }
 
-class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
+class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   AudioPlayer player = AudioPlayer();
 
   bool isPlaying = false;
@@ -30,6 +31,7 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   String? title;
   String? description;
   Duration? newPosition;
+  int seekDuration = 15000;
 
   Future<void> stop() async {
     await player.stop();
@@ -47,7 +49,9 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
 
   Future<void> init() async {
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      episode = Provider.of<Episode>(context, listen: false);
+      if (mounted) {
+        episode = Provider.of<Episode>(context, listen: false);
+      }
 
       Duration? duration = await player.setUrl(episode!.audio);
       title = episode!.title;
@@ -55,34 +59,39 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
 
       getTotalDuration(duration: duration);
       getcurretPostion();
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
   void getTotalDuration({Duration? duration}) {
     DateTime date =
         DateTime.fromMillisecondsSinceEpoch(duration!.inMilliseconds.toInt());
-    setState(() {
-      totalDurationText = FormalDates.formatMs(date: date);
-      totalDuration = duration.inMilliseconds.toDouble();
-    });
+    if (mounted) {
+      setState(() {
+        totalDurationText = FormalDates.calculateTime(date: date);
+        totalDuration = duration.inMilliseconds.toDouble();
+      });
+    }
   }
 
   void getcurretPostion() {
     player.positionStream.listen((Duration duration) {
       DateTime date =
           DateTime.fromMillisecondsSinceEpoch(duration.inMilliseconds.toInt());
-      setState(() {
-        currentposition = duration.inMilliseconds.toDouble();
-        currentPostionText = FormalDates.formatMs(date: date);
-      });
+      if (mounted) {
+        setState(() {
+          currentposition = duration.inMilliseconds.toDouble();
+          currentPostionText = FormalDates.calculateTime(date: date);
+        });
+      }
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-
     player.dispose();
   }
 
@@ -138,21 +147,45 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
           onChangeEnd: (value) {},
         ),
         const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              currentPostionText ?? '00:00',
-              style: kSFBody,
-            ),
-            Text(
-              totalDurationText ?? '...',
-              style: kSFBody,
-            ),
-          ],
-        ),
+        _buildDurationText()
       ],
     );
+  }
+
+  Widget _buildDurationText() {
+    if (episode != null) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            currentPostionText!,
+            style: kSFBody,
+          ),
+          Text(
+            totalDurationText!,
+            style: kSFBody,
+          )
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: const [
+          SkeletonItem(
+            child: Text(
+              '00:00',
+              style: kSFBody,
+            ),
+          ),
+          SkeletonItem(
+            child: Text(
+              '00:00',
+              style: kSFBody,
+            ),
+          )
+        ],
+      );
+    }
   }
 
   Widget _buildImage() {
@@ -161,10 +194,10 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.40,
         decoration: BoxDecoration(
-          color: kBlue,
+          color: kGreyLight,
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: NetworkImage(episode!.image!),
+            image: CachedNetworkImageProvider(episode!.image!),
           ),
           borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
@@ -212,16 +245,19 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
               size: 32,
             ),
             color: Colors.grey,
-            onPressed: () {
-              var x = player.position - const Duration(milliseconds: 10000);
+            onPressed: episode != null
+                ? () {
+                    var newduration =
+                        player.position - Duration(milliseconds: seekDuration);
 
-              if (x > Duration.zero) {
-                player.seek(x);
-              }
-              if (x.inMilliseconds < 0) {
-                player.seek(Duration.zero);
-              }
-            },
+                    if (newduration > Duration.zero) {
+                      player.seek(newduration);
+                    }
+                    if (newduration.inMilliseconds < 0) {
+                      player.seek(Duration.zero);
+                    }
+                  }
+                : null,
           ),
         ),
         const Flexible(child: SizedBox(width: kBodyPadding)),
@@ -231,17 +267,19 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
             size: 32,
           ),
           color: Colors.grey,
-          onPressed: () {
-            if (isPlaying) {
-              stop();
-            } else {
-              play();
-            }
+          onPressed: episode != null
+              ? () {
+                  if (isPlaying) {
+                    stop();
+                  } else {
+                    play();
+                  }
 
-            setState(() {
-              isPlaying = !isPlaying;
-            });
-          },
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                }
+              : null,
         ),
         const Flexible(child: SizedBox(width: kBodyPadding)),
         Flexible(
@@ -251,15 +289,17 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
               size: 32,
             ),
             color: Colors.grey,
-            onPressed: () {
-              newPosition =
-                  player.position + const Duration(milliseconds: 10000);
-              player.seek(newPosition);
+            onPressed: episode != null
+                ? () {
+                    newPosition =
+                        player.position + Duration(milliseconds: seekDuration);
+                    player.seek(newPosition);
 
-              if (newPosition! > player.duration!) {
-                player.seek(player.duration);
-              }
-            },
+                    if (newPosition! > player.duration!) {
+                      player.seek(player.duration);
+                    }
+                  }
+                : null,
           ),
         ),
       ],
@@ -267,20 +307,47 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
   }
 
   Widget _buildTitleDescription() {
-    return TextButton(
-      style: kTextButtonStyle,
-      onPressed: () {
-        _showBottomSheet(
+    if (episode != null) {
+      return TextButton(
+        style: kTextButtonStyle,
+        onPressed: () {
+          _showBottomSheet(
             context: context,
-            title: title ?? '...',
-            description: description ?? '...');
-      },
-      child: Column(
+            title: title!,
+            description: description!,
+          );
+        },
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title!,
+                style: kSFHeadLine2,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                description!,
+                style: kSFBody,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Column(
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            child: Text(
-              title ?? '...',
+            child: const Text(
+              '...',
               style: kSFHeadLine2,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -289,16 +356,16 @@ class _PlayPodcastScreenState extends State<PlayPodcastScreen> {
           const SizedBox(height: 12),
           Container(
             alignment: Alignment.centerLeft,
-            child: Text(
-              description ?? '...',
+            child: const Text(
+              '...',
               style: kSFBody,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
-      ),
-    );
+      );
+    }
   }
 
   Future<void> _showBottomSheet({

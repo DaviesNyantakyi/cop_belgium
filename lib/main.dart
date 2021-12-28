@@ -57,7 +57,8 @@ Map<String, WidgetBuilder> _routes = {
   PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
   // SeeAllPodCastScreen.seeAllPodCastScreen: (context) =>
   //     const SeeAllPodCastScreen(),
-  PlayPodcastScreen.playPodcastScreen: (context) => const PlayPodcastScreen(),
+  PodcastPlayerScreen.podcastPlayerScreen: (context) =>
+      const PodcastPlayerScreen(),
   PodcastDetailScreen.podcastDetailScreen: (context) =>
       const PodcastDetailScreen(),
   UserSavedPodcastView.userSavedPodcastView: (context) =>
