@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
@@ -184,39 +183,6 @@ class CloudFireStore {
           .doc(tInfo.id)
           .collection('likers')
           .doc(docRef)
-          .delete();
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> createFastHistory({required FastingInfo fInfo}) async {
-    try {
-      if (fInfo.userId != null &&
-          fInfo.startDate != null &&
-          fInfo.endDate != null &&
-          fInfo.goalDate != null) {
-        final docRef = await _firestore
-            .collection('Users')
-            .doc(_user!.uid)
-            .collection('Fasting history')
-            .add(FastingInfo.toMap(map: fInfo));
-        await docRef.update({'id': docRef.id});
-      }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> deleteFastHistory({required FastingInfo fInfo}) async {
-    try {
-      await _firestore
-          .collection('Users')
-          .doc(_user!.uid)
-          .collection('Fasting history')
-          .doc(fInfo.id)
           .delete();
     } on FirebaseException catch (e) {
       debugPrint(e.toString());

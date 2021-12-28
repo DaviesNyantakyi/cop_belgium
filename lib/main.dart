@@ -61,9 +61,6 @@ Map<String, WidgetBuilder> _routes = {
       const PodcastDetailScreen(),
   UserSavedPodcastView.userSavedPodcastView: (context) =>
       const UserSavedPodcastView(),
-
-  UserFastingHistoryView.userFastingHistoryView: (context) =>
-      const UserFastingHistoryView(),
   ProfileScreens.profileScreens: (context) => const ProfileScreens(),
   EditProfileScreen.editProfileScreen: (context) =>
       const EditProfileScreen(user: null),
