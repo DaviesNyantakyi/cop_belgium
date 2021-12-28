@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
-import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -34,15 +33,21 @@ class _TestimoniesViewState extends State<TestimoniesView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      'assets/images/add_testimony.png',
-                      height: 220,
-                      width: 220,
+                    Flexible(
+                      flex: 2,
+                      child: Image.asset(
+                        'assets/images/add_testimony.png',
+                        height: 220,
+                        width: 220,
+                      ),
                     ),
                     const SizedBox(height: 40),
-                    const Text(
-                      'Be the first to add a testimony',
-                      style: kSFBody,
+                    const Expanded(
+                      flex: 1,
+                      child: Text(
+                        'Be the first to add a testimony',
+                        style: kSFBody,
+                      ),
                     ),
                   ],
                 ),

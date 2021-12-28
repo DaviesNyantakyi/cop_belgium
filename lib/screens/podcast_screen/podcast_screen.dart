@@ -73,15 +73,17 @@ class _PodcastScreenState extends State<PodcastScreen> {
             child: FutureBuilder<List<Podcast>>(
               future: PodcastRssHandler().getPodcast(),
               builder: (context, snapshot) {
+                if (snapshot.data != null) {
+                  if (snapshot.data!.isEmpty) {
+                    return _buildNoPodcastsSkeleton();
+                  }
+                }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const PodcastScreenSkeleton();
                 }
 
                 if (snapshot.hasError) {
                   return _buildErrorSkeleton();
-                }
-                if (snapshot.data!.isEmpty) {
-                  return _buildNoPodcastsSkeleton();
                 }
 
                 return Provider.value(

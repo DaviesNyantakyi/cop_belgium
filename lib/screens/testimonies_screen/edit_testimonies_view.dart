@@ -7,7 +7,6 @@ import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-//TODO: overflow error on no testimonies image on small screen
 class EditTestimoniesView extends StatefulWidget {
   const EditTestimoniesView({Key? key}) : super(key: key);
 
@@ -50,15 +49,19 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/create_testimony.png',
-                    height: 200,
-                    width: 200,
+                  Expanded(
+                    child: Image.asset(
+                      'assets/images/create_testimony.png',
+                      height: 200,
+                      width: 200,
+                    ),
                   ),
                   const SizedBox(height: 40),
-                  const Text(
-                    'You have no testimonies',
-                    style: kSFBody,
+                  const Expanded(
+                    child: Text(
+                      'You have no testimonies',
+                      style: kSFBody,
+                    ),
                   ),
                 ],
               );

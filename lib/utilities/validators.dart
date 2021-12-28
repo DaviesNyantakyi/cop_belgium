@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:regexpattern/src/regex_extension.dart';
+import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
   static String? nameValidator(String? value) {

@@ -175,6 +175,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     );
   }
 */
+/*
   Widget _buildAvatar({VoidCallback? onTap}) {
     return TextButton(
       onPressed: () {},
@@ -195,7 +196,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         ],
       ),
     );
-  }
+  }*/
 
   Widget _buildTitle() {
     return Column(

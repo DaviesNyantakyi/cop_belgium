@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/rss_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';

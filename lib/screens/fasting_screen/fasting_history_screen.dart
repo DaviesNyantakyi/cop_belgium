@@ -75,7 +75,6 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
                     context: context,
                     btnText: 'Try again',
                     onPressed: () {
-                      //TODO: add try again option
                       setState(() {});
                     },
                   ),

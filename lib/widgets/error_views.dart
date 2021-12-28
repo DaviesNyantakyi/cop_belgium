@@ -46,7 +46,7 @@ class NoPodcastsView extends StatelessWidget {
             height: 220,
             width: 220,
           ),
-          const Text('No podcast found', style: kSFHeadLine1),
+          const Text('No podcasts found', style: kSFHeadLine1),
           const Text('Please try again later', style: kSFBody),
         ],
       ),

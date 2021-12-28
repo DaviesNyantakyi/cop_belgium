@@ -1,5 +1,5 @@
 import 'package:cop_belgium/models/fasting_model.dart';
-import 'package:dart_date/src/dart_date.dart';
+import 'package:dart_date/dart_date.dart';
 
 class FormalDates {
   static String formatDm({required DateTime? date}) {

@@ -64,17 +64,17 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
     onTap: onTap,
     items: [
       BottomNavigationBarItem(
-        tooltip: 'Home',
-        label: 'Home',
+        tooltip: 'Podcasts',
+        label: 'Podcasts',
         icon: Icon(
-          Icons.home_outlined,
+          FontAwesomeIcons.podcast,
           color: _bottomNavColor,
-          size: 35,
+          size: 28,
         ),
         activeIcon: const Icon(
-          Icons.home_outlined,
+          FontAwesomeIcons.podcast,
           color: kBlueDark,
-          size: 35,
+          size: 28,
         ),
       ),
       BottomNavigationBarItem(

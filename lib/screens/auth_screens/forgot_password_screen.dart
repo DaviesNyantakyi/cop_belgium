@@ -6,7 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:regexpattern/src/regex_extension.dart';
+import 'package:regexpattern/regexpattern.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static String forgotPasswordScreen = 'forgotPasswordScreen';
