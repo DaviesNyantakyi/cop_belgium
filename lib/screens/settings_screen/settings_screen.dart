@@ -41,12 +41,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (!mounted) return;
 
     kshowSnackbar(
-      type: 'normal',
+      errorType: 'normal',
       context: context,
-      child: Text(
-        platformResponse,
-        style: kSFBody,
-      ),
+      text: platformResponse,
     );
   }
 

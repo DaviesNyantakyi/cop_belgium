@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -300,7 +301,13 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             size: 20,
             color: kBlueDark,
           ),
-          onPressed: () {
+          onPressed: () async {
+            await CloudFireStore().saveUnsavePodcast(
+              rssInfo: PodcastRssInfo(
+                id: podcast!.id,
+                rssLink: podcast!.rssLink,
+              ),
+            );
             setState(() {
               bookMark = !bookMark;
             });

@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-class LatestReleaseCard extends StatelessWidget {
-  const LatestReleaseCard({Key? key}) : super(key: key);
+class FeaturedReleaseCard extends StatelessWidget {
+  const FeaturedReleaseCard({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +76,8 @@ class LatestReleaseCard extends StatelessWidget {
                   style: kSFHeadLine2.copyWith(
                     color: Colors.white,
                   ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 5),
                 Text(

@@ -3,20 +3,24 @@ import 'package:flutter/material.dart';
 
 dynamic kshowSnackbar({
   required BuildContext context,
-  required String type,
-  required Widget child,
+  required String errorType,
+  required String text,
 }) {
   Color? backgroundColor;
-  switch (type) {
+  Color textColor;
+  switch (errorType) {
     case 'error':
-      backgroundColor = kRedLight2;
+      backgroundColor = kRed;
+      textColor = Colors.white;
       break;
     case 'succes':
-      backgroundColor = kGreyLight;
+      backgroundColor = kGreen;
+      textColor = Colors.white;
       break;
 
     default:
       backgroundColor = kGreyLight;
+      textColor = kBlueDark;
       break;
   }
   ScaffoldMessenger.of(context).removeCurrentSnackBar();
@@ -27,7 +31,10 @@ dynamic kshowSnackbar({
       elevation: 7,
       backgroundColor: backgroundColor,
       duration: const Duration(seconds: 5),
-      content: child,
+      content: Text(
+        text,
+        style: kSFBody.copyWith(color: textColor),
+      ),
     ),
   );
 }

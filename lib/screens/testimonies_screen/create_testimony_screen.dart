@@ -197,30 +197,32 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 Navigator.pop(context);
               } else {
                 kshowSnackbar(
-                  type: 'normal',
+                  errorType: 'normal',
                   context: context,
-                  child: Text(
-                    'Please add title and testimony',
-                    style: kSFBody.copyWith(color: Colors.black),
-                  ),
+                  text: 'Please add title and testimony',
                 );
               }
             } on FirebaseException catch (e) {
               kshowSnackbar(
-                type: 'error',
+                errorType: 'error',
                 context: context,
-                child: Text(
-                  '${e.message}',
-                  style: kSFBody,
-                ),
+                text: e.message!,
               );
             }
           } else {
             var result = await _showDeleteAlert();
             if (result == 'ok') {
-              await CloudFireStore()
-                  .deleteTestimony(testimony: widget.testimonyInfo);
-              Navigator.pop(context);
+              try {
+                await CloudFireStore()
+                    .deleteTestimony(testimony: widget.testimonyInfo);
+                Navigator.pop(context);
+              } on FirebaseException catch (e) {
+                kshowSnackbar(
+                  context: context,
+                  errorType: 'error',
+                  text: e.message.toString(),
+                );
+              }
             }
           }
         },
@@ -228,7 +230,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
           return <PopupMenuEntry<String>>[
             const PopupMenuItem<String>(
               value: 'save',
-              child: Text('Save'),
+              child: Text('Update'),
             ),
             PopupMenuItem<String>(
               value: 'delete',
@@ -274,24 +276,18 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               Navigator.pop(context);
             } else {
               kshowSnackbar(
-                type: 'error',
+                errorType: 'normal',
                 context: context,
-                child: Text(
-                  'Please add title and testimony',
-                  style: kSFBody.copyWith(color: Colors.black),
-                ),
+                text: 'Please add title and testimony',
               );
             }
           } on FirebaseException catch (e) {
             debugPrint(e.toString());
 
             kshowSnackbar(
-              type: 'error',
+              errorType: 'error',
               context: context,
-              child: Text(
-                e.message!,
-                style: kSFBody.copyWith(color: Colors.black),
-              ),
+              text: e.message!,
             );
           } catch (e) {
             debugPrint(e.toString());

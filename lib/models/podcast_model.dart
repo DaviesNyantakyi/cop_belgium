@@ -34,11 +34,11 @@ class PodcastRssInfo {
     required this.rssLink,
   });
 
-  Map<String, dynamic> toMap({required PodcastRssInfo podCast}) {
+  Map<String, dynamic> toMap() {
     return {
-      'id': podCast.id,
-      'rssLink': podCast.rssLink,
-      'title': podCast.title,
+      'id': id,
+      'rssLink': rssLink,
+      'title': title,
     };
   }
 

@@ -27,8 +27,7 @@ class PodcastRssHandler {
         throw FirebaseException(
           code: 'Status code Error',
           plugin: 'http',
-          message: 'Something whent wrong whiles making the request',
-          //TODO: change  and test the error message.
+          message: 'Something went wrong while making the request.',
         );
       }
     } catch (e) {
@@ -41,9 +40,9 @@ class PodcastRssHandler {
       {required RssFeed rssFeed, required List<Episode> episodes}) {
     // creates a podcast using the rss info and also adds all the episodes
     return Podcast(
-      id: RssHelper.getRssPath(rssFeed: rssFeed),
+      id: RssHelper.getTokenRssPath(rssFeed: rssFeed),
       pageLink: rssFeed.link!,
-      rssLink: RssHelper.getRssLink(rssFeed: rssFeed),
+      rssLink: RssHelper.makeRssLink(rssFeed: rssFeed),
       image: rssFeed.itunes!.image!.href!,
       title: rssFeed.title!,
       description: rssFeed.itunes!.summary!,
@@ -69,9 +68,26 @@ class PodcastRssHandler {
   }
 
   Future<List<Podcast>> getPodcast() async {
+    // await Future.delayed(Duration(seconds: 100));
     try {
       final List<Podcast> podcasts = [];
       final firebaseInfo = await _fireStore.getPodcastRssInfoFireStore();
+
+      for (var info in firebaseInfo) {
+        Podcast podcast = await _getPodcastRss(rssLink: info!.rssLink);
+        podcasts.add(podcast);
+      }
+      return podcasts;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<Podcast>> getSavedPodcast() async {
+    // await Future.delayed(Duration(seconds: 100));
+    try {
+      final List<Podcast> podcasts = [];
+      final firebaseInfo = await _fireStore.getSavedPodcast();
 
       for (var info in firebaseInfo) {
         Podcast podcast = await _getPodcastRss(rssLink: info!.rssLink);

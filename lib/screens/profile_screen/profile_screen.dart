@@ -1,11 +1,12 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
-import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,7 +33,7 @@ class _ProfileScreensState extends State<ProfileScreens>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(initialIndex: 0, vsync: this, length: 3);
+    tabController = TabController(initialIndex: 0, vsync: this, length: 2);
   }
 
   @override
@@ -52,7 +53,6 @@ class _ProfileScreensState extends State<ProfileScreens>
           children: const <Widget>[
             UserSavedPodcastView(),
             UserTestimoniesView(),
-            UserFastingHistoryView()
           ],
         ),
       ),
@@ -78,9 +78,8 @@ class _ProfileScreensState extends State<ProfileScreens>
           borderSide: BorderSide(color: kBlue, width: 2),
         ),
         tabs: const [
-          Tab(text: 'Podcast'),
+          Tab(text: 'Podcasts'),
           Tab(text: 'Testimonies'),
-          Tab(text: 'Fasting History'),
         ],
       ),
     );

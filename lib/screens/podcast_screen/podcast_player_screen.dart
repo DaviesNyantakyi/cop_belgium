@@ -192,7 +192,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     if (episode?.image != null) {
       return Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.40,
+        height: MediaQuery.of(context).size.height * 0.37,
         decoration: BoxDecoration(
           color: kGreyLight,
           image: DecorationImage(

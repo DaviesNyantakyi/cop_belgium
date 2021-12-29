@@ -90,12 +90,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         debugPrint(e.toString());
         await EasyLoading.dismiss();
         kshowSnackbar(
-          type: 'error',
+          errorType: 'error',
           context: context,
-          child: Text(
-            e.message.toString(),
-            style: kSFBody.copyWith(color: Colors.black),
-          ),
+          text: e.message.toString(),
         );
       } finally {
         if (mounted) {

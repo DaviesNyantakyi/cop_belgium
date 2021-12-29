@@ -43,7 +43,7 @@ class PodcastScreenSkeleton extends StatelessWidget {
                   _buildGreeting(),
                   const SizedBox(height: 20),
                   const Text(
-                    'Latest Release',
+                    'Featured episode',
                     style: kSFCaptionBold,
                   ),
                   const SizedBox(height: 16),
@@ -52,9 +52,12 @@ class PodcastScreenSkeleton extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 42),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: _buildSeriesTitle(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
+              child: Text(
+                'Podcasts',
+                style: kSFCaptionBold,
+              ),
             ),
             const SizedBox(height: 16),
             SkeletonItem(
@@ -76,6 +79,66 @@ class PodcastScreenSkeleton extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildGreeting() {
+    final user = FirebaseAuth.instance.currentUser;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          YonoGreetings.showGreetings(),
+          style: kSFBody,
+        ),
+        Row(
+          children: [
+            Text(
+              user?.displayName ?? '',
+              style: kSFHeadLine2.copyWith(color: kYellow),
+            ),
+            const SizedBox(width: 6),
+            Image.asset('assets/images/icons/smile.png'),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class SavedPodcastScreenSkeleton extends StatelessWidget {
+  const SavedPodcastScreenSkeleton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonItem(
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(
+          vertical: kBodyPadding,
+          horizontal: kBodyPadding,
+        ),
+        itemCount: 5,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 1,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+          crossAxisCount: 2,
+          mainAxisExtent: 200,
+        ),
+        itemBuilder: (context, index) {
+          return Container(
+            width: 160,
+            height: 200,
+            decoration: const BoxDecoration(
+              color: kBlueLight,
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

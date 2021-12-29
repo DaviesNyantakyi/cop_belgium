@@ -178,21 +178,24 @@ class _BuildBody extends StatelessWidget {
                   _buildGreeting(),
                   const SizedBox(height: 20),
                   const Text(
-                    'Latest Release',
+                    'Featured episode',
                     style: kSFCaptionBold,
                   ),
                   const SizedBox(height: 16),
                   Provider.value(
                     value: podcats,
-                    child: const LatestReleaseCard(),
+                    child: const FeaturedReleaseCard(),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 42),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: _buildSeriesTitle(),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
+              child: Text(
+                'Podcasts',
+                style: kSFCaptionBold,
+              ),
             ),
             const SizedBox(height: 16),
             _buildSeriesList(),
@@ -233,41 +236,6 @@ class _BuildBody extends StatelessWidget {
         ),
       );
     });
-  }
-
-  Widget _buildSeriesTitle() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Podcasts',
-              style: kSFCaptionBold,
-            ),
-            TextButton(
-              child: const Text(
-                'See All',
-                style: kSFSubtitle2,
-              ),
-              onPressed: () {
-                /*Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const SeeAllPodCastScreen(),
-                  ),
-                );*/
-              },
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
   }
 }
 

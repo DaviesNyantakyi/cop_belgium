@@ -53,3 +53,26 @@ class NoPodcastsView extends StatelessWidget {
     );
   }
 }
+
+class NoSavedPodcastsView extends StatelessWidget {
+  final Function()? onPressed;
+  const NoSavedPodcastsView({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Image.asset(
+            'assets/images/no_podcasts.png',
+            height: 220,
+            width: 220,
+          ),
+          const Text('Bookmark empty', style: kSFHeadLine2),
+          const Text('Get started by saving a podcasts', style: kSFBody),
+        ],
+      ),
+    );
+  }
+}

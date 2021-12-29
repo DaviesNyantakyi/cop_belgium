@@ -3,6 +3,7 @@ import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
+import 'package:cop_belgium/utilities/rss_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,10 +39,6 @@ class CloudFireStore {
   Future<void> updateTestimonyInfo({required TestimonyInfo tInfo}) async {
     try {
       bool hasConnection = await _connectionChecker.checkConnection();
-
-      // voor dat we de tesitmony aanmaken checken we als we interne connectie hebben.
-      // als we internet connectie hebben update de testimony doc
-      // else throw error no internet connection
 
       if (hasConnection) {
         await _firestore.collection('Testimonies').doc(tInfo.id).update(
@@ -79,6 +76,9 @@ class CloudFireStore {
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
     }
   }
 
@@ -91,7 +91,8 @@ class CloudFireStore {
         String docRef = tInfo.id.toString() + _user!.uid;
 
         // Try to get the document in the likes collection.
-        final docSnap = await getTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
+        final docSnap =
+            await _getTestimonyLikeDoc(tInfo: tInfo, docRef: docRef);
 
         // the user has clicked on the like button:
         // If the doc does not exits in the Testimony likers collection.
@@ -116,7 +117,7 @@ class CloudFireStore {
     }
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getTestimonyLikeDoc({
+  Future<DocumentSnapshot<Map<String, dynamic>>> _getTestimonyLikeDoc({
     required TestimonyInfo tInfo,
     required String docRef,
   }) async {
@@ -127,6 +128,26 @@ class CloudFireStore {
         .collection('likers')
         .doc(docRef)
         .get();
+  }
+
+  Future<bool> hasLikedTestimony({
+    required TestimonyInfo tInfo,
+  }) async {
+    // This gets the document with the uniek ref in the likes collection.
+    String docRef = tInfo.id.toString() + _user!.uid;
+
+    final doc = await FirebaseFirestore.instance
+        .collection('Testimonies')
+        .doc(tInfo.id)
+        .collection('likers')
+        .doc(docRef)
+        .get();
+
+    if (doc.exists) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<void> createTestimonyLikeDoc({
@@ -174,6 +195,27 @@ class CloudFireStore {
     }
   }
 
+  Future<List<PodcastRssInfo?>> getSavedPodcast() async {
+    // get the podcast rss link and page link from firestore.
+    try {
+      final qSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('podcasts')
+          .get();
+      final listQDocSnap = qSnap.docs;
+
+      List<PodcastRssInfo> listPodRssInfo = listQDocSnap.map((doc) {
+        return PodcastRssInfo.fromMap(map: doc.data());
+      }).toList();
+
+      return listPodRssInfo;
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
   Future<void> deleteTestimonyLikeDoc(
       {required TestimonyInfo tInfo, required String docRef}) async {
     try {
@@ -196,13 +238,45 @@ class CloudFireStore {
           user.lastName != null &&
           user.firstName != null &&
           user.email != null) {
-        await _firestore.collection('Users').doc(user.id).set(
+        await _firestore.collection('users').doc(user.id).set(
               CopUser.toMap(copUser: user),
             );
       }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
+    }
+  }
+
+  Future<void> saveUnsavePodcast({required PodcastRssInfo rssInfo}) async {
+    try {
+      final doc = await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('podcasts')
+          .doc(rssInfo.id)
+          .get();
+
+      if (!doc.exists) {
+        await _firestore
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('podcasts')
+            .doc(rssInfo.id)
+            .set(rssInfo.toMap());
+      } else {
+        await _firestore
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('podcasts')
+            .doc(rssInfo.id)
+            .delete();
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }
