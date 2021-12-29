@@ -68,7 +68,7 @@ class PodcastRssHandler {
   }
 
   Future<List<Podcast>> getPodcast() async {
-    // await Future.delayed(Duration(seconds: 100));
+    //await Future.delayed(Duration(seconds: 10));
     try {
       final List<Podcast> podcasts = [];
       final firebaseInfo = await _fireStore.getPodcastRssInfoFireStore();
@@ -87,7 +87,7 @@ class PodcastRssHandler {
     // await Future.delayed(Duration(seconds: 100));
     try {
       final List<Podcast> podcasts = [];
-      final firebaseInfo = await _fireStore.getSavedPodcast();
+      final firebaseInfo = await _fireStore.getUserSavedPodcast();
 
       for (var info in firebaseInfo) {
         Podcast podcast = await _getPodcastRss(rssLink: info!.rssLink);

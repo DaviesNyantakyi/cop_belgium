@@ -20,7 +20,7 @@ class ConnectionChecker extends ChangeNotifier {
     return result;
   }
 
-  static Exception connectionException = FirebaseException(
+  static FirebaseException connectionException = FirebaseException(
     plugin: 'Connection Checker:',
     code: 'No connection',
     message:

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
@@ -5,6 +6,7 @@ import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +21,26 @@ class UserSavedPodcastView extends StatefulWidget {
 }
 
 class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
+  final _user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_user!.uid)
+        .collection('savedPodcasts')
+        .snapshots()
+        .listen((event) {
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await CloudFireStore().getSavedPodcast();
+        await CloudFireStore().getUserSavedPodcast();
         setState(() {});
       },
       child: FutureBuilder<List<Podcast>>(

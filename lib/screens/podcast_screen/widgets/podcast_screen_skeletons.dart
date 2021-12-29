@@ -30,55 +30,53 @@ class PodcastScreenSkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Featured episode',
-                    style: kSFCaptionBold,
-                  ),
-                  const SizedBox(height: 16),
-                  const SkeletonItem(child: LatestReleaseCardSkeleton())
-                ],
-              ),
-            ),
-            const SizedBox(height: 42),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Text(
-                'Podcasts',
-                style: kSFCaptionBold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            SkeletonItem(
-              child: SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: 15,
-                  scrollDirection: Axis.horizontal,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(left: kBodyPadding),
-                  itemBuilder: (context, index) {
-                    return const Padding(
-                      padding: EdgeInsets.only(right: 12),
-                      child: PodcastCardSkeleton(),
-                    );
-                  },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildGreeting(),
+                const SizedBox(height: 45),
+                const Text(
+                  'Featured episode',
+                  style: kSFCaptionBold,
                 ),
+                const SizedBox(height: 16),
+                const SkeletonItem(child: LatestReleaseCardSkeleton())
+              ],
+            ),
+          ),
+          const SizedBox(height: 42),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
+            child: Text(
+              'Podcasts',
+              style: kSFCaptionBold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          SkeletonItem(
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                itemCount: 15,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(
+                    parent: NeverScrollableScrollPhysics()),
+                padding: const EdgeInsets.only(left: kBodyPadding),
+                itemBuilder: (context, index) {
+                  return const Padding(
+                    padding: EdgeInsets.only(right: 12),
+                    child: PodcastCardSkeleton(),
+                  );
+                },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -140,57 +138,6 @@ class SavedPodcastScreenSkeleton extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildGreeting() {
-    final user = FirebaseAuth.instance.currentUser;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          YonoGreetings.showGreetings(),
-          style: kSFBody,
-        ),
-        Row(
-          children: [
-            Text(
-              user?.displayName ?? '',
-              style: kSFHeadLine2.copyWith(color: kYellow),
-            ),
-            const SizedBox(width: 6),
-            Image.asset('assets/images/icons/smile.png'),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSeriesTitle() {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Podcasts',
-              style: kSFCaptionBold,
-            ),
-            TextButton(
-              child: const Text(
-                'See All',
-                style: kSFSubtitle2,
-              ),
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

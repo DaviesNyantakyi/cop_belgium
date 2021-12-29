@@ -3,6 +3,7 @@ import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
       ),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('Testimonies')
+            .collection('testimonies')
             .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -38,9 +39,10 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
           }
 
           if (snapshot.hasError) {
-            // also add image
-            return const Center(
-              child: Text('Please try again', style: kSFBody),
+            return TryAgainView(
+              onPressed: () {
+                setState(() {});
+              },
             );
           }
 

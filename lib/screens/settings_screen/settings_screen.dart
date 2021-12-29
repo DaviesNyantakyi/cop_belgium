@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 39),
                 Column(
                   children: [
-                    ListTile(
+                    /* ListTile(
                       leading: const Icon(
                         FontAwesomeIcons.solidBell,
                         color: kBlueDark,
@@ -81,7 +81,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           },
                         ),
                       ),
-                    ),
+                    ),*/
                     ListTile(
                       onTap: () async {
                         language = await _showLanguagelectorBottomSheet(

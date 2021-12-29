@@ -29,22 +29,7 @@ class TestimonyCard extends StatefulWidget {
 }
 
 class _TestimonyCardState extends State<TestimonyCard> {
-  bool? isLiked;
-
-  @override
-  void initState() {
-    super.initState();
-    checkLike();
-  }
-
-  Future<bool?> checkLike() async {
-    bool hasLiked =
-        await CloudFireStore().hasLikedTestimony(tInfo: widget.testimonyInfo);
-    setState(() {
-      isLiked = hasLiked;
-    });
-    return hasLiked;
-  }
+  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +109,6 @@ class _TestimonyCardState extends State<TestimonyCard> {
         try {
           await CloudFireStore()
               .likeDislikeTestimony(tInfo: widget.testimonyInfo);
-          await checkLike();
         } on FirebaseException catch (e) {
           debugPrint(e.toString());
           kshowSnackbar(
@@ -150,26 +134,38 @@ class _TestimonyCardState extends State<TestimonyCard> {
   }
 
   Widget _buildLikeIcon() {
-    if (isLiked != null) {
-      return Image.asset(
-        isLiked!
-            ? 'assets/images/icons/clapping_filled.png'
-            : 'assets/images/icons/clapping_outlined.png',
-        filterQuality: FilterQuality.high,
-        color: kBlueDark,
-      );
-    }
-    return Image.asset(
-      'assets/images/icons/clapping_outlined.png',
-      filterQuality: FilterQuality.high,
-      color: kBlueDark,
+    String docRef = widget.testimonyInfo.id.toString() + _user!.uid;
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('testimonies')
+          .doc(widget.testimonyInfo.id)
+          .collection('likers')
+          .where('id', isEqualTo: docRef)
+          .where('userId', isEqualTo: _user!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final docs = snapshot.data?.docs ?? [];
+        if (docs.isNotEmpty) {
+          //user has likes the testimony
+          return Image.asset(
+            'assets/images/icons/clapping_filled.png',
+            filterQuality: FilterQuality.high,
+            color: kBlueDark,
+          );
+        }
+        return Image.asset(
+          'assets/images/icons/clapping_outlined.png',
+          filterQuality: FilterQuality.high,
+          color: kBlueDark,
+        );
+      },
     );
   }
 
   Widget _buildLikeCount() {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
-          .collection('Testimonies')
+          .collection('testimonies')
           .doc(widget.testimonyInfo.id)
           .collection('likers')
           .snapshots(),

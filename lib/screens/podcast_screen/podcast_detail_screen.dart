@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
@@ -6,6 +7,7 @@ import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -26,11 +28,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   bool bookMark = false;
   bool isLiked = false;
   Podcast? podcast;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -266,54 +264,47 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         ),
         const SizedBox(width: 19),
         TextButton(
-          onPressed: () {
-            setState(() {
-              isLiked = !isLiked;
-            });
-          },
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: Row(
-            children: [
-              Icon(
-                isLiked ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-                color: kBlueDark,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'likes',
-                style: kSFBody,
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 19),
-        TextButton(
           style: kTextButtonStyle,
-          child: Icon(
-            bookMark == false
-                ? FontAwesomeIcons.bookmark
-                : FontAwesomeIcons.solidBookmark,
-            size: 20,
-            color: kBlueDark,
-          ),
+          child: _buildBookmarkIcon(),
           onPressed: () async {
             await CloudFireStore().saveUnsavePodcast(
               rssInfo: PodcastRssInfo(
                 id: podcast!.id,
                 rssLink: podcast!.rssLink,
+                title: podcast?.title ?? '',
               ),
             );
-            setState(() {
-              bookMark = !bookMark;
-            });
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildBookmarkIcon() {
+    String docRef = podcast!.id;
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('savedPodcasts')
+          .where('id', isEqualTo: docRef)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final docs = snapshot.data?.docs ?? [];
+        if (docs.isNotEmpty) {
+          //user has saved to podcast
+          return const Icon(
+            FontAwesomeIcons.solidBookmark,
+            size: 20,
+            color: kBlueDark,
+          );
+        }
+        return const Icon(
+          FontAwesomeIcons.bookmark,
+          size: 20,
+          color: kBlueDark,
+        );
+      },
     );
   }
 

@@ -1,10 +1,9 @@
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
-import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
-import 'package:cop_belgium/utilities/church_selector.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
@@ -22,6 +21,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
+  final User? _user = FirebaseAuth.instance.currentUser;
+
   bool isSubmit = false;
 
   bool isLoading = false;
@@ -29,7 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? lastName;
   String? email;
   String? password;
-  String? selectedChurchLocation;
+  // String? selectedChurchLocation;
   String? gender;
 
   @override
@@ -38,7 +39,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     setState(() {
       gender = widget.user!.gender;
-      selectedChurchLocation = widget.user!.church;
+      // selectedChurchLocation = widget.user!.church;
     });
   }
 
@@ -54,31 +55,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const EdgeInsets.symmetric(horizontal: 20).copyWith(top: 10),
             child: Column(
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(profilePhoto),
-                  radius: 50,
-                  backgroundColor: kBlueDark,
-                  child: TextButton(
-                    // splash effect
-                    style: kTextButtonStyle.copyWith(
-                      shape: MaterialStateProperty.all(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(100),
-                          ),
-                        ),
-                      ),
-                    ),
-                    child: Container(),
-                    onPressed: () {},
-                  ),
-                ),
+                _buildAvatar(),
                 const SizedBox(height: kButtonSpacing),
                 _buildForm(),
                 const SizedBox(height: kTextFieldSpacing),
-                _buildLocationSelector(),
-                const SizedBox(height: 5),
-                _locationValidator(),
+                // _buildLocationSelector(),
+                // const SizedBox(height: 5),
+                // _locationValidator(),
                 const SizedBox(height: kTextFieldSpacing),
                 _buildGenderSelector(),
                 const SizedBox(height: kTextFieldSpacing),
@@ -88,6 +71,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAvatar() {
+    if (_user?.photoURL != null) {
+      return CircleAvatar(
+        backgroundImage: NetworkImage(_user!.photoURL!),
+        radius: 60,
+        backgroundColor: kBlueDark,
+        child: TextButton(
+          // splash effect
+          style: kTextButtonStyle.copyWith(
+            shape: MaterialStateProperty.all(
+              const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+            ),
+          ),
+          child: Container(),
+          onPressed: () {},
+        ),
+      );
+    }
+    return const CircleAvatar(
+      radius: 60,
+      backgroundColor: kBlueDark,
+      child: Icon(FontAwesomeIcons.camera),
     );
   }
 
@@ -129,31 +141,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _locationValidator() {
-    // shows error text if the location is null
+  // Widget _locationValidator() {
+  //   // shows error text if the location is null
 
-    if (selectedChurchLocation == null && isSubmit == true) {
-      return Text(
-        'Please select church location',
-        style: TextStyle(color: Colors.red.shade700, fontSize: 13),
-      );
-    } else {
-      return Container();
-    }
-  }
+  //   if (selectedChurchLocation == null && isSubmit == true) {
+  //     return Text(
+  //       'Please select church location',
+  //       style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
 
-  Widget _buildLocationSelector() {
-    return ChurchSelctor().buildChurchSelectorTile(
-      city: selectedChurchLocation,
-      onChanged: (value) {
-        setState(() {
-          selectedChurchLocation = value;
-          FocusScope.of(context).unfocus();
-        });
-      },
-      context: context,
-    );
-  }
+  // Widget _buildLocationSelector() {
+  //   return ChurchSelctor().buildChurchSelectorTile(
+  //     city: selectedChurchLocation,
+  //     onChanged: (value) {
+  //       setState(() {
+  //         selectedChurchLocation = value;
+  //         FocusScope.of(context).unfocus();
+  //       });
+  //     },
+  //     context: context,
+  //   );
+  // }
 
   Widget _buildForm() {
     return Column(

@@ -3,7 +3,6 @@ import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
-import 'package:cop_belgium/utilities/rss_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,7 +22,7 @@ class CloudFireStore {
             testimony.description != null &&
             testimony.date != null) {
           final docRef = await _firestore
-              .collection('Testimonies')
+              .collection('testimonies')
               .add(TestimonyInfo.toMap(map: testimony));
           docRef.update({'id': docRef.id});
         }
@@ -41,7 +40,7 @@ class CloudFireStore {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
-        await _firestore.collection('Testimonies').doc(tInfo.id).update(
+        await _firestore.collection('testimonies').doc(tInfo.id).update(
               TestimonyInfo.toMap(map: tInfo),
             );
       } else {
@@ -60,7 +59,7 @@ class CloudFireStore {
       if (hasConnection) {
         // delete likers collection first otherwise the doc will still remain
         final collection = _firestore
-            .collection('Testimonies')
+            .collection('testimonies')
             .doc(testimony!.id)
             .collection('likers');
         final snapshots = await collection.get();
@@ -69,7 +68,7 @@ class CloudFireStore {
         }
 
         // delete doc
-        await _firestore.collection('Testimonies').doc(testimony.id).delete();
+        await _firestore.collection('testimonies').doc(testimony.id).delete();
       } else {
         throw ConnectionChecker.connectionException;
       }
@@ -123,31 +122,11 @@ class CloudFireStore {
   }) async {
     // This gets the document with the uniek ref in the likes collection.
     return await FirebaseFirestore.instance
-        .collection('Testimonies')
+        .collection('testimonies')
         .doc(tInfo.id)
         .collection('likers')
         .doc(docRef)
         .get();
-  }
-
-  Future<bool> hasLikedTestimony({
-    required TestimonyInfo tInfo,
-  }) async {
-    // This gets the document with the uniek ref in the likes collection.
-    String docRef = tInfo.id.toString() + _user!.uid;
-
-    final doc = await FirebaseFirestore.instance
-        .collection('Testimonies')
-        .doc(tInfo.id)
-        .collection('likers')
-        .doc(docRef)
-        .get();
-
-    if (doc.exists) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   Future<void> createTestimonyLikeDoc({
@@ -156,10 +135,10 @@ class CloudFireStore {
   }) async {
     final currenDate = DateTime.now();
     try {
-      // This method allows us to soo ho liked the post.
+      // This method allows us to soo who liked the post.
       // Upload a document with a unqiek id to the specific testimony doc likers collection.
       await _firestore
-          .collection('Testimonies')
+          .collection('testimonies')
           .doc(tInfo.id)
           .collection('likers')
           .doc(docRef)
@@ -195,13 +174,13 @@ class CloudFireStore {
     }
   }
 
-  Future<List<PodcastRssInfo?>> getSavedPodcast() async {
+  Future<List<PodcastRssInfo?>> getUserSavedPodcast() async {
     // get the podcast rss link and page link from firestore.
     try {
       final qSnap = await FirebaseFirestore.instance
           .collection('users')
           .doc(_user!.uid)
-          .collection('podcasts')
+          .collection('savedPodcasts')
           .get();
       final listQDocSnap = qSnap.docs;
 
@@ -221,7 +200,7 @@ class CloudFireStore {
     try {
       // delete the doc with the liker info in the likers collection.
       await FirebaseFirestore.instance
-          .collection('Testimonies')
+          .collection('testimonies')
           .doc(tInfo.id)
           .collection('likers')
           .doc(docRef)
@@ -238,11 +217,24 @@ class CloudFireStore {
           user.lastName != null &&
           user.firstName != null &&
           user.email != null) {
-        await _firestore.collection('users').doc(user.id).set(
-              CopUser.toMap(copUser: user),
-            );
+        await _firestore.collection('users').doc(user.id).set(user.toMap());
       }
     } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updatePhotoUrl({required String photoUrl}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'photoUrl': photoUrl});
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
@@ -253,7 +245,7 @@ class CloudFireStore {
       final doc = await _firestore
           .collection('users')
           .doc(_user!.uid)
-          .collection('podcasts')
+          .collection('savedPodcasts')
           .doc(rssInfo.id)
           .get();
 
@@ -261,14 +253,14 @@ class CloudFireStore {
         await _firestore
             .collection('users')
             .doc(_user!.uid)
-            .collection('podcasts')
+            .collection('savedPodcasts')
             .doc(rssInfo.id)
             .set(rssInfo.toMap());
       } else {
         await _firestore
             .collection('users')
             .doc(_user!.uid)
-            .collection('podcasts')
+            .collection('savedPodcasts')
             .doc(rssInfo.id)
             .delete();
       }

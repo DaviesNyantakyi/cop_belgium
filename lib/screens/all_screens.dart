@@ -1,10 +1,6 @@
 //Home (With bottom Nav)
 export 'package:cop_belgium/screens/bottom_nav_selector.dart';
 
-//Announcement
-export 'package:cop_belgium/screens/announcement_screen/announcement_screen.dart';
-export 'package:cop_belgium/screens/announcement_screen/widget/announcement_card.dart';
-
 //Auth Screens
 export 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 export 'package:cop_belgium/screens/auth_screens/sign_up_screen.dart';
@@ -22,7 +18,6 @@ export 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
 //Profile Screens
 
 export 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
-export 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 export 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 export 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 export 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';

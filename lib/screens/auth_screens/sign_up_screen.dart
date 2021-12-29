@@ -1,6 +1,9 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/screens/photo_picker_screen.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,7 +11,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
-import 'package:cop_belgium/utilities/church_selector.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
@@ -33,7 +35,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? lastName;
   String? email;
   String? password;
-  String? selectedChurch;
   String? gender;
 
   Future<void> submit() async {
@@ -44,11 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     bool emailIsValid = _emailFormKey.currentState!.validate();
     bool passworIsValid = _passwordFormKey.currentState!.validate();
 
-    if (nameIsValid &&
-        emailIsValid &&
-        passworIsValid &&
-        gender != null &&
-        selectedChurch != null) {
+    if (nameIsValid && emailIsValid && passworIsValid && gender != null) {
       try {
         if (mounted) {
           setState(() {
@@ -63,14 +60,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         final userObject = CopUser(
-          title: 'member',
           isOnline: true,
           isAdmin: false,
           firstName: firstName,
           lastName: lastName,
           email: email,
           gender: gender,
-          church: selectedChurch,
         );
 
         final user = await Authentication().signUpWithEmail(
@@ -85,6 +80,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         }
         if (user != null) {
           Navigator.pop(context);
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => const PhotoPickerScreen(),
+            ),
+          );
         }
       } on FirebaseAuthException catch (e) {
         debugPrint(e.toString());
@@ -121,9 +122,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
               children: [
                 _buildForm(),
                 const SizedBox(height: kTextFieldSpacing),
-                _buildLocationSelector(),
-                const SizedBox(height: 5),
-                _locationValidator(),
                 const SizedBox(height: kTextFieldSpacing),
                 _buildGenderSelector(),
                 const SizedBox(height: kButtonSpacing),
@@ -133,19 +131,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLocationSelector() {
-    return ChurchSelctor().buildChurchSelectorTile(
-      city: selectedChurch,
-      onChanged: (value) {
-        setState(() {
-          selectedChurch = value;
-          FocusScope.of(context).unfocus();
-        });
-      },
-      context: context,
     );
   }
 
@@ -256,19 +241,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  dynamic _locationValidator() {
-    // shows error text if the location is null
-
-    if (selectedChurch == null && isSubmit == true) {
-      return Text(
-        'Please select church location',
-        style: TextStyle(color: Colors.red.shade700, fontSize: 13),
-      );
-    } else {
-      return Container();
-    }
-  }
-
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
       leading: Container(
@@ -292,28 +264,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildSingUpBtn() {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            isLoading ? kGrey : kYellow,
-          ),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(kButtonRadius),
-              ),
-            ),
-          ),
-        ),
-        onPressed: isLoading ? null : submit,
-        child: const Text(
-          'Sing Up',
-          style: kSFBodyBold,
-        ),
-      ),
+    return Buttons.buildBtn(
+      context: context,
+      color: isLoading ? kGrey : kYellow,
+      btnText: 'Sign Up',
+      onPressed: isLoading ? null : submit,
     );
   }
 }

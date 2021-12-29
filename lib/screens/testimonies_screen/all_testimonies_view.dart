@@ -6,6 +6,7 @@ import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:flutter/material.dart';
 
+//TODO: fix: if a testimony field is null in firbase then have an error
 class TestimoniesView extends StatefulWidget {
   const TestimoniesView({Key? key}) : super(key: key);
 
@@ -21,7 +22,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
           horizontal: kBodyPadding, vertical: kBodyPadding),
       child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection('Testimonies')
+            .collection('testimonies')
             .orderBy('date', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
@@ -59,9 +60,12 @@ class _TestimoniesViewState extends State<TestimoniesView> {
               child: CircularProgressIndicator.adaptive(),
             );
           }
+
           if (snapshot.hasError) {
             return TryAgainView(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {});
+              },
             );
           }
 

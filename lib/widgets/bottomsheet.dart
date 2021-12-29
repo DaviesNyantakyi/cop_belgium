@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showMyBottomSheet({
-  required BuildContext context,
-  Widget? child,
-}) async {
+Future<void> showMyBottomSheet(
+    {required BuildContext context,
+    Widget? child,
+    double? height = kBottomSheetHeight}) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
@@ -17,7 +17,7 @@ Future<void> showMyBottomSheet({
     ),
     builder: (BuildContext context) {
       return Container(
-        height: kBottomSheetHeight,
+        height: height,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -38,7 +38,9 @@ Future<void> showMyBottomSheet({
 }
 
 Future<void> showMyFastingBottomSheet(
-    {required BuildContext context, Widget? child}) async {
+    {required BuildContext context,
+    Widget? child,
+    double? height = 300}) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
@@ -49,7 +51,7 @@ Future<void> showMyFastingBottomSheet(
     ),
     builder: (BuildContext context) {
       return Container(
-        height: 300,
+        height: height,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(

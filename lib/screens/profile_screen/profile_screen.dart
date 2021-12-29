@@ -1,20 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
-import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-String profilePhoto =
-    'https://images.unsplash.com/photo-1584473457409-ae5c91d7d8b1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8YmxhY2slMjBnaXJsfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60';
 
 enum WhyFarther { editProfile, settings }
 
@@ -29,6 +25,8 @@ class ProfileScreens extends StatefulWidget {
 class _ProfileScreensState extends State<ProfileScreens>
     with TickerProviderStateMixin {
   TabController? tabController;
+
+  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -96,11 +94,7 @@ class _ProfileScreensState extends State<ProfileScreens>
             _buildPopupMenu(context: context),
           ],
         ),
-        CircleAvatar(
-          backgroundImage: NetworkImage(profilePhoto),
-          radius: 40,
-          backgroundColor: kBlueDark,
-        ),
+        _buildAvatar(),
         const SizedBox(height: 10),
         Text(
           user.displayName ?? ' ',
@@ -111,6 +105,21 @@ class _ProfileScreensState extends State<ProfileScreens>
           style: kSFSubtitle2,
         ),
       ],
+    );
+  }
+
+  Widget _buildAvatar() {
+    if (_user?.photoURL != null) {
+      return CircleAvatar(
+        backgroundImage: CachedNetworkImageProvider(_user!.photoURL!),
+        radius: 40,
+        backgroundColor: kBlueDark,
+      );
+    }
+    return const CircleAvatar(
+      radius: 40,
+      backgroundColor: kBlueDark,
+      child: Icon(FontAwesomeIcons.user),
     );
   }
 
@@ -134,15 +143,12 @@ class _ProfileScreensState extends State<ProfileScreens>
             builder: (context) {
               return EditProfileScreen(
                 user: CopUser(
-                  title: 'user',
-                  photoUrl: profilePhoto,
+                  photoUrl: _user!.photoURL,
                   firstName: 'Melisa',
                   lastName: 'Shanses',
                   isOnline: true,
                   email: 'MelisaShanses@outlook.com',
                   gender: 'female',
-                  church: 'Turnhout',
-                  isFasting: false,
                   isAdmin: false,
                 ),
               );

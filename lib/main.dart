@@ -1,3 +1,4 @@
+import 'package:cop_belgium/screens/photo_picker_screen.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
@@ -50,11 +51,7 @@ Map<String, WidgetBuilder> _routes = {
       const ForgotPasswordScreen(),
   BottomNavSelectorPage.bottomNavSelectorPage: (context) =>
       const BottomNavSelectorPage(),
-  AnnouncementScreen.announcementScreen: (context) =>
-      const AnnouncementScreen(),
   PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
-  // SeeAllPodCastScreen.seeAllPodCastScreen: (context) =>
-  //     const SeeAllPodCastScreen(),
   PodcastPlayerScreen.podcastPlayerScreen: (context) =>
       const PodcastPlayerScreen(),
   PodcastDetailScreen.podcastDetailScreen: (context) =>

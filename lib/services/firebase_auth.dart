@@ -16,7 +16,6 @@ class Authentication {
           user.lastName != null &&
           user.email != null &&
           password != null &&
-          user.church != null &&
           user.gender != null) {
         String? displayName = '${user.firstName} ${user.lastName}';
 

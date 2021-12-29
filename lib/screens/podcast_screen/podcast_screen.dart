@@ -1,12 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'package:cop_belgium/screens/announcement_screen/announcement_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
@@ -27,38 +25,19 @@ class PodcastScreen extends StatefulWidget {
 
 class _PodcastScreenState extends State<PodcastScreen> {
   @override
-  Widget build(BuildContext context) {
-    dynamic _buildAppbar() {
-      return AppBar(
-        actions: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: const Icon(
-                FontAwesomeIcons.bell,
-                color: kBlueDark,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const AnnouncementScreen(),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    }
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('podcasts')
+        .snapshots()
+        .listen((event) {
+      setState(() {});
+    });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(),
       body: SafeArea(
         child: RefreshIndicator(
           color: kBlueDark,
@@ -69,6 +48,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
             }
           },
           child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
             physics: const AlwaysScrollableScrollPhysics(),
             child: FutureBuilder<List<Podcast>>(
               future: PodcastRssHandler().getPodcast(),
@@ -165,42 +145,39 @@ class _BuildBody extends StatelessWidget {
     var podcats = Provider.of<List<Podcast>>(context, listen: false);
     return Provider.value(
       value: podcats,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Featured episode',
-                    style: kSFCaptionBold,
-                  ),
-                  const SizedBox(height: 16),
-                  Provider.value(
-                    value: podcats,
-                    child: const FeaturedReleaseCard(),
-                  ),
-                ],
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildGreeting(),
+                const SizedBox(height: 45),
+                const Text(
+                  'Featured episode',
+                  style: kSFCaptionBold,
+                ),
+                const SizedBox(height: 16),
+                Provider.value(
+                  value: podcats,
+                  child: const FeaturedReleaseCard(),
+                ),
+              ],
             ),
-            const SizedBox(height: 42),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Text(
-                'Podcasts',
-                style: kSFCaptionBold,
-              ),
+          ),
+          const SizedBox(height: 42),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
+            child: Text(
+              'Podcasts',
+              style: kSFCaptionBold,
             ),
-            const SizedBox(height: 16),
-            _buildSeriesList(),
-          ],
-        ),
+          ),
+          const SizedBox(height: 16),
+          _buildSeriesList(),
+        ],
       ),
     );
   }
