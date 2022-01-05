@@ -394,7 +394,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           style: kSFHeadLine2,
         ),
         content: const Text(
-            'We have send password recovery instruction to your email.',
+            'We have send password recovery instruction to your email. No instruction found? Check your spam filter.',
             style: kSFBody),
         actions: <Widget>[
           TextButton(

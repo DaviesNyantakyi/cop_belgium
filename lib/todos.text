@@ -1,8 +1,7 @@
 
 Firebase project setup
  -iOS Firebase Project Setup
- -Password recovery message 
- -Cloud firstore rules
+ -Password recovery message: link and sender email 
  
 
 Image picker
@@ -12,17 +11,10 @@ Image picker
 Just audio setup 
  - Add no microphone usage code so that App store won't ask for microphone usaga 
 
-PodcastScreen
- - exception if the rssLink is null in firbase: only add the functional podcast to the screen
-
-TextField Validator
- - name Validator: only  text allowed
-
 Onboarding
 
 Playstore Force update
-
-New version package test
+ -New version package test
 
 
 
