@@ -36,8 +36,6 @@ dependencies:
   font_awesome_flutter: ^9.2.0
 
 
-  spring_button: ^2.0.0  # color picker dependencies
-  smooth_page_indicator: ^1.0.0+2  # color picker dependencies
   numberpicker: ^2.1.1 # fasting pciker
   dart_date: ^1.1.0 # formating dates to formal
   circular_countdown_timer: ^0.2.0 #  asting timer
@@ -56,10 +54,14 @@ dependencies:
   webfeed: ^0.7.0 # for parsing rss 
   http: ^0.13.4 #making http request
   skeletons: ^0.0.3 #body of shimmers 
-  html: ^0.15.0 #removes p tag from podcast description
+  html: ^0.15.0 #r emoves p tag from podcast description
   cached_network_image: ^3.2.0
   image_picker: ^0.8.4+4
-  path: ^1.8.0 # base name
+  path: ^1.8.0 # get base name from selected file path
+  package_info_plus: ^1.3.0 # get app package info
+  device_info: ^2.0.3 # get device info
+
+
 
 
 

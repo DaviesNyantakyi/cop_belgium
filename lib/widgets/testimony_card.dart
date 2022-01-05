@@ -37,8 +37,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
       width: double.infinity,
       height: 210,
       decoration: BoxDecoration(
-        color: Color(int.parse(widget.testimonyInfo.cardColor.toString()))
-            .withAlpha(170),
+        color: kBlueLight2.withAlpha(170),
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),

@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:cop_belgium/utilities/color_picker.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -32,7 +30,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   String? title;
   String? testimony;
   DateTime? date;
-  Color? cardColor = kBlueLight2;
+  Color backgroundColor = kGreyLight;
   bool isAnon = false;
 
   @override
@@ -49,9 +47,6 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         testimony = widget.testimonyInfo!.description;
         date = widget.testimonyInfo!.date;
         isAnon = widget.testimonyInfo!.isAnonymous;
-        cardColor = Color(
-          int.parse(widget.testimonyInfo!.cardColor.toString()),
-        );
       }
     });
   }
@@ -59,7 +54,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: cardColor,
+      backgroundColor: backgroundColor,
       appBar: _buildAppbar(editable: widget.editable!),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -71,14 +66,6 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FastColorPicker(
-                  onColorSelected: (value) {
-                    setState(() {
-                      cardColor = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
                 _buildTF(
                   initialValue: title,
                   hintText: 'Title',
@@ -156,12 +143,12 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         ),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'ok'),
-            child: const Text('Delete', style: kSFBody),
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('Cancel', style: kSFBody),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel', style: kSFBodyBold),
+            onPressed: () => Navigator.pop(context, 'ok'),
+            child: Text('Delete', style: kSFBodyBold.copyWith(color: kRed)),
           ),
         ],
       ),
@@ -262,7 +249,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             isAnonymous: isAnon,
             description: testimony,
             date: date,
-            cardColor: cardColor!.value.toString(),
+            // cardColor: cardColor!.value.toString(),
             likes: 0,
           );
 
@@ -306,7 +293,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       title: title,
       description: testimony,
       date: widget.testimonyInfo!.date,
-      cardColor: cardColor!.value.toString(),
+      // cardColor: cardColor!.value.toString(),
       likes: widget.testimonyInfo!.likes,
     );
     return updatedTestimony;
@@ -316,7 +303,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     return AppBar(
       elevation: 1,
       title: _buildAppbarTitle(),
-      backgroundColor: cardColor,
+      backgroundColor: backgroundColor,
       leading: TextButton(
         child: const Padding(
           padding: EdgeInsets.all(8.0),

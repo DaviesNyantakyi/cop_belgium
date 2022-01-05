@@ -1,6 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,9 +13,14 @@ class AboutChruchScreen extends StatelessWidget {
       appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
           child: Column(
             children: [
-              Image.asset('assets/images/logos/cop_logo.png'),
+              Image.asset(
+                'assets/images/logos/cop_logo.png',
+                height: 140,
+                width: 140,
+              ),
               const SizedBox(height: 39),
               ListTile(
                 title: const Text(

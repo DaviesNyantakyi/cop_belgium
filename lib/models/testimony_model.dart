@@ -6,7 +6,7 @@ class TestimonyInfo {
   String? description;
   int? likes;
   final DateTime? date;
-  String? cardColor;
+  // String? cardColor;
   final bool isAnonymous;
 
   TestimonyInfo({
@@ -18,7 +18,7 @@ class TestimonyInfo {
     required this.description,
     this.likes,
     required this.date,
-    this.cardColor,
+    // this.cardColor,
   });
 
   static Map<String, dynamic> toMap({required TestimonyInfo map}) {
@@ -31,7 +31,7 @@ class TestimonyInfo {
       'description': map.description,
       'likes': map.likes,
       'date': map.date,
-      'cardColor': map.cardColor,
+      // 'cardColor': map.cardColor,
     };
   }
 
@@ -44,7 +44,7 @@ class TestimonyInfo {
       isAnonymous: map['isAnonymous'],
       description: map['description'],
       date: map['date'].toDate(),
-      cardColor: map['cardColor'],
+      // cardColor: map['cardColor'],
       likes: map['likes'],
     );
   }

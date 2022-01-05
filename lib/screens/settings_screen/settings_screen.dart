@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-List<String> languages = ['English', 'Dutch'];
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
   static String settingsScreen = 'settingsScreen';
@@ -19,32 +20,84 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool notificationOn = false;
-  String? language = 'English';
+  PackageInfo? packageInfo;
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-  Future<void> send() async {
+  // Device name
+  // App version
+
+  String? deviceModel;
+  String? deviceManufacturer;
+  String? packageVersion;
+
+  Future<void> sendFeedBack({required String type}) async {
+    String? subject;
+    String appVersion = 'App version: $packageVersion';
+    String? message;
+
+    if (type == 'bug') {
+      subject = 'Bug';
+      message = 'Please write about your bug here.';
+    } else {
+      subject = 'App Feedback';
+      message = 'Please write about your feedback here.';
+    }
+
     final Email email = Email(
-      body: '',
-      subject: '',
+      subject: subject,
+      body: '''
+      $message
+
+
+      Device Information: 
+      $deviceManufacturer - $deviceModel
+      $appVersion
+      ''',
       recipients: ['support@apkeroo.com'],
     );
 
-    String platformResponse;
-
     try {
       await FlutterEmailSender.send(email);
-      platformResponse = 'success';
-    } catch (error) {
-      platformResponse = error.toString();
+    } catch (e) {
+      kshowSnackbar(
+        errorType: 'normal',
+        context: context,
+        text: e.toString(),
+      );
     }
+  }
 
-    if (!mounted) return;
+  @override
+  void initState() {
+    super.initState();
+    init();
+  }
 
-    kshowSnackbar(
-      errorType: 'normal',
-      context: context,
-      text: platformResponse,
-    );
+  Future<void> init() async {
+    await getAppInfo();
+    await getDeviceInfo();
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> getAppInfo() async {
+    packageInfo = await PackageInfo.fromPlatform();
+    packageVersion = packageInfo?.version;
+  }
+
+  Future<void> getDeviceInfo() async {
+    if (mounted) {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceModel = androidInfo.model;
+        deviceManufacturer = androidInfo.manufacturer;
+      } else {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceModel = iosInfo.model;
+        deviceManufacturer = 'apple';
+      }
+    }
   }
 
   @override
@@ -53,142 +106,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Center(
             child: Column(
               children: [
                 _buildImage(),
                 const SizedBox(height: 39),
-                Column(
-                  children: [
-                    /* ListTile(
-                      leading: const Icon(
-                        FontAwesomeIcons.solidBell,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'Notifications',
-                        style: kSFBody,
-                      ),
-                      trailing: Transform.scale(
-                        scale: 0.9,
-                        child: CupertinoSwitch(
-                          value: notificationOn,
-                          onChanged: (bool value) {
-                            setState(() {
-                              notificationOn = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),*/
-                    ListTile(
-                      onTap: () async {
-                        language = await _showLanguagelectorBottomSheet(
-                            context: context);
-
-                        language ??= language;
-                        setState(() {});
-                      },
-                      leading: const Icon(
-                        FontAwesomeIcons.globeAfrica,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'Language',
-                        style: kSFBody,
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '$language',
-                            style: kSFBody,
-                          ),
-                          const SizedBox(width: 11),
-                          const Icon(
-                            FontAwesomeIcons.chevronRight,
-                            color: kBlueDark,
-                          ),
-                        ],
-                      ),
-                    ),
-                    ListTile(
-                      leading: const Icon(
-                        FontAwesomeIcons.solidQuestionCircle,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'About Church',
-                        style: kSFBody,
-                      ),
-                      trailing: const Icon(
-                        FontAwesomeIcons.chevronRight,
-                        color: kBlueDark,
-                      ),
-                      onTap: () async {
-                        await Navigator.push(
-                          context,
-                          CupertinoPageRoute(
-                            builder: (context) => const AboutChruchScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 5),
-                    const Divider(),
-                    const SizedBox(height: 5),
-                    ListTile(
-                      onTap: () async {
-                        await send();
-                      },
-                      leading: const Icon(
-                        FontAwesomeIcons.solidEnvelope,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'Help & Support',
-                        style: kSFBody,
-                      ),
-                      trailing: const Icon(
-                        FontAwesomeIcons.chevronRight,
-                        color: kBlueDark,
-                      ),
-                    ),
-                    ListTile(
-                      leading: const Icon(
-                        FontAwesomeIcons.lock,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'Privacy Policy',
-                        style: kSFBody,
-                      ),
-                      onTap: () {
-                        loadMdFile(
-                          context: context,
-                          mdFile: 'assets/privacy/privacy_policy.md',
-                        );
-                      },
-                    ),
-                    ListTile(
-                      onTap: () {
-                        loadMdFile(
-                          context: context,
-                          mdFile: 'assets/privacy/terms_of_service.md',
-                        );
-                      },
-                      leading: const Icon(
-                        FontAwesomeIcons.solidFileAlt,
-                        color: kBlueDark,
-                      ),
-                      title: const Text(
-                        'Terms Of Service',
-                        style: kSFBody,
-                      ),
-                    ),
-                  ],
-                )
+                _buildAboutChruch(),
+                const SizedBox(height: 5),
+                const Divider(),
+                _buildFeedBackTiles(),
+                const SizedBox(height: 5),
+                _buildPrivacyTiles(),
               ],
             ),
           ),
@@ -197,39 +125,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Future<String?> _showLanguagelectorBottomSheet(
-      {required BuildContext context}) async {
-    return await showModalBottomSheet<String?>(
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
+  Widget _buildAboutChruch() {
+    return ListTile(
+      title: const Text(
+        'About Church',
+        style: kSFBody,
       ),
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: SizedBox(
-            height: kBottomSheetHeight,
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: languages.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Text(
-                    languages[index],
-                    style: kSFBody,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context, languages[index]);
-                  },
-                );
-              },
-            ),
+      onTap: () async {
+        await Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const AboutChruchScreen(),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildFeedBackTiles() {
+    return Column(
+      children: [
+        ListTile(
+          onTap: () async {
+            await sendFeedBack(type: 'feedBack');
+          },
+          title: const Text(
+            'Send Feedback',
+            style: kSFBody,
+          ),
+        ),
+        ListTile(
+          onTap: () async {
+            await sendFeedBack(type: 'bug');
+          },
+          title: const Text(
+            'Report a Bug',
+            style: kSFBody,
+          ),
+        ),
+      ],
     );
   }
 
@@ -243,10 +177,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
           width: 140,
         ),
         const SizedBox(height: 15),
-        const Text(
-          'v0.02',
-          style: kSFBodyBold,
+        Text(
+          packageVersion != null ? ' v$packageVersion' : '',
+          style: kSFBody,
         )
+      ],
+    );
+  }
+
+  Widget _buildPrivacyTiles() {
+    return Column(
+      children: [
+        ListTile(
+          title: const Text(
+            'Privacy Policy',
+            style: kSFBody,
+          ),
+          onTap: () {
+            loadMdFile(
+              context: context,
+              mdFile: 'assets/privacy/privacy_policy.md',
+            );
+          },
+        ),
+        ListTile(
+          onTap: () {
+            loadMdFile(
+              context: context,
+              mdFile: 'assets/privacy/terms_of_service.md',
+            );
+          },
+          title: const Text(
+            'Terms Of Service',
+            style: kSFBody,
+          ),
+        ),
       ],
     );
   }

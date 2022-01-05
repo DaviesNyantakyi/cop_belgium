@@ -5,12 +5,13 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class ConnectionChecker extends ChangeNotifier {
   bool hasConnection = false;
 
-  void intializeConnectionChecker() {
+  Future<void> intializeConnectionChecker() async {
     InternetConnectionChecker()
         .onStatusChange
         .listen((InternetConnectionStatus status) async {
       await checkConnection();
     });
+    await checkConnection();
   }
 
   Future<bool> checkConnection() async {

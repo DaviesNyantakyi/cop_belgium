@@ -1,20 +1,23 @@
-import 'package:cop_belgium/screens/photo_picker_screen.dart';
+import 'package:cop_belgium/services/podcast_handlre.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:provider/provider.dart';
-//import 'package:splash_screen_view/SplashScreenView.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(const MyApp());
 }
 
@@ -31,8 +34,11 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider<ConnectionChecker>(
               create: (_) => ConnectionChecker(),
             ),
+            ChangeNotifierProvider<PodcastHandler>(
+              create: (_) => PodcastHandler(),
+            )
           ],
-          child: const AuthScreenSwitcher(),
+          child: const AuthSwitcher(),
         ),
         theme: _theme,
         routes: _routes,
@@ -45,8 +51,7 @@ class MyApp extends StatelessWidget {
 Map<String, WidgetBuilder> _routes = {
   WelcomeScreen.welcomeScreen: (context) => const WelcomeScreen(),
   SignUpScreen.signUpScreen: (context) => const SignUpScreen(),
-  AuthScreenSwitcher.authScreenSwitcher: (context) =>
-      const AuthScreenSwitcher(),
+  AuthSwitcher.authScreenSwitcher: (context) => const AuthSwitcher(),
   ForgotPasswordScreen.forgotPasswordScreen: (context) =>
       const ForgotPasswordScreen(),
   BottomNavSelectorPage.bottomNavSelectorPage: (context) =>
@@ -59,8 +64,7 @@ Map<String, WidgetBuilder> _routes = {
   UserSavedPodcastView.userSavedPodcastView: (context) =>
       const UserSavedPodcastView(),
   ProfileScreens.profileScreens: (context) => const ProfileScreens(),
-  EditProfileScreen.editProfileScreen: (context) =>
-      const EditProfileScreen(user: null),
+  EditProfileScreen.editProfileScreen: (context) => const EditProfileScreen(),
   SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
   AboutChruchScreen.aboutChruchScreen: (context) => const AboutChruchScreen(),
   CreateTestimonyScreen.createTestimonyScreen: (context) =>

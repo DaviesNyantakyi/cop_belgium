@@ -1,6 +1,7 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cop_belgium/services/fire_storage.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
@@ -12,15 +13,15 @@ class Authentication {
   Future<User?> signUpWithEmail(
       {required CopUser user, String? password}) async {
     try {
-      if (user.firstName != null &&
-          user.lastName != null &&
-          user.email != null &&
-          password != null &&
-          user.gender != null) {
+      if (user.firstName.isNotEmpty &&
+          user.lastName.isNotEmpty &&
+          user.gender.isNotEmpty &&
+          user.email.isNotEmpty &&
+          password != null) {
         String? displayName = '${user.firstName} ${user.lastName}';
 
         await _auth.createUserWithEmailAndPassword(
-          email: user.email!,
+          email: user.email,
           password: password,
         );
         await _auth.currentUser!.updateDisplayName(displayName);
@@ -40,8 +41,14 @@ class Authentication {
 
   Future<void> sendResetPassword({required String? email}) async {
     try {
-      if (email != null && email.isNotEmpty) {
-        await _auth.sendPasswordResetEmail(email: email);
+      final hasConnection = await ConnectionChecker().checkConnection();
+
+      if (hasConnection) {
+        if (email != null && email.isNotEmpty) {
+          await _auth.sendPasswordResetEmail(email: email);
+        }
+      } else {
+        throw ConnectionChecker.connectionException;
       }
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
@@ -62,6 +69,27 @@ class Authentication {
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
+    }
+  }
+
+  Future<void> deleteUser({required String password}) async {
+    final hasConnection = await ConnectionChecker().checkConnection();
+    try {
+      if (hasConnection) {
+        await signIn(email: _auth.currentUser!.email, password: password);
+
+        await CloudFireStore().deleteUserInfo();
+        await _auth.currentUser!.delete();
+        FireStorage().deleteUserStorageInfo();
+      } else {
+        throw ConnectionChecker.connectionException;
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }

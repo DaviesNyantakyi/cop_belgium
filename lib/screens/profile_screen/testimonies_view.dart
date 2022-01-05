@@ -82,8 +82,6 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
             }
           }
 
-          //user has added not testimonies
-          //the testimony list is empty
           if (allTestmonies.isEmpty) {
             return Center(
               child: Column(
@@ -105,8 +103,6 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
           }
 
           return ListView.separated(
-            physics:
-                const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
             itemCount: allTestmonies.length,
             separatorBuilder: (context, index) => const SizedBox(height: 14),
             itemBuilder: (context, index) {

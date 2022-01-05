@@ -4,7 +4,7 @@ export 'package:cop_belgium/screens/bottom_nav_selector.dart';
 //Auth Screens
 export 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 export 'package:cop_belgium/screens/auth_screens/sign_up_screen.dart';
-export 'package:cop_belgium/screens/auth_screens/auth_screens_switcher_page.dart';
+export 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
 export 'package:cop_belgium/screens/auth_screens/forgot_password_screen.dart';
 
 //Podcast Screens
@@ -13,7 +13,6 @@ export 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.
 export 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 export 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
 export 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
-export 'package:cop_belgium/screens/podcast_screen/see_all_podcasts.dart';
 
 //Profile Screens
 

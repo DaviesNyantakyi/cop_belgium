@@ -72,7 +72,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding:
@@ -142,8 +141,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         SizedBox(
           child: Image.asset(
             'assets/images/logos/cop_logo.png',
-            width: 200,
-            height: 200,
+            width: 170,
+            height: 170,
             filterQuality: FilterQuality.high,
           ),
         ),

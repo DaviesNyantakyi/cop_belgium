@@ -22,9 +22,6 @@ class PodcastDetailScreen extends StatefulWidget {
 }
 
 class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
-  String speaker =
-      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60';
-
   bool bookMark = false;
   bool isLiked = false;
   Podcast? podcast;
@@ -41,7 +38,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       body: Padding(
         padding: const EdgeInsets.only(bottom: kBodyPadding),
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               _buildHeaderImage(),
@@ -57,12 +53,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                     const SizedBox(height: 32),
                     _buildDescription(),
                     const SizedBox(height: 30),
-                    // const SizedBox(height: 32),
                   ],
                 ),
               ),
-              // _buildSpeakers(),
-              // const SizedBox(height: 36),
               _buildEpisodesList()
             ],
           ),
@@ -111,7 +104,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           child: ListView.builder(
             itemCount: podcast?.episodes!.length,
             scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(left: kBodyPadding),
             itemBuilder: (context, index) {
               return Padding(
@@ -139,63 +131,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       ],
     );
   }
-
-/*
-  Widget _buildSpeakers() {
-    return Column(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(left: kBodyPadding),
-          alignment: Alignment.centerLeft,
-          child: const Text('Speakers', style: kSFCaptionBold),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 73,
-          child: ListView.builder(
-            padding: const EdgeInsets.only(left: kBodyPadding),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            itemCount: 10,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(
-                  right: kBodyPadding,
-                ),
-                child: _buildAvatar(
-                  onTap: () {},
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-*/
-/*
-  Widget _buildAvatar({VoidCallback? onTap}) {
-    return TextButton(
-      onPressed: () {},
-      style: TextButton.styleFrom(
-        minimumSize: Size.zero,
-        padding: EdgeInsets.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: NetworkImage(speaker),
-          ),
-          const SizedBox(height: 8),
-          const Text('John Smith', style: kSFSubtitle2),
-        ],
-      ),
-    );
-  }*/
 
   Widget _buildTitle() {
     return Column(

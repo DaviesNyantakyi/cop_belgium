@@ -4,7 +4,6 @@ import 'package:cop_belgium/screens/photo_picker_screen.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -60,12 +59,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
         );
 
         final userObject = CopUser(
-          isOnline: true,
-          isAdmin: false,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          gender: gender,
+          // isOnline: true,
+          // isAdmin: false,
+          firstName: firstName!,
+          lastName: lastName!,
+          email: email!,
+          gender: gender!,
         );
 
         final user = await Authentication().signUpWithEmail(
@@ -112,7 +111,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: _buildAppbar(context: context),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20)

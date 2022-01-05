@@ -10,7 +10,6 @@ class TryAgainView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image.asset(
             'assets/images/error.png',
@@ -39,7 +38,6 @@ class NoPodcastsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image.asset(
             'assets/images/no_podcasts.png',
@@ -70,7 +68,7 @@ class NoSavedPodcastsView extends StatelessWidget {
             width: 220,
           ),
           const Text('Bookmark empty', style: kSFHeadLine2),
-          const Text('Get started by saving a podcasts', style: kSFBody),
+          const Text('Get started by saving a podcast', style: kSFBody),
         ],
       ),
     );

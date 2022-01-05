@@ -1,19 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
-
+import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
-import 'package:cop_belgium/services/podcast_rss_handler.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:provider/provider.dart';
-
-FirebaseAuth _auth = FirebaseAuth.instance;
 
 class PodcastScreen extends StatefulWidget {
   static String podcastScreen = 'podcastScreen';
@@ -25,120 +22,95 @@ class PodcastScreen extends StatefulWidget {
 
 class _PodcastScreenState extends State<PodcastScreen> {
   @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance
-        .collection('podcasts')
-        .snapshots()
-        .listen((event) {
-      setState(() {});
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
           color: kBlueDark,
           onRefresh: () async {
-            await PodcastRssHandler().getPodcast();
-            if (mounted) {
-              setState(() {});
-            }
+            await Provider.of<PodcastHandler>(context, listen: false)
+                .getPodcasts();
           },
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
             physics: const AlwaysScrollableScrollPhysics(),
-            child: FutureBuilder<List<Podcast>>(
-              future: PodcastRssHandler().getPodcast(),
-              builder: (context, snapshot) {
-                if (snapshot.data != null) {
-                  if (snapshot.data!.isEmpty) {
-                    return _buildNoPodcastsSkeleton();
-                  }
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const PodcastScreenSkeleton();
-                }
-
-                if (snapshot.hasError) {
-                  return _buildErrorSkeleton();
-                }
-
-                return Provider.value(
-                  value: snapshot.data,
-                  child: const _BuildBody(),
-                );
-              },
-            ),
+            child: _buildBody(),
           ),
         ),
       ),
     );
   }
 
+  Widget _buildBody() {
+    List<Podcast> podcasts = [];
+
+    bool hasError = Provider.of<PodcastHandler>(context).hasError;
+    bool isLoading = Provider.of<PodcastHandler>(context).isLoading;
+    podcasts = Provider.of<PodcastHandler>(context).podcasts;
+    if (hasError) {
+      return _buildErrorSkeleton();
+    }
+
+    if (isLoading) {
+      return const PodcastScreenSkeleton();
+    }
+
+    if (podcasts.isEmpty) {
+      return _buildNoPodcastsSkeleton();
+    }
+
+    return Provider.value(
+      value: podcasts,
+      child: const _Body(),
+    );
+  }
+
   Widget _buildNoPodcastsSkeleton() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 40),
-                  NoPodcastsView(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                  )
-                ],
-              ),
-            ),
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: kBodyPadding,
+        vertical: kBodyPadding,
+      ),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: NoPodcastsView(
+          onPressed: () {},
         ),
       ),
     );
   }
 
   Widget _buildErrorSkeleton() {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildGreeting(),
-                  const SizedBox(height: 40),
-                  TryAgainView(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                  )
-                ],
-              ),
-            ),
-          ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: kBodyPadding,
+        vertical: kBodyPadding,
+      ),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: TryAgainView(
+          onPressed: () async {
+            try {
+              await Provider.of<PodcastHandler>(context, listen: false)
+                  .getPodcasts();
+            } on FirebaseException catch (e) {
+              kshowSnackbar(
+                context: context,
+                errorType: 'error',
+                text: e.message.toString(),
+              );
+            } catch (e) {
+              debugPrint(e.toString());
+            }
+          },
         ),
       ),
     );
   }
 }
 
-class _BuildBody extends StatelessWidget {
-  const _BuildBody({Key? key}) : super(key: key);
+class _Body extends StatelessWidget {
+  const _Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +118,7 @@ class _BuildBody extends StatelessWidget {
     return Provider.value(
       value: podcats,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
@@ -153,8 +126,6 @@ class _BuildBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildGreeting(),
-                const SizedBox(height: 45),
                 const Text(
                   'Featured episode',
                   style: kSFCaptionBold,
@@ -170,10 +141,7 @@ class _BuildBody extends StatelessWidget {
           const SizedBox(height: 42),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
-            child: Text(
-              'Podcasts',
-              style: kSFCaptionBold,
-            ),
+            child: Text('Podcasts', style: kSFCaptionBold),
           ),
           const SizedBox(height: 16),
           _buildSeriesList(),
@@ -184,56 +152,35 @@ class _BuildBody extends StatelessWidget {
 
   Widget _buildSeriesList() {
     return Consumer<List<Podcast>>(builder: (context, podcasts, _) {
-      return SizedBox(
-        height: 200,
-        child: ListView.builder(
-          itemCount: podcasts.length,
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.only(left: kBodyPadding),
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: PodcastCard(
-                podcast: podcasts[index],
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => Provider.value(
-                        value: podcasts[index],
-                        child: const PodcastDetailScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          },
+      return GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          childAspectRatio: 1,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 20,
+          crossAxisCount: 2,
+          mainAxisExtent: 200,
         ),
+        itemCount: podcasts.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+        itemBuilder: (context, index) {
+          return PodcastCard(
+            podcast: podcasts[index],
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => Provider.value(
+                    value: podcasts[index],
+                    child: const PodcastDetailScreen(),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       );
     });
   }
-}
-
-Widget _buildGreeting() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        YonoGreetings.showGreetings(),
-        style: kSFBody,
-      ),
-      Row(
-        children: [
-          Text(
-            _auth.currentUser!.displayName.toString(),
-            style: kSFHeadLine2.copyWith(color: kYellow),
-          ),
-          const SizedBox(width: 6),
-          Image.asset('assets/images/icons/smile.png'),
-        ],
-      ),
-    ],
-  );
 }

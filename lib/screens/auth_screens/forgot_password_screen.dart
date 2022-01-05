@@ -142,7 +142,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 25),
         const Text(
-          'Don\'t worry! It happens. Please enter the email address associated with yout account.',
+          'Don\'t worry! It happens. Please enter the email address associated with your account.',
           style: kSFBody,
         ),
       ],

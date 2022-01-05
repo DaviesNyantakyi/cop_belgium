@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,19 +26,39 @@ class _ProfileScreensState extends State<ProfileScreens>
     with TickerProviderStateMixin {
   TabController? tabController;
 
-  final User? _user = FirebaseAuth.instance.currentUser;
-
   @override
   void initState() {
     super.initState();
     tabController = TabController(initialIndex: 0, vsync: this, length: 2);
   }
 
+  Future<void> popUp(String? result) async {
+    if (result == WelcomeScreen.welcomeScreen) {
+      await Authentication().singout();
+    } else if (result == EditProfileScreen.editProfileScreen) {
+      final user = await CloudFireStore().getUserFirstore();
+
+      if (user != null) {
+        await Navigator.push(context, CupertinoPageRoute(
+          builder: (context) {
+            return EditProfileScreen(user: user);
+          },
+        ));
+      }
+    } else {
+      await Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const SettingsScreen(),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-        physics: const BouncingScrollPhysics(),
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, value) {
           return [
@@ -46,7 +66,6 @@ class _ProfileScreensState extends State<ProfileScreens>
           ];
         },
         body: TabBarView(
-          physics: const BouncingScrollPhysics(),
           controller: tabController,
           children: const <Widget>[
             UserSavedPodcastView(),
@@ -109,9 +128,11 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Widget _buildAvatar() {
-    if (_user?.photoURL != null) {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    if (user.photoURL != null) {
       return CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(_user!.photoURL!),
+        backgroundImage: CachedNetworkImageProvider(user.photoURL!),
         radius: 40,
         backgroundColor: kBlueDark,
       );
@@ -135,34 +156,7 @@ class _ProfileScreensState extends State<ProfileScreens>
         FontAwesomeIcons.ellipsisV,
         size: 20,
       ),
-      onSelected: (String result) async {
-        if (result == WelcomeScreen.welcomeScreen) {
-          await Authentication().singout();
-        } else if (result == EditProfileScreen.editProfileScreen) {
-          await Navigator.push(context, CupertinoPageRoute(
-            builder: (context) {
-              return EditProfileScreen(
-                user: CopUser(
-                  photoUrl: _user!.photoURL,
-                  firstName: 'Melisa',
-                  lastName: 'Shanses',
-                  isOnline: true,
-                  email: 'MelisaShanses@outlook.com',
-                  gender: 'female',
-                  isAdmin: false,
-                ),
-              );
-            },
-          ));
-        } else {
-          await Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const SettingsScreen(),
-            ),
-          );
-        }
-      },
+      onSelected: popUp,
       itemBuilder: (BuildContext context) {
         return <PopupMenuEntry<String>>[
           PopupMenuItem<String>(

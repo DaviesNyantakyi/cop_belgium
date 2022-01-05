@@ -104,7 +104,6 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           padding: const EdgeInsets.symmetric(
               horizontal: kBodyPadding, vertical: kBodyPadding),
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 _buildImage(),

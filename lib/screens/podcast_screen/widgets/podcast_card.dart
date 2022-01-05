@@ -24,7 +24,7 @@ class PodcastCard extends StatelessWidget {
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: CachedNetworkImageProvider(podcast.image, scale: 1),
+          image: CachedNetworkImageProvider(podcast.image),
         ),
       ),
       child: TextButton(

@@ -9,20 +9,10 @@ Image picker
 Just audio setup 
  - Add no microphone usage code so that App store won't ask for microphone usaga 
 
+PodcastScreen
+ - exception if the rssLink is null in firbase: only add the functional podcast to the screen
 
-Testimony Screen 
-  -try again option if testimony fails to load
-  -Error met laden van likes firebase
 
-Fasting Screen
-  -Save timer progress
-  
-
-FastingHistoryScreen
-  -Fix: When you click to delete the top card the last one get's deleted because the index is reversed.
-
-PlayPodcastScreen
-  - Test audio controlles just audio package
 
 
 

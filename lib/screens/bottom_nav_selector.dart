@@ -14,7 +14,6 @@ class BottomNavSelectorPage extends StatefulWidget {
 }
 
 class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
-  // selected bottom navigation bar item
   int _selectedIndex = 0;
 
   final List<Widget> _screens = const [
@@ -65,12 +64,12 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         tooltip: 'Podcasts',
         label: 'Podcasts',
         icon: Icon(
-          FontAwesomeIcons.podcast,
+          FontAwesomeIcons.headphones,
           color: _bottomNavColor,
           size: 28,
         ),
         activeIcon: const Icon(
-          FontAwesomeIcons.podcast,
+          FontAwesomeIcons.headphones,
           color: kBlueDark,
           size: 28,
         ),
@@ -79,11 +78,11 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         label: 'Testimonies',
         tooltip: 'Testimonies',
         icon: Icon(
-          FontAwesomeIcons.clipboard,
+          FontAwesomeIcons.quoteRight,
           color: _bottomNavColor,
         ),
         activeIcon: const Icon(
-          FontAwesomeIcons.clipboard,
+          FontAwesomeIcons.quoteRight,
           color: kBlueDark,
         ),
       ),
@@ -91,11 +90,11 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         label: 'Profile',
         tooltip: 'Profile',
         icon: Icon(
-          FontAwesomeIcons.user,
+          FontAwesomeIcons.userAlt,
           color: _bottomNavColor,
         ),
         activeIcon: const Icon(
-          FontAwesomeIcons.user,
+          FontAwesomeIcons.userAlt,
           color: kBlueDark,
         ),
       ),

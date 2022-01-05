@@ -174,39 +174,40 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
     await showMyFastingBottomSheet(
       height: 150,
       context: context,
-      child: SizedBox(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                onTap: () async {
-                  await pickImage(type: 'camera');
-                },
-                leading: const Icon(
-                  FontAwesomeIcons.camera,
-                  color: kBlueDark,
+      child: Material(
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  onTap: () async {
+                    await pickImage(type: 'camera');
+                  },
+                  leading: const Icon(
+                    FontAwesomeIcons.camera,
+                    color: kBlueDark,
+                  ),
+                  title: const Text(
+                    'Camera',
+                    style: kSFBody,
+                  ),
                 ),
-                title: const Text(
-                  'Camera',
-                  style: kSFBody,
+                ListTile(
+                  onTap: () async {
+                    await pickImage(type: 'gallery');
+                  },
+                  leading: const Icon(
+                    FontAwesomeIcons.images,
+                    color: kBlueDark,
+                  ),
+                  title: const Text(
+                    'Gallery',
+                    style: kSFBody,
+                  ),
                 ),
-              ),
-              ListTile(
-                onTap: () async {
-                  await pickImage(type: 'gallery');
-                },
-                leading: const Icon(
-                  FontAwesomeIcons.images,
-                  color: kBlueDark,
-                ),
-                title: const Text(
-                  'Gallery',
-                  style: kSFBody,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

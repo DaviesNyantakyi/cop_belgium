@@ -1,18 +1,18 @@
 class CopUser {
   String? id;
   String? photoUrl;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? gender;
-  bool isOnline;
-  bool isAdmin;
+  String firstName;
+  String lastName;
+  String email;
+  String gender;
+  // bool isOnline;
+  // bool isAdmin;
 
   CopUser({
     this.id,
     this.photoUrl,
-    required this.isOnline,
-    required this.isAdmin,
+    // required this.isOnline,
+    // required this.isAdmin,
     required this.firstName,
     required this.lastName,
     required this.email,
@@ -27,8 +27,8 @@ class CopUser {
       lastName: map['lastName'],
       email: map['email'],
       gender: map['gender'],
-      isOnline: map['isOnline'],
-      isAdmin: map['isAdmin'],
+      // isOnline: map['isOnline'],
+      // isAdmin: map['isAdmin'],
     );
   }
 
@@ -38,8 +38,8 @@ class CopUser {
       'photoUrl': photoUrl,
       'firstName': firstName,
       'lastName': lastName,
-      'isOnline': isOnline,
-      'isAdmin': isAdmin,
+      // 'isOnline': isOnline,
+      // 'isAdmin': isAdmin,
       'email': email,
       'gender': gender,
     };

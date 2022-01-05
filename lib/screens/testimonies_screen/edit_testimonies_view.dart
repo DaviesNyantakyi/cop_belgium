@@ -102,8 +102,6 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
           }
 
           return ListView.separated(
-            physics:
-                const BouncingScrollPhysics(parent: ClampingScrollPhysics()),
             itemCount: allTestmonies.length,
             separatorBuilder: (context, index) => const SizedBox(height: 14),
             itemBuilder: (context, index) {

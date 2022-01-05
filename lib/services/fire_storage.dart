@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,22 +12,38 @@ class FireStorage {
 
   Future<void> uploadProfileImage({File? image}) async {
     try {
-      if (image != null) {
-        final userId = _user!.uid;
-        final ref =
-            await _fireStore.ref('profile_photos/$userId').putFile(image);
-        final url = await getPhotoUrl(fileRef: ref.ref.fullPath);
-        await _user?.updatePhotoURL(url);
+      bool hasConnection = await ConnectionChecker().checkConnection();
+      if (hasConnection) {
+        if (image != null) {
+          final userId = _user!.uid;
+          final ref = await _fireStore
+              .ref('images/profile_images/$userId')
+              .putFile(image);
+          final url = await getPhotoUrl(fileRef: ref.ref.fullPath);
+          await _user?.updatePhotoURL(url);
 
-        await CloudFireStore().updatePhotoUrl(photoUrl: url);
+          await CloudFireStore().updatePhotoUrl(photoUrl: url);
+        }
+      } else {
+        throw ConnectionChecker.connectionException;
       }
     } on FirebaseStorage catch (e) {
-      debugPrint(e.toString() + 'print()');
+      debugPrint(e.toString());
       rethrow;
     }
   }
 
   Future<String> getPhotoUrl({required String fileRef}) async {
     return await _fireStore.ref(fileRef).getDownloadURL();
+  }
+
+  Future<void> deleteUserStorageInfo() async {
+    try {
+      final userId = _user!.uid;
+      await _fireStore.ref('images/profile_images/$userId').delete();
+    } on FirebaseStorage catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 }

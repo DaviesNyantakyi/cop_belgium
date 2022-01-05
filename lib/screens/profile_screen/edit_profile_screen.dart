@@ -1,17 +1,30 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/fire_storage.dart';
+import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
   static String editProfileScreen = 'editProfileScreen';
-  const EditProfileScreen({Key? key, required this.user}) : super(key: key);
+  const EditProfileScreen({Key? key, this.user}) : super(key: key);
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -21,7 +34,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameFormKey = GlobalKey<FormState>();
   final _emailFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
-  final User? _user = FirebaseAuth.instance.currentUser;
+
+  bool hasConnection = false;
 
   bool isSubmit = false;
 
@@ -29,18 +43,136 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? firstName;
   String? lastName;
   String? email;
-  String? password;
-  // String? selectedChurchLocation;
   String? gender;
+  String? photoUrl;
+  String? password;
+
+  final ImagePicker _picker = ImagePicker();
+
+  File? _selectedImage;
 
   @override
   void initState() {
     super.initState();
 
+    initUserInfo();
+  }
+
+  Future<void> initUserInfo() async {
     setState(() {
+      firstName = widget.user!.firstName;
+      lastName = widget.user!.lastName;
+      email = widget.user!.email;
       gender = widget.user!.gender;
-      // selectedChurchLocation = widget.user!.church;
+      photoUrl = widget.user!.photoUrl;
     });
+  }
+
+  Future<void> submitUpdate() async {
+    try {
+      if (mounted) {
+        setState(() {
+          isLoading = true;
+        });
+      }
+      await EasyLoading.show(
+        maskType: EasyLoadingMaskType.black,
+        indicator: const CircularProgressIndicator(color: kBlueDark),
+      );
+      bool nameIsValid = _nameFormKey.currentState!.validate();
+      bool emailIsValid = _emailFormKey.currentState!.validate();
+      if (nameIsValid && emailIsValid && gender != null) {
+        await FireStorage().uploadProfileImage(image: _selectedImage);
+        await CloudFireStore().updateUserInfo(
+          firstName: firstName!,
+          lastName: lastName!,
+          email: email!,
+          gender: gender!,
+        );
+        Navigator.pop(context);
+      }
+
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      await EasyLoading.dismiss();
+      kshowSnackbar(
+        errorType: 'error',
+        context: context,
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+      await EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> submitDelete() async {
+    bool validPassword = _passwordFormKey.currentState!.validate();
+    if (password != null && password!.isNotEmpty && validPassword) {
+      try {
+        if (mounted) {
+          setState(() {
+            isLoading = true;
+          });
+        }
+        await EasyLoading.show(
+          maskType: EasyLoadingMaskType.black,
+          indicator: const CircularProgressIndicator(
+            color: kBlueDark,
+          ),
+        );
+        await Authentication().deleteUser(password: password!);
+
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        await EasyLoading.dismiss();
+        Navigator.of(context)
+          ..pop()
+          ..pop();
+      } on FirebaseException catch (e) {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        await EasyLoading.dismiss();
+        Navigator.pop(context);
+        kshowSnackbar(
+          context: context,
+          errorType: 'error',
+          text: e.message!,
+        );
+      } catch (e) {
+        debugPrint(e.toString());
+        Navigator.pop(context);
+      } finally {
+        if (mounted) {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        await EasyLoading.dismiss();
+      }
+    }
   }
 
   @override
@@ -48,7 +180,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       appBar: _buildAppbar(),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding:
@@ -58,13 +189,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _buildAvatar(),
                 const SizedBox(height: kButtonSpacing),
                 _buildForm(),
-                const SizedBox(height: kTextFieldSpacing),
-                // _buildLocationSelector(),
-                // const SizedBox(height: 5),
-                // _locationValidator(),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: 24),
                 _buildGenderSelector(),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: 24),
                 _buildDeleteReset()
               ],
             ),
@@ -75,13 +202,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAvatar() {
-    if (_user?.photoURL != null) {
+    if (_selectedImage != null) {
       return CircleAvatar(
-        backgroundImage: NetworkImage(_user!.photoURL!),
+        backgroundImage: Image.file(_selectedImage!).image,
         radius: 60,
         backgroundColor: kBlueDark,
         child: TextButton(
-          // splash effect
           style: kTextButtonStyle.copyWith(
             shape: MaterialStateProperty.all(
               const RoundedRectangleBorder(
@@ -92,80 +218,106 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           child: Container(),
-          onPressed: () {},
+          onPressed: () async {
+            await showBottomSheet();
+            setState(() {});
+          },
         ),
       );
     }
-    return const CircleAvatar(
+    if (photoUrl != null) {
+      return CircleAvatar(
+        backgroundImage: CachedNetworkImageProvider(photoUrl!),
+        radius: 60,
+        backgroundColor: kBlueDark,
+        child: TextButton(
+          style: kTextButtonStyle.copyWith(
+            shape: MaterialStateProperty.all(
+              const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100),
+                ),
+              ),
+            ),
+          ),
+          child: Container(),
+          onPressed: () async {
+            await showBottomSheet();
+          },
+        ),
+      );
+    }
+
+    return CircleAvatar(
       radius: 60,
       backgroundColor: kBlueDark,
-      child: Icon(FontAwesomeIcons.camera),
+      child: TextButton(
+        style: kTextButtonStyle,
+        child: const Icon(
+          FontAwesomeIcons.camera,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          await showBottomSheet();
+        },
+      ),
     );
   }
 
   Widget _buildDeleteReset() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 45,
-          child: OutlinedButton(
-            style: ButtonStyle(
-              shape: MaterialStateProperty.all(
-                const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(kButtonRadius),
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () {
-              _showDeleteAlert();
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: [
+          _buildBtn(
+            btText: 'Reset Password',
+            textColor: kBlueDark,
+            onPressed: () async {
+              String? conformation = await _showConformationAlert();
+              try {
+                if (conformation == 'ok') {
+                  await Authentication().sendResetPassword(email: email);
+                }
+              } on FirebaseException catch (e) {
+                kshowSnackbar(
+                  context: context,
+                  errorType: 'error',
+                  text: e.message!,
+                );
+                debugPrint(e.toString());
+              } catch (e) {
+                Navigator.pop(context);
+              }
             },
-            child: const Text(
-              'Delete Account',
-              style: kSFBodyBold,
-            ),
           ),
-        ),
-        const SizedBox(width: 20),
-        _buildBtn(
-          btText: 'Reset Password',
-          textColor: kBlueDark,
-          backgroundColor: kGreenLight2,
-          onPressed: () async {
-            await _showConformationAlert();
-          },
-        ),
-      ],
+          _buildBtn(
+            btText: 'Delete account',
+            textColor: kRed,
+            onPressed: () async {
+              await _showDeleteAlert();
+            },
+          ),
+        ],
+      ),
     );
   }
 
-  // Widget _locationValidator() {
-  //   // shows error text if the location is null
+  Future<void> pickImage({required String type}) async {
+    final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
+    try {
+      final pickedImage = await _picker.pickImage(source: source);
 
-  //   if (selectedChurchLocation == null && isSubmit == true) {
-  //     return Text(
-  //       'Please select church location',
-  //       style: TextStyle(color: Colors.red.shade700, fontSize: 13),
-  //     );
-  //   } else {
-  //     return Container();
-  //   }
-  // }
+      if (pickedImage != null) {
+        setState(() {
+          _selectedImage = File(pickedImage.path);
+        });
+      }
 
-  // Widget _buildLocationSelector() {
-  //   return ChurchSelctor().buildChurchSelectorTile(
-  //     city: selectedChurchLocation,
-  //     onChanged: (value) {
-  //       setState(() {
-  //         selectedChurchLocation = value;
-  //         FocusScope.of(context).unfocus();
-  //       });
-  //     },
-  //     context: context,
-  //   );
-  // }
+      Navigator.pop(context);
+    } on PlatformException catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   Widget _buildForm() {
     return Column(
@@ -178,6 +330,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               MyTextField(
                 hintText: 'First Name',
                 obscureText: false,
+                initialValue: firstName,
                 validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -189,6 +342,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               MyTextField(
                 hintText: 'Last Name',
                 obscureText: false,
+                initialValue: lastName,
                 validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
@@ -205,24 +359,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: MyTextField(
             hintText: 'Email',
             obscureText: false,
+            initialValue: email,
             validator: Validators.emailTextValidator,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             onChanged: (value) {
               email = value;
-            },
-          ),
-        ),
-        const SizedBox(height: kTextFieldSpacing),
-        Form(
-          key: _passwordFormKey,
-          child: MyTextField(
-            validator: Validators.passwordTextValidator,
-            hintText: 'Password',
-            obscureText: true,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) {
-              password = value;
             },
           ),
         ),
@@ -249,7 +391,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: kSFBody),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
+            onPressed: () => Navigator.pop(context, 'ok'),
             child: const Text('OK', style: kSFCaptionBold),
           ),
         ],
@@ -260,8 +402,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<String?> _showDeleteAlert() async {
     const String _deleteText =
         'Are you sure you want to delete your whole account? All saved data will be lost.';
+    const String _deleteConformationText =
+        'Confirm you want to delete this account by typing its password.';
     return await showDialog<String?>(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) => AlertDialog(
         shape: const RoundedRectangleBorder(
@@ -273,21 +417,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           'Now just a minute',
           style: kSFHeadLine2,
         ),
-        content: const Text(_deleteText, style: kSFBody),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Text(_deleteText, style: kSFBodyBold),
+            Text(_deleteConformationText, style: kSFBody),
+          ],
+        ),
         actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'ok'),
-            child: Text(
-              'Delete Account',
-              style: kSFCaptionBold.copyWith(
-                fontWeight: FontWeight.normal,
-              ),
+          Form(
+            key: _passwordFormKey,
+            child: MyTextField(
+              hintText: 'Password',
+              obscureText: true,
+              validator: Validators.passwordTextValidator,
+              onChanged: (value) {
+                password = value;
+              },
             ),
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel', style: kSFCaptionBold),
+          const SizedBox(height: kButtonSpacing),
+          Buttons.buildBtn(
+            context: context,
+            btnText: 'Delete account',
+            onPressed: isLoading ? null : submitDelete,
+            color: isLoading ? Colors.grey : kRed,
+            fontColor: Colors.white,
           ),
+          const SizedBox(height: kTextFieldSpacing)
         ],
       ),
     );
@@ -296,16 +453,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildBtn({
     required String btText,
     VoidCallback? onPressed,
-    Color? backgroundColor,
     Color? textColor,
   }) {
     return SizedBox(
       height: kButtonSize,
       child: TextButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            backgroundColor,
-          ),
+        style: kTextButtonStyle.copyWith(
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -315,9 +468,56 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         onPressed: onPressed,
-        child: Text(
-          btText,
-          style: kSFBodyBold.copyWith(color: textColor),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Text(
+            btText,
+            style: kSFBodyBold.copyWith(color: textColor),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> showBottomSheet() async {
+    await showMyFastingBottomSheet(
+      height: 150,
+      context: context,
+      child: Material(
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ListTile(
+                  onTap: () async {
+                    await pickImage(type: 'camera');
+                  },
+                  leading: const Icon(
+                    FontAwesomeIcons.camera,
+                    color: kBlueDark,
+                  ),
+                  title: const Text(
+                    'Camera',
+                    style: kSFBody,
+                  ),
+                ),
+                ListTile(
+                  onTap: () async {
+                    await pickImage(type: 'gallery');
+                  },
+                  leading: const Icon(
+                    FontAwesomeIcons.images,
+                    color: kBlueDark,
+                  ),
+                  title: const Text(
+                    'Gallery',
+                    style: kSFBody,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -393,9 +593,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: kSFCaptionBold,
             ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: isLoading ? null : submitUpdate,
         ),
       ],
     );

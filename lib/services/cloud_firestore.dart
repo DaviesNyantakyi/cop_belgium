@@ -4,12 +4,13 @@ import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 class CloudFireStore {
   final _firestore = FirebaseFirestore.instance;
   final _user = FirebaseAuth.instance.currentUser;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final _connectionChecker = ConnectionChecker();
 
   Future<void> createTestimony({required TestimonyInfo testimony}) async {
@@ -159,8 +160,10 @@ class CloudFireStore {
   Future<List<PodcastRssInfo?>> getPodcastRssInfoFireStore() async {
     // get the podcast rss link and page link from firestore.
     try {
-      final qSnap =
-          await FirebaseFirestore.instance.collection('podcasts').get();
+      QuerySnapshot<Map<String, dynamic>>? qSnap;
+
+      qSnap = await FirebaseFirestore.instance.collection('podcasts').get();
+
       final listQDocSnap = qSnap.docs;
 
       List<PodcastRssInfo> listPodRssInfo = listQDocSnap.map((doc) {
@@ -211,35 +214,6 @@ class CloudFireStore {
     }
   }
 
-  Future<void> createUserDoc({required CopUser user}) async {
-    try {
-      if (user.id != null &&
-          user.lastName != null &&
-          user.firstName != null &&
-          user.email != null) {
-        await _firestore.collection('users').doc(user.id).set(user.toMap());
-      }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> updatePhotoUrl({required String photoUrl}) async {
-    try {
-      await _firestore
-          .collection('users')
-          .doc(_user!.uid)
-          .update({'photoUrl': photoUrl});
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    } catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
   Future<void> saveUnsavePodcast({required PodcastRssInfo rssInfo}) async {
     try {
       final doc = await _firestore
@@ -269,6 +243,150 @@ class CloudFireStore {
       rethrow;
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  Future<void> createUserDoc({required CopUser user}) async {
+    try {
+      if (user.id != null &&
+          user.lastName.isNotEmpty &&
+          user.firstName.isNotEmpty &&
+          user.email.isNotEmpty) {
+        await _firestore.collection('users').doc(user.id).set(user.toMap());
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updatePhotoUrl({required String photoUrl}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'photoUrl': photoUrl});
+      await _user!.updatePhotoURL(photoUrl);
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updateUsername(
+      {required String firstName, required String lastName}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'firstName': firstName, 'lastName': lastName});
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updateUserEmail({required String email}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'email': email});
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updateUserGender({required String gender}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .update({'gender': gender});
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> updateUserInfo({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String gender,
+  }) async {
+    try {
+      bool hasConnection = await ConnectionChecker().checkConnection();
+      if (hasConnection) {
+        String? displayName = '$firstName $lastName';
+
+        await _auth.currentUser!.updateDisplayName(displayName);
+        await _auth.currentUser!.updateEmail(email);
+        await updateUsername(firstName: firstName, lastName: lastName);
+        await updateUserEmail(email: email);
+        await updateUserGender(gender: gender);
+      } else {
+        throw ConnectionChecker.connectionException;
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<CopUser?> getUserFirstore() async {
+    try {
+      final docSnap =
+          await _firestore.collection('users').doc(_user!.uid).get();
+      final data = docSnap.data();
+
+      if (data == null) {
+        return null;
+      }
+
+      return CopUser.fromMap(map: data);
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteUserInfo() async {
+    try {
+      var collection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('savedPodcasts');
+      var snapshots = await collection.get();
+      for (var doc in snapshots.docs) {
+        await doc.reference.delete();
+      }
+      await _firestore.collection('users').doc(_user!.uid).delete();
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
     }
   }
 }

@@ -28,6 +28,7 @@ class RssHelper {
 
   static String getDescription({required RssItem item}) {
     //Returns a rss description without the p tag.
+
     final doc = parse(item.description!);
     String newText = doc.body!.text;
 

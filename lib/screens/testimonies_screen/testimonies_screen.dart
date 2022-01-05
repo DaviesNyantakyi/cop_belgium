@@ -30,7 +30,6 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
       appBar: _buildAppbar(controller: _tabController),
       body: SafeArea(
         child: TabBarView(
-          physics: const BouncingScrollPhysics(),
           controller: _tabController,
           children: const [
             TestimoniesView(),
@@ -44,7 +43,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
 
   Widget _builFloActionBtn() {
     return FloatingActionButton(
-      tooltip: 'Testify',
+      tooltip: 'Create testimony',
       child: const Icon(FontAwesomeIcons.plus),
       onPressed: () {
         Navigator.push(
@@ -66,7 +65,6 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
         child: Align(
           alignment: Alignment.centerLeft,
           child: TabBar(
-            physics: const BouncingScrollPhysics(),
             indicatorColor: kBlue,
             indicatorSize: TabBarIndicatorSize.label,
             indicator: const UnderlineTabIndicator(
