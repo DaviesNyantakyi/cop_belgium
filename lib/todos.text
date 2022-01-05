@@ -1,6 +1,9 @@
 
 Firebase project setup
  -iOS Firebase Project Setup
+ -Password recovery message 
+ -Cloud firstore rules
+ 
 
 Image picker
  - image picker setup ios
@@ -12,6 +15,14 @@ Just audio setup
 PodcastScreen
  - exception if the rssLink is null in firbase: only add the functional podcast to the screen
 
+TextField Validator
+ - name Validator: only  text allowed
+
+Onboarding
+
+Playstore Force update
+
+New version package test
 
 
 

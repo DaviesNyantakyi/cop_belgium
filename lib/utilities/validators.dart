@@ -8,9 +8,9 @@ class Validators {
     }
 
     // only letters
-    if (!value.isAlphabet()) {
-      return 'Name must contain only alphabetical characters.';
-    }
+    // if (!value.isAlphabet()) {
+    //   return 'Name must contain only alphabetical characters.';
+    // }
   }
 
   static String? emailTextValidator(String? value) {

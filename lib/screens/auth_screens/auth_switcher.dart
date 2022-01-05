@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:new_version/new_version.dart';
 import 'package:provider/provider.dart';
 
 class AuthSwitcher extends StatefulWidget {
@@ -17,6 +19,7 @@ class AuthSwitcher extends StatefulWidget {
 
 class _AuthSwitcherState extends State<AuthSwitcher> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  final InAppReview inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -26,6 +29,12 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
 
   Future<void> init() async {
     await checkConnnection();
+
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    }
+
+    final newVersion = NewVersion();
 
     try {
       await Provider.of<PodcastHandler>(context, listen: false).getPodcasts();

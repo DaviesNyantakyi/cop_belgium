@@ -243,7 +243,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
               FontAwesomeIcons.backward,
               size: 32,
             ),
-            color: Colors.grey,
+            color: kBlueDark,
             onPressed: episode != null
                 ? () {
                     var newduration =
@@ -265,7 +265,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             isPlaying == true ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
             size: 32,
           ),
-          color: Colors.grey,
+          color: kBlueDark,
           onPressed: episode != null
               ? () {
                   if (isPlaying) {
@@ -287,7 +287,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
               FontAwesomeIcons.forward,
               size: 32,
             ),
-            color: Colors.grey,
+            color: kBlueDark,
             onPressed: episode != null
                 ? () {
                     newPosition =

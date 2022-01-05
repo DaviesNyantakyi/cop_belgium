@@ -251,15 +251,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return CircleAvatar(
       radius: 60,
       backgroundColor: kBlueDark,
-      child: TextButton(
-        style: kTextButtonStyle,
-        child: const Icon(
-          FontAwesomeIcons.camera,
-          color: Colors.white,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(60),
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: TextButton(
+            style: kTextButtonStyle,
+            child: const Icon(
+              FontAwesomeIcons.camera,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              await showBottomSheet();
+            },
+          ),
         ),
-        onPressed: () async {
-          await showBottomSheet();
-        },
       ),
     );
   }
