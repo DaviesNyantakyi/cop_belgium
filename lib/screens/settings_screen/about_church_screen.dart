@@ -66,7 +66,7 @@ class AboutChruchScreen extends StatelessWidget {
                 onTap: () async {
                   loadMdFile(
                     context: context,
-                    mdFile: "assets/about_church/about_us.md",
+                    mdFile: "assets/about_church/tenets.md",
                   );
                 },
               ),
