@@ -7,6 +7,7 @@ import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletons/skeletons.dart';
 
 class UserTestimoniesView extends StatefulWidget {
   static String userTestimoniesView = 'userTestimoniesView';
@@ -36,9 +37,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
           List<TestimonyInfo> allTestmonies = [];
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const TestimoniesViewShimmer();
           }
 
           if (snapshot.hasError) {
@@ -51,25 +50,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
 
           if (snapshot.data != null) {
             if (snapshot.data!.docs.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Image.asset(
-                      'assets/images/create_testimony.png',
-                      height: 200,
-                      width: 200,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  const Expanded(
-                    child: Text(
-                      'You have no testimonies',
-                      style: kSFBody,
-                    ),
-                  ),
-                ],
-              );
+              return const NoTestimonyView();
             }
           }
 
@@ -83,23 +64,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
           }
 
           if (allTestmonies.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/create_testimony.png',
-                    height: 200,
-                    width: 200,
-                  ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'You have no testimonies',
-                    style: kSFBody,
-                  ),
-                ],
-              ),
-            );
+            return const NoTestimonyView();
           }
 
           return ListView.separated(
@@ -159,6 +124,60 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class NoTestimonyView extends StatelessWidget {
+  const NoTestimonyView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/create_testimony.png',
+              height: 200,
+              width: 200,
+            ),
+            const SizedBox(height: 40),
+            const Text(
+              'You have no testimonies',
+              style: kSFBody,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class TestimoniesViewShimmer extends StatelessWidget {
+  const TestimoniesViewShimmer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SkeletonItem(
+      child: ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        separatorBuilder: (context, index) => const SizedBox(height: 14),
+        itemBuilder: (context, index) {
+          return Container(
+            width: double.infinity,
+            height: 210,
+            decoration: BoxDecoration(
+              color: kBlueLight2.withAlpha(170),
+              borderRadius: const BorderRadius.all(
+                Radius.circular(10),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

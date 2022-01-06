@@ -14,7 +14,7 @@ class BottomNavSelectorPage extends StatefulWidget {
 }
 
 class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 2;
 
   final List<Widget> _screens = const [
     PodcastScreen(),

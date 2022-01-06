@@ -72,6 +72,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
         child: SafeArea(
           child: Padding(
             padding:
@@ -154,41 +155,51 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        TextButton(
-          style: kTextButtonStyle,
-          child: Row(
-            children: [
-              const Text(
-                'Not a member? ',
-                style: kSFBody,
-              ),
-              Text(
-                'Sing Up',
-                style: kSFBodyBold.copyWith(color: kBlueLight),
-              ),
-            ],
+        Expanded(
+          flex: 6,
+          child: TextButton(
+            style: kTextButtonStyle,
+            child: Row(
+              children: [
+                const Flexible(
+                  child: Text(
+                    'Not a member? ',
+                    style: kSFBody,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    'Sing Up',
+                    style: kSFBodyBold.copyWith(color: kBlueLight),
+                  ),
+                ),
+              ],
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(builder: (context) => const SignUpScreen()),
+              );
+            },
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => const SignUpScreen()),
-            );
-          },
         ),
-        TextButton(
-          style: kTextButtonStyle,
-          child: const Text(
-            'Forgot Password?',
-            style: kSFBody,
+        Expanded(
+          flex: 4,
+          child: TextButton(
+            style: kTextButtonStyle,
+            child: const Text(
+              'Forgot Password?',
+              style: kSFBody,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const ForgotPasswordScreen(),
+                ),
+              );
+            },
           ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const ForgotPasswordScreen(),
-              ),
-            );
-          },
         ),
       ],
     );

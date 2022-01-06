@@ -407,8 +407,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<String?> _showDeleteAlert() async {
-    const String _deleteText =
-        'Are you sure you want to delete your whole account? All saved data will be lost.';
     const String _deleteConformationText =
         'Confirm you want to delete this account by typing its password.';
     return await showDialog<String?>(
@@ -420,17 +418,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             Radius.circular(kButtonRadius),
           ),
         ),
-        title: const Text(
-          'Now just a minute',
-          style: kSFHeadLine2,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(_deleteText, style: kSFBodyBold),
-            Text(_deleteConformationText, style: kSFBody),
-          ],
-        ),
+        title: const Text(_deleteConformationText, style: kSFBodyBold),
         actions: <Widget>[
           Form(
             key: _passwordFormKey,

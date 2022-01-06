@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
-import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
@@ -33,9 +33,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
           List<TestimonyInfo> allTestmonies = [];
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const TestimoniesViewShimmer();
           }
 
           if (snapshot.hasError) {
@@ -48,25 +46,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
 
           if (snapshot.data != null) {
             if (snapshot.data!.docs.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Image.asset(
-                      'assets/images/create_testimony.png',
-                      height: 200,
-                      width: 200,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  const Expanded(
-                    child: Text(
-                      'You have no testimonies',
-                      style: kSFBody,
-                    ),
-                  ),
-                ],
-              );
+              return const NoTestimonyView();
             }
           }
 
@@ -82,23 +62,7 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
           //user has added not testimonies
           //the testimony list is empty
           if (allTestmonies.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/create_testimony.png',
-                    height: 200,
-                    width: 200,
-                  ),
-                  const SizedBox(height: 40),
-                  const Text(
-                    'You have no testimonies',
-                    style: kSFBody,
-                  ),
-                ],
-              ),
-            );
+            return const NoTestimonyView();
           }
 
           return ListView.separated(

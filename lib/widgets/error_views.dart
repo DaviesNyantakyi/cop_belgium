@@ -11,18 +11,22 @@ class TryAgainView extends StatelessWidget {
     return Center(
       child: Column(
         children: <Widget>[
-          Image.asset(
-            'assets/images/error.png',
-            height: 220,
-            width: 220,
+          Flexible(
+            child: Image.asset(
+              'assets/images/error.png',
+              height: 220,
+              width: 220,
+            ),
           ),
-          const Text('OOops', style: kSFHeadLine1),
-          const Text('Something went wrong.', style: kSFBody),
-          const SizedBox(height: 30),
-          Buttons.buildBtn(
-            context: context,
-            btnText: 'Try again',
-            onPressed: onPressed,
+          const Flexible(child: Text('OOops', style: kSFHeadLine1)),
+          const Flexible(child: Text('Something went wrong.', style: kSFBody)),
+          const Flexible(child: SizedBox(height: 30)),
+          Flexible(
+            child: Buttons.buildBtn(
+              context: context,
+              btnText: 'Try again',
+              onPressed: onPressed,
+            ),
           ),
         ],
       ),
