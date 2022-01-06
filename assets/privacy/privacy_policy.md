@@ -61,5 +61,7 @@ This policy is effective as of 2021-12-21
 
 **Contact Us**
 
-If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at support@apkeroo.com.
+If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me at support@apkeroo.com
+
+https://github.com/DaviesNyantakyi/cop-privacy/blob/main/privacy_policy.md
 
