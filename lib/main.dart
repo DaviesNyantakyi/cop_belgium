@@ -11,9 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:provider/provider.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
