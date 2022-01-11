@@ -72,6 +72,7 @@ class PodcastService {
 
   Future<List<Podcast>> getPodcast() async {
     //await Future.delayed(Duration(seconds: 10));
+
     try {
       final List<Podcast> podcasts = [];
       final firebaseInfo = await _fireStore.getPodcastRssInfoFireStore();

@@ -1,5 +1,4 @@
 import 'package:cop_belgium/services/podcast_handlre.dart';
-import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:provider/provider.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,9 +32,6 @@ class MyApp extends StatelessWidget {
         title: 'Cop Belgium',
         home: MultiProvider(
           providers: [
-            ChangeNotifierProvider<ConnectionChecker>(
-              create: (_) => ConnectionChecker(),
-            ),
             ChangeNotifierProvider<PodcastHandler>(
               create: (_) => PodcastHandler(),
             )

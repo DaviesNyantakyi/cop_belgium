@@ -1,5 +1,4 @@
 import 'package:cop_belgium/services/podcast_handlre.dart';
-import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +18,6 @@ class AuthSwitcher extends StatefulWidget {
 class _AuthSwitcherState extends State<AuthSwitcher> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-
   @override
   void initState() {
     super.initState();
@@ -27,10 +25,6 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
   }
 
   Future<void> init() async {
-    await checkConnnection();
-
-   
-
     try {
       await Provider.of<PodcastHandler>(context, listen: false).getPodcasts();
     } on FirebaseException catch (e) {
@@ -42,13 +36,6 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
     } catch (e) {
       debugPrint(e.toString());
     }
-  }
-
-  Future<bool> checkConnnection() async {
-    // check internet connection when the app starts
-    await Provider.of<ConnectionChecker>(context, listen: false)
-        .intializeConnectionChecker();
-    return Provider.of<ConnectionChecker>(context, listen: false).hasConnection;
   }
 
   @override

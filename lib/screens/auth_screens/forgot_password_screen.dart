@@ -42,26 +42,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         await Authentication().sendResetPassword(email: email);
 
-        await EasyLoading.dismiss();
         FocusScope.of(context).unfocus();
         _showMailConformationAlert();
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
       } on FirebaseAuthException catch (e) {
-        await EasyLoading.dismiss();
         kshowSnackbar(
           errorType: 'error',
           context: context,
           text: e.message.toString(),
         );
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
+      } on FirebaseException catch (e) {
+        kshowSnackbar(
+          errorType: 'error',
+          context: context,
+          text: e.message.toString(),
+        );
+      } catch (e) {
+        debugPrint(e.toString());
       } finally {
         if (mounted) {
           await EasyLoading.dismiss();

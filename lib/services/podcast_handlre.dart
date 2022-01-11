@@ -13,7 +13,7 @@ class PodcastHandler extends ChangeNotifier {
       podcasts = [];
       hasError = false;
       isLoading = true;
-      notifyListeners();
+
       final allPodcats = await PodcastService().getPodcast();
       podcasts.addAll(allPodcats);
       isLoading = false;
