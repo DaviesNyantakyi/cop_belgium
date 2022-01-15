@@ -76,7 +76,7 @@ class PodcastScreenSkeleton extends StatelessWidget {
           width: 160,
           height: 200,
           decoration: const BoxDecoration(
-            color: kBlueLight,
+            color: kBlue,
             borderRadius: BorderRadius.all(
               Radius.circular(15),
             ),
@@ -112,7 +112,7 @@ class SavedPodcastScreenSkeleton extends StatelessWidget {
             width: 160,
             height: 200,
             decoration: const BoxDecoration(
-              color: kBlueLight,
+              color: kBlue,
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),

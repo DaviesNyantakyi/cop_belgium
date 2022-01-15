@@ -30,7 +30,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   String? title;
   String? testimony;
   DateTime? date;
-  Color backgroundColor = kGreyLight;
+  Color backgroundColor = kGrey;
   bool isAnon = false;
 
   @override
@@ -319,7 +319,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       actions: [
         Container(
           alignment: Alignment.center,
-          child: const Text('Announymous', style: kSFCaptionNormal),
+          child: const Text('Announymous', style: kSFCaption),
         ),
         Transform.scale(
           scale: 0.9,

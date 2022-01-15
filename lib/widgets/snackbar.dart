@@ -19,7 +19,7 @@ dynamic kshowSnackbar({
       break;
 
     default:
-      backgroundColor = kGreyLight;
+      backgroundColor = kGrey;
       textColor = kBlueDark;
       break;
   }

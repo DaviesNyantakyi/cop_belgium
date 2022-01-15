@@ -37,7 +37,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
       width: double.infinity,
       height: 210,
       decoration: BoxDecoration(
-        color: kBlueLight2.withAlpha(170),
+        color: kBlue.withAlpha(170),
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
@@ -80,7 +80,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
   Widget _buildDateCreated() {
     return Text(
       FormalDates.formatDm(date: widget.testimonyInfo.date),
-      style: kSFSubtitle2.copyWith(
+      style: kSFCaption.copyWith(
         color: kBlueDark.withOpacity(0.50),
       ),
     );
@@ -95,7 +95,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
 
       return Text(
         name,
-        style: kSFSubtitle2.copyWith(color: kBlueDark),
+        style: kSFCaption.copyWith(color: kBlueDark),
       );
     } else {
       return Container();
@@ -175,9 +175,9 @@ class _TestimonyCardState extends State<TestimonyCard> {
         }
 
         if (snapshot.hasData) {
-          return Text('${likes!.length}', style: kSFSubtitle2);
+          return Text('${likes!.length}', style: kSFCaption);
         }
-        return const Text('...', style: kSFSubtitle2);
+        return const Text('...', style: kSFCaption);
       },
     );
   }

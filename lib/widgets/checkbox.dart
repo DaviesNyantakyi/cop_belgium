@@ -45,7 +45,7 @@ class _MyCheckBoxState extends State<MyCheckBox> {
                 : Container(),
           ),
           decoration: const BoxDecoration(
-            color: kBlueLight2,
+            color: kGrey,
             borderRadius: BorderRadius.all(
               Radius.circular(5),
             ),

@@ -41,7 +41,7 @@ class PodcastEpisodesCard extends StatelessWidget {
                 FormalDates.calculateTime(
                   date: DateTime.fromMillisecondsSinceEpoch(episode.duration),
                 ),
-                style: kSFSubtitle2Bold.copyWith(
+                style: kSFOverline.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
                 ),
@@ -65,7 +65,7 @@ class PodcastEpisodesCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       episode.title,
-                      style: kSFSubtitle1.copyWith(color: Colors.white),
+                      style: kSFOverline.copyWith(color: Colors.white),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),

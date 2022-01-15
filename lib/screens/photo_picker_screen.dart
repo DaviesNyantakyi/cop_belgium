@@ -129,7 +129,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
           borderRadius: BorderRadius.all(
             Radius.circular(kButtonRadius),
           ),
-          color: kGreyLight,
+          color: kGrey,
         ),
         child: TextButton(
           onPressed: showBottomSheet,
@@ -155,7 +155,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
         borderRadius: BorderRadius.all(
           Radius.circular(kButtonRadius),
         ),
-        color: kGreyLight,
+        color: kGrey,
       ),
       child: TextButton(
         onPressed: showBottomSheet,

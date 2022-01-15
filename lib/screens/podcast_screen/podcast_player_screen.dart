@@ -193,7 +193,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 0.37,
         decoration: BoxDecoration(
-          color: kGreyLight,
+          color: kGrey,
           image: DecorationImage(
             fit: BoxFit.cover,
             image: CachedNetworkImageProvider(episode!.image!),

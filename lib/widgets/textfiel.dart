@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class MyTextField extends StatelessWidget {
   final String? hintText;
   final String? initialValue;
+
   final TextInputType? keyboardType;
   final Function(String)? onChanged;
   final String? Function(String?)? validator;
@@ -27,7 +28,7 @@ class MyTextField extends StatelessWidget {
       key: key,
       validator: validator,
       initialValue: initialValue,
-      style: kSFCaptionBold,
+      style: kSFBodyBold,
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
@@ -37,7 +38,7 @@ class MyTextField extends StatelessWidget {
         errorMaxLines: 2,
         hintText: hintText,
         hintStyle: kSFBody,
-        fillColor: kBlueLight2,
+        fillColor: kGrey,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(

@@ -25,7 +25,7 @@ class FeaturedReleaseCard extends StatelessWidget {
       height: 189,
 
       decoration: BoxDecoration(
-        color: kGreyLight,
+        color: kGrey,
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
@@ -163,7 +163,7 @@ class LatestReleaseCardSkeleton extends StatelessWidget {
       width: 380,
       height: 189,
       decoration: const BoxDecoration(
-        color: kGreyLight,
+        color: kGrey,
         borderRadius: BorderRadius.all(
           Radius.circular(15),
         ),

@@ -18,7 +18,7 @@ class PodcastCard extends StatelessWidget {
       width: 160,
       height: 200,
       decoration: BoxDecoration(
-        color: kBlueLight, // card background color if imgae is null
+        color: kBlue, // card background color if imgae is null
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
@@ -51,7 +51,7 @@ class PodcastCard extends StatelessWidget {
                   children: [
                     Text(
                       podcast.title,
-                      style: kSFSubtitle1.copyWith(color: Colors.white),
+                      style: kSFOverline.copyWith(color: Colors.white),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -59,7 +59,7 @@ class PodcastCard extends StatelessWidget {
                     const SizedBox(height: 5),
                     Text(
                       '${podcast.episodes?.length ?? 0} Episodes',
-                      style: kSFSubtitle2.copyWith(color: Colors.white),
+                      style: kSFOverline.copyWith(color: Colors.white),
                     ),
                   ],
                 ),

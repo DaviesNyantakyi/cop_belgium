@@ -24,10 +24,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   String? password;
   final _emailFormKey = GlobalKey<FormState>();
   final _passwordFormKey = GlobalKey<FormState>();
+
   bool isLoading = false;
 
-  Future<void> submit() async {
+  Future<void> loginEmail() async {
     FocusScope.of(context).unfocus();
+
     bool _validPassword = _passwordFormKey.currentState!.validate();
     bool validEmail = _emailFormKey.currentState!.validate();
 
@@ -68,6 +70,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
+  Future<void> loginGoogle() async {
+    try {} catch (e) {}
+  }
+
+  Future<void> loginApple() async {
+    try {} catch (e) {}
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailFormKey.currentState?.dispose();
+    _passwordFormKey.currentState?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,10 +98,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildLogoText(),
-                const SizedBox(height: 40),
+                const SizedBox(height: 54),
                 _buildForm(),
                 const SizedBox(height: kButtonSpacing),
-                _buildSignInBtn(),
+                _buildLogInBtn(),
+                const SizedBox(height: kButtonSpacing),
+                _buildDivider(),
+                const SizedBox(height: kButtonSpacing),
+                _buildSocialBtn(
+                  icon: 'assets/images/icons/google.png',
+                  label: 'Continue with Google',
+                  submit: loginGoogle,
+                ),
+                const SizedBox(height: kTextFieldSpacing),
+                _buildSocialBtn(
+                  icon: 'assets/images/icons/apple.png',
+                  label: 'Continue with Apple',
+                  submit: loginApple,
+                ),
                 const SizedBox(height: kButtonSpacing),
                 _buildAccountQuestion(),
               ],
@@ -95,11 +126,52 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildSignInBtn() {
+  Widget _buildDivider() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        SizedBox(
+          width: 100,
+          child: Divider(),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text('OR', style: kSFBody),
+        ),
+        SizedBox(
+          width: 100,
+          child: Divider(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLogInBtn() {
     return Buttons.buildBtn(
       context: context,
       color: isLoading ? kGrey : kYellow,
-      btnText: 'Sign In',
+      btnText: 'Log in',
+      onPressed: isLoading ? null : loginEmail,
+    );
+  }
+
+  Widget _buildSocialBtn(
+      {required String icon,
+      required String label,
+      required VoidCallback submit}) {
+    return Buttons.buildSocialBtn(
+      icon: SizedBox(
+        height: 40,
+        child: Image.asset(
+          icon,
+        ),
+      ),
+      label: Text(
+        label,
+        style: kSFBody,
+      ),
+      context: context,
+      color: isLoading ? kGrey : Colors.white,
       onPressed: isLoading ? null : submit,
     );
   }
@@ -132,59 +204,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             textInputAction: TextInputAction.done,
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildLogoText() {
-    return Column(
-      children: [
-        SizedBox(
-          child: Image.asset(
-            'assets/images/logos/cop_logo.png',
-            width: 170,
-            height: 170,
-            filterQuality: FilterQuality.high,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAccountQuestion() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 6,
-          child: TextButton(
-            style: kTextButtonStyle,
-            child: Row(
-              children: [
-                const Flexible(
-                  child: Text(
-                    'Not a member? ',
-                    style: kSFBody,
-                  ),
-                ),
-                Flexible(
-                  child: Text(
-                    'Sing Up',
-                    style: kSFBodyBold.copyWith(color: kBlueLight),
-                  ),
-                ),
-              ],
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => const SignUpScreen()),
-              );
-            },
-          ),
-        ),
-        Expanded(
-          flex: 4,
+        const SizedBox(height: kTextFieldSpacing),
+        Container(
+          alignment: Alignment.centerRight,
           child: TextButton(
             style: kTextButtonStyle,
             child: const Text(
@@ -198,10 +220,59 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   builder: (context) => const ForgotPasswordScreen(),
                 ),
               );
+              if (_emailFormKey.currentState != null &&
+                  _passwordFormKey.currentState != null) {
+                _emailFormKey.currentState!.reset();
+                _passwordFormKey.currentState!.reset();
+              }
             },
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildLogoText() {
+    return Column(
+      children: [
+        SizedBox(
+          child: Image.asset(
+            'assets/images/logos/cop_logo.png',
+            width: 115,
+            height: 115,
+            filterQuality: FilterQuality.high,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAccountQuestion() {
+    return TextButton(
+      style: kTextButtonStyle,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Flexible(
+            child: Text(
+              'Not a member? ',
+              style: kSFBody,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              'Sing Up',
+              style: kSFBodyBold.copyWith(color: kBlueDark),
+            ),
+          ),
+        ],
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(builder: (context) => const SignUpScreen()),
+        );
+      },
     );
   }
 }

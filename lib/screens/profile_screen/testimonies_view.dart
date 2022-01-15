@@ -171,7 +171,7 @@ class TestimoniesViewShimmer extends StatelessWidget {
             width: double.infinity,
             height: 210,
             decoration: BoxDecoration(
-              color: kBlueLight2.withAlpha(170),
+              color: kBlue.withAlpha(170),
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),

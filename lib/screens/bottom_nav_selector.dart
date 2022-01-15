@@ -57,7 +57,7 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
       color: kBlueDark,
     ),
     unselectedIconTheme: const IconThemeData(
-      color: kBlueLight,
+      color: kBlue,
     ),
     currentIndex: index,
     type: BottomNavigationBarType.fixed,

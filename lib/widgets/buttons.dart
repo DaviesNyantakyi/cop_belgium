@@ -11,7 +11,7 @@ class Buttons {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 48,
+      height: kButtonSize,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(color),
@@ -26,8 +26,43 @@ class Buttons {
         onPressed: onPressed,
         child: Text(
           btnText,
-          style: kSFBodyBold.copyWith(color: fontColor),
+          style: kSFBody.copyWith(color: fontColor),
         ),
+      ),
+    );
+  }
+
+  static Widget buildSocialBtn({
+    required BuildContext context,
+    Color color = kYellow,
+    Color fontColor = kBlueDark,
+    VoidCallback? onPressed,
+    required Widget icon,
+    required Widget label,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: kButtonSize,
+      child: ElevatedButton.icon(
+        icon: icon,
+        label: Padding(
+          padding: const EdgeInsets.only(right: 40),
+          child: Center(
+            child: label,
+          ),
+        ),
+        style: ButtonStyle(
+          alignment: Alignment.centerLeft,
+          backgroundColor: MaterialStateProperty.all(color),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(kButtonRadius),
+              ),
+            ),
+          ),
+        ),
+        onPressed: onPressed,
       ),
     );
   }

@@ -85,7 +85,7 @@ class _ProfileScreensState extends State<ProfileScreens>
       flexibleSpace: _buildProfilInfo(context: context),
       bottom: TabBar(
         controller: tabController,
-        labelStyle: kSFSubtitle1,
+        labelStyle: kSFBody,
         labelColor: kBlue,
         indicatorColor: kBlue,
         isScrollable: true,
@@ -121,7 +121,7 @@ class _ProfileScreensState extends State<ProfileScreens>
         ),
         Text(
           user.email ?? ' ',
-          style: kSFSubtitle2,
+          style: kSFCaption,
         ),
       ],
     );
