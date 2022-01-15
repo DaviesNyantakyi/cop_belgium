@@ -104,7 +104,6 @@ ThemeData _theme = ThemeData(
   ),
 );
 
-/*
 class Test extends StatelessWidget {
   const Test({Key? key}) : super(key: key);
 
@@ -115,26 +114,48 @@ class Test extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: PresetFastingCard(
-                    onPressed: () {},
-                    duration: 10,
-                    backgroundColor: kIndigo,
-                    typeFast: 'Preset',
+            SizedBox(
+              width: 300,
+              child: Container(
+                child: const Text(
+                  'Hello world',
+                  style: kSFHeadLine1,
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: Container(
+                child: const Text(
+                  'Hello world',
+                  style: kSFHeadLine2,
+                ),
+                alignment: Alignment.centerLeft,
+              ),
+            ),
+            SizedBox(
+              width: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: const Text(
+                      'Hello world',
+                      style: kSFCaptionBold,
+                    ),
+                    alignment: Alignment.centerLeft,
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: PodcastCard(),
-                ),
-              ],
+                  const Text(
+                    'Hello worldAmet nostrud culpa velit qui culpa culpa aliquip esse minim incididunt. Eiusmod aliqua enim occaecat amet minim do ut. Consequat nisi eiusmod aute ipsum excepteur cillum culpa dolor ea. Veniam elit esse ad ipsum. Cillum exercitation et veniam Lorem ex excepteur sit reprehenderit in consequat aute cupidatat cillum. Exercitation laboris eiusmod aute ullamco aute excepteur. Mollit non ad velit ullamco ea eu incididunt incididunt incididunt sunt.',
+                    style: kSFBody,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
   }
-}*/
+}
