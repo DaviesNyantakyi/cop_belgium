@@ -5,23 +5,24 @@ import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class PhotoPickerScreen extends StatefulWidget {
-  const PhotoPickerScreen({Key? key}) : super(key: key);
+class ImagePickerScreen extends StatefulWidget {
+  const ImagePickerScreen({Key? key}) : super(key: key);
 
   @override
-  State<PhotoPickerScreen> createState() => _PhotoPickerScreenState();
+  State<ImagePickerScreen> createState() => _ImagePickerScreenState();
 }
 
-class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
+class _ImagePickerScreenState extends State<ImagePickerScreen> {
   final ImagePicker _picker = ImagePicker();
   final _connectionChecker = ConnectionChecker();
 
@@ -35,9 +36,34 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
       final pickedImage = await _picker.pickImage(source: source);
       if (hasConnection) {
         if (pickedImage != null) {
-          setState(() {
-            image = File(pickedImage.path);
-          });
+          image = File(pickedImage.path);
+
+          File? croppedImage = await ImageCropper.cropImage(
+            sourcePath: image!.path,
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            androidUiSettings: const AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: kBlueDark,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false,
+            ),
+            iosUiSettings: const IOSUiSettings(
+              minimumAspectRatio: 1.0,
+            ),
+          );
+
+          if (mounted) {
+            setState(() {
+              image = croppedImage;
+            });
+          }
         }
       } else {
         kshowSnackbar(
@@ -60,22 +86,18 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
           isLoading = true;
         });
       }
-      await EasyLoading.show(
-        maskType: EasyLoadingMaskType.black,
-        indicator: const CircularProgressIndicator(
-          color: kBlueDark,
-        ),
-      );
+      await EaslyLoadingIndicator.showLoading();
+
       await FireStorage().uploadProfileImage(image: image);
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
-      await EasyLoading.dismiss();
+      await EaslyLoadingIndicator.dismissLoading();
       Navigator.pop(context);
     } on FirebaseException catch (e) {
-      await EasyLoading.dismiss();
+      await EaslyLoadingIndicator.dismissLoading();
       debugPrint(e.toString());
       kshowSnackbar(
         errorType: 'error',
@@ -90,7 +112,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
           isLoading = false;
         });
       }
-      await EasyLoading.dismiss();
+      await EaslyLoadingIndicator.dismissLoading();
     }
   }
 
@@ -106,7 +128,7 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
                 const SizedBox(height: 90),
                 const Text(
                   'Choose picture',
-                  style: kSFBody,
+                  style: kSFBodyBold,
                 ),
                 const SizedBox(height: 40),
                 _buildImage(),
@@ -122,15 +144,13 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
 
   Widget _buildImage() {
     if (image?.path != null) {
-      return Container(
-        width: 296,
-        height: 296,
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-          color: kGrey,
-        ),
+      return CircleAvatar(
+        radius: 90,
+        backgroundImage: Image.file(
+          image!,
+          fit: BoxFit.cover,
+        ).image,
+        backgroundColor: kGrey,
         child: TextButton(
           onPressed: showBottomSheet,
           style: kTextButtonStyle,
@@ -138,32 +158,21 @@ class _PhotoPickerScreenState extends State<PhotoPickerScreen> {
             borderRadius: const BorderRadius.all(
               Radius.circular(kButtonRadius),
             ),
-            child: Image.file(
-              image!,
-              fit: BoxFit.cover,
-              width: 296,
-              height: 296,
-            ),
+            child: Container(),
           ),
         ),
       );
     }
-    return Container(
-      width: 296,
-      height: 296,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(kButtonRadius),
-        ),
-        color: kGrey,
-      ),
+    return CircleAvatar(
+      radius: 90,
+      backgroundColor: kGrey,
       child: TextButton(
         onPressed: showBottomSheet,
         style: kTextButtonStyle,
         child: const Center(
           child: Icon(
             FontAwesomeIcons.plus,
-            color: kGrey,
+            color: kBlueDark,
           ),
         ),
       ),

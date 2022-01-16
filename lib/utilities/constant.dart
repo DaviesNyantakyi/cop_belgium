@@ -68,7 +68,7 @@ const Color kRed = Color(0xFFFE4F4F);
 
 //Yellow
 const Color kYellow = Color(0xFFFDD835);
-const Color kYellowLight = Color(0xFFFFBA3C);
+const Color kYellowDark = Color(0xFFFFBA3C);
 
 //Green
 const Color kGreen = Color(0xFF00B488);

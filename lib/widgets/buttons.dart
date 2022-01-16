@@ -5,7 +5,7 @@ class Buttons {
   static Widget buildBtn({
     required BuildContext context,
     required String btnText,
-    Color color = kYellow,
+    Color color = kYellowDark,
     Color fontColor = kBlueDark,
     VoidCallback? onPressed,
   }) {

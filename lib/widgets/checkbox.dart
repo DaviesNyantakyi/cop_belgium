@@ -26,8 +26,8 @@ class _MyCheckBoxState extends State<MyCheckBox> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 25,
-          height: 25,
+          width: 30,
+          height: 30,
           padding: const EdgeInsets.all(1),
           child: TextButton(
             style: kTextButtonStyle,

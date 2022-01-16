@@ -1,6 +1,7 @@
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
 import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -10,6 +11,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PodcastScreen extends StatefulWidget {
@@ -126,9 +128,11 @@ class _Body extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _buildGreetingAndIcon(),
+                const SizedBox(height: 20),
                 const Text(
-                  'Featured episode',
-                  style: kSFCaptionBold,
+                  'Featured Episode',
+                  style: kSFHeadLine2,
                 ),
                 const SizedBox(height: 16),
                 Provider.value(
@@ -138,10 +142,13 @@ class _Body extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 42),
+          const SizedBox(height: 35),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
-            child: Text('Podcasts', style: kSFCaptionBold),
+            child: Text(
+              'Podcasts',
+              style: kSFHeadLine2,
+            ),
           ),
           const SizedBox(height: 16),
           _buildSeriesList(),
@@ -150,12 +157,38 @@ class _Body extends StatelessWidget {
     );
   }
 
+  Widget _buildGreetingAndIcon() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Greeting.showGreetings(),
+              style: kSFBody,
+            ),
+            Text(
+              FirebaseAuth.instance.currentUser?.displayName ?? ' ',
+              style: kSFHeadLine2.copyWith(color: kYellowDark, fontSize: 20),
+            ),
+          ],
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: const Icon(FontAwesomeIcons.bell),
+          tooltip: 'Announcements',
+        )
+      ],
+    );
+  }
+
   Widget _buildSeriesList() {
     return Consumer<List<Podcast>>(builder: (context, podcasts, _) {
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1,
-          crossAxisSpacing: 12,
+          crossAxisSpacing: 20,
           mainAxisSpacing: 20,
           crossAxisCount: 2,
           mainAxisExtent: 200,

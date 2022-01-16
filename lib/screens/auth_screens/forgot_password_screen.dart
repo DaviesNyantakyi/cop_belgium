@@ -1,8 +1,8 @@
 import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
@@ -33,12 +33,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           });
         }
 
-        await EasyLoading.show(
-          maskType: EasyLoadingMaskType.black,
-          indicator: const CircularProgressIndicator(
-            color: Colors.white,
-          ),
-        );
+        await EaslyLoadingIndicator.showLoading();
 
         await Authentication().sendResetPassword(email: email);
 
@@ -60,7 +55,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         debugPrint(e.toString());
       } finally {
         if (mounted) {
-          await EasyLoading.dismiss();
+          await EaslyLoadingIndicator.dismissLoading();
           setState(() {
             isLoading = false;
           });

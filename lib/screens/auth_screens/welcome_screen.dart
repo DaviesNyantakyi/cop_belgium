@@ -1,8 +1,8 @@
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -40,11 +40,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             isLoading = true;
           });
         }
-
-        await EasyLoading.show(
-          maskType: EasyLoadingMaskType.black,
-          indicator: const CircularProgressIndicator(),
-        );
+        await EaslyLoadingIndicator.showLoading();
         await Authentication().signIn(email: email, password: password);
 
         if (mounted) {
@@ -53,14 +49,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           });
         }
       } on FirebaseAuthException catch (e) {
-        await EasyLoading.dismiss();
+        await EaslyLoadingIndicator.dismissLoading();
         kshowSnackbar(
           errorType: 'error',
           context: context,
           text: e.message.toString(),
         );
       } finally {
-        await EasyLoading.dismiss();
+        await EaslyLoadingIndicator.dismissLoading();
         if (mounted) {
           setState(() {
             isLoading = false;
@@ -71,11 +67,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> loginGoogle() async {
-    try {} catch (e) {}
+    try {
+      FocusScope.of(context).unfocus();
+    } catch (e) {}
   }
 
   Future<void> loginApple() async {
-    try {} catch (e) {}
+    try {
+      FocusScope.of(context).unfocus();
+    } catch (e) {}
   }
 
   @override
@@ -220,11 +220,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   builder: (context) => const ForgotPasswordScreen(),
                 ),
               );
-              if (_emailFormKey.currentState != null &&
-                  _passwordFormKey.currentState != null) {
-                _emailFormKey.currentState!.reset();
-                _passwordFormKey.currentState!.reset();
-              }
+              FocusScope.of(context).unfocus();
             },
           ),
         ),
@@ -272,6 +268,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           context,
           CupertinoPageRoute(builder: (context) => const SignUpScreen()),
         );
+        FocusScope.of(context).unfocus();
       },
     );
   }

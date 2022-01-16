@@ -1,11 +1,11 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/validators.dart';
-import 'package:cop_belgium/screens/photo_picker_screen.dart';
+import 'package:cop_belgium/screens/image_picker_screen.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/services/firebase_auth.dart';
@@ -40,6 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       isSubmit = true;
     });
+    FocusScope.of(context).unfocus();
     bool nameIsValid = _nameFormKey.currentState!.validate();
     bool emailIsValid = _emailFormKey.currentState!.validate();
     bool passworIsValid = _passwordFormKey.currentState!.validate();
@@ -51,16 +52,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             isLoading = true;
           });
         }
-        await EasyLoading.show(
-          maskType: EasyLoadingMaskType.black,
-          indicator: const CircularProgressIndicator(
-            color: kBlueDark,
-          ),
-        );
+        await EaslyLoadingIndicator.showLoading();
 
         final userObject = CopUser(
-          // isOnline: true,
-          // isAdmin: false,
           firstName: firstName!,
           lastName: lastName!,
           email: email!,
@@ -82,13 +76,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => const PhotoPickerScreen(),
+              builder: (context) => const ImagePickerScreen(),
             ),
           );
         }
       } on FirebaseAuthException catch (e) {
         debugPrint(e.toString());
-        await EasyLoading.dismiss();
+        await EaslyLoadingIndicator.dismissLoading();
+
         kshowSnackbar(
           errorType: 'error',
           context: context,
@@ -101,9 +96,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
             isLoading = false;
           });
         }
-        await EasyLoading.dismiss();
+        await EaslyLoadingIndicator.dismissLoading();
       }
     }
+  }
+
+  Future<void> loginGoogle() async {
+    try {
+      FocusScope.of(context).unfocus();
+    } catch (e) {}
+  }
+
+  Future<void> loginApple() async {
+    try {
+      FocusScope.of(context).unfocus();
+    } catch (e) {}
   }
 
   @override
@@ -116,7 +123,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20)
                 .copyWith(top: kBodyPadding),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildForm(),
                 const SizedBox(height: kTextFieldSpacing),
@@ -124,11 +130,94 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 _buildGenderSelector(),
                 const SizedBox(height: kButtonSpacing),
                 _buildSingUpBtn(),
+                const SizedBox(height: kButtonSpacing),
+                _buildDivider(),
+                const SizedBox(height: kButtonSpacing),
+                _buildSocialBtn(
+                  icon: 'assets/images/icons/google.png',
+                  label: 'Continue with Google',
+                  submit: loginGoogle,
+                ),
+                const SizedBox(height: kTextFieldSpacing),
+                _buildSocialBtn(
+                  icon: 'assets/images/icons/apple.png',
+                  label: 'Continue with Apple',
+                  submit: loginApple,
+                ),
+                const SizedBox(height: kButtonSpacing),
+                _buildAccountQuestion(),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildAccountQuestion() {
+    return TextButton(
+      style: kTextButtonStyle,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Flexible(
+            child: Text(
+              'Already a member? ',
+              style: kSFBody,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              'Log In',
+              style: kSFBodyBold.copyWith(color: kBlueDark),
+            ),
+          ),
+        ],
+      ),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  Widget _buildSocialBtn(
+      {required String icon,
+      required String label,
+      required VoidCallback submit}) {
+    return Buttons.buildSocialBtn(
+      icon: SizedBox(
+        height: 40,
+        child: Image.asset(
+          icon,
+        ),
+      ),
+      label: Text(
+        label,
+        style: kSFBody,
+      ),
+      context: context,
+      color: isLoading ? kGrey : Colors.white,
+      onPressed: isLoading ? null : submit,
+    );
+  }
+
+  Widget _buildDivider() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: const [
+        SizedBox(
+          width: 100,
+          child: Divider(),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text('OR', style: kSFBody),
+        ),
+        SizedBox(
+          width: 100,
+          child: Divider(),
+        ),
+      ],
     );
   }
 
@@ -256,7 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       title: const Text(
         'Sign Up',
-        style: kSFCaptionBold,
+        style: kSFBodyBold,
       ),
     );
   }

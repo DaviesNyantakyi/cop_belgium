@@ -76,7 +76,7 @@ class FeaturedReleaseCard extends StatelessWidget {
                   style: kSFHeadLine2.copyWith(
                     color: Colors.white,
                   ),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 5),
@@ -111,7 +111,7 @@ class FeaturedReleaseCard extends StatelessWidget {
   Widget _buildPlayBt({VoidCallback? onPressed}) {
     return SizedBox(
       height: 40,
-      width: 123,
+      width: 125,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
@@ -130,18 +130,17 @@ class FeaturedReleaseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
-              flex: 100,
+              flex: 7,
               child: Text(
-                'Listen Now',
+                'Play Now',
                 style: kSFBody.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const Expanded(child: SizedBox(width: 10)),
             const Expanded(
               child: Icon(
-                FontAwesomeIcons.chevronRight,
+                FontAwesomeIcons.play,
                 size: 16,
                 color: kBlueDark,
               ),

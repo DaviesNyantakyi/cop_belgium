@@ -8,18 +8,28 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
+
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  init();
+
+  runApp(const MyApp());
+}
+
+void init() {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  runApp(const MyApp());
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..loadingStyle = EasyLoadingStyle.light
+    ..indicatorSize = 45.0
+    ..radius = 5;
 }
 
 class MyApp extends StatelessWidget {
@@ -76,7 +86,6 @@ ThemeData _theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kBlueDark,
   ),
-  splashColor: kBlue,
   iconTheme: const IconThemeData(
     color: kBlueDark,
     size: 25,

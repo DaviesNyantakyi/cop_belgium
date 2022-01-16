@@ -14,60 +14,40 @@ class PodcastCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 160,
-      height: 200,
-      decoration: BoxDecoration(
-        color: kBlue, // card background color if imgae is null
-        borderRadius: const BorderRadius.all(
-          Radius.circular(15),
-        ),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: CachedNetworkImageProvider(podcast.image),
-        ),
-      ),
-      child: TextButton(
-        style: kTextButtonStyle,
-        onPressed: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Container(
-              // bottom card
-              height: 70,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: kBlueDark,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      podcast.title,
-                      style: kSFOverline.copyWith(color: Colors.white),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      '${podcast.episodes?.length ?? 0} Episodes',
-                      style: kSFOverline.copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-              ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 170,
+          height: 170,
+          decoration: BoxDecoration(
+            color: kBlue, // card background color if imgae is null
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15),
             ),
-          ],
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: CachedNetworkImageProvider(podcast.image),
+            ),
+          ),
+          child: TextButton(
+            style: kTextButtonStyle,
+            onPressed: onPressed,
+            child: Container(),
+          ),
         ),
-      ),
+        const SizedBox(height: 5),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+          width: double.infinity,
+          child: Text(
+            podcast.title,
+            style: kSFBodyBold,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        )
+      ],
     );
   }
 }
