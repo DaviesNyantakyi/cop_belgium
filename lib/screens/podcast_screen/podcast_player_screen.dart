@@ -98,7 +98,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppbar(context: context),
+      appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
@@ -198,7 +198,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             fit: BoxFit.cover,
             image: CachedNetworkImageProvider(episode!.image!),
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
       );
     } else {
@@ -215,20 +215,18 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     }
   }
 
-  dynamic buildAppbar({required BuildContext context}) {
+  dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      leading: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      backgroundColor: Colors.transparent,
+      leading: TextButton(
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
         ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: kTextButtonStyle,
       ),
     );
   }
@@ -241,7 +239,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           child: IconButton(
             icon: const Icon(
               FontAwesomeIcons.backward,
-              size: 32,
+              size: 35,
             ),
             color: kBlueDark,
             onPressed: episode != null
@@ -259,33 +257,39 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
                 : null,
           ),
         ),
-        const Flexible(child: SizedBox(width: kBodyPadding)),
-        IconButton(
-          icon: Icon(
-            isPlaying == true ? FontAwesomeIcons.pause : FontAwesomeIcons.play,
-            size: 32,
-          ),
-          color: kBlueDark,
-          onPressed: episode != null
-              ? () {
-                  if (isPlaying) {
-                    stop();
-                  } else {
-                    play();
-                  }
+        const Flexible(child: SizedBox(width: 30)),
+        player.processingState == ProcessingState.loading ||
+                player.processingState == ProcessingState.buffering
+            ? kCircularProgress
+            : IconButton(
+                padding: const EdgeInsets.all(0),
+                icon: Icon(
+                  isPlaying == true
+                      ? FontAwesomeIcons.pause
+                      : FontAwesomeIcons.play,
+                  size: 45,
+                ),
+                color: kBlueDark,
+                onPressed: episode != null
+                    ? () {
+                        if (isPlaying) {
+                          stop();
+                        } else {
+                          play();
+                        }
 
-                  setState(() {
-                    isPlaying = !isPlaying;
-                  });
-                }
-              : null,
-        ),
-        const Flexible(child: SizedBox(width: kBodyPadding)),
+                        setState(() {
+                          isPlaying = !isPlaying;
+                        });
+                      }
+                    : null,
+              ),
+        const Flexible(child: SizedBox(width: 30)),
         Flexible(
           child: IconButton(
             icon: const Icon(
               FontAwesomeIcons.forward,
-              size: 32,
+              size: 35,
             ),
             color: kBlueDark,
             onPressed: episode != null

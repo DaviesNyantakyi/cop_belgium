@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 //Fonts
 const String _sfDisplayFont = 'SFDisplay';
 
-const kSFOverline = TextStyle(
+const kSFUnderline = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlueDark,
   fontSize: 12,
   fontFamily: _sfDisplayFont,
 );
-const kSFOverlineBold = TextStyle(
+const kSFUnderlineBold = TextStyle(
   fontWeight: FontWeight.w700,
   color: kBlueDark,
   fontSize: 12,
@@ -32,14 +32,14 @@ const kSFCaptionBold = TextStyle(
 const kSFBody = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlueDark,
-  fontSize: 16,
+  fontSize: 17,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBodyBold = TextStyle(
   fontWeight: FontWeight.w700,
   color: kBlueDark,
-  fontSize: 16,
+  fontSize: 17,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
@@ -52,7 +52,7 @@ const kSFHeadLine2 = TextStyle(
 );
 const kSFHeadLine1 = TextStyle(
   fontWeight: FontWeight.w700,
-  fontSize: 36,
+  fontSize: 30,
   color: kBlueDark,
   fontFamily: _sfDisplayFont,
 );
@@ -62,6 +62,7 @@ const kSFHeadLine1 = TextStyle(
 //Blues
 const Color kBlue = Color(0xFF0009EB);
 const Color kBlueDark = Color(0xFF1E2B5F);
+const Color kBlueDark2 = Color(0xFF384859);
 
 //Reds
 const Color kRed = Color(0xFFFE4F4F);
@@ -76,15 +77,54 @@ const Color kGreen = Color(0xFF00B488);
 //Grey
 const Color kGrey = Color(0xFFF8F9FA);
 
-//Blijven
+const LinearGradient kRedGradient = LinearGradient(
+  colors: [
+    Color(0xFFF78CA0),
+    Color(0xFFF9748F),
+    Color(0xFFFD868C),
+  ],
+);
+const LinearGradient kGreenGradient = LinearGradient(
+  colors: [
+    Color(0xFF58926C),
+    Color(0xFF659F8A),
+  ],
+);
+const LinearGradient kPurpleGradient = LinearGradient(
+  colors: [
+    Color(0xFF585E92),
+    Color(0xFF65689F),
+  ],
+);
+const LinearGradient kBlueDarkGradient = LinearGradient(
+  colors: [kBlueDark2],
+);
+
+List<LinearGradient> kGradients = [
+  kRedGradient,
+  kGreenGradient,
+  kPurpleGradient,
+  kBlueDarkGradient,
+];
+//Stay
 const double kButtonSize = 45;
 const double kButtonRadius = 5;
 const double kTextFieldSpacing = 12;
 const double kButtonSpacing = 25;
+
+BoxShadow boxShadow = BoxShadow(
+  offset: const Offset(0, 4),
+  blurRadius: 10,
+  color: Colors.black.withOpacity(0.2),
+);
 //Weg
 
 const double kAppbarPadding = 20.0;
 const double kBodyPadding = 15.0;
+
+const kCircularProgress = CircularProgressIndicator(
+  strokeWidth: 5,
+);
 
 const double kBodyBottomPadding = 40.0;
 const double kBottomSheetHeight = 470;

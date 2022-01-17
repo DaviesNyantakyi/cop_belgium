@@ -147,6 +147,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await EasyLoading.dismiss();
         Navigator.of(context)
           ..pop()
+          ..pop()
           ..pop();
       } on FirebaseException catch (e) {
         if (mounted) {
@@ -564,9 +565,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return AppBar(
       title: const Text(
         'Edit Profile',
-        style: kSFCaptionBold,
+        style: kSFBodyBold,
       ),
-      centerTitle: true,
       leading: TextButton(
         child: const Padding(
           padding: EdgeInsets.all(8.0),
@@ -585,7 +585,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Save',
-              style: kSFCaptionBold,
+              style: kSFBodyBold,
             ),
           ),
           onPressed: isLoading ? null : submitUpdate,

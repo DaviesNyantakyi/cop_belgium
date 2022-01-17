@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
+import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
-import 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -29,13 +29,15 @@ class _ProfileScreensState extends State<ProfileScreens>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(initialIndex: 0, vsync: this, length: 2);
+    tabController = TabController(initialIndex: 0, vsync: this, length: 3);
   }
 
   Future<void> popUp(String? result) async {
     if (result == WelcomeScreen.welcomeScreen) {
       await Authentication().singout();
-    } else if (result == EditProfileScreen.editProfileScreen) {
+      Navigator.pop(context);
+    }
+    if (result == EditProfileScreen.editProfileScreen) {
       final user = await CloudFireStore().getUserFirstore();
 
       if (user != null) {
@@ -45,82 +47,76 @@ class _ProfileScreensState extends State<ProfileScreens>
           },
         ));
       }
-    } else {
-      await Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (context) => const SettingsScreen(),
-        ),
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          _buildPopupMenu(context: context),
+        ],
+      ),
       body: NestedScrollView(
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, value) {
           return [
-            _buildAppbar(),
+            SliverToBoxAdapter(
+              child: _buildProfilInfo(context: context),
+            ),
           ];
         },
-        body: TabBarView(
-          controller: tabController,
-          children: const <Widget>[
-            UserSavedPodcastView(),
-            UserTestimoniesView(),
+        body: Column(
+          children: <Widget>[
+            const SizedBox(height: 10),
+            TabBar(
+              controller: tabController,
+              labelStyle: kSFBodyBold,
+              labelColor: kBlueDark,
+              isScrollable: true,
+              indicatorColor: kBlueDark,
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              unselectedLabelColor: kBlueDark,
+              indicator: const UnderlineTabIndicator(
+                borderSide: BorderSide(color: kBlueDark, width: 2),
+              ),
+              tabs: const [
+                Tab(text: 'Podcasts'),
+                Tab(text: 'Testimonies'),
+                Tab(text: 'Fasting History'),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: tabController,
+                children: const [
+                  UserSavedPodcastView(),
+                  UserTestimoniesView(),
+                  UserFastingHistoryView()
+                ],
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildAppbar() {
-    return SliverAppBar(
-      toolbarHeight: 190,
-      floating: true,
-      forceElevated: true,
-      elevation: 5,
-      flexibleSpace: _buildProfilInfo(context: context),
-      bottom: TabBar(
-        controller: tabController,
-        labelStyle: kSFBody,
-        labelColor: kBlue,
-        indicatorColor: kBlue,
-        isScrollable: true,
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        unselectedLabelColor: kBlueDark,
-        indicator: const UnderlineTabIndicator(
-          borderSide: BorderSide(color: kBlue, width: 2),
-        ),
-        tabs: const [
-          Tab(text: 'Podcasts'),
-          Tab(text: 'Testimonies'),
-        ],
       ),
     );
   }
 
   Widget _buildProfilInfo({required BuildContext context}) {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser;
     return Column(
       children: [
-        AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [
-            _buildPopupMenu(context: context),
-          ],
-        ),
         _buildAvatar(),
         const SizedBox(height: 10),
         Text(
-          user.displayName ?? ' ',
-          style: kSFCaptionBold,
+          user?.displayName ?? '',
+          style: kSFBodyBold.copyWith(fontSize: 18),
         ),
         Text(
-          user.email ?? ' ',
+          user?.email ?? '',
           style: kSFCaption,
         ),
       ],
@@ -128,19 +124,22 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Widget _buildAvatar() {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser;
 
-    if (user.photoURL != null) {
+    if (user?.photoURL != null) {
       return CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(user.photoURL!),
-        radius: 40,
+        backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
+        radius: 50,
         backgroundColor: kBlueDark,
       );
     }
     return const CircleAvatar(
-      radius: 40,
+      radius: 50,
       backgroundColor: kBlueDark,
-      child: Icon(FontAwesomeIcons.user),
+      child: Icon(
+        FontAwesomeIcons.userAlt,
+        color: Colors.white,
+      ),
     );
   }
 
@@ -161,15 +160,15 @@ class _ProfileScreensState extends State<ProfileScreens>
         return <PopupMenuEntry<String>>[
           PopupMenuItem<String>(
             value: EditProfileScreen.editProfileScreen,
-            child: const Text('Edit Profile'),
-          ),
-          PopupMenuItem<String>(
-            value: SettingsScreen.settingsScreen,
-            child: const Text('Settings'),
+            child: const Text(
+              'Edit Profile',
+            ),
           ),
           PopupMenuItem<String>(
             value: WelcomeScreen.welcomeScreen,
-            child: const Text('Logout'),
+            child: const Text(
+              'Logout',
+            ),
           ),
         ];
       },

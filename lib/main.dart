@@ -1,3 +1,4 @@
+import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/services/podcast_handlre.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
@@ -104,11 +105,17 @@ ThemeData _theme = ThemeData(
     cursorColor: kBlueDark,
     selectionHandleColor: kBlueDark,
   ),
+  progressIndicatorTheme: const ProgressIndicatorThemeData(
+    color: kBlueDark,
+  ),
   sliderTheme: SliderThemeData(
+    trackHeight: 16.0,
+
     activeTrackColor: kBlueDark,
     thumbColor: kBlueDark,
-    inactiveTrackColor: Colors.grey,
-    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
+    inactiveTrackColor: Colors.grey.shade300,
+    thumbShape: const RoundSliderThumbShape(
+        enabledThumbRadius: 9, elevation: 0, pressedElevation: 0),
     overlayShape: SliderComponentShape.noThumb, // removes padding
   ),
 );
@@ -118,53 +125,8 @@ class Test extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 300,
-              child: Container(
-                child: const Text(
-                  'Hello world',
-                  style: kSFHeadLine1,
-                ),
-                alignment: Alignment.centerLeft,
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: Container(
-                child: const Text(
-                  'Hello world',
-                  style: kSFHeadLine2,
-                ),
-                alignment: Alignment.centerLeft,
-              ),
-            ),
-            SizedBox(
-              width: 300,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    child: const Text(
-                      'Hello world',
-                      style: kSFCaptionBold,
-                    ),
-                    alignment: Alignment.centerLeft,
-                  ),
-                  const Text(
-                    'Hello worldAmet nostrud culpa velit qui culpa culpa aliquip esse minim incididunt. Eiusmod aliqua enim occaecat amet minim do ut. Consequat nisi eiusmod aute ipsum excepteur cillum culpa dolor ea. Veniam elit esse ad ipsum. Cillum exercitation et veniam Lorem ex excepteur sit reprehenderit in consequat aute cupidatat cillum. Exercitation laboris eiusmod aute ullamco aute excepteur. Mollit non ad velit ullamco ea eu incididunt incididunt incididunt sunt.',
-                    style: kSFBody,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    return const Scaffold(
+      body: CreateFastingScreens(),
     );
   }
 }

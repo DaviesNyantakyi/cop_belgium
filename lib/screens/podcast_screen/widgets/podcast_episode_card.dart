@@ -5,9 +5,9 @@ import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PodcastEpisodesCard extends StatelessWidget {
+class EpisodeCard extends StatelessWidget {
   final VoidCallback? onPressed;
-  const PodcastEpisodesCard({
+  const EpisodeCard({
     Key? key,
     this.onPressed,
   }) : super(key: key);
@@ -37,13 +37,27 @@ class PodcastEpisodesCard extends StatelessWidget {
             Positioned(
               right: 12.0,
               top: 14.0,
-              child: Text(
-                FormalDates.calculateTime(
-                  date: DateTime.fromMillisecondsSinceEpoch(episode.duration),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: kBlueDark.withOpacity(0.7),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5),
+                  ),
                 ),
-                style: kSFOverline.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Center(
+                    child: Text(
+                      FormalDates.calculateTime(
+                        date: DateTime.fromMillisecondsSinceEpoch(
+                            episode.duration),
+                      ),
+                      style: kSFUnderline.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -65,7 +79,7 @@ class PodcastEpisodesCard extends StatelessWidget {
                   child: Center(
                     child: Text(
                       episode.title,
-                      style: kSFOverline.copyWith(color: Colors.white),
+                      style: kSFBody.copyWith(color: Colors.white),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),

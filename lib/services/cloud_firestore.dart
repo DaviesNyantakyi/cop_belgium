@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
@@ -77,6 +78,39 @@ class CloudFireStore {
       debugPrint(e.toString());
       rethrow;
     } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> createFastHistory({required FastingInfo fInfo}) async {
+    try {
+      if (fInfo.userId != null &&
+          fInfo.startDate != null &&
+          fInfo.endDate != null &&
+          fInfo.goalDate != null) {
+        final docRef = await _firestore
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('fastingHistory')
+            .add(FastingInfo.toMap(map: fInfo));
+        await docRef.update({'id': docRef.id});
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFastHistory({required FastingInfo fInfo}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('fastingHistory')
+          .doc(fInfo.id)
+          .delete();
+    } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
@@ -236,6 +270,41 @@ class CloudFireStore {
             .doc(_user!.uid)
             .collection('savedPodcasts')
             .doc(rssInfo.id)
+            .delete();
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> likeUnLikePodcast({required PodcastRssInfo rssInfo}) async {
+    try {
+      final doc = await _firestore
+          .collection('podcasts')
+          .doc(rssInfo.id)
+          .collection('likes')
+          .doc(_user!.uid)
+          .get();
+
+      if (!doc.exists) {
+        await _firestore
+            .collection('podcasts')
+            .doc(rssInfo.id)
+            .collection('likes')
+            .doc(_user!.uid)
+            .set({
+          'userId': _user!.uid,
+          'date': DateTime.now(),
+        });
+      } else {
+        await _firestore
+            .collection('podcasts')
+            .doc(rssInfo.id)
+            .collection('likes')
+            .doc(_user!.uid)
             .delete();
       }
     } on FirebaseException catch (e) {

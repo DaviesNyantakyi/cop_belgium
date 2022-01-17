@@ -26,7 +26,6 @@ Future<void> showMyBottomSheet(
           ),
         ),
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(25),
             child: child,

@@ -37,10 +37,13 @@ class _TestimonyCardState extends State<TestimonyCard> {
       width: double.infinity,
       height: 210,
       decoration: BoxDecoration(
-        color: kBlue.withAlpha(170),
+        color: Colors.white,
         borderRadius: const BorderRadius.all(
           Radius.circular(10),
         ),
+        boxShadow: [
+          boxShadow,
+        ],
       ),
       child: TextButton(
         onPressed: widget.onPressedCard,
@@ -146,15 +149,13 @@ class _TestimonyCardState extends State<TestimonyCard> {
         final docs = snapshot.data?.docs ?? [];
         if (docs.isNotEmpty) {
           //user has likes the testimony
-          return Image.asset(
-            'assets/images/icons/clapping_filled.png',
-            filterQuality: FilterQuality.high,
-            color: kBlueDark,
+          return const Icon(
+            FontAwesomeIcons.solidHeart,
+            color: kRed,
           );
         }
-        return Image.asset(
-          'assets/images/icons/clapping_outlined.png',
-          filterQuality: FilterQuality.high,
+        return const Icon(
+          FontAwesomeIcons.heart,
           color: kBlueDark,
         );
       },

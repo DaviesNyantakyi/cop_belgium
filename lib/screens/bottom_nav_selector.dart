@@ -1,5 +1,6 @@
+import 'package:cop_belgium/screens/events_screen/events_screen.dart';
+import 'package:cop_belgium/screens/more_screen/more_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
-import 'package:cop_belgium/screens/profile_screen/profile_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,9 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
 
   final List<Widget> _screens = const [
     PodcastScreen(),
+    EventsScreen(),
     TestimoniesScreen(),
-    ProfileScreens(),
+    MoreScreen()
   ];
 
   @override
@@ -44,7 +46,6 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
 }
 
 Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
-  final Color _bottomNavColor = Colors.blueGrey.shade300;
   return BottomNavigationBar(
     backgroundColor: Colors.white,
     selectedItemColor: kBlueDark,
@@ -63,44 +64,42 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
     type: BottomNavigationBarType.fixed,
     onTap: onTap,
     items: [
-      BottomNavigationBarItem(
-        tooltip: 'Podcasts',
+      _buildBottomNavItem(
         label: 'Podcasts',
-        icon: Icon(
-          FontAwesomeIcons.headphones,
-          color: _bottomNavColor,
-          size: 28,
-        ),
-        activeIcon: const Icon(
-          FontAwesomeIcons.headphones,
-          color: kBlueDark,
-          size: 28,
-        ),
+        icon: FontAwesomeIcons.headphones,
       ),
-      BottomNavigationBarItem(
+      _buildBottomNavItem(
+        label: 'Events',
+        icon: FontAwesomeIcons.calendar,
+      ),
+      _buildBottomNavItem(
         label: 'Testimonies',
-        tooltip: 'Testimonies',
-        icon: Icon(
-          FontAwesomeIcons.quoteRight,
-          color: _bottomNavColor,
-        ),
-        activeIcon: const Icon(
-          FontAwesomeIcons.quoteRight,
-          color: kBlueDark,
-        ),
+        icon: FontAwesomeIcons.quoteRight,
       ),
-      BottomNavigationBarItem(
-        label: 'Profile',
-        tooltip: 'Profile',
-        icon: Icon(
-          FontAwesomeIcons.userAlt,
-          color: _bottomNavColor,
-        ),
-        activeIcon: const Icon(
-          FontAwesomeIcons.userAlt,
-          color: kBlueDark,
-        ),
+      _buildBottomNavItem(
+        label: 'More',
+        icon: FontAwesomeIcons.bars,
       ),
     ],
+  );
+}
+
+BottomNavigationBarItem _buildBottomNavItem({
+  required String label,
+  required IconData icon,
+}) {
+  final Color _bottomNavColor = Colors.blueGrey.shade300;
+
+  return BottomNavigationBarItem(
+    label: label,
+    tooltip: label,
+    icon: Icon(
+      icon,
+      color: _bottomNavColor,
+    ),
+    activeIcon: Icon(
+      icon,
+      color: kBlueDark,
+    ),
   );
 }

@@ -14,10 +14,8 @@ class FeaturedReleaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // latest episode
-    final episode = Provider.of<List<Podcast>>(context, listen: false)
-        .first
-        .episodes!
-        .first;
+    final episode =
+        Provider.of<List<Podcast>>(context, listen: false).last.episodes!.first;
 
     return Container(
       //background image
@@ -33,6 +31,7 @@ class FeaturedReleaseCard extends StatelessWidget {
           fit: BoxFit.cover,
           image: CachedNetworkImageProvider(episode.image!),
         ),
+        boxShadow: [boxShadow],
       ),
       child: TextButton(
         onPressed: () {

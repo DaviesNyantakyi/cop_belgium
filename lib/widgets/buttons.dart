@@ -14,6 +14,7 @@ class Buttons {
       height: kButtonSize,
       child: ElevatedButton(
         style: ButtonStyle(
+          elevation: MaterialStateProperty.all(2),
           backgroundColor: MaterialStateProperty.all(color),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
@@ -26,7 +27,7 @@ class Buttons {
         onPressed: onPressed,
         child: Text(
           btnText,
-          style: kSFBody.copyWith(color: fontColor),
+          style: kSFBodyBold.copyWith(color: fontColor),
         ),
       ),
     );

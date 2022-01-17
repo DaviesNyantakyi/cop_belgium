@@ -30,7 +30,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   String? title;
   String? testimony;
   DateTime? date;
-  Color backgroundColor = kGrey;
+  Color backgroundColor = Colors.white;
   bool isAnon = false;
 
   @override
@@ -77,7 +77,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
                 const SizedBox(height: 16),
                 _buildTF(
                   initialValue: testimony,
-                  style: kSFBody,
+                  style: kSFBodyBold,
                   hintText: 'Testimony',
                   onChanged: (value) {
                     testimony = value;
@@ -117,12 +117,12 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     if (widget.editable == false) {
       return const Text(
         'Create',
-        style: kSFCaptionBold,
+        style: kSFBodyBold,
       );
     } else {
       return const Text(
         'Edit',
-        style: kSFCaptionBold,
+        style: kSFBodyBold,
       );
     }
   }
@@ -217,13 +217,16 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
           return <PopupMenuEntry<String>>[
             const PopupMenuItem<String>(
               value: 'save',
-              child: Text('Update'),
+              child: Text(
+                'Update',
+                style: kSFBodyBold,
+              ),
             ),
             PopupMenuItem<String>(
               value: 'delete',
               child: Text(
                 'Delete',
-                style: kSFBody.copyWith(color: Colors.red.shade700),
+                style: kSFBody.copyWith(color: kRed),
               ),
             ),
           ];
@@ -235,7 +238,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         child: Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-          child: const Text('Post', style: kSFCaptionBold),
+          child: const Text('Post', style: kSFBodyBold),
         ),
         onPressed: () async {
           setState(() {
@@ -319,7 +322,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
       actions: [
         Container(
           alignment: Alignment.center,
-          child: const Text('Announymous', style: kSFCaption),
+          child: const Text('Announymous', style: kSFBodyBold),
         ),
         Transform.scale(
           scale: 0.9,

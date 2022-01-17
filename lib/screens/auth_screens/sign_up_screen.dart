@@ -120,13 +120,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20)
-                .copyWith(top: kBodyPadding),
+            padding: const EdgeInsets.all(kBodyPadding),
             child: Column(
               children: [
                 _buildForm(),
-                const SizedBox(height: kTextFieldSpacing),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: kButtonSpacing),
                 _buildGenderSelector(),
                 const SizedBox(height: kButtonSpacing),
                 _buildSingUpBtn(),

@@ -3,6 +3,8 @@ import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+TextStyle _textStyle = kSFBodyBold;
+
 class AboutChruchScreen extends StatelessWidget {
   static String aboutChruchScreen = 'aboutChruchScreen';
   const AboutChruchScreen({Key? key}) : super(key: key);
@@ -23,9 +25,9 @@ class AboutChruchScreen extends StatelessWidget {
               ),
               const SizedBox(height: 39),
               ListTile(
-                title: const Text(
+                title: Text(
                   'Abous us',
-                  style: kSFBody,
+                  style: _textStyle,
                 ),
                 onTap: () async {
                   loadMdFile(
@@ -35,9 +37,9 @@ class AboutChruchScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text(
+                title: Text(
                   'Values',
-                  style: kSFBody,
+                  style: _textStyle,
                 ),
                 onTap: () async {
                   loadMdFile(
@@ -47,9 +49,9 @@ class AboutChruchScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text(
+                title: Text(
                   'Mission & Vission',
-                  style: kSFBody,
+                  style: _textStyle,
                 ),
                 onTap: () async {
                   loadMdFile(
@@ -59,9 +61,9 @@ class AboutChruchScreen extends StatelessWidget {
                 },
               ),
               ListTile(
-                title: const Text(
+                title: Text(
                   'Tenets',
-                  style: kSFBody,
+                  style: _textStyle,
                 ),
                 onTap: () async {
                   loadMdFile(
@@ -79,19 +81,20 @@ class AboutChruchScreen extends StatelessWidget {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      title: const Text('About Church', style: kSFCaptionBold),
-      leading: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      backgroundColor: Colors.transparent,
+      title: const Text(
+        'About Church',
+        style: kSFBodyBold,
+      ),
+      leading: TextButton(
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
         ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: kTextButtonStyle,
       ),
     );
   }

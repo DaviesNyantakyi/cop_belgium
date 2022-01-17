@@ -9,26 +9,33 @@ class TryAgainView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: <Widget>[
-          Flexible(
-            child: Image.asset(
-              'assets/images/error.png',
-              height: 220,
-              width: 220,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: kBodyPadding,
+          horizontal: kBodyPadding,
+        ),
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              child: Image.asset(
+                'assets/images/error.png',
+                height: 220,
+                width: 220,
+              ),
             ),
-          ),
-          const Flexible(child: Text('OOops', style: kSFHeadLine1)),
-          const Flexible(child: Text('Something went wrong.', style: kSFBody)),
-          const Flexible(child: SizedBox(height: 30)),
-          Flexible(
-            child: Buttons.buildBtn(
-              context: context,
-              btnText: 'Try again',
-              onPressed: onPressed,
+            const Flexible(child: Text('OOops', style: kSFHeadLine2)),
+            const Flexible(
+                child: Text('Something went wrong.', style: kSFBody)),
+            const Flexible(child: SizedBox(height: 30)),
+            Flexible(
+              child: Buttons.buildBtn(
+                context: context,
+                btnText: 'Try again',
+                onPressed: onPressed,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -48,7 +55,7 @@ class NoPodcastsView extends StatelessWidget {
             height: 220,
             width: 220,
           ),
-          const Text('No podcasts found', style: kSFHeadLine1),
+          const Text('No podcasts found', style: kSFHeadLine2),
           const Text('Please try again later', style: kSFBody),
         ],
       ),
@@ -71,9 +78,33 @@ class NoSavedPodcastsView extends StatelessWidget {
             height: 220,
             width: 220,
           ),
-          const Text('Bookmark empty', style: kSFHeadLine2),
+          const Text('Bookmark Empty', style: kSFHeadLine2),
           const Text('Get started by saving a podcast', style: kSFBody),
         ],
+      ),
+    );
+  }
+}
+
+class NoFastingHistoryView extends StatelessWidget {
+  final Function()? onPressed;
+  const NoFastingHistoryView({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/images/no_fast_added.png',
+              height: 220,
+              width: 220,
+            ),
+            const Text('No Fasting History', style: kSFHeadLine2),
+            const Text('Get started by Fasting', style: kSFBody),
+          ],
+        ),
       ),
     );
   }

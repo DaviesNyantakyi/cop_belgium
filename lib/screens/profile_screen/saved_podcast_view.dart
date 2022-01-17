@@ -89,53 +89,27 @@ class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
 
   Widget _buildErrorSkeleton() {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TryAgainView(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+      child: TryAgainView(
+        onPressed: () {
+          setState(() {});
+        },
       ),
     );
   }
 
   Widget _buildNoSavedPodcastsSkeleton() {
     return SingleChildScrollView(
+      padding: const EdgeInsets.all(kBodyPadding),
       physics: const NeverScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyBottomPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  NoSavedPodcastsView(
-                    onPressed: () {
-                      setState(() {});
-                    },
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NoSavedPodcastsView(
+            onPressed: () {
+              setState(() {});
+            },
+          )
+        ],
       ),
     );
   }

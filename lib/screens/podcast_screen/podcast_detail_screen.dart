@@ -52,7 +52,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                     _buildTitle(),
                     const SizedBox(height: 32),
                     _buildDescription(),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 19),
                   ],
                 ),
               ),
@@ -96,7 +96,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         Container(
           margin: const EdgeInsets.only(left: kBodyPadding),
           alignment: Alignment.centerLeft,
-          child: const Text('Episodes', style: kSFCaptionBold),
+          child: const Text('Episodes', style: kSFBodyBold),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -110,7 +110,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
                 padding: const EdgeInsets.only(right: 16),
                 child: Provider.value(
                   value: podcast!.episodes![index],
-                  child: PodcastEpisodesCard(
+                  child: EpisodeCard(
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -143,7 +143,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
         ),
         const SizedBox(height: 12),
-        _buildDetail(),
+        _buildIcons(),
       ],
     );
   }
@@ -155,7 +155,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           alignment: Alignment.centerLeft,
           child: const Text(
             'Description',
-            style: kSFCaptionBold,
+            style: kSFBodyBold,
           ),
         ),
         const SizedBox(height: 12),
@@ -181,7 +181,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     );
   }
 
-  Widget _buildDetail() {
+  Widget _buildIcons() {
     return Row(
       children: [
         Row(
@@ -200,6 +200,20 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         const SizedBox(width: 19),
         TextButton(
           style: kTextButtonStyle,
+          child: _buildLikeIcon(),
+          onPressed: () async {
+            await CloudFireStore().likeUnLikePodcast(
+              rssInfo: PodcastRssInfo(
+                id: podcast!.id,
+                rssLink: podcast!.rssLink,
+                title: podcast?.title ?? '',
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: kTextFieldSpacing),
+        TextButton(
+          style: kTextButtonStyle,
           child: _buildBookmarkIcon(),
           onPressed: () async {
             await CloudFireStore().saveUnsavePodcast(
@@ -212,6 +226,78 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildLikeIcon() {
+    String docRef = podcast!.id;
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('podcasts')
+          .doc(docRef)
+          .collection('likes')
+          .where('userId', isEqualTo: _user!.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final docs = snapshot.data?.docs ?? [];
+
+        if (docs.isNotEmpty) {
+          //user has saved to podcast
+          return Row(
+            children: [
+              const Icon(
+                FontAwesomeIcons.solidHeart,
+                size: 20,
+                color: kRed,
+              ),
+              const SizedBox(
+                width: 7,
+              ),
+              _buildLikeCount()
+            ],
+          );
+        }
+        return Row(
+          children: [
+            const Icon(
+              FontAwesomeIcons.heart,
+              size: 20,
+              color: kBlueDark,
+            ),
+            const SizedBox(
+              width: 7,
+            ),
+            _buildLikeCount()
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLikeCount() {
+    String docRef = podcast!.id;
+
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('podcasts')
+          .doc(docRef)
+          .collection('likes')
+          .snapshots(),
+      builder: (context, snapshot) {
+        final docs = snapshot.data?.docs ?? [];
+
+        if (docs.isNotEmpty) {
+          //user has saved to podcast
+          return Text(
+            '${docs.length}',
+            style: kSFBody,
+          );
+        }
+        return Text(
+          '${docs.length}',
+          style: kSFBody,
+        );
+      },
     );
   }
 

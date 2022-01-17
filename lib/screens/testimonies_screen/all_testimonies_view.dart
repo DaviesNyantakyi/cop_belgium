@@ -77,7 +77,7 @@ class _TestimoniesViewState extends State<TestimoniesView> {
 
           return ListView.separated(
             separatorBuilder: (BuildContext context, int index) =>
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
             itemCount: allTestimonies.length,
             itemBuilder: (context, index) {
               return TestimonyCard(

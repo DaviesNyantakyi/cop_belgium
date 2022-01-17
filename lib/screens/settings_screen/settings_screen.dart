@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:device_info/device_info.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+TextStyle _textStyle = kSFBodyBold;
 
 class SettingsScreen extends StatefulWidget {
   static String settingsScreen = 'settingsScreen';
@@ -111,9 +111,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 _buildImage(),
                 const SizedBox(height: 39),
-                _buildAboutChruch(),
-                const SizedBox(height: 5),
-                const Divider(),
                 _buildFeedBackTiles(),
                 const SizedBox(height: 5),
                 _buildPrivacyTiles(),
@@ -125,23 +122,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildAboutChruch() {
-    return ListTile(
-      title: const Text(
-        'About Church',
-        style: kSFBody,
-      ),
-      onTap: () async {
-        await Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const AboutChruchScreen(),
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildFeedBackTiles() {
     return Column(
       children: [
@@ -149,18 +129,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onTap: () async {
             await sendFeedBack(type: 'feedBack');
           },
-          title: const Text(
+          title: Text(
             'Send Feedback',
-            style: kSFBody,
+            style: _textStyle,
           ),
         ),
         ListTile(
           onTap: () async {
             await sendFeedBack(type: 'bug');
           },
-          title: const Text(
+          title: Text(
             'Report a Bug',
-            style: kSFBody,
+            style: _textStyle,
           ),
         ),
       ],
@@ -189,9 +169,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Column(
       children: [
         ListTile(
-          title: const Text(
+          title: Text(
             'Privacy Policy',
-            style: kSFBody,
+            style: _textStyle,
           ),
           onTap: () {
             loadMdFile(
@@ -207,9 +187,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mdFile: 'assets/privacy/terms_of_service.md',
             );
           },
-          title: const Text(
+          title: Text(
             'Terms Of Service',
-            style: kSFBody,
+            style: _textStyle,
           ),
         ),
       ],
@@ -218,19 +198,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      title: const Text('Settings', style: kSFCaptionBold),
-      leading: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      backgroundColor: Colors.transparent,
+      title: const Text(
+        'Settings',
+        style: kSFBodyBold,
+      ),
+      leading: TextButton(
+        child: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
         ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        style: kTextButtonStyle,
       ),
     );
   }

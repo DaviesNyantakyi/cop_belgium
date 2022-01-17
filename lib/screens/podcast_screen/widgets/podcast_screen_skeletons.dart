@@ -1,6 +1,11 @@
+import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/greeting.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletons/skeletons.dart';
 
 class PodcastCardSkeleton extends StatelessWidget {
@@ -32,13 +37,15 @@ class PodcastScreenSkeleton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Featured episode',
-                style: kSFCaptionBold,
+            children: [
+              _buildGreetingAndIcon(context: context),
+              const SizedBox(height: 20),
+              const Text(
+                'Featured Episode',
+                style: kSFHeadLine2,
               ),
-              SizedBox(height: 16),
-              SkeletonItem(child: LatestReleaseCardSkeleton())
+              const SizedBox(height: 16),
+              const SkeletonItem(child: LatestReleaseCardSkeleton())
             ],
           ),
         ),
@@ -47,13 +54,46 @@ class PodcastScreenSkeleton extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
           child: Text(
             'Podcasts',
-            style: kSFCaptionBold,
+            style: kSFHeadLine2,
           ),
         ),
         const SizedBox(height: 16),
         SkeletonItem(
           child: _buildSeriesList(),
         ),
+      ],
+    );
+  }
+
+  Widget _buildGreetingAndIcon({required BuildContext context}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              Greeting.showGreetings(),
+              style: kSFBody,
+            ),
+            Text(
+              FirebaseAuth.instance.currentUser?.displayName ?? ' ',
+              style: kSFHeadLine2.copyWith(color: kYellowDark, fontSize: 20),
+            ),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(FontAwesomeIcons.bell),
+          tooltip: 'Announcements',
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const AnnouncementsScreen(),
+              ),
+            );
+          },
+        )
       ],
     );
   }
@@ -65,22 +105,25 @@ class PodcastScreenSkeleton extends StatelessWidget {
         crossAxisSpacing: 12,
         mainAxisSpacing: 20,
         crossAxisCount: 2,
-        mainAxisExtent: 200,
       ),
       itemCount: 4,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
       itemBuilder: (context, index) {
-        return Container(
-          width: 160,
-          height: 200,
-          decoration: const BoxDecoration(
-            color: kBlue,
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
+        return Column(
+          children: [
+            Container(
+              width: 170,
+              height: 170,
+              decoration: const BoxDecoration(
+                color: kBlue,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
             ),
-          ),
+          ],
         );
       },
     );

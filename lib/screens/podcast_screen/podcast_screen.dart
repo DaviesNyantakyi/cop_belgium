@@ -1,4 +1,5 @@
 import 'package:cop_belgium/models/podcast_model.dart';
+import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
 import 'package:cop_belgium/services/podcast_handlre.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
@@ -128,7 +129,7 @@ class _Body extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildGreetingAndIcon(),
+                _buildGreetingAndIcon(context: context),
                 const SizedBox(height: 20),
                 const Text(
                   'Featured Episode',
@@ -157,7 +158,7 @@ class _Body extends StatelessWidget {
     );
   }
 
-  Widget _buildGreetingAndIcon() {
+  Widget _buildGreetingAndIcon({required BuildContext context}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -175,9 +176,16 @@ class _Body extends StatelessWidget {
           ],
         ),
         IconButton(
-          onPressed: () {},
           icon: const Icon(FontAwesomeIcons.bell),
           tooltip: 'Announcements',
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const AnnouncementsScreen(),
+              ),
+            );
+          },
         )
       ],
     );
@@ -188,7 +196,7 @@ class _Body extends StatelessWidget {
       return GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1,
-          crossAxisSpacing: 20,
+          crossAxisSpacing: 12,
           mainAxisSpacing: 20,
           crossAxisCount: 2,
           mainAxisExtent: 200,

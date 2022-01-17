@@ -144,9 +144,9 @@ class NoTestimonyView extends StatelessWidget {
               height: 200,
               width: 200,
             ),
-            const SizedBox(height: 40),
+            const Text('No Testimonies', style: kSFHeadLine2),
             const Text(
-              'You have no testimonies',
+              'Get started by saving a creating a testimony',
               style: kSFBody,
             ),
           ],

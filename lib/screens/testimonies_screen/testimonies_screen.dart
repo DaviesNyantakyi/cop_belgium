@@ -67,17 +67,24 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
           child: TabBar(
             indicatorColor: kBlue,
             indicatorSize: TabBarIndicatorSize.label,
+            labelStyle: kSFBodyBold,
+            labelColor: kBlueDark,
             indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: kBlue, width: 2),
+              borderSide: BorderSide(color: kBlueDark, width: 2),
             ),
-            labelStyle: kSFCaptionBold,
-            labelColor: kBlue,
             isScrollable: true,
             controller: controller,
             unselectedLabelColor: kBlueDark,
+            onTap: (index) {
+              setState(() {});
+            },
             tabs: const [
-              Tab(text: 'Testimonies'),
-              Tab(text: 'Edit Testimonies'),
+              Tab(
+                text: 'Testimonies',
+              ),
+              Tab(
+                text: 'My Testimonies',
+              ),
             ],
           ),
         ),
