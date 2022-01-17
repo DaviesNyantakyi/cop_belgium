@@ -152,7 +152,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Image.asset(
-          'assets/images/logos/cop_logo.png',
+          'assets/images/logos/cop_logo.jpg',
           height: 140,
           width: 140,
         ),

@@ -19,7 +19,7 @@ class AboutChruchScreen extends StatelessWidget {
           child: Column(
             children: [
               Image.asset(
-                'assets/images/logos/cop_logo.png',
+                'assets/images/logos/cop_logo.jpg',
                 height: 140,
                 width: 140,
               ),

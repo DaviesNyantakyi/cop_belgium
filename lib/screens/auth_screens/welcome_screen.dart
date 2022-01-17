@@ -233,7 +233,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       children: [
         SizedBox(
           child: Image.asset(
-            'assets/images/logos/cop_logo.png',
+            'assets/images/logos/cop_logo.jpg',
             width: 115,
             height: 115,
             filterQuality: FilterQuality.high,
