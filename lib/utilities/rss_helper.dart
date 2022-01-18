@@ -2,6 +2,7 @@ import 'package:webfeed/domain/rss_feed.dart';
 import 'package:webfeed/domain/rss_item.dart';
 import 'package:html/parser.dart' show parse;
 
+//TODO: delete make rssLink and getTokenPath so that the podcast server can get any rssLink
 class RssHelper {
   static String getTokenRssPath({required RssFeed rssFeed}) {
     //this returns the podcast path id from redcircle

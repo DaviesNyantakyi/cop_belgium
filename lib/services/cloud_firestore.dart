@@ -3,6 +3,7 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
+import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -450,6 +451,7 @@ class CloudFireStore {
         await doc.reference.delete();
       }
       await _firestore.collection('users').doc(_user!.uid).delete();
+      await FireStorage().deleteUserStorageInfo();
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

@@ -339,6 +339,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         ),
         onPressed: () {
           Navigator.pop(context);
+          Navigator.pop(context);
         },
         style: kTextButtonStyle,
       ),

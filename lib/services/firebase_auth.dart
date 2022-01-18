@@ -24,9 +24,10 @@ class Authentication {
           email: user.email,
           password: password,
         );
-        await _auth.currentUser!.updateDisplayName(displayName);
-        user.id = _auth.currentUser!.uid;
+        await _auth.currentUser?.updateDisplayName(displayName);
+        user.id = _auth.currentUser?.uid;
         await _fireStore.createUserDoc(user: user);
+
         return _auth.currentUser;
       }
     } on FirebaseAuthException catch (e) {
@@ -80,7 +81,6 @@ class Authentication {
 
         await CloudFireStore().deleteUserInfo();
         await _auth.currentUser!.delete();
-        FireStorage().deleteUserStorageInfo();
       } else {
         throw ConnectionChecker.connectionException;
       }

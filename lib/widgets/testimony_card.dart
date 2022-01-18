@@ -93,7 +93,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
     if (widget.testimonyInfo.isAnonymous == false) {
       String? name =
           FirebaseAuth.instance.currentUser!.uid == widget.testimonyInfo.userId
-              ? 'by you'
+              ? 'by me'
               : 'by ${widget.testimonyInfo.userName}';
 
       return Text(
@@ -190,8 +190,8 @@ class _TestimonyCardState extends State<TestimonyCard> {
           flex: 9,
           child: Text(
             widget.testimonyInfo.title.toString(),
-            style: kSFCaptionBold.copyWith(color: kBlueDark),
-            maxLines: 2,
+            style: kSFBodyBold.copyWith(color: kBlueDark),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),

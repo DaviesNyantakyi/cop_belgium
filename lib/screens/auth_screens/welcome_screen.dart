@@ -66,18 +66,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
   }
 
-  Future<void> loginGoogle() async {
-    try {
-      FocusScope.of(context).unfocus();
-    } catch (e) {}
-  }
-
-  Future<void> loginApple() async {
-    try {
-      FocusScope.of(context).unfocus();
-    } catch (e) {}
-  }
-
   @override
   void dispose() {
     super.dispose();
@@ -102,20 +90,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 _buildForm(),
                 const SizedBox(height: kButtonSpacing),
                 _buildLogInBtn(),
-                const SizedBox(height: kButtonSpacing),
-                _buildDivider(),
-                const SizedBox(height: kButtonSpacing),
-                _buildSocialBtn(
-                  icon: 'assets/images/icons/google.png',
-                  label: 'Continue with Google',
-                  submit: loginGoogle,
-                ),
-                const SizedBox(height: kTextFieldSpacing),
-                _buildSocialBtn(
-                  icon: 'assets/images/icons/apple.png',
-                  label: 'Continue with Apple',
-                  submit: loginApple,
-                ),
                 const SizedBox(height: kButtonSpacing),
                 _buildAccountQuestion(),
               ],

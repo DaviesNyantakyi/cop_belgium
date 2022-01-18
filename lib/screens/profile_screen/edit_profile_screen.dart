@@ -19,7 +19,10 @@ import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+// TODO: if the information is the same pop
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
@@ -68,7 +71,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  Future<void> submitUpdate() async {
+  Future<void> updateAccount() async {
     try {
       if (mounted) {
         setState(() {
@@ -122,7 +125,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  Future<void> submitDelete() async {
+  Future<void> deleteAccount() async {
     bool validPassword = _passwordFormKey.currentState!.validate();
     if (password != null && password!.isNotEmpty && validPassword) {
       try {
@@ -281,6 +284,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             btText: 'Reset Password',
             textColor: kBlueDark,
             onPressed: () async {
+              //TODO: Send mail if the email is not null instead of after conformation
               String? conformation = await _showConformationAlert();
               try {
                 if (conformation == 'ok') {
@@ -313,11 +317,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> pickImage({required String type}) async {
     final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
     try {
-      final pickedImage = await _picker.pickImage(source: source);
+      final image = await _picker.pickImage(source: source);
 
-      if (pickedImage != null) {
+      File? croppedImage = await ImageCropper.cropImage(
+        sourcePath: image!.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        androidUiSettings: const AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: kBlueDark,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false,
+        ),
+        iosUiSettings: const IOSUiSettings(
+          minimumAspectRatio: 1.0,
+        ),
+      );
+
+      if (croppedImage != null) {
         setState(() {
-          _selectedImage = File(pickedImage.path);
+          _selectedImage = File(croppedImage.path);
         });
       }
 
@@ -391,7 +416,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         title: const Text(
-          'Check Your email',
+          'Check your email',
           style: kSFHeadLine2,
         ),
         content: const Text(
@@ -436,7 +461,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Buttons.buildBtn(
             context: context,
             btnText: 'Delete account',
-            onPressed: isLoading ? null : submitDelete,
+            onPressed: isLoading ? null : deleteAccount,
             color: isLoading ? Colors.grey : kRed,
             fontColor: Colors.white,
           ),
@@ -588,7 +613,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               style: kSFBodyBold,
             ),
           ),
-          onPressed: isLoading ? null : submitUpdate,
+          onPressed: isLoading ? null : updateAccount,
         ),
       ],
     );

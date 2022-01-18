@@ -98,6 +98,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Widget _buildAccountInfo() {
     final user = FirebaseAuth.instance.currentUser;
+    //TODO: Display name does not show when user registers
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

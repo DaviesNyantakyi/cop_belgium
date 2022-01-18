@@ -28,10 +28,7 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: IndexedStack(
-          children: _screens,
-          index: _selectedIndex,
-        ),
+        child: _screens[_selectedIndex],
       ),
       bottomNavigationBar: _buildBottomNavBar(
         index: _selectedIndex,

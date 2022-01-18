@@ -38,8 +38,10 @@ class FireStorage {
   }
 
   Future<void> deleteUserStorageInfo() async {
+    //TODO: Info is not deleted because the auth object is null
     try {
       final userId = _user!.uid;
+
       await _fireStore.ref('images/profile_images/$userId').delete();
     } on FirebaseStorage catch (e) {
       debugPrint(e.toString());

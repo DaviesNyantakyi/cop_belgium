@@ -33,6 +33,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
           onRefresh: () async {
             await Provider.of<PodcastHandler>(context, listen: false)
                 .getPodcasts();
+            setState(() {});
           },
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
@@ -159,6 +160,9 @@ class _Body extends StatelessWidget {
   }
 
   Widget _buildGreetingAndIcon({required BuildContext context}) {
+    final userName = FirebaseAuth.instance.currentUser?.displayName;
+    //TODO: Display name does not show after registrations
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -170,7 +174,7 @@ class _Body extends StatelessWidget {
               style: kSFBody,
             ),
             Text(
-              FirebaseAuth.instance.currentUser?.displayName ?? ' ',
+              userName ?? '',
               style: kSFHeadLine2.copyWith(color: kYellowDark, fontSize: 20),
             ),
           ],

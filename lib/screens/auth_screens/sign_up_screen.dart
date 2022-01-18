@@ -101,18 +101,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  Future<void> loginGoogle() async {
-    try {
-      FocusScope.of(context).unfocus();
-    } catch (e) {}
-  }
-
-  Future<void> loginApple() async {
-    try {
-      FocusScope.of(context).unfocus();
-    } catch (e) {}
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,20 +116,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 _buildGenderSelector(),
                 const SizedBox(height: kButtonSpacing),
                 _buildSingUpBtn(),
-                const SizedBox(height: kButtonSpacing),
-                _buildDivider(),
-                const SizedBox(height: kButtonSpacing),
-                _buildSocialBtn(
-                  icon: 'assets/images/icons/google.png',
-                  label: 'Continue with Google',
-                  submit: loginGoogle,
-                ),
-                const SizedBox(height: kTextFieldSpacing),
-                _buildSocialBtn(
-                  icon: 'assets/images/icons/apple.png',
-                  label: 'Continue with Apple',
-                  submit: loginApple,
-                ),
                 const SizedBox(height: kButtonSpacing),
                 _buildAccountQuestion(),
               ],
@@ -175,47 +149,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       onPressed: () {
         Navigator.pop(context);
       },
-    );
-  }
-
-  Widget _buildSocialBtn(
-      {required String icon,
-      required String label,
-      required VoidCallback submit}) {
-    return Buttons.buildSocialBtn(
-      icon: SizedBox(
-        height: 40,
-        child: Image.asset(
-          icon,
-        ),
-      ),
-      label: Text(
-        label,
-        style: kSFBody,
-      ),
-      context: context,
-      color: isLoading ? kGrey : Colors.white,
-      onPressed: isLoading ? null : submit,
-    );
-  }
-
-  Widget _buildDivider() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        SizedBox(
-          width: 100,
-          child: Divider(),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text('OR', style: kSFBody),
-        ),
-        SizedBox(
-          width: 100,
-          child: Divider(),
-        ),
-      ],
     );
   }
 
