@@ -1,3 +1,4 @@
+import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -63,19 +64,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   children: [
                     _buildTitle(),
                     const SizedBox(height: 20),
-                    _buildAttendenceCount(),
+                    _buildEventInfo(),
                     const SizedBox(height: 25),
-                    _buildCalendarDetails(
-                      icon: FontAwesomeIcons.calendar,
-                      date: '20 May 2021',
-                      time: '8:30 AM',
-                    ),
-                    const SizedBox(height: 18),
-                    _buildLocationDetails(),
-                    const SizedBox(height: 18),
                     _buildDescription(),
                     const SizedBox(height: 18),
-                    _buildLocation(),
+                    _buildLocationMap(),
                   ],
                 ),
               )
@@ -86,7 +79,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 
-  Widget _buildLocation() {
+//TODO: add marker for laction
+  Widget _buildLocationMap() {
     if (widget.eventType == 'online') {
       return Container();
     }
@@ -112,6 +106,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               Radius.circular(10),
             ),
             child: GoogleMap(
+              markers: {
+                const Marker(
+                  markerId: MarkerId('turnhout'),
+                  position: LatLng(51.31830821507976, 4.939745926843822),
+                ),
+              },
               scrollGesturesEnabled: true,
               zoomControlsEnabled: false,
               mapType: MapType.normal,
@@ -141,11 +141,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     );
   }
 
-  Widget _buildCalendarDetails({
-    required IconData icon,
-    required String date,
-    required String time,
-  }) {
+  Widget _buildCalendarInfo() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -157,31 +153,33 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               Radius.circular(5),
             ),
           ),
-          child: Icon(
-            icon,
+          child: const Icon(
+            FontAwesomeIcons.calendar,
             color: kBlueDark,
             size: 24,
           ),
         ),
         const SizedBox(width: 6),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              date,
-              style: kSFBody,
-            ),
-            Text(
-              time,
-              style: kSFCaption,
-            ),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                '20 May 2021',
+                style: kSFCaption,
+              ),
+              Text(
+                '8:30 AM',
+                style: kSFCaption,
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildLocationDetails() {
+  Widget _buildLocationInfo() {
     if (widget.eventType == 'online') {
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -194,26 +192,23 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 Radius.circular(5),
               ),
             ),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/logos/zoom.png',
-                  width: 30,
-                ),
-                const SizedBox(width: 6),
-                const Text(
-                  'Zoom',
-                  style: kSFBodyBold,
-                ),
-              ],
+            child: Image.asset(
+              'assets/images/logos/zoom.png',
+              width: 24,
             ),
           ),
+          const SizedBox(width: 6),
+          const Text(
+            'Zoom',
+            style: kSFBody,
+          )
         ],
       );
     }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           padding: const EdgeInsets.all(7),
@@ -230,112 +225,45 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           ),
         ),
         const SizedBox(width: 6),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              'Turnhout',
-              style: kSFBody,
-            ),
-            Flexible(
-              child: Text(
-                'Korte',
-                style: kSFCaption,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+        const Flexible(
+          child: Text(
+            'Patriottenstraat 94, 2300 Turnhout',
+            style: kSFCaption,
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildAttendenceCount() {
+  Widget _buildEventInfo() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(right: 65),
-              alignment: Alignment.centerLeft,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: const [
-                  Positioned(
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 14,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 28,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 42,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 56,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Text(
-              '+ 120 Interested',
-              style: kSFBody,
-            ),
-          ],
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildCalendarInfo(),
+              const SizedBox(height: 18),
+              _buildLocationInfo(),
+            ],
+          ),
         ),
-        _buildAttendButtton(),
+        Flexible(
+          child: _buildReminderBtn(),
+        ),
       ],
     );
   }
 
-  Widget _buildAttendButtton() {
-    if (widget.eventType == 'online') {
-      return Flexible(
-        child: Buttons.buildBtn(
-          context: context,
-          btnText: 'Join',
-          onPressed: () {},
-          height: 25,
-          width: 91,
-        ),
-      );
-    }
-    return Flexible(
-      child: Buttons.buildBtn(
-        context: context,
-        btnText: 'Add',
-        onPressed: () {},
-        height: 25,
-        width: 91,
-      ),
+  Widget _buildReminderBtn() {
+    return Buttons.buildBtn(
+      context: context,
+      btnText: 'Add to Calendar',
+      onPressed: () {},
+      height: 25,
     );
   }
 
@@ -390,7 +318,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         Container(
           alignment: Alignment.centerLeft,
           child: const Text(
-            'Details',
+            'About Event',
             style: kSFBodyBold,
           ),
         ),

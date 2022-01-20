@@ -1,3 +1,6 @@
+import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
+import 'package:cop_belgium/screens/events_screen/event_details_screen.dart';
+import 'package:cop_belgium/screens/events_screen/events_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/services/podcast_handlre.dart';
 import 'package:cop_belgium/utilities/constant.dart';

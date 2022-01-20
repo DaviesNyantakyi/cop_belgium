@@ -91,6 +91,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 
   Column _buildEpisodesList() {
+    //TODO: Episode card images keeps reloading on scroll
+
     return Column(
       children: [
         Container(

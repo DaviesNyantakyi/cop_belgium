@@ -1,4 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -84,86 +85,21 @@ class _EventCardState extends State<EventCard> {
         _buildTitle(),
         const Flexible(child: SizedBox(height: 13)),
         _buildEventDetails(),
-        const SizedBox(height: 10),
-        _buildAttendence(),
       ],
     );
   }
 
   Widget _buildEventDetails() {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildCalendarDetails(
           icon: FontAwesomeIcons.calendar,
           date: '20 May 21',
           time: '8:30 AM',
         ),
-        const SizedBox(width: 10),
+        const SizedBox(height: 7),
         _buildLocationDetails()
-      ],
-    );
-  }
-
-  Widget _buildAttendence() {
-    return Row(
-      children: [
-        Container(
-          margin: const EdgeInsets.only(right: 65),
-          alignment: Alignment.centerLeft,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 14,
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 28,
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 42,
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 56,
-                child: CircleAvatar(
-                  radius: avatarRadius,
-                  backgroundImage: const NetworkImage(
-                    'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Text(
-          '+ 120 Going',
-          style: kSFCaption,
-        ),
       ],
     );
   }
@@ -205,11 +141,11 @@ class _EventCardState extends State<EventCard> {
           children: [
             Text(
               date,
-              style: kSFUnderline,
+              style: kSFCaption,
             ),
             Text(
               time,
-              style: kSFUnderline,
+              style: kSFCaption,
             ),
           ],
         ),
@@ -230,20 +166,16 @@ class _EventCardState extends State<EventCard> {
                 Radius.circular(5),
               ),
             ),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/logos/zoom.png',
-                  width: 20,
-                ),
-                const SizedBox(width: 6),
-                const Text(
-                  'Zoom',
-                  style: kSFCaptionBold,
-                ),
-              ],
+            child: Image.asset(
+              'assets/images/logos/zoom.png',
+              width: 22,
             ),
           ),
+          const SizedBox(width: 6),
+          const Text(
+            'Zoom',
+            style: kSFCaption,
+          )
         ],
       );
     }
@@ -266,22 +198,13 @@ class _EventCardState extends State<EventCard> {
           ),
         ),
         const SizedBox(width: 6),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Text(
-              'Turnhout',
-              style: kSFUnderlineBold,
-            ),
-            Flexible(
-              child: Text(
-                'Korte',
-                style: kSFUnderline,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+        const Flexible(
+          child: Text(
+            'Patriottenstraat 94, 2300 Turnhouttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt',
+            style: kSFCaption,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
         ),
       ],
     );

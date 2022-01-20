@@ -107,7 +107,7 @@ List<LinearGradient> kGradients = [
   kBlueDarkGradient,
 ];
 //Stay
-const double kButtonSize = 45;
+const double kButtonHeight = 45;
 const double kButtonRadius = 5;
 const double kTextFieldSpacing = 12;
 const double kButtonSpacing = 25;
@@ -120,7 +120,7 @@ BoxShadow boxShadow = BoxShadow(
 //Weg
 
 const double kAppbarPadding = 20.0;
-const double kBodyPadding = 15.0;
+const double kBodyPadding = 10.0;
 
 const kCircularProgress = CircularProgressIndicator(
   strokeWidth: 5,

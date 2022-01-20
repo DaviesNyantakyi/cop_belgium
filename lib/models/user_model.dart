@@ -1,3 +1,5 @@
+//TODO: add admin to user account firbase
+
 class CopUser {
   String? id;
   String? photoUrl;

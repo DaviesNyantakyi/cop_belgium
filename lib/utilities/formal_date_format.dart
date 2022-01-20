@@ -10,6 +10,10 @@ class FormalDates {
     return date!.format('dd MMM yy');
   }
 
+  static String formatDmyHm({required DateTime? date}) {
+    return date!.format('dd MMM yy - HH:mm');
+  }
+
   static String formatHm({required DateTime? date}) {
     return date!.format('HH:mm');
   }

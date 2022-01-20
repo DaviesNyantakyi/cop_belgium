@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
+//TODO: Keeps loading when the screen is opened for the first time and the slider is moved
 
 class PodcastPlayerScreen extends StatefulWidget {
   static String podcastPlayerScreen = 'podcastPlayerScreen';

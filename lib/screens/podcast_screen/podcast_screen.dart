@@ -15,6 +15,9 @@ import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+//TODO: show loading indicator when try again button is pressed
+//TODO: Reduce getting podcasts time and try getting each podcast indiviualy
+
 class PodcastScreen extends StatefulWidget {
   static String podcastScreen = 'podcastScreen';
   const PodcastScreen({Key? key}) : super(key: key);

@@ -8,8 +8,8 @@ class Buttons {
     Color color = kYellowDark,
     Color fontColor = kBlueDark,
     VoidCallback? onPressed,
-    double? width = double.infinity,
-    double? height = kButtonSize,
+    double? width,
+    double? height = kButtonHeight,
   }) {
     return SizedBox(
       width: width,
@@ -45,7 +45,7 @@ class Buttons {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: kButtonSize,
+      height: kButtonHeight,
       child: ElevatedButton.icon(
         icon: icon,
         label: Padding(

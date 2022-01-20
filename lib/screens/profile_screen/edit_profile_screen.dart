@@ -22,7 +22,8 @@ import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-// TODO: if the information is the same pop
+// TODO: if the user information is the same do not update information
+// TODO: ask for permision gallary and camera (check whatsaap process)
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
@@ -477,7 +478,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     Color? textColor,
   }) {
     return SizedBox(
-      height: kButtonSize,
+      height: kButtonHeight,
       child: TextButton(
         style: kTextButtonStyle.copyWith(
           shape: MaterialStateProperty.all(

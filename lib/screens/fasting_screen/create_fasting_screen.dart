@@ -159,6 +159,7 @@ Widget _buildBtn({
   );
 }
 
+//TODO: Change to Ios style Picker
 class FastingPicker extends StatefulWidget {
   const FastingPicker({Key? key}) : super(key: key);
 
@@ -185,7 +186,8 @@ class _FastingPickerState extends State<FastingPicker> {
             Row(
               children: [
                 ScrollConfiguration(
-                  behavior: MyBehavior(), // removes listview glow
+                  //ScrollConfiguration removes listview glow
+                  behavior: MyBehavior(),
                   child: NumberPicker(
                     selectedTextStyle: kSFHeadLine2,
                     textStyle: kSFHeadLine2,

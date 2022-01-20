@@ -153,8 +153,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       children: [
         Image.asset(
           'assets/images/logos/cop_logo.jpg',
-          height: 140,
-          width: 140,
+          height: 100,
+          width: 100,
         ),
         const SizedBox(height: 15),
         Text(
