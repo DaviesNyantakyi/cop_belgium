@@ -6,8 +6,12 @@ class FormalDates {
     return date!.format('dd MMM H:mm');
   }
 
-  static String formatDmy({required DateTime? date}) {
+  static String formatDmyy({required DateTime? date}) {
     return date!.format('dd MMM yy');
+  }
+
+  static String formatDmyyyy({required DateTime? date}) {
+    return date!.format('dd MMM yyyy');
   }
 
   static String formatDmyHm({required DateTime? date}) {

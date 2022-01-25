@@ -2,14 +2,17 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -35,25 +38,32 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  final _nameFormKey = GlobalKey<FormState>();
-  final _emailFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
-
   bool hasConnection = false;
 
-  bool isSubmit = false;
-
   bool isLoading = false;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? gender;
+  bool showPassword = false;
+
   String? photoUrl;
-  String? password;
+  String? nameErrorText;
+  String? emailErrorText;
+  String? passwordErrorText;
+  String? birthDateErrorText;
+  String? genderErrorText;
+
+  bool? isAdimin;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  TextEditingController firstNameCntlr = TextEditingController();
+  TextEditingController lastNameCntlr = TextEditingController();
+  TextEditingController emailCntlr = TextEditingController();
+  TextEditingController passwordCntlr = TextEditingController();
+  TextEditingController genderCntlr = TextEditingController();
+  DateTime? birthDate;
 
   final ImagePicker _picker = ImagePicker();
 
-  File? _selectedImage;
+  File? image;
 
   @override
   void initState() {
@@ -64,71 +74,132 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> initUserInfo() async {
     setState(() {
-      firstName = widget.user!.firstName;
-      lastName = widget.user!.lastName;
-      email = widget.user!.email;
-      gender = widget.user!.gender;
+      firstNameCntlr.text = widget.user!.firstName;
+      firstNameCntlr.text = widget.user!.firstName;
+      lastNameCntlr.text = widget.user!.lastName;
+      emailCntlr.text = widget.user!.email;
+      genderCntlr.text = widget.user!.gender;
       photoUrl = widget.user!.photoUrl;
+      isAdimin = widget.user!.isAdmin;
+      birthDate = widget.user!.birthDate;
     });
   }
 
-  Future<void> updateAccount() async {
+  Future<void> resetPassword() async {
+    FocusScope.of(context).unfocus();
+    EasyLoading.show();
     try {
-      if (mounted) {
-        setState(() {
-          isLoading = true;
-        });
-      }
-      await EasyLoading.show(
-        maskType: EasyLoadingMaskType.black,
-        indicator: const CircularProgressIndicator(color: kBlueDark),
-      );
-      bool nameIsValid = _nameFormKey.currentState!.validate();
-      bool emailIsValid = _emailFormKey.currentState!.validate();
-      if (nameIsValid && emailIsValid && gender != null) {
-        await FireStorage().uploadProfileImage(image: _selectedImage);
-        await CloudFireStore().updateUserInfo(
-          firstName: firstName!,
-          lastName: lastName!,
-          email: email!,
-          gender: gender!,
-        );
-        Navigator.pop(context);
-      }
+      isLoading = true;
 
       if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() {});
       }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
+
+      await FireAuth().sendResetPassword(email: auth.currentUser!.email);
+
+      _showMailConformationAlert();
+
       if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() {});
       }
-      await EasyLoading.dismiss();
+    } on FirebaseAuthException catch (e) {
+      EasyLoading.dismiss();
       kshowSnackbar(
-        errorType: 'error',
         context: context,
-        text: e.message.toString(),
+        errorType: 'error',
+        text: e.message!,
       );
+      debugPrint(e.toString());
     } catch (e) {
       debugPrint(e.toString());
     } finally {
+      isLoading = false;
+      EasyLoading.dismiss();
       if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() {});
       }
+    }
+  }
+
+  bool validateForm() {
+    nameErrorText = Validators.nameValidator(
+      firstName: firstNameCntlr.text,
+      lastName: lastNameCntlr.text,
+    );
+    emailErrorText = Validators.emailValidator(
+      email: emailCntlr.text,
+    );
+
+    birthDateErrorText = Validators.birthdayValidator(date: birthDate);
+
+    genderErrorText = Validators.genderValidator(gender: genderCntlr.text);
+
+    if (nameErrorText == null &&
+        emailErrorText == null &&
+        birthDateErrorText == null &&
+        genderErrorText == null) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> updateAccount() async {
+    FocusScope.of(context).unfocus();
+    EasyLoading.show();
+    try {
+      isLoading = true;
+
+      bool isValid = validateForm();
+
+      if (isValid) {
+        final user = CopUser(
+          firstName: firstNameCntlr.text,
+          lastName: lastNameCntlr.text,
+          email: emailCntlr.text,
+          birthDate: birthDate!,
+          gender: genderCntlr.text,
+          isAdmin: isAdimin!,
+        );
+        if (mounted) {
+          setState(() {});
+        }
+
+        await FireStorage().uploadProfileImage(image: image);
+        await CloudFireStore().updateUserInfo(
+          firstName: firstNameCntlr.text,
+          lastName: lastNameCntlr.text,
+          email: emailCntlr.text,
+          gender: genderCntlr.text,
+        );
+
+        await EasyLoading.dismiss();
+      }
+      Navigator.pop(context);
+
+      if (mounted) {
+        setState(() {});
+      }
+    } on FirebaseAuthException catch (e) {
       await EasyLoading.dismiss();
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message!,
+      );
+      debugPrint(e.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading = false;
+      EasyLoading.dismiss();
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
   Future<void> deleteAccount() async {
-    bool validPassword = _passwordFormKey.currentState!.validate();
-    if (password != null && password!.isNotEmpty && validPassword) {
+    if (passwordCntlr.text.isNotEmpty) {
       try {
         if (mounted) {
           setState(() {
@@ -141,7 +212,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             color: kBlueDark,
           ),
         );
-        await Authentication().deleteUser(password: password!);
+        await FireAuth().deleteUser(password: passwordCntlr.text);
 
         if (mounted) {
           setState(() {
@@ -194,7 +265,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _buildAvatar(),
                 const SizedBox(height: kButtonSpacing),
                 _buildForm(),
-                const SizedBox(height: 24),
+                const SizedBox(height: kTextFieldSpacing),
+                _buildBirthdayPicker(),
+                const SizedBox(height: kButtonSpacing),
                 _buildGenderSelector(),
                 const SizedBox(height: 24),
                 _buildDeleteReset()
@@ -207,9 +280,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAvatar() {
-    if (_selectedImage != null) {
+    if (image != null) {
       return CircleAvatar(
-        backgroundImage: Image.file(_selectedImage!).image,
+        backgroundImage: Image.file(image!).image,
         radius: 60,
         backgroundColor: kBlueDark,
         child: TextButton(
@@ -284,24 +357,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _buildBtn(
             btText: 'Reset Password',
             textColor: kBlueDark,
-            onPressed: () async {
-              //TODO: Send mail if the email is not null instead of after conformation
-              String? conformation = await _showConformationAlert();
-              try {
-                if (conformation == 'ok') {
-                  await Authentication().sendResetPassword(email: email);
-                }
-              } on FirebaseException catch (e) {
-                kshowSnackbar(
-                  context: context,
-                  errorType: 'error',
-                  text: e.message!,
-                );
-                debugPrint(e.toString());
-              } catch (e) {
-                Navigator.pop(context);
-              }
-            },
+            onPressed: resetPassword,
           ),
           _buildBtn(
             btText: 'Delete account',
@@ -318,10 +374,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> pickImage({required String type}) async {
     final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
     try {
-      final image = await _picker.pickImage(source: source);
+      final pickedImage = await _picker.pickImage(source: source);
 
       File? croppedImage = await ImageCropper.cropImage(
-        sourcePath: image!.path,
+        sourcePath: pickedImage!.path,
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
           CropAspectRatioPreset.ratio3x2,
@@ -343,7 +399,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (croppedImage != null) {
         setState(() {
-          _selectedImage = File(croppedImage.path);
+          image = File(croppedImage.path);
         });
       }
 
@@ -355,58 +411,215 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildForm() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Form(
-          key: _nameFormKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MyTextField(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: MyTextField(
+                controller: firstNameCntlr,
                 hintText: 'First Name',
                 obscureText: false,
-                initialValue: firstName,
-                validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onChanged: (value) {
-                  firstName = value;
+                  nameErrorText = Validators.nameValidator(
+                    firstName: value,
+                    lastName: lastNameCntlr.text,
+                  );
+
+                  setState(() {});
                 },
               ),
-              const SizedBox(height: kTextFieldSpacing),
-              MyTextField(
+            ),
+            const SizedBox(width: kTextFieldSpacing),
+            Expanded(
+              child: MyTextField(
+                controller: lastNameCntlr,
                 hintText: 'Last Name',
                 obscureText: false,
-                initialValue: lastName,
-                validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onChanged: (value) {
-                  lastName = value;
+                  nameErrorText = Validators.nameValidator(
+                    firstName: firstNameCntlr.text,
+                    lastName: value,
+                  );
+                  setState(() {});
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        _buildNameErrorText(),
         const SizedBox(height: kTextFieldSpacing),
-        Form(
-          key: _emailFormKey,
-          child: MyTextField(
-            hintText: 'Email',
-            obscureText: false,
-            initialValue: email,
-            validator: Validators.emailTextValidator,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) {
-              email = value;
-            },
-          ),
+        MyTextField(
+          controller: emailCntlr,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          onChanged: (value) {
+            emailErrorText = Validators.emailValidator(email: value);
+            setState(() {});
+          },
         ),
+        _buildEmailErrorText(),
       ],
     );
   }
 
-  Future<String?> _showConformationAlert() async {
+  Widget _buildNameErrorText() {
+    if (nameErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          nameErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildEmailErrorText() {
+    if (emailErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          emailErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildBirthDateErrorText() {
+    if (birthDateErrorText == null || birthDate != null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          birthDateErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildBirthdayPicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 64,
+          decoration: const BoxDecoration(
+            color: kBlueLight,
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                kButtonRadius,
+              ),
+            ),
+          ),
+          child: TextButton(
+            onPressed: showDatePicker,
+            style: kTextButtonStyle,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    FontAwesomeIcons.calendar,
+                    color: kBlueDark,
+                    size: kIconSize,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    birthDate == null
+                        ? 'Birthday'
+                        : FormalDates.formatDmyyyy(date: birthDate),
+                    style: birthDate == null ? kSFBodyBold2 : kSFBodyBold,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildBirthDateErrorText()
+      ],
+    );
+  }
+
+  Future<void> showDatePicker() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    await showMyBottomSheet(
+      isDismissible: false,
+      context: context,
+      height: 300,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 200,
+              child: Theme(
+                data: ThemeData(),
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: birthDate,
+                  maximumDate: DateTime.now(),
+                  minimumDate: DateTime(1900, 01, 31),
+                  minimumYear: 1900,
+                  maximumYear: DateTime.now().year,
+                  onDateTimeChanged: (date) {
+                    HapticFeedback.lightImpact();
+                    birthDate = date;
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                ),
+              ),
+            ),
+            Buttons.buildBtn(
+              context: context,
+              btnText: 'Done',
+              height: kButtonHeight,
+              width: double.infinity,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _builGenderErrorText() {
+    if (genderErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          genderErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Future<String?> _showMailConformationAlert() async {
     return await showDialog<String?>(
       barrierDismissible: true,
       context: context,
@@ -417,15 +630,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         title: const Text(
-          'Check your email',
-          style: kSFHeadLine2,
+          'Check your mail',
+          style: kSFBodyBold,
         ),
         content: const Text(
-            'We have send password recovery instruction to your email. No instruction found? Check your spam filter.',
+            'We have sent password recovery instructions to your email.',
             style: kSFBody),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'ok'),
+            onPressed: () => Navigator.pop(context),
             child: const Text('OK', style: kSFCaptionBold),
           ),
         ],
@@ -446,25 +659,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         title: const Text(_deleteConformationText, style: kSFBodyBold),
+        content: MyTextField(
+          hintText: 'Password',
+          obscureText: true,
+          onChanged: (value) {
+            passwordCntlr.text = value;
+          },
+        ),
         actions: <Widget>[
-          Form(
-            key: _passwordFormKey,
-            child: MyTextField(
-              hintText: 'Password',
-              obscureText: true,
-              validator: Validators.passwordTextValidator,
-              onChanged: (value) {
-                password = value;
-              },
-            ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: kSFBodyBold),
           ),
           const SizedBox(height: kButtonSpacing),
-          Buttons.buildBtn(
-            context: context,
-            btnText: 'Delete account',
-            onPressed: isLoading ? null : deleteAccount,
-            color: isLoading ? Colors.grey : kRed,
-            fontColor: Colors.white,
+          TextButton(
+            onPressed: () => deleteAccount,
+            child: Text('Delete account',
+                style: kSFBodyBold.copyWith(color: kRed)),
           ),
           const SizedBox(height: kTextFieldSpacing)
         ],
@@ -503,7 +714,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> showBottomSheet() async {
     await showMyFastingBottomSheet(
-      height: 150,
+      height: 170,
       context: context,
       child: Material(
         child: SizedBox(
@@ -518,6 +729,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   leading: const Icon(
                     FontAwesomeIcons.camera,
                     color: kBlueDark,
+                    size: kIconSize,
                   ),
                   title: const Text(
                     'Camera',
@@ -531,12 +743,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   leading: const Icon(
                     FontAwesomeIcons.images,
                     color: kBlueDark,
+                    size: kIconSize,
                   ),
                   title: const Text(
                     'Gallery',
                     style: kSFBody,
                   ),
                 ),
+                image != null || photoUrl != null
+                    ? ListTile(
+                        onTap: () async {
+                          image = null;
+                          photoUrl = null;
+
+                          //TODO: add delete photoUrl
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                        leading: const Icon(
+                          FontAwesomeIcons.trash,
+                          color: kRed,
+                          size: kIconSize,
+                        ),
+                        title: Text(
+                          'Delete',
+                          style: kSFBody.copyWith(color: kRed),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -563,10 +797,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             MyCheckBox(
               label: 'Male',
               value: 'male',
-              groupsValue: gender,
+              groupsValue: genderCntlr.text,
               onChanged: (value) {
                 setState(() {
-                  gender = value;
+                  genderCntlr.text = value;
                 });
               },
             ),
@@ -574,15 +808,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             MyCheckBox(
               label: 'Female',
               value: 'female',
-              groupsValue: gender,
+              groupsValue: genderCntlr.text,
               onChanged: (value) {
                 setState(() {
-                  gender = value;
+                  genderCntlr.text = value;
                 });
               },
             ),
           ],
         ),
+        _builGenderErrorText()
       ],
     );
   }

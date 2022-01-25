@@ -1,8 +1,9 @@
 import 'package:cop_belgium/services/firebase_auth.dart';
-import 'package:cop_belgium/widgets/easy_loading.dart';
+import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
@@ -17,51 +18,50 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  String? email;
   bool isLoading = false;
+  TextEditingController emailCntlr = TextEditingController();
+  String? emailErrorText;
 
-  final _emailFormKey = GlobalKey<FormState>();
+  Future<void> resetPassword() async {
+    FocusScope.of(context).unfocus();
+    EasyLoading.show();
+    try {
+      isLoading = true;
 
-  Future<void> submit() async {
-    bool validEmail = _emailFormKey.currentState!.validate();
+      bool isValid = validateForm();
 
-    if (validEmail) {
-      try {
-        if (mounted) {
-          setState(() {
-            isLoading = true;
-          });
-        }
+      if (isValid) {
+        setState(() {});
 
-        await EaslyLoadingIndicator.showLoading();
-
-        await Authentication().sendResetPassword(email: email);
-
-        FocusScope.of(context).unfocus();
+        await FireAuth().sendResetPassword(email: emailCntlr.text);
         _showMailConformationAlert();
-      } on FirebaseAuthException catch (e) {
-        kshowSnackbar(
-          errorType: 'error',
-          context: context,
-          text: e.message.toString(),
-        );
-      } on FirebaseException catch (e) {
-        kshowSnackbar(
-          errorType: 'error',
-          context: context,
-          text: e.message.toString(),
-        );
-      } catch (e) {
-        debugPrint(e.toString());
-      } finally {
-        if (mounted) {
-          await EaslyLoadingIndicator.dismissLoading();
-          setState(() {
-            isLoading = false;
-          });
-        }
       }
+
+      setState(() {});
+    } on FirebaseAuthException catch (e) {
+      await EasyLoading.dismiss();
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message!,
+      );
+      debugPrint(e.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading = false;
+      EasyLoading.dismiss();
+      setState(() {});
     }
+  }
+
+  bool validateForm() {
+    emailErrorText = Validators.emailValidator(email: emailCntlr.text);
+
+    if (emailErrorText == null) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -92,25 +92,46 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildEmailForm() {
-    return Form(
-      key: _emailFormKey,
-      child: MyTextField(
-        hintText: 'Email',
-        obscureText: false,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter email';
-          }
-          if (!value.isEmail()) {
-            return 'Please enter valid email address';
-          }
-          return null;
-        },
-        keyboardType: TextInputType.emailAddress,
-        onChanged: (value) {
-          email = value;
-        },
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MyTextField(
+          controller: emailCntlr,
+          hintText: 'Email',
+          obscureText: false,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter email';
+            }
+            if (!value.isEmail()) {
+              return 'Please enter valid email address';
+            }
+            return null;
+          },
+          keyboardType: TextInputType.emailAddress,
+          onChanged: (value) {
+            emailErrorText = Validators.emailValidator(email: value);
+            setState(() {});
+          },
+        ),
+        _buildEmailErrorText(),
+      ],
+    );
+  }
+
+  Widget _buildEmailErrorText() {
+    if (emailErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          emailErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
     );
   }
 
@@ -147,7 +168,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(
-            isLoading ? kGrey : kYellow,
+            isLoading ? kGrey : kYellowDark,
           ),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
@@ -157,7 +178,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
           ),
         ),
-        onPressed: isLoading ? null : submit,
+        onPressed: isLoading ? null : resetPassword,
         child: const Text(
           'Send',
           style: kSFBodyBold,
@@ -168,7 +189,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Future<String?> _showMailConformationAlert() async {
     return await showDialog<String?>(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (BuildContext context) => AlertDialog(
         shape: const RoundedRectangleBorder(
@@ -178,15 +199,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         title: const Text(
           'Check your mail',
-          style: kSFHeadLine2,
+          style: kSFBodyBold,
         ),
         content: const Text(
             'We have sent password recovery instructions to your email.',
             style: kSFBody),
         actions: <Widget>[
           TextButton(
-            onPressed: () => Navigator.pop(context, 'ok'),
-            child: const Text('Ok', style: kSFCaptionBold),
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK', style: kSFCaptionBold),
           ),
         ],
       ),

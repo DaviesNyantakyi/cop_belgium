@@ -44,7 +44,7 @@ class AnnouncementsCard extends StatelessWidget {
               Text(
                 title,
                 style: kSFBodyBold,
-                maxLines: 2,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               const Flexible(child: SizedBox(height: 5)),

@@ -1,5 +1,4 @@
 import 'package:cop_belgium/utilities/validators.dart';
-import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,8 @@ import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String welcomeScreen = 'welcomeScreen';
@@ -20,57 +21,75 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  String? email;
-  String? password;
-  final _emailFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
+  TextEditingController emailCntlr = TextEditingController();
+  TextEditingController passwordCntlr = TextEditingController();
+  String? emailErrorText;
+  String? passwordErrorText;
 
   bool isLoading = false;
+  bool showPassword = false;
 
   Future<void> loginEmail() async {
     FocusScope.of(context).unfocus();
+    EasyLoading.show();
+    try {
+      isLoading = true;
 
-    bool _validPassword = _passwordFormKey.currentState!.validate();
-    bool validEmail = _emailFormKey.currentState!.validate();
+      bool isValid = validateForm();
 
-    if (validEmail && _validPassword) {
-      try {
+      if (isValid) {
         if (mounted) {
-          setState(() {
-            isLoading = true;
-          });
+          setState(() {});
         }
-        await EaslyLoadingIndicator.showLoading();
-        await Authentication().signIn(email: email, password: password);
 
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
-      } on FirebaseAuthException catch (e) {
-        await EaslyLoadingIndicator.dismissLoading();
-        kshowSnackbar(
-          errorType: 'error',
-          context: context,
-          text: e.message.toString(),
+        await FireAuth().login(
+          email: emailCntlr.text,
+          password: passwordCntlr.text,
         );
-      } finally {
-        await EaslyLoadingIndicator.dismissLoading();
-        if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
-        }
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    } on FirebaseAuthException catch (e) {
+      await EasyLoading.dismiss();
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message!,
+      );
+      debugPrint(e.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading = false;
+      EasyLoading.dismiss();
+      if (mounted) {
+        setState(() {});
       }
     }
   }
 
   @override
   void dispose() {
+    emailCntlr.dispose();
+    passwordCntlr.dispose();
+
     super.dispose();
-    _emailFormKey.currentState?.dispose();
-    _passwordFormKey.currentState?.dispose();
+  }
+
+  bool validateForm() {
+    emailErrorText = Validators.emailValidator(
+      email: emailCntlr.text,
+    );
+    passwordErrorText = Validators.passwordTextValidator(
+      password: passwordCntlr.text,
+    );
+
+    if (emailErrorText == null && passwordErrorText == null) {
+      return true;
+    }
+    return false;
   }
 
   @override
@@ -100,84 +119,85 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildDivider() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        SizedBox(
-          width: 100,
-          child: Divider(),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text('OR', style: kSFBody),
-        ),
-        SizedBox(
-          width: 100,
-          child: Divider(),
-        ),
+  Widget _buildLogInBtn() {
+    return Buttons.buildBtn(
+      context: context,
+      color: isLoading ? kGrey : kYellowDark,
+      btnText: 'Log in',
+      onPressed: isLoading ? null : loginEmail,
+      width: double.infinity,
+    );
+  }
+
+  Widget _buildEmailErrorText() {
+    if (emailErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          emailErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
       ],
     );
   }
 
-  Widget _buildLogInBtn() {
-    return Buttons.buildBtn(
-      context: context,
-      color: isLoading ? kGrey : kYellow,
-      btnText: 'Log in',
-      onPressed: isLoading ? null : loginEmail,
-    );
-  }
-
-  Widget _buildSocialBtn(
-      {required String icon,
-      required String label,
-      required VoidCallback submit}) {
-    return Buttons.buildSocialBtn(
-      icon: SizedBox(
-        height: 40,
-        child: Image.asset(
-          icon,
-        ),
-      ),
-      label: Text(
-        label,
-        style: kSFBody,
-      ),
-      context: context,
-      color: isLoading ? kGrey : Colors.white,
-      onPressed: isLoading ? null : submit,
+  Widget _buildPasswordErrorText() {
+    if (passwordErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          passwordErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
     );
   }
 
   Widget _buildForm() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Form(
-          key: _emailFormKey,
-          child: MyTextField(
-            hintText: 'Email',
-            validator: Validators.emailTextValidator,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (value) {
-              email = value;
-            },
-            textInputAction: TextInputAction.next,
-          ),
+        MyTextField(
+          controller: emailCntlr,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          onChanged: (value) {
+            emailErrorText = Validators.emailValidator(email: value);
+            setState(() {});
+          },
         ),
+        _buildEmailErrorText(),
         const SizedBox(height: kTextFieldSpacing),
-        Form(
-          key: _passwordFormKey,
-          child: MyTextField(
-            validator: Validators.passwordTextValidator,
-            hintText: 'Password',
-            obscureText: true,
-            onChanged: (value) {
-              password = value;
+        MyTextField(
+          controller: passwordCntlr,
+          hintText: 'Password',
+          obscureText: showPassword ? false : true,
+          textInputAction: TextInputAction.done,
+          suffixIcon: GestureDetector(
+            child: Icon(
+              showPassword ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+              color: kBlueDark,
+            ),
+            onTap: () {
+              setState(() {
+                showPassword = !showPassword;
+              });
             },
-            textInputAction: TextInputAction.done,
           ),
+          onChanged: (value) {
+            passwordErrorText =
+                Validators.passwordTextValidator(password: value);
+            setState(() {});
+          },
         ),
+        _buildPasswordErrorText(),
         const SizedBox(height: kTextFieldSpacing),
         Container(
           alignment: Alignment.centerRight,
@@ -194,7 +214,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   builder: (context) => const ForgotPasswordScreen(),
                 ),
               );
-              FocusScope.of(context).unfocus();
             },
           ),
         ),
@@ -231,18 +250,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
           Flexible(
             child: Text(
-              'Sing Up',
+              'Sign up',
               style: kSFBodyBold.copyWith(color: kBlueDark),
             ),
           ),
         ],
       ),
       onPressed: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+
         Navigator.push(
           context,
           CupertinoPageRoute(builder: (context) => const SignUpScreen()),
         );
-        FocusScope.of(context).unfocus();
       },
     );
   }

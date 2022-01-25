@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 
 class TryAgainView extends StatelessWidget {
   final Function()? onPressed;
-  const TryAgainView({Key? key, this.onPressed}) : super(key: key);
+  final Color btnColor;
+  const TryAgainView({
+    Key? key,
+    this.onPressed,
+    required this.btnColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,8 @@ class TryAgainView extends StatelessWidget {
             const Flexible(child: SizedBox(height: 30)),
             Flexible(
               child: Buttons.buildBtn(
+                width: double.infinity,
+                color: btnColor,
                 context: context,
                 btnText: 'Try again',
                 onPressed: onPressed,

@@ -12,6 +12,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +28,33 @@ class PodcastScreen extends StatefulWidget {
 }
 
 class _PodcastScreenState extends State<PodcastScreen> {
+  bool isLoading = false;
+
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+      await Provider.of<PodcastHandler>(context, listen: false).getPodcasts();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,20 +124,8 @@ class _PodcastScreenState extends State<PodcastScreen> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: TryAgainView(
-          onPressed: () async {
-            try {
-              await Provider.of<PodcastHandler>(context, listen: false)
-                  .getPodcasts();
-            } on FirebaseException catch (e) {
-              kshowSnackbar(
-                context: context,
-                errorType: 'error',
-                text: e.message.toString(),
-              );
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          },
+          btnColor: isLoading ? kGrey : kYellowDark,
+          onPressed: isLoading ? null : tryAgain,
         ),
       ),
     );
@@ -206,7 +222,7 @@ class _Body extends StatelessWidget {
           crossAxisSpacing: 12,
           mainAxisSpacing: 20,
           crossAxisCount: 2,
-          mainAxisExtent: 200,
+          mainAxisExtent: 220,
         ),
         itemCount: podcasts.length,
         shrinkWrap: true,

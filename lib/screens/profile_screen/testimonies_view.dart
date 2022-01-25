@@ -4,9 +4,11 @@ import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.d
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:skeletons/skeletons.dart';
 
 class UserTestimoniesView extends StatefulWidget {
@@ -20,6 +22,30 @@ class UserTestimoniesView extends StatefulWidget {
 
 class _UserTestimoniesViewState extends State<UserTestimoniesView> {
   User? currentUser = FirebaseAuth.instance.currentUser;
+  bool isLoading = false;
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +68,8 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
 
           if (snapshot.hasError) {
             return TryAgainView(
-              onPressed: () {
-                setState(() {});
-              },
+              btnColor: isLoading ? kGrey : kYellowDark,
+              onPressed: isLoading ? null : tryAgain,
             );
           }
 

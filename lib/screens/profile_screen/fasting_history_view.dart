@@ -3,8 +3,10 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class UserFastingHistoryView extends StatefulWidget {
   static String userSavedPodcastView = 'userSavedPodcastView';
@@ -17,6 +19,7 @@ class UserFastingHistoryView extends StatefulWidget {
 
 class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
   final _user = FirebaseAuth.instance.currentUser;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -33,6 +36,30 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
         setState(() {});
       }
     });
+  }
+
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -58,9 +85,8 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
           }
           if (snapshot.hasError) {
             return TryAgainView(
-              onPressed: () {
-                setState(() {});
-              },
+              btnColor: isLoading ? kGrey : kYellowDark,
+              onPressed: isLoading ? null : tryAgain,
             );
           }
           List<FastingInfo> allFastingInfo = [];

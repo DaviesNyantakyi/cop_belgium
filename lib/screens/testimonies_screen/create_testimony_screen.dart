@@ -218,8 +218,8 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             const PopupMenuItem<String>(
               value: 'save',
               child: Text(
-                'Update',
-                style: kSFBodyBold,
+                'Save',
+                style: kSFBody,
               ),
             ),
             PopupMenuItem<String>(

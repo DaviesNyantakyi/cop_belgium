@@ -33,7 +33,7 @@ dynamic kshowSnackbar({
       duration: const Duration(seconds: 5),
       content: Text(
         text,
-        style: kSFBody.copyWith(color: textColor),
+        style: kSFBodyBold2.copyWith(color: textColor),
       ),
     ),
   );

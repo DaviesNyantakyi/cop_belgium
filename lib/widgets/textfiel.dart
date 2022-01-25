@@ -10,21 +10,26 @@ class MyTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final TextInputAction? textInputAction;
   final bool? obscureText;
+  final Widget? suffixIcon;
+  final TextEditingController? controller;
 
   const MyTextField({
     Key? key,
     this.hintText,
     this.initialValue,
     this.keyboardType,
+    this.controller,
     this.onChanged,
     this.obscureText = false,
     this.validator,
     this.textInputAction,
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       key: key,
       validator: validator,
       initialValue: initialValue,
@@ -32,13 +37,13 @@ class MyTextField extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         filled: true,
         errorMaxLines: 2,
         hintText: hintText,
-        hintStyle: kSFBody,
-        fillColor: kGrey,
+        hintStyle: kSFBodyBold2,
+        fillColor: kBlueLight,
+        suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(

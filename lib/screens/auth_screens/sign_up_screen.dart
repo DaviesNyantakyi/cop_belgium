@@ -1,11 +1,14 @@
 import 'package:cop_belgium/models/user_model.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/screens/image_picker_screen.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/services/firebase_auth.dart';
@@ -23,82 +26,187 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _nameFormKey = GlobalKey<FormState>();
-  final _emailFormKey = GlobalKey<FormState>();
-  final _passwordFormKey = GlobalKey<FormState>();
-
-  bool isSubmit = false;
   bool isLoading = false;
+  bool showPassword = false;
+  String? nameErrorText;
+  String? emailErrorText;
+  String? passwordErrorText;
+  String? birthDateErrorText;
+  String? genderErrorText;
 
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? password;
-  String? gender;
+  TextEditingController firstNameCntlr = TextEditingController();
+  TextEditingController lastNameCntlr = TextEditingController();
+  TextEditingController emailCntlr = TextEditingController();
+  TextEditingController passwordCntlr = TextEditingController();
+  TextEditingController genderCntlr = TextEditingController();
+  DateTime? birthDate;
 
-  Future<void> submit() async {
-    setState(() {
-      isSubmit = true;
-    });
+  // only validate when the signup button is pressed
+
+  Future<void> signUp() async {
     FocusScope.of(context).unfocus();
-    bool nameIsValid = _nameFormKey.currentState!.validate();
-    bool emailIsValid = _emailFormKey.currentState!.validate();
-    bool passworIsValid = _passwordFormKey.currentState!.validate();
+    EasyLoading.show();
+    try {
+      isLoading = true;
 
-    if (nameIsValid && emailIsValid && passworIsValid && gender != null) {
-      try {
-        if (mounted) {
-          setState(() {
-            isLoading = true;
-          });
-        }
-        await EaslyLoadingIndicator.showLoading();
+      bool isValid = validateForm();
 
-        final userObject = CopUser(
-          firstName: firstName!,
-          lastName: lastName!,
-          email: email!,
-          gender: gender!,
+      if (isValid) {
+        final user = CopUser(
+          firstName: firstNameCntlr.text,
+          lastName: lastNameCntlr.text,
+          email: emailCntlr.text,
+          birthDate: birthDate!,
+          gender: genderCntlr.text,
+          isAdmin: false,
         );
-
-        final user = await Authentication().signUpWithEmail(
-          user: userObject,
-          password: password,
-        );
-
         if (mounted) {
-          setState(() {
-            isLoading = false;
-          });
+          setState(() {});
         }
-        if (user != null) {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const ImagePickerScreen(),
-            ),
-          );
-        }
-      } on FirebaseAuthException catch (e) {
-        debugPrint(e.toString());
-        await EaslyLoadingIndicator.dismissLoading();
 
-        kshowSnackbar(
-          errorType: 'error',
-          context: context,
-          text: e.message.toString(),
+        await FireAuth()
+            .signUpEmailPassword(user: user, password: passwordCntlr.text);
+        await EasyLoading.dismiss();
+
+        Navigator.pop(context);
+
+        await Navigator.push(
+          context,
+          CupertinoPageRoute(builder: (context) => const ImagePickerScreen()),
         );
-      } finally {
-        if (mounted) {
-          setState(() {
-            isSubmit = false;
-            isLoading = false;
-          });
-        }
-        await EaslyLoadingIndicator.dismissLoading();
+      }
+
+      if (mounted) {
+        setState(() {});
+      }
+    } on FirebaseAuthException catch (e) {
+      await EasyLoading.dismiss();
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message!,
+      );
+      debugPrint(e.toString());
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      isLoading = false;
+      EasyLoading.dismiss();
+      if (mounted) {
+        setState(() {});
       }
     }
+  }
+
+  bool validateForm() {
+    nameErrorText = Validators.nameValidator(
+      firstName: firstNameCntlr.text,
+      lastName: lastNameCntlr.text,
+    );
+    emailErrorText = Validators.emailValidator(
+      email: emailCntlr.text,
+    );
+    passwordErrorText = Validators.passwordTextValidator(
+      password: passwordCntlr.text,
+    );
+
+    birthDateErrorText = Validators.birthdayValidator(date: birthDate);
+
+    genderErrorText = Validators.genderValidator(gender: genderCntlr.text);
+
+    if (nameErrorText == null &&
+        emailErrorText == null &&
+        passwordErrorText == null &&
+        birthDateErrorText == null &&
+        genderErrorText == null) {
+      return true;
+    }
+    return false;
+  }
+
+  Widget _buildNameErrorText() {
+    if (nameErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          nameErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildEmailErrorText() {
+    if (emailErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          emailErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildPasswordErrorText() {
+    if (passwordErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          passwordErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _buildBirthDateErrorText() {
+    if (birthDateErrorText == null || birthDate != null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          birthDateErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  Widget _builGenderErrorText() {
+    if (genderErrorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          genderErrorText!,
+          style: kSFUnderline.copyWith(color: kRed),
+        )
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    firstNameCntlr.dispose();
+    lastNameCntlr.dispose();
+    emailCntlr.dispose();
+    passwordCntlr.dispose();
+    genderCntlr.dispose();
+    super.dispose();
   }
 
   @override
@@ -112,6 +220,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               children: [
                 _buildForm(),
+                const SizedBox(height: kTextFieldSpacing),
+                _buildBirthdayPicker(),
                 const SizedBox(height: kButtonSpacing),
                 _buildGenderSelector(),
                 const SizedBox(height: kButtonSpacing),
@@ -121,6 +231,97 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBirthdayPicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 64,
+          decoration: const BoxDecoration(
+            color: kBlueLight,
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                kButtonRadius,
+              ),
+            ),
+          ),
+          child: TextButton(
+            onPressed: showDatePicker,
+            style: kTextButtonStyle,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                children: [
+                  const Icon(
+                    FontAwesomeIcons.calendar,
+                    color: kBlueDark,
+                    size: kIconSize,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    birthDate == null
+                        ? 'Birthday'
+                        : FormalDates.formatDmyyyy(date: birthDate),
+                    style: birthDate == null ? kSFBodyBold2 : kSFBodyBold,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildBirthDateErrorText()
+      ],
+    );
+  }
+
+  Future<void> showDatePicker() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    await showMyBottomSheet(
+      isDismissible: false,
+      context: context,
+      height: 300,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 200,
+              child: Theme(
+                data: ThemeData(),
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  maximumDate: DateTime.now(),
+                  minimumDate: DateTime(1900, 01, 31),
+                  minimumYear: 1900,
+                  maximumYear: DateTime.now().year,
+                  onDateTimeChanged: (date) {
+                    HapticFeedback.lightImpact();
+
+                    birthDate = date;
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                ),
+              ),
+            ),
+            Buttons.buildBtn(
+              context: context,
+              btnText: 'Done',
+              height: kButtonHeight,
+              width: double.infinity,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -140,7 +341,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Flexible(
             child: Text(
-              'Log In',
+              'Log in',
               style: kSFBodyBold.copyWith(color: kBlueDark),
             ),
           ),
@@ -154,63 +355,84 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Widget _buildForm() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Form(
-          key: _nameFormKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MyTextField(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              child: MyTextField(
+                controller: firstNameCntlr,
                 hintText: 'First Name',
                 obscureText: false,
-                validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onChanged: (value) {
-                  firstName = value;
+                  nameErrorText = Validators.nameValidator(
+                    firstName: value,
+                    lastName: lastNameCntlr.text,
+                  );
+
+                  setState(() {});
                 },
               ),
-              const SizedBox(height: kTextFieldSpacing),
-              MyTextField(
+            ),
+            const SizedBox(width: kTextFieldSpacing),
+            Expanded(
+              child: MyTextField(
+                controller: lastNameCntlr,
                 hintText: 'Last Name',
                 obscureText: false,
-                validator: Validators.nameValidator,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onChanged: (value) {
-                  lastName = value;
+                  nameErrorText = Validators.nameValidator(
+                    firstName: firstNameCntlr.text,
+                    lastName: value,
+                  );
+                  setState(() {});
                 },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        _buildNameErrorText(),
         const SizedBox(height: kTextFieldSpacing),
-        Form(
-          key: _emailFormKey,
-          child: MyTextField(
-            hintText: 'Email',
-            obscureText: false,
-            validator: Validators.emailTextValidator,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) {
-              email = value;
+        MyTextField(
+          controller: emailCntlr,
+          hintText: 'Email',
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          onChanged: (value) {
+            emailErrorText = Validators.emailValidator(email: value);
+            setState(() {});
+          },
+        ),
+        _buildEmailErrorText(),
+        const SizedBox(height: kTextFieldSpacing),
+        MyTextField(
+          controller: passwordCntlr,
+          hintText: 'Password',
+          obscureText: showPassword ? false : true,
+          textInputAction: TextInputAction.done,
+          suffixIcon: GestureDetector(
+            child: Icon(
+              showPassword ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+              color: kBlueDark,
+            ),
+            onTap: () {
+              setState(() {
+                showPassword = !showPassword;
+              });
             },
           ),
+          onChanged: (value) {
+            passwordErrorText =
+                Validators.passwordTextValidator(password: value);
+            setState(() {});
+          },
         ),
-        const SizedBox(height: kTextFieldSpacing),
-        Form(
-          key: _passwordFormKey,
-          child: MyTextField(
-            validator: Validators.passwordTextValidator,
-            hintText: 'Password',
-            obscureText: true,
-            textInputAction: TextInputAction.next,
-            onChanged: (value) {
-              password = value;
-            },
-          ),
-        ),
+        _buildPasswordErrorText(),
       ],
     );
   }
@@ -233,28 +455,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
             MyCheckBox(
               label: 'Male',
               value: 'male',
-              groupsValue: gender,
+              groupsValue: genderCntlr.text,
               onChanged: (value) {
-                setState(() {
-                  gender = value;
-                });
+                genderCntlr.text = value;
+                genderErrorText = Validators.genderValidator(gender: value);
+                setState(() {});
               },
             ),
             const SizedBox(width: 10),
             MyCheckBox(
               label: 'Female',
               value: 'female',
-              groupsValue: gender,
+              groupsValue: genderCntlr.text,
               onChanged: (value) {
-                setState(() {
-                  gender = value;
-                });
+                genderCntlr.text = value;
+                genderErrorText = Validators.genderValidator(gender: value);
+                setState(() {});
               },
             ),
           ],
         ),
-        const SizedBox(height: 5),
-        Validators.genderValidator(gender: gender, submitForm: isSubmit)
+        _builGenderErrorText(),
       ],
     );
   }
@@ -275,7 +496,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       ),
       title: const Text(
-        'Sign Up',
+        'Create account',
         style: kSFBodyBold,
       ),
     );
@@ -284,9 +505,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSingUpBtn() {
     return Buttons.buildBtn(
       context: context,
-      color: isLoading ? kGrey : kYellow,
-      btnText: 'Sign Up',
-      onPressed: isLoading ? null : submit,
+      color: isLoading ? kGrey : kYellowDark,
+      btnText: 'Sign up',
+      onPressed: isLoading ? null : signUp,
+      width: double.infinity,
     );
   }
 }

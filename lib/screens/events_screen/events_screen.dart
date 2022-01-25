@@ -184,6 +184,7 @@ class _EventsScreenState extends State<EventsScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<EventType>(
+                  activeColor: kBlueDark,
                   value: EventType.normal,
                   groupValue: _eventType,
                   title: const Text('Normal', style: kSFBody),
@@ -193,6 +194,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   },
                 ),
                 RadioListTile<EventType>(
+                  activeColor: kBlueDark,
                   value: EventType.zoom,
                   groupValue: _eventType,
                   title: const Text('Zoom', style: kSFBody),
@@ -218,6 +220,7 @@ class _EventsScreenState extends State<EventsScreen> {
                   builder: (context) {
                     return CreateEventScreen(
                       eventType: _eventType,
+                      editable: false,
                     );
                   },
                 ),

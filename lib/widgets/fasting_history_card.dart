@@ -130,9 +130,9 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
   }
 
   Widget _buildEstimatedTimes({required FastingInfo fastingInfo}) {
-    String startedDate = FormalDates.formatDmy(date: fastingInfo.startDate);
+    String startedDate = FormalDates.formatDmyy(date: fastingInfo.startDate);
     String startedTime = FormalDates.formatHm(date: fastingInfo.startDate);
-    String endDate = FormalDates.formatDmy(date: fastingInfo.endDate);
+    String endDate = FormalDates.formatDmyy(date: fastingInfo.endDate);
     String endTime = FormalDates.formatHm(date: fastingInfo.endDate);
     return Flexible(
       child: Container(

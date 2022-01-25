@@ -43,6 +43,13 @@ const kSFBodyBold = TextStyle(
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
+TextStyle kSFBodyBold2 = TextStyle(
+  fontWeight: FontWeight.w700,
+  color: kBlueDark.withOpacity(0.5),
+  fontSize: 17,
+  height: 1.4,
+  fontFamily: _sfDisplayFont,
+);
 
 const kSFHeadLine2 = TextStyle(
   fontWeight: FontWeight.w700,
@@ -61,6 +68,7 @@ const kSFHeadLine1 = TextStyle(
 
 //Blues
 const Color kBlue = Color(0xFF0009EB);
+const Color kBlueLight = Color(0xFFF1F6F9);
 const Color kBlueDark = Color(0xFF1E2B5F);
 const Color kBlueDark2 = Color(0xFF384859);
 
@@ -111,25 +119,22 @@ const double kButtonHeight = 45;
 const double kButtonRadius = 5;
 const double kTextFieldSpacing = 12;
 const double kButtonSpacing = 25;
+const double kAppbarPadding = 20.0;
+const double kBodyPadding = 10.0;
+const double kIconSize = 24;
 
 BoxShadow boxShadow = BoxShadow(
   offset: const Offset(0, 4),
   blurRadius: 10,
   color: Colors.black.withOpacity(0.2),
 );
-//Weg
-
-const double kAppbarPadding = 20.0;
-const double kBodyPadding = 10.0;
 
 const kCircularProgress = CircularProgressIndicator(
   strokeWidth: 5,
 );
 
-const double kBodyBottomPadding = 40.0;
 const double kBottomSheetHeight = 470;
-
-// spacing between button and textfield
+const double kPickerBottomSheetHeight = 170;
 
 //Disables the textButton default padding
 ButtonStyle kTextButtonStyle = TextButton.styleFrom(

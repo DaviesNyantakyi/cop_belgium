@@ -33,20 +33,26 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Future<void> popUp(String? result) async {
-    if (result == WelcomeScreen.welcomeScreen) {
-      await Authentication().singout();
-      Navigator.pop(context);
-    }
-    if (result == EditProfileScreen.editProfileScreen) {
-      final user = await CloudFireStore().getUserFirstore();
-
-      if (user != null) {
-        await Navigator.push(context, CupertinoPageRoute(
-          builder: (context) {
-            return EditProfileScreen(user: user);
-          },
-        ));
+    try {
+      if (result == WelcomeScreen.welcomeScreen) {
+        await FireAuth().singout();
+        Navigator.pop(context);
       }
+      if (result == EditProfileScreen.editProfileScreen) {
+        final user = await CloudFireStore().getUserFirstore();
+
+        if (user != null) {
+          await Navigator.push(context, CupertinoPageRoute(
+            builder: (context) {
+              return EditProfileScreen(user: user);
+            },
+          ));
+        }
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 

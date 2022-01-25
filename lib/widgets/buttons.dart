@@ -37,7 +37,7 @@ class Buttons {
 
   static Widget buildSocialBtn({
     required BuildContext context,
-    Color color = kYellow,
+    Color color = kYellowDark,
     Color fontColor = kBlueDark,
     VoidCallback? onPressed,
     required Widget icon,

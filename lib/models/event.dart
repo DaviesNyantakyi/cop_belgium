@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class Event {
   DateTime startDate;
   DateTime endDate;

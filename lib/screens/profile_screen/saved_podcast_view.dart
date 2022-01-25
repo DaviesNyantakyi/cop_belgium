@@ -5,8 +5,10 @@ import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skelet
 import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 class UserSavedPodcastView extends StatefulWidget {
@@ -20,6 +22,7 @@ class UserSavedPodcastView extends StatefulWidget {
 
 class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
   final _user = FirebaseAuth.instance.currentUser;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -34,6 +37,30 @@ class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
         setState(() {});
       }
     });
+  }
+
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
   @override
@@ -64,7 +91,7 @@ class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
             crossAxisCount: 2,
-            mainAxisExtent: 200,
+            mainAxisExtent: 220,
           ),
           itemBuilder: (context, index) {
             return PodcastCard(
@@ -90,9 +117,8 @@ class _UserSavedPodcastViewState extends State<UserSavedPodcastView> {
   Widget _buildErrorSkeleton() {
     return SingleChildScrollView(
       child: TryAgainView(
-        onPressed: () {
-          setState(() {});
-        },
+        btnColor: isLoading ? kGrey : kYellowDark,
+        onPressed: isLoading ? null : tryAgain,
       ),
     );
   }

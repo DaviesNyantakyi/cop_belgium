@@ -30,6 +30,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   File? image;
   bool isLoading = false;
 
+  TextStyle fontStyle = kSFBodyBold;
+
   Future<void> pickImage({required String type}) async {
     final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
     try {
@@ -128,7 +130,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
               children: [
                 const SizedBox(height: 90),
                 const Text(
-                  'Choose picture',
+                  'Choose a photo',
                   style: kSFBodyBold,
                 ),
                 const SizedBox(height: 40),
@@ -182,7 +184,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
   Future<void> showBottomSheet() async {
     await showMyFastingBottomSheet(
-      height: 150,
+      height: kPickerBottomSheetHeight,
       context: context,
       child: Material(
         child: SizedBox(
@@ -197,10 +199,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   leading: const Icon(
                     FontAwesomeIcons.camera,
                     color: kBlueDark,
+                    size: kIconSize,
                   ),
-                  title: const Text(
+                  title: Text(
                     'Camera',
-                    style: kSFBody,
+                    style: fontStyle,
                   ),
                 ),
                 ListTile(
@@ -210,12 +213,31 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   leading: const Icon(
                     FontAwesomeIcons.images,
                     color: kBlueDark,
+                    size: kIconSize,
                   ),
-                  title: const Text(
+                  title: Text(
                     'Gallery',
-                    style: kSFBody,
+                    style: fontStyle,
                   ),
                 ),
+                image != null
+                    ? ListTile(
+                        onTap: () async {
+                          image = null;
+                          setState(() {});
+                          Navigator.pop(context);
+                        },
+                        leading: const Icon(
+                          FontAwesomeIcons.trash,
+                          color: kRed,
+                          size: kIconSize,
+                        ),
+                        title: Text(
+                          'Delete',
+                          style: fontStyle.copyWith(color: kRed),
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
@@ -227,7 +249,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   Widget _buildDoneBtn() {
     return Buttons.buildBtn(
       context: context,
-      color: kYellow,
+      color: isLoading ? kGrey : kYellowDark,
+      width: double.infinity,
       btnText: 'Done',
       onPressed: isLoading ? null : submit,
     );

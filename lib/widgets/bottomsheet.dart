@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showMyBottomSheet(
-    {required BuildContext context,
-    Widget? child,
-    double? height = kBottomSheetHeight}) async {
+Future<void> showMyBottomSheet({
+  required BuildContext context,
+  Widget? child,
+  bool? isDismissible = true,
+  double? height = kBottomSheetHeight,
+}) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: true,
+    isDismissible: isDismissible!,
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(

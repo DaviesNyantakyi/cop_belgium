@@ -194,26 +194,12 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              FormalDates.formatDmy(date: podcast!.episodes!.last.date),
+              FormalDates.formatDmyy(date: podcast!.episodes!.last.date),
               style: kSFBody,
             ),
           ],
         ),
         const SizedBox(width: 19),
-        TextButton(
-          style: kTextButtonStyle,
-          child: _buildLikeIcon(),
-          onPressed: () async {
-            await CloudFireStore().likeUnLikePodcast(
-              rssInfo: PodcastRssInfo(
-                id: podcast!.id,
-                rssLink: podcast!.rssLink,
-                title: podcast?.title ?? '',
-              ),
-            );
-          },
-        ),
-        const SizedBox(width: kTextFieldSpacing),
         TextButton(
           style: kTextButtonStyle,
           child: _buildBookmarkIcon(),
@@ -340,7 +326,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           color: kBlueDark,
         ),
         onPressed: () {
-          Navigator.pop(context);
           Navigator.pop(context);
         },
         style: kTextButtonStyle,

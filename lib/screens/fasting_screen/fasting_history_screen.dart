@@ -3,9 +3,11 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FastingHistoryScreen extends StatefulWidget {
@@ -19,6 +21,31 @@ class FastingHistoryScreen extends StatefulWidget {
 
 class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
   User? currentUser = FirebaseAuth.instance.currentUser;
+  bool isLoading = false;
+
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +88,8 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
             }
             if (snapshot.hasError) {
               return TryAgainView(
-                onPressed: () {
-                  setState(() {});
-                },
+                btnColor: isLoading ? kGrey : kYellowDark,
+                onPressed: isLoading ? null : tryAgain,
               );
             }
             List<FastingInfo> allFastingInfo = [];

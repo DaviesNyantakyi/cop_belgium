@@ -24,7 +24,7 @@ class EventDetailScreen extends StatefulWidget {
 }
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
-  static const CameraPosition _kGooglePlex = CameraPosition(
+  static const CameraPosition initialPostion = CameraPosition(
     target: LatLng(51.322182921264194, 4.937284434846798),
     zoom: 10,
   );
@@ -120,7 +120,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   () => EagerGestureRecognizer(),
                 ),
               },
-              initialCameraPosition: _kGooglePlex,
+              initialCameraPosition: initialPostion,
               onMapCreated: (GoogleMapController controller) {
                 mapController = controller;
               },
@@ -327,7 +327,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           style: kTextButtonStyle,
           onPressed: () {
             _showBottomSheet(
-                context: context, title: _title, description: _description);
+              context: context,
+              title: _title,
+              description: _description,
+            );
           },
           child: Container(
             alignment: Alignment.centerLeft,

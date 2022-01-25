@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/error_views.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 //TODO: fix: if a testimony field is null in firbase then have an error
 class TestimoniesView extends StatefulWidget {
@@ -15,6 +17,31 @@ class TestimoniesView extends StatefulWidget {
 }
 
 class _TestimoniesViewState extends State<TestimoniesView> {
+  bool isLoading = false;
+  Future<void> tryAgain() async {
+    try {
+      isLoading = true;
+      if (mounted) {
+        setState(() {});
+      }
+      EasyLoading.show();
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message.toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+      isLoading = false;
+      if (mounted) {
+        setState(() {});
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -63,9 +90,8 @@ class _TestimoniesViewState extends State<TestimoniesView> {
 
           if (snapshot.hasError) {
             return TryAgainView(
-              onPressed: () {
-                setState(() {});
-              },
+              btnColor: isLoading ? kGrey : kYellowDark,
+              onPressed: isLoading ? null : tryAgain,
             );
           }
 

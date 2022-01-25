@@ -1,16 +1,15 @@
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 
-class Authentication {
+class FireAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final CloudFireStore _fireStore = CloudFireStore();
 
-  Future<User?> signUpWithEmail(
+  Future<User?> signUpEmailPassword(
       {required CopUser user, String? password}) async {
     try {
       if (user.firstName.isNotEmpty &&
@@ -31,19 +30,28 @@ class Authentication {
         return _auth.currentUser;
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.toString());
+      debugPrint(e.hashCode.toString());
+
       rethrow;
     }
   }
 
   Future<void> singout() async {
-    await _auth.signOut();
+    try {
+      await _auth.signOut();
+    } on FirebaseAuthException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 
   Future<void> sendResetPassword({required String? email}) async {
-    try {
-      final hasConnection = await ConnectionChecker().checkConnection();
+    final hasConnection = await ConnectionChecker().checkConnection();
 
+    try {
       if (hasConnection) {
         if (email != null && email.isNotEmpty) {
           await _auth.sendPasswordResetEmail(email: email);
@@ -57,7 +65,7 @@ class Authentication {
     }
   }
 
-  Future<User?> signIn(
+  Future<User?> login(
       {required String? email, required String? password}) async {
     try {
       if (email != null && password != null) {
@@ -77,7 +85,7 @@ class Authentication {
     final hasConnection = await ConnectionChecker().checkConnection();
     try {
       if (hasConnection) {
-        await signIn(email: _auth.currentUser!.email, password: password);
+        await login(email: _auth.currentUser!.email, password: password);
 
         await CloudFireStore().deleteUserInfo();
         await _auth.currentUser!.delete();

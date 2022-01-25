@@ -1,4 +1,5 @@
 import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
 
   @override
   void initState() {
-    super.initState();
     init();
+    super.initState();
   }
 
   Future<void> init() async {
@@ -52,7 +53,7 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
         } else {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: kCircularProgress,
             ),
           );
         }
