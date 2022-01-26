@@ -65,7 +65,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 
   Widget _buildHeaderImage() {
-    if (podcast?.image != null) {
+    if (podcast?.imageUrl != null) {
       return Container(
         width: double.infinity,
         margin: const EdgeInsets.only(top: 10),
@@ -74,7 +74,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           color: kBlue,
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(podcast!.image),
+            image: CachedNetworkImageProvider(podcast!.imageUrl),
           ),
         ),
       );
@@ -203,94 +203,14 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         TextButton(
           style: kTextButtonStyle,
           child: _buildBookmarkIcon(),
-          onPressed: () async {
-            await CloudFireStore().saveUnsavePodcast(
-              rssInfo: PodcastRssInfo(
-                id: podcast!.id,
-                rssLink: podcast!.rssLink,
-                title: podcast?.title ?? '',
-              ),
-            );
-          },
+          onPressed: () async {},
         ),
       ],
     );
   }
 
-  Widget _buildLikeIcon() {
-    String docRef = podcast!.id;
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('podcasts')
-          .doc(docRef)
-          .collection('likes')
-          .where('userId', isEqualTo: _user!.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        final docs = snapshot.data?.docs ?? [];
-
-        if (docs.isNotEmpty) {
-          //user has saved to podcast
-          return Row(
-            children: [
-              const Icon(
-                FontAwesomeIcons.solidHeart,
-                size: 20,
-                color: kRed,
-              ),
-              const SizedBox(
-                width: 7,
-              ),
-              _buildLikeCount()
-            ],
-          );
-        }
-        return Row(
-          children: [
-            const Icon(
-              FontAwesomeIcons.heart,
-              size: 20,
-              color: kBlueDark,
-            ),
-            const SizedBox(
-              width: 7,
-            ),
-            _buildLikeCount()
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildLikeCount() {
-    String docRef = podcast!.id;
-
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('podcasts')
-          .doc(docRef)
-          .collection('likes')
-          .snapshots(),
-      builder: (context, snapshot) {
-        final docs = snapshot.data?.docs ?? [];
-
-        if (docs.isNotEmpty) {
-          //user has saved to podcast
-          return Text(
-            '${docs.length}',
-            style: kSFBody,
-          );
-        }
-        return Text(
-          '${docs.length}',
-          style: kSFBody,
-        );
-      },
-    );
-  }
-
   Widget _buildBookmarkIcon() {
-    String docRef = podcast!.id;
+    String docRef = podcast!.pageLink;
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
       stream: FirebaseFirestore.instance
           .collection('users')

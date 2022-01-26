@@ -9,13 +9,14 @@ import 'package:cop_belgium/utilities/rss_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:webfeed/domain/rss_feed.dart';
 
 class PodcastService {
   final CloudFireStore _fireStore = CloudFireStore();
 
-  Future<RssFeed> _getRssFeed({required String rssLink}) async {
+  Future<RssFeed> getRssFeed({required String rssLink}) async {
     // get the rss body and turns it into an podcast
 
     final hasConnection = await ConnectionChecker().checkConnection();
@@ -47,7 +48,6 @@ class PodcastService {
 
     List<Episode> episodes = rssFeed.items!.map((rssItem) {
       return Episode(
-        id: rssItem.link!,
         title: rssItem.itunes!.title!,
         image: rssItem.itunes?.image?.href ?? rssFeed.itunes!.image!.href,
         duration: rssItem.itunes!.duration!.inMilliseconds,
@@ -58,27 +58,24 @@ class PodcastService {
     }).toList();
 
     return Podcast(
-      id: RssHelper.getTokenRssPath(rssFeed: rssFeed),
       pageLink: rssFeed.link!,
-      rssLink: RssHelper.makeRssLink(rssFeed: rssFeed),
-      image: rssFeed.itunes!.image!.href!,
+      imageUrl: rssFeed.itunes!.image!.href!,
       title: rssFeed.title!,
       description: rssFeed.itunes!.summary!,
-      speakers: rssFeed.itunes!.author!,
+      author: rssFeed.itunes!.author!,
       episodes: episodes,
       totalEpisodes: rssFeed.items!.length,
     );
   }
 
   Future<List<Podcast>> getPodcast() async {
-    //await Future.delayed(Duration(seconds: 10));
-
     try {
       final List<Podcast> podcasts = [];
       final firebaseInfo = await _fireStore.getPodcastRssInfoFireStore();
 
       for (var info in firebaseInfo) {
-        RssFeed rssFeed = await _getRssFeed(rssLink: info!.rssLink);
+        RssFeed rssFeed = await getRssFeed(rssLink: info!.rssLink);
+
         Podcast podcast = createPodcast(rssFeed: rssFeed);
         podcasts.add(podcast);
       }
@@ -89,13 +86,12 @@ class PodcastService {
   }
 
   Future<List<Podcast>> getSavedPodcast() async {
-    // await Future.delayed(Duration(seconds: 100));
     try {
       final List<Podcast> podcasts = [];
       final firebaseInfo = await _fireStore.getUserSavedPodcast();
 
       for (var info in firebaseInfo) {
-        RssFeed rssFeed = await _getRssFeed(rssLink: info!.rssLink);
+        RssFeed rssFeed = await getRssFeed(rssLink: info!.rssLink);
         Podcast podcast = createPodcast(rssFeed: rssFeed);
         podcasts.add(podcast);
       }

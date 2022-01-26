@@ -1,4 +1,4 @@
-import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/services/podcast_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,7 +27,7 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
 
   Future<void> init() async {
     try {
-      await Provider.of<PodcastHandler>(context, listen: false).getPodcasts();
+      await Provider.of<PodcastProvider>(context, listen: false).getPodcasts();
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,

@@ -1,5 +1,7 @@
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
-import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/podcast_provider.dart';
+import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/my_skeleton_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -46,8 +48,8 @@ class MyApp extends StatelessWidget {
         title: 'Cop Belgium',
         home: MultiProvider(
           providers: [
-            ChangeNotifierProvider<PodcastHandler>(
-              create: (_) => PodcastHandler(),
+            ChangeNotifierProvider<PodcastProvider>(
+              create: (_) => PodcastProvider(),
             )
           ],
           child: const AuthSwitcher(),

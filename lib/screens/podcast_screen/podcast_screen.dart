@@ -1,9 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
-import 'package:cop_belgium/services/podcast_handlre.dart';
+import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/podcast_provider.dart';
+import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -28,6 +34,7 @@ class PodcastScreen extends StatefulWidget {
 }
 
 class _PodcastScreenState extends State<PodcastScreen> {
+  TextEditingController rssLinkCntlr = TextEditingController();
   bool isLoading = false;
 
   Future<void> tryAgain() async {
@@ -37,7 +44,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
         setState(() {});
       }
       EasyLoading.show();
-      await Provider.of<PodcastHandler>(context, listen: false).getPodcasts();
+      await Provider.of<PodcastProvider>(context, listen: false).getPodcasts();
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,
@@ -55,16 +62,45 @@ class _PodcastScreenState extends State<PodcastScreen> {
     }
   }
 
+  Future<void> addPodcast() async {
+    try {
+      if (rssLinkCntlr.text.isNotEmpty) {
+        EasyLoading.show();
+        await CloudFireStore().addPodcast(rssLink: rssLinkCntlr.text);
+        Navigator.pop(context);
+        rssLinkCntlr.clear();
+      }
+    } on FirebaseException catch (e) {
+      Navigator.pop(context);
+      kshowSnackbar(
+        context: context,
+        errorType: 'error',
+        text: e.message!,
+      );
+      debugPrint(e.toString());
+    } catch (e) {
+      Navigator.pop(context);
+      debugPrint(e.toString());
+    } finally {
+      EasyLoading.dismiss();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(FontAwesomeIcons.plus),
+        onPressed: () {
+          _showAddDialog();
+        },
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           color: kBlueDark,
           onRefresh: () async {
-            await Provider.of<PodcastHandler>(context, listen: false)
+            await Provider.of<PodcastProvider>(context, listen: false)
                 .getPodcasts();
-            setState(() {});
           },
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
@@ -76,12 +112,44 @@ class _PodcastScreenState extends State<PodcastScreen> {
     );
   }
 
+  Future<String?> _showAddDialog() async {
+    const String _deleteConformationText = 'Copy and paste the RSS feed here.';
+    return await showDialog<String?>(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kButtonRadius),
+          ),
+        ),
+        title: const Text(_deleteConformationText, style: kSFBodyBold),
+        content: MyTextField(
+          controller: rssLinkCntlr,
+          hintText: 'RSS feed link',
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: kSFBodyBold),
+          ),
+          const SizedBox(height: kButtonSpacing),
+          TextButton(
+            onPressed: addPodcast,
+            child: const Text('Add', style: kSFBodyBold),
+          ),
+          const SizedBox(height: kTextFieldSpacing)
+        ],
+      ),
+    );
+  }
+
   Widget _buildBody() {
     List<Podcast> podcasts = [];
 
-    bool hasError = Provider.of<PodcastHandler>(context).hasError;
-    bool isLoading = Provider.of<PodcastHandler>(context).isLoading;
-    podcasts = Provider.of<PodcastHandler>(context).podcasts;
+    bool hasError = Provider.of<PodcastProvider>(context).hasError;
+    bool isLoading = Provider.of<PodcastProvider>(context).isLoading;
+    podcasts = Provider.of<PodcastProvider>(context).podcasts;
     if (hasError) {
       return _buildErrorSkeleton();
     }

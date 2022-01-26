@@ -2,7 +2,7 @@ import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:flutter/foundation.dart';
 
-class PodcastHandler extends ChangeNotifier {
+class PodcastProvider extends ChangeNotifier {
   List<Podcast> podcasts = [];
   List<Podcast> savedPodcasts = [];
   bool hasError = false;
