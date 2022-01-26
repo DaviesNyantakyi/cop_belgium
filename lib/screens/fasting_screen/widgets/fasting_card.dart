@@ -27,7 +27,7 @@ class PresetFastingCard extends StatelessWidget {
           Radius.circular(20),
         ),
         boxShadow: [
-          boxShadow,
+          kBoxShadow,
         ],
         gradient: backgroundGradient,
       ),
@@ -100,7 +100,7 @@ class CustomFastingCard extends StatelessWidget {
           Radius.circular(20),
         ),
         boxShadow: [
-          boxShadow,
+          kBoxShadow,
         ],
       ),
       child: TextButton(

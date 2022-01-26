@@ -133,7 +133,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         Text(
           nameErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaptionBold.copyWith(color: kRed),
         )
       ],
     );
@@ -148,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         Text(
           emailErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -163,7 +163,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         Text(
           passwordErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -178,7 +178,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         Text(
           birthDateErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -193,7 +193,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const SizedBox(height: 5),
         Text(
           genderErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -214,22 +214,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       appBar: _buildAppbar(context: context),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(kBodyPadding),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(kBodyPadding),
-            child: Column(
-              children: [
-                _buildForm(),
-                const SizedBox(height: kTextFieldSpacing),
-                _buildBirthdayPicker(),
-                const SizedBox(height: kButtonSpacing),
-                _buildGenderSelector(),
-                const SizedBox(height: kButtonSpacing),
-                _buildSingUpBtn(),
-                const SizedBox(height: kButtonSpacing),
-                _buildAccountQuestion(),
-              ],
-            ),
+          child: Column(
+            children: [
+              _buildForm(),
+              const SizedBox(height: kTextFieldSpacing),
+              _buildBirthdayPicker(),
+              const SizedBox(height: kButtonSpacing),
+              _buildGenderSelector(),
+              const SizedBox(height: kButtonSpacing),
+              _buildSingUpBtn(),
+              const SizedBox(height: kButtonSpacing),
+              _buildAccountQuestion(),
+            ],
           ),
         ),
       ),
@@ -265,9 +263,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(width: 10),
                   Text(
                     birthDate == null
-                        ? 'Birthday'
+                        ? 'Date of birth'
                         : FormalDates.formatDmyyyy(date: birthDate),
-                    style: birthDate == null ? kSFBodyBold2 : kSFBodyBold,
+                    style: kSFTextFieldStyle,
                   )
                 ],
               ),
@@ -497,7 +495,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       title: const Text(
         'Create account',
-        style: kSFBodyBold,
+        style: kSFHeadLine2,
       ),
     );
   }

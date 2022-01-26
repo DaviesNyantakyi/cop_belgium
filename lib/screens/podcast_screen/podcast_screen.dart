@@ -136,7 +136,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
           const SizedBox(height: kButtonSpacing),
           TextButton(
             onPressed: addPodcast,
-            child: const Text('Add', style: kSFBodyBold),
+            child: const Text('OK', style: kSFBodyBold),
           ),
           const SizedBox(height: kTextFieldSpacing)
         ],
@@ -218,7 +218,7 @@ class _Body extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildGreetingAndIcon(context: context),
-                const SizedBox(height: 20),
+                const SizedBox(height: 42),
                 const Text(
                   'Featured Episode',
                   style: kSFHeadLine2,
@@ -258,25 +258,28 @@ class _Body extends StatelessWidget {
           children: [
             Text(
               Greeting.showGreetings(),
-              style: kSFBody,
+              style: kSFBodyBold,
             ),
             Text(
               userName ?? '',
-              style: kSFHeadLine2.copyWith(color: kYellowDark, fontSize: 20),
+              style: kSFBody.copyWith(color: Colors.yellow.shade900),
             ),
           ],
         ),
-        IconButton(
-          icon: const Icon(FontAwesomeIcons.bell),
-          tooltip: 'Announcements',
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const AnnouncementsScreen(),
-              ),
-            );
-          },
+        Container(
+          alignment: Alignment.center,
+          child: IconButton(
+            icon: const Icon(FontAwesomeIcons.bell),
+            tooltip: 'Announcements',
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const AnnouncementsScreen(),
+                ),
+              );
+            },
+          ),
         )
       ],
     );
@@ -288,7 +291,6 @@ class _Body extends StatelessWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           childAspectRatio: 1,
           crossAxisSpacing: 12,
-          mainAxisSpacing: 20,
           crossAxisCount: 2,
           mainAxisExtent: 220,
         ),

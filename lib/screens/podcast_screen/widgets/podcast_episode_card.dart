@@ -14,7 +14,7 @@ class EpisodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final episode = context.watch<Episode>();
+    final episode = Provider.of<Episode>(context, listen: false);
 
     return Container(
       height: 200,
@@ -52,10 +52,7 @@ class EpisodeCard extends StatelessWidget {
                         date: DateTime.fromMillisecondsSinceEpoch(
                             episode.duration),
                       ),
-                      style: kSFUnderline.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w900,
-                      ),
+                      style: kSFCaptionBold.copyWith(color: Colors.white),
                     ),
                   ),
                 ),

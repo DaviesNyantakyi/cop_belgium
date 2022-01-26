@@ -2,20 +2,23 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:dart_date/dart_date.dart';
 
 class FormalDates {
-  static String formatDm({required DateTime? date}) {
-    return date!.format('dd MMM H:mm');
+  static String formatDmyy({required DateTime? date}) {
+    // 26 Jan 22
+    return date!.format('dd MMM yy');
   }
 
-  static String formatDmyy({required DateTime? date}) {
-    return date!.format('dd MMM yy');
+  static String formatEDmy({required DateTime? date}) {
+    // Wed, 26 Jan 22
+    return date!.format('E, dd MMM yy');
   }
 
   static String formatDmyyyy({required DateTime? date}) {
     return date!.format('dd MMM yyyy');
   }
 
-  static String formatDmyHm({required DateTime? date}) {
-    return date!.format('dd MMM yy - HH:mm');
+  static String formatEDmyHm({required DateTime? date}) {
+    // Wed, 26 Jan 22
+    return date!.format('E, dd MMM yy - hh:mm');
   }
 
   static String formatHm({required DateTime? date}) {
@@ -23,13 +26,10 @@ class FormalDates {
   }
 
   static String formatMs({required DateTime? date}) {
-    // check if the duration is greater then 60 min the return hour format
-
     return date!.format('mm:ss');
   }
 
   static String formatHms({required DateTime? date}) {
-    // check if the duration is greater then 60 min the return hour format
     return date!.format('hh:mm:ss');
   }
 

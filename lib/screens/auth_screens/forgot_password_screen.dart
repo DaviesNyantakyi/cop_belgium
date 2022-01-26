@@ -129,7 +129,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         const SizedBox(height: 5),
         Text(
           emailErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );

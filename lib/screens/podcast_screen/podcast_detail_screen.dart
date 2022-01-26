@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
@@ -135,18 +136,21 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 
   Widget _buildTitle() {
-    return Column(
-      children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
             podcast?.title ?? '',
             style: kSFHeadLine1,
           ),
-        ),
-        const SizedBox(height: 12),
-        _buildIcons(),
-      ],
+          Text(
+            podcast?.author ?? '',
+            style: kSFBody,
+          )
+        ],
+      ),
     );
   }
 
@@ -164,10 +168,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         TextButton(
           style: kTextButtonStyle,
           onPressed: () {
-            _showBottomSheet(
-                context: context,
-                title: podcast?.title ?? '',
-                description: podcast?.description ?? '');
+            _showBottomSheet(context: context, podcast: podcast);
           },
           child: Container(
             alignment: Alignment.centerLeft,
@@ -183,63 +184,38 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     );
   }
 
-  Widget _buildIcons() {
-    return Row(
-      children: [
-        Row(
-          children: [
-            const Icon(
-              FontAwesomeIcons.calendar,
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              FormalDates.formatDmyy(date: podcast!.episodes!.last.date),
-              style: kSFBody,
-            ),
-          ],
-        ),
-        const SizedBox(width: 19),
-        TextButton(
-          style: kTextButtonStyle,
-          child: _buildBookmarkIcon(),
-          onPressed: () async {},
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBookmarkIcon() {
+  Widget get _buildBookmarkIcon {
     String docRef = podcast!.pageLink;
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .collection('savedPodcasts')
-          .where('id', isEqualTo: docRef)
-          .snapshots(),
-      builder: (context, snapshot) {
-        final docs = snapshot.data?.docs ?? [];
-        if (docs.isNotEmpty) {
-          //user has saved to podcast
+    return TextButton(
+      onPressed: () {},
+      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('savedPodcasts')
+            .where('id', isEqualTo: docRef)
+            .snapshots(),
+        builder: (context, snapshot) {
+          final docs = snapshot.data?.docs ?? [];
+          if (docs.isNotEmpty) {
+            //user has saved to podcast
+            return const Icon(
+              FontAwesomeIcons.solidBookmark,
+              color: kBlueDark,
+            );
+          }
           return const Icon(
-            FontAwesomeIcons.solidBookmark,
-            size: 20,
+            FontAwesomeIcons.bookmark,
             color: kBlueDark,
           );
-        }
-        return const Icon(
-          FontAwesomeIcons.bookmark,
-          size: 20,
-          color: kBlueDark,
-        );
-      },
+        },
+      ),
     );
   }
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       leading: TextButton(
         child: const Icon(
           FontAwesomeIcons.chevronLeft,
@@ -250,14 +226,14 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         },
         style: kTextButtonStyle,
       ),
+      actions: [
+        _buildBookmarkIcon,
+      ],
     );
   }
 
-  Future<void> _showBottomSheet({
-    required BuildContext context,
-    required String title,
-    required String description,
-  }) {
+  Future<void> _showBottomSheet(
+      {required BuildContext context, required Podcast? podcast}) {
     return showMyBottomSheet(
       context: context,
       child: Column(
@@ -266,7 +242,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              title,
+              podcast?.title ?? '',
               style: kSFHeadLine2,
             ),
           ),
@@ -274,7 +250,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              description,
+              podcast?.description ?? '',
               style: kSFBody,
             ),
           ),

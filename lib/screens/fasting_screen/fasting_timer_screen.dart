@@ -34,7 +34,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   FastingInfo? fastingInfo;
 
   String getStartDate() {
-    return FormalDates.formatDm(date: fastingInfo!.startDate);
+    return FormalDates.formatDmyy(date: fastingInfo!.startDate);
   }
 
   String getEndDate() {

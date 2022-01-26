@@ -94,14 +94,13 @@ ThemeData _theme = ThemeData(
   ),
   iconTheme: const IconThemeData(
     color: kBlueDark,
-    size: 25,
+    size: kIconSize,
   ),
   appBarTheme: const AppBarTheme(
     elevation: 0,
     iconTheme: IconThemeData(
-      size: 25,
+      size: kIconSize,
       color: kBlueDark,
-      opacity: 0.5,
     ),
     backgroundColor: Colors.white,
   ),
@@ -114,8 +113,6 @@ ThemeData _theme = ThemeData(
     color: kBlueDark,
   ),
   sliderTheme: SliderThemeData(
-    trackHeight: 16.0,
-
     activeTrackColor: kBlueDark,
     thumbColor: kBlueDark,
     inactiveTrackColor: Colors.grey.shade300,

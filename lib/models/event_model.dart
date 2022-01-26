@@ -5,7 +5,9 @@ class Event {
   String description;
   String type;
   String image;
-  String zoomLink;
+  String? zoomLink;
+  Map<String, dynamic>? location;
+
   Event({
     required this.startDate,
     required this.endDate,
@@ -13,7 +15,8 @@ class Event {
     required this.description,
     required this.type,
     required this.image,
-    required this.zoomLink,
+    this.zoomLink,
+    this.location,
   });
 
   Map<String, dynamic> toMap() {

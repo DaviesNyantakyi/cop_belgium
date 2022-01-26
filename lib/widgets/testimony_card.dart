@@ -42,7 +42,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
           Radius.circular(10),
         ),
         boxShadow: [
-          boxShadow,
+          kBoxShadow,
         ],
       ),
       child: TextButton(
@@ -82,7 +82,7 @@ class _TestimonyCardState extends State<TestimonyCard> {
 
   Widget _buildDateCreated() {
     return Text(
-      FormalDates.formatDm(date: widget.testimonyInfo.date),
+      FormalDates.formatDmyy(date: widget.testimonyInfo.date),
       style: kSFCaption.copyWith(
         color: kBlueDark.withOpacity(0.50),
       ),

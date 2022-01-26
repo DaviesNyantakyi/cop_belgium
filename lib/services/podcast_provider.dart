@@ -15,6 +15,7 @@ class PodcastProvider extends ChangeNotifier {
       isLoading = true;
 
       final allPodcats = await PodcastService().getPodcast();
+
       podcasts.addAll(allPodcats);
       isLoading = false;
       notifyListeners();

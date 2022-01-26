@@ -1,15 +1,14 @@
-import 'package:cop_belgium/models/event.dart';
+import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
-import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 import 'package:cop_belgium/screens/events_screen/event_details_screen.dart';
+import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-enum EventType { normal, zoom }
+enum EventType { normal, online }
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -26,6 +25,43 @@ class _EventsScreenState extends State<EventsScreen> {
 
   EventType _eventType = EventType.normal;
 
+  List<Event> events = [
+    Event(
+      title: 'S04 E37 - Season 4 Finale Episode: Make Room',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(
+        const Duration(hours: 3),
+      ),
+      type: 'online',
+      description:
+          'As we wrap up 2021 & Season 4, it’s time to evaluate What’s taking up space and Make ROOM for your healing, your goals and all that God has for you. In this episode I share some personal revelations on my healing journey from this year, from acknowledging the hard t',
+      image:
+          'https://images.unsplash.com/photo-1642793891075-4f53583a2079?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+      zoomLink:
+          'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
+    ),
+    Event(
+      title: 'S04 E37 - Season 4 Finale Episode: Make Room',
+      startDate: DateTime.now(),
+      endDate: DateTime.now().add(
+        const Duration(hours: 3),
+      ),
+      location: {
+        'street': 'Middelolenlaan 123',
+        'podstcode': '2100',
+        'city': 'Deurne',
+        'lat': '51.31830821507976',
+        'long': '4.939745926843822'
+      },
+      type: 'normal',
+      description:
+          'As we wrap up 2021 & Season 4, it’s time to evaluate What’s taking up space and Make ROOM for your healing, your goals and all that God has for you. In this episode I share some personal revelations on my healing journey from this year, from acknowledging the hard t',
+      image:
+          'https://images.unsplash.com/photo-1642793891075-4f53583a2079?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+      zoomLink:
+          'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
+    ),
+  ];
   @override
   void initState() {
     _selectedEvents = {};
@@ -74,6 +110,30 @@ class _EventsScreenState extends State<EventsScreen> {
           children: [
             _buildCalendar(),
             const SizedBox(height: 35),
+            ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+              separatorBuilder: (context, _) => const SizedBox(
+                height: kCardSpacing,
+              ),
+              shrinkWrap: true,
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return EventCard(
+                  event: events[index],
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => EventDetailScreen(
+                          eventType: events[index].type,
+                          event: events[index],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            )
           ],
         ),
       ),
@@ -90,7 +150,23 @@ class _EventsScreenState extends State<EventsScreen> {
       },
       focusedDay: _focusedDay,
       calendarFormat: _calendarFormat,
+      daysOfWeekStyle: const DaysOfWeekStyle(
+        weekdayStyle: kSFCaption,
+        weekendStyle: kSFCaption,
+      ),
       headerStyle: HeaderStyle(
+        titleTextStyle: kSFHeadLine2,
+        leftChevronMargin: const EdgeInsets.only(left: 2, right: 10),
+        rightChevronMargin: const EdgeInsets.only(right: 2, left: 10),
+        formatButtonTextStyle: kSFBtnStyleBold,
+        leftChevronIcon: const Icon(
+          FontAwesomeIcons.chevronLeft,
+          color: kBlueDark,
+        ),
+        rightChevronIcon: const Icon(
+          FontAwesomeIcons.chevronRight,
+          color: kBlueDark,
+        ),
         formatButtonDecoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
             Radius.circular(5),
@@ -99,6 +175,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
       ),
       calendarStyle: CalendarStyle(
+        defaultTextStyle: kSFBody,
         defaultDecoration: const BoxDecoration(
           shape: BoxShape.rectangle,
         ),
@@ -127,6 +204,9 @@ class _EventsScreenState extends State<EventsScreen> {
           borderRadius: BorderRadius.all(
             Radius.circular(5),
           ),
+        ),
+        outsideTextStyle: kSFBodyBold.copyWith(
+          color: kBlueDark.withOpacity(0.3),
         ),
       ),
       selectedDayPredicate: (day) {
@@ -180,10 +260,12 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
         content: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
+            const contentPadding = EdgeInsets.all(0);
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 RadioListTile<EventType>(
+                  contentPadding: contentPadding,
                   activeColor: kBlueDark,
                   value: EventType.normal,
                   groupValue: _eventType,
@@ -194,10 +276,11 @@ class _EventsScreenState extends State<EventsScreen> {
                   },
                 ),
                 RadioListTile<EventType>(
+                  contentPadding: contentPadding,
                   activeColor: kBlueDark,
-                  value: EventType.zoom,
+                  value: EventType.online,
                   groupValue: _eventType,
-                  title: const Text('Zoom', style: kSFBody),
+                  title: const Text('Online', style: kSFBody),
                   onChanged: (value) {
                     _eventType = value!;
                     setState(() {});
@@ -210,7 +293,10 @@ class _EventsScreenState extends State<EventsScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel', style: kSFCaptionBold),
+            child: const Text(
+              'Cancel',
+              style: kSFBody2Bold,
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -226,7 +312,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 ),
               );
             },
-            child: const Text('Continue', style: kSFCaptionBold),
+            child: const Text('OK', style: kSFBodyBold),
           ),
         ],
       ),

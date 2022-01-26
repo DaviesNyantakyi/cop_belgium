@@ -31,7 +31,7 @@ class FeaturedReleaseCard extends StatelessWidget {
           fit: BoxFit.cover,
           image: CachedNetworkImageProvider(episode.image!),
         ),
-        boxShadow: [boxShadow],
+        boxShadow: [kBoxShadow],
       ),
       child: TextButton(
         onPressed: () {

@@ -478,7 +478,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SizedBox(height: 5),
         Text(
           nameErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -493,7 +493,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SizedBox(height: 5),
         Text(
           emailErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -508,7 +508,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SizedBox(height: 5),
         Text(
           birthDateErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -545,7 +545,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     birthDate == null
                         ? 'Birthday'
                         : FormalDates.formatDmyyyy(date: birthDate),
-                    style: birthDate == null ? kSFBodyBold2 : kSFBodyBold,
+                    style: birthDate == null ? kSFBodyBold : kSFBodyBold,
                   )
                 ],
               ),
@@ -613,7 +613,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         const SizedBox(height: 5),
         Text(
           genderErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );

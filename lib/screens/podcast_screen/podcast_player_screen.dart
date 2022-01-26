@@ -29,8 +29,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   double totalDuration = 0;
   double currentposition = 0;
   Episode? episode;
-  String? title;
-  String? description;
+
   Duration? newPosition;
   int seekDuration = 15000;
 
@@ -55,8 +54,6 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
       }
 
       Duration? duration = await player.setUrl(episode!.audio);
-      title = episode!.title;
-      description = episode!.title;
 
       getTotalDuration(duration: duration);
       getcurretPostion();
@@ -108,17 +105,12 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             child: Column(
               children: [
                 _buildImage(),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildTitleDescription(),
-                    const SizedBox(height: 32),
-                    _slider(),
-                    const SizedBox(height: 32),
-                    _buildMediaControls()
-                  ],
-                ),
+                const SizedBox(height: 20),
+                _buildTitleDescription(),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                _slider(),
+                const SizedBox(height: 32),
+                _buildMediaControls(),
               ],
             ),
           ),
@@ -192,8 +184,9 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     if (episode?.image != null) {
       return Container(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.37,
+        height: MediaQuery.of(context).size.height * 0.40,
         decoration: BoxDecoration(
+          boxShadow: [kBoxShadow],
           color: kGrey,
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -229,6 +222,15 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
         },
         style: kTextButtonStyle,
       ),
+      actions: [
+        TextButton(
+          child: const Icon(
+            FontAwesomeIcons.arrowDown,
+            color: kBlueDark,
+          ),
+          onPressed: () {},
+        )
+      ],
     );
   }
 
@@ -315,28 +317,34 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
       return TextButton(
         style: kTextButtonStyle,
         onPressed: () {
-          _showBottomSheet(
-            context: context,
-            title: title!,
-            description: description!,
-          );
+          _showBottomSheet(context: context, episode: episode);
         },
         child: Column(
           children: [
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                title!,
+                episode?.title ?? '',
                 style: kSFHeadLine2,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                description!,
+                'by ${episode?.author ?? ''}',
+                style: kSFCaption,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                episode?.description ?? '',
                 style: kSFBody,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -374,8 +382,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
 
   Future<void> _showBottomSheet({
     required BuildContext context,
-    required String title,
-    required String description,
+    required Episode? episode,
   }) {
     return showMyBottomSheet(
       context: context,
@@ -385,7 +392,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              title,
+              episode?.title ?? '',
               style: kSFHeadLine2,
             ),
           ),
@@ -393,7 +400,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           Container(
             alignment: Alignment.centerLeft,
             child: Text(
-              description,
+              episode?.description ?? '',
               style: kSFBody,
             ),
           ),

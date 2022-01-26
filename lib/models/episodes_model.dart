@@ -3,11 +3,13 @@ class Episode {
   final String title;
   final String description;
   final String audio;
+  final String author;
   final int duration;
   final DateTime date;
   Episode({
     required this.image,
     required this.title,
+    required this.author,
     required this.description,
     required this.audio,
     required this.duration,
@@ -19,6 +21,7 @@ class Episode {
       'audio': episode.audio,
       'image': episode.image,
       'title': episode.title,
+      'author': episode.author,
       'description': episode.description,
       'duration': episode.duration,
       'date': episode.date.millisecondsSinceEpoch,
@@ -29,6 +32,7 @@ class Episode {
     return Episode(
       audio: map['audio'],
       image: map['image'],
+      author: map['author'],
       title: map['title'],
       description: map['description'],
       duration: map['duration'],

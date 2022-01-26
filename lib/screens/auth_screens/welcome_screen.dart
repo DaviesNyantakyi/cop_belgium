@@ -139,7 +139,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         const SizedBox(height: 5),
         Text(
           emailErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );
@@ -154,7 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         const SizedBox(height: 5),
         Text(
           passwordErrorText!,
-          style: kSFUnderline.copyWith(color: kRed),
+          style: kSFCaption.copyWith(color: kRed),
         )
       ],
     );

@@ -3,63 +3,86 @@ import 'package:flutter/material.dart';
 //Fonts
 const String _sfDisplayFont = 'SFDisplay';
 
-const kSFUnderline = TextStyle(
-  fontWeight: FontWeight.w400,
-  color: kBlueDark,
-  fontSize: 12,
-  fontFamily: _sfDisplayFont,
-);
-const kSFUnderlineBold = TextStyle(
-  fontWeight: FontWeight.w700,
-  color: kBlueDark,
-  fontSize: 12,
-  fontFamily: _sfDisplayFont,
-);
-
+//
 const kSFCaption = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlueDark,
-  fontSize: 14,
+  fontSize: 12,
   fontFamily: _sfDisplayFont,
 );
 const kSFCaptionBold = TextStyle(
-  fontWeight: FontWeight.w700,
+  fontWeight: FontWeight.bold,
   color: kBlueDark,
-  fontSize: 14,
+  fontSize: 12,
   fontFamily: _sfDisplayFont,
 );
 
+// for normal text eg when reading
 const kSFBody = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlueDark,
-  fontSize: 17,
+  fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBodyBold = TextStyle(
-  fontWeight: FontWeight.w700,
+  fontWeight: FontWeight.bold,
   color: kBlueDark,
-  fontSize: 17,
+  fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
-TextStyle kSFBodyBold2 = TextStyle(
-  fontWeight: FontWeight.w700,
-  color: kBlueDark.withOpacity(0.5),
-  fontSize: 17,
+const kSFBody2 = TextStyle(
+  fontWeight: FontWeight.w400,
+  color: kBlueDark,
+  fontSize: 14,
+  height: 1.4,
+  fontFamily: _sfDisplayFont,
+);
+const kSFBody2Bold = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: kBlueDark,
+  fontSize: 14,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 
-const kSFHeadLine2 = TextStyle(
-  fontWeight: FontWeight.w700,
+TextStyle kSFTextFieldStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: kBlueDark.withOpacity(0.5),
+  fontSize: 16,
+  height: 1.4,
+  fontFamily: _sfDisplayFont,
+);
+
+// used for buttons
+const kSFBtnStyleNormal = TextStyle(
+  fontWeight: FontWeight.w400,
+  color: kBlueDark,
+  fontSize: 14,
+  height: 1.4,
+  fontFamily: _sfDisplayFont,
+);
+
+const kSFBtnStyleBold = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: kBlueDark,
+  fontSize: 14,
+  height: 1.4,
+  fontFamily: _sfDisplayFont,
+);
+
+// headlines of articals
+const kSFHeadLine1 = TextStyle(
+  fontWeight: FontWeight.bold,
   fontSize: 24,
   color: kBlueDark,
   fontFamily: _sfDisplayFont,
 );
-const kSFHeadLine1 = TextStyle(
-  fontWeight: FontWeight.w700,
-  fontSize: 30,
+
+const kSFHeadLine2 = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
   color: kBlueDark,
   fontFamily: _sfDisplayFont,
 );
@@ -122,8 +145,11 @@ const double kButtonSpacing = 25;
 const double kAppbarPadding = 20.0;
 const double kBodyPadding = 10.0;
 const double kIconSize = 24;
+const double kCardSpacing = 10;
 
-BoxShadow boxShadow = BoxShadow(
+const double kCardContentPadding = 16;
+
+BoxShadow kBoxShadow = BoxShadow(
   offset: const Offset(0, 4),
   blurRadius: 10,
   color: Colors.black.withOpacity(0.2),

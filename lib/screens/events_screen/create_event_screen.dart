@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:cop_belgium/screens/events_screen/events_screen.dart';
-import 'package:cop_belgium/services/api_key.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,6 +38,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime? startDate;
 
   DateTime? endDate;
+  DateTime? birthDate;
 
   File? image;
   bool isLoading = false;
@@ -89,31 +90,83 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Scaffold(
       appBar: _buildAppbar(context: context),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                _buildImage(),
-                const SizedBox(height: 16),
-                _buildDescription(),
-                const Divider(),
-                _buildEventType(),
-                const Divider(),
-                _buildStartEndDate(),
-              ],
-            ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildImage(),
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+                child: Column(
+                  children: [
+                    _buildDescription(),
+                    const Divider(),
+                    _buildEventType(),
+                    const Divider(),
+                    _buildStartEndDate(),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  Future<void> showDatePicker() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    await showMyBottomSheet(
+      isDismissible: false,
+      context: context,
+      height: 300,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 200,
+              child: Theme(
+                data: ThemeData(),
+                child: CupertinoDatePicker(
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  maximumDate: DateTime.now(),
+                  minimumDate: DateTime(1900, 01, 31),
+                  minimumYear: 1900,
+                  maximumYear: DateTime.now().year,
+                  onDateTimeChanged: (date) {
+                    HapticFeedback.lightImpact();
+
+                    birthDate = date;
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  },
+                ),
+              ),
+            ),
+            Buttons.buildBtn(
+              context: context,
+              btnText: 'Done',
+              height: kButtonHeight,
+              width: double.infinity,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildEventType() {
-    if (widget.eventType == EventType.zoom) {
+    if (widget.eventType == EventType.online) {
       return _buildTF(
         initialValue: title,
-        hintText: 'Zoom Link',
+        hintText: 'Link',
         style: kSFBodyBold,
         onChanged: (value) {
           title = value;
@@ -129,26 +182,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         'Add Location',
         style: kSFBody,
       ),
-      onTap: () async {
-        final p = await PlacesAutocomplete.show(
-          context: context,
-          apiKey: kGoogleApiKey,
-          radius: 10000000,
-          types: [],
-          strictbounds: false,
-          mode: Mode.overlay,
-          language: "be",
-          decoration: InputDecoration(
-            hintText: 'Search',
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        );
-      },
+      onTap: () async {},
     );
   }
 
@@ -167,49 +201,12 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         _buildTF(
           initialValue: description,
           style: kSFBodyBold,
-          hintText: 'About event',
+          hintText: 'Event description',
           onChanged: (value) {
             description = value;
           },
         ),
       ],
-    );
-  }
-
-  Future<String?> _showEventDialog() async {
-    String? link;
-    return await showDialog<String?>(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(
-          'Zoom Link',
-          style: kSFBodyBold,
-        ),
-        content: MyTextField(
-          onChanged: (value) {
-            link = value;
-          },
-          validator: Validators.normalValidator,
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: kSFCaptionBold),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, link);
-            },
-            child: const Text('Ok', style: kSFCaptionBold),
-          ),
-        ],
-      ),
     );
   }
 
@@ -222,33 +219,34 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             color: kBlueDark,
           ),
           title: startDate != null
-              ? Text(FormalDates.formatDmyHm(date: startDate))
-              : Text(FormalDates.formatDmyHm(date: DateTime.now())),
+              ? Text(FormalDates.formatEDmy(date: startDate))
+              : Text(FormalDates.formatEDmy(date: DateTime.now())),
           onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.utc(1999, 01, 31),
-              lastDate: DateTime.utc(2030, 12, 31),
-            );
+            showDatePicker();
+            //   DateTime? pickedDate = await showDatePicker(
+            //     context: context,
+            //     initialDate: DateTime.now(),
+            //     firstDate: DateTime.utc(1999, 01, 31),
+            //     lastDate: DateTime.utc(2030, 12, 31),
+            //   );
 
-            TimeOfDay? pickedTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay.now(),
-            );
+            //   TimeOfDay? pickedTime = await showTimePicker(
+            //     context: context,
+            //     initialTime: TimeOfDay.now(),
+            //   );
 
-            if (pickedDate != null && pickedTime != null) {
-              DateTime newDateTime = DateTime(
-                pickedDate.year,
-                pickedDate.month,
-                pickedDate.day,
-                pickedTime.hour,
-                pickedTime.minute,
-              );
-              startDate = newDateTime;
-            }
+            //   if (pickedDate != null && pickedTime != null) {
+            //     DateTime newDateTime = DateTime(
+            //       pickedDate.year,
+            //       pickedDate.month,
+            //       pickedDate.day,
+            //       pickedTime.hour,
+            //       pickedTime.minute,
+            //     );
+            //     startDate = newDateTime;
+            //   }
 
-            setState(() {});
+            //   setState(() {});
           },
         ),
         ListTile(
@@ -257,35 +255,35 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             color: kBlueDark,
           ),
           title: endDate != null
-              ? Text(FormalDates.formatDmyHm(date: endDate))
-              : Text(FormalDates.formatDmyHm(
+              ? Text(FormalDates.formatEDmy(date: endDate))
+              : Text(FormalDates.formatEDmy(
                   date: DateTime.now().add(const Duration(
                   minutes: 30,
                 )))),
           onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime.utc(1999, 01, 31),
-              lastDate: DateTime.utc(2030, 12, 31),
-            );
+            // DateTime? pickedDate = await showDatePicker(
+            //   context: context,
+            //   initialDate: DateTime.now(),
+            //   firstDate: DateTime.utc(1999, 01, 31),
+            //   lastDate: DateTime.utc(2030, 12, 31),
+            // );
 
-            TimeOfDay? pickedTime = await showTimePicker(
-              context: context,
-              initialTime: TimeOfDay.now(),
-            );
+            // TimeOfDay? pickedTime = await showTimePicker(
+            //   context: context,
+            //   initialTime: TimeOfDay.now(),
+            // );
 
-            if (pickedDate != null && pickedTime != null) {
-              DateTime newDateTime = DateTime(
-                pickedDate.year,
-                pickedDate.month,
-                pickedDate.day,
-                pickedTime.hour,
-                pickedTime.minute,
-              );
-              endDate = newDateTime;
-              setState(() {});
-            }
+            // if (pickedDate != null && pickedTime != null) {
+            //   DateTime newDateTime = DateTime(
+            //     pickedDate.year,
+            //     pickedDate.month,
+            //     pickedDate.day,
+            //     pickedTime.hour,
+            //     pickedTime.minute,
+            //   );
+            //   endDate = newDateTime;
+            //   setState(() {});
+            // }
           },
         ),
       ],
@@ -439,29 +437,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Widget _buildAction() {
-    if (widget.editable!) {
-      return TextButton(
-        style: kTextButtonStyle,
-        child: Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-          child: const Text('Save', style: kSFBodyBold),
-        ),
-        onPressed: () async {},
-      );
-    }
-    return TextButton(
-      style: kTextButtonStyle,
-      child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-        child: const Text('Save', style: kSFBodyBold),
-      ),
-      onPressed: () async {},
-    );
-  }
-
   Widget _buildPopupMenu({required BuildContext context}) {
     if (widget.editable == true) {
       return PopupMenuButton<String>(
@@ -502,7 +477,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         child: Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-          child: const Text('Post', style: kSFBodyBold),
+          child: const Text('Create', style: kSFBodyBold),
         ),
         onPressed: () async {},
       );

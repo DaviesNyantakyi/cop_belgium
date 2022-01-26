@@ -1,20 +1,18 @@
+import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EventCard extends StatefulWidget {
-  final String title;
-  final String date;
-  final String eventType;
-
+  final Event event;
   final VoidCallback onPressed;
+
   const EventCard({
     Key? key,
-    required this.title,
-    required this.date,
+    required this.event,
     required this.onPressed,
-    required this.eventType,
   }) : super(key: key);
 
   @override
@@ -30,7 +28,7 @@ class _EventCardState extends State<EventCard> {
       height: 130,
       decoration: BoxDecoration(
         boxShadow: [
-          boxShadow,
+          kBoxShadow,
         ],
         color: Colors.white,
         borderRadius: const BorderRadius.all(
@@ -93,11 +91,7 @@ class _EventCardState extends State<EventCard> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildCalendarDetails(
-          icon: FontAwesomeIcons.calendar,
-          date: '20 May 21',
-          time: '8:30 AM',
-        ),
+        _buildCalendarDetails(),
         const SizedBox(height: 7),
         _buildLocationDetails()
       ],
@@ -106,18 +100,14 @@ class _EventCardState extends State<EventCard> {
 
   Widget _buildTitle() {
     return Text(
-      widget.title,
+      widget.event.title,
       style: kSFBodyBold,
-      maxLines: 2,
+      maxLines: 1,
       overflow: TextOverflow.ellipsis,
     );
   }
 
-  Widget _buildCalendarDetails({
-    required IconData icon,
-    required String date,
-    required String time,
-  }) {
+  Widget _buildCalendarDetails() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -129,8 +119,8 @@ class _EventCardState extends State<EventCard> {
               Radius.circular(5),
             ),
           ),
-          child: Icon(
-            icon,
+          child: const Icon(
+            FontAwesomeIcons.calendar,
             color: kBlueDark,
             size: 20,
           ),
@@ -140,11 +130,11 @@ class _EventCardState extends State<EventCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              date,
-              style: kSFCaption,
+              FormalDates.formatEDmy(date: widget.event.startDate),
+              style: kSFBody2Bold,
             ),
             Text(
-              time,
+              '${FormalDates.formatHm(date: widget.event.startDate)} - ${FormalDates.formatHm(date: widget.event.endDate)}',
               style: kSFCaption,
             ),
           ],
@@ -154,7 +144,7 @@ class _EventCardState extends State<EventCard> {
   }
 
   Widget _buildLocationDetails() {
-    if (widget.eventType == 'online') {
+    if (widget.event.type == 'online') {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -174,7 +164,7 @@ class _EventCardState extends State<EventCard> {
           const SizedBox(width: 6),
           const Text(
             'Zoom',
-            style: kSFCaption,
+            style: kSFBody,
           )
         ],
       );
@@ -198,12 +188,12 @@ class _EventCardState extends State<EventCard> {
           ),
         ),
         const SizedBox(width: 6),
-        const Flexible(
+        Flexible(
           child: Text(
-            'Patriottenstraat 94, 2300 Turnhouttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt',
-            style: kSFCaption,
+            widget.event.location!.values.toString(),
+            style: kSFBody2,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            maxLines: 1,
           ),
         ),
       ],

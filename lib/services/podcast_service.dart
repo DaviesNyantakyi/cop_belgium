@@ -49,6 +49,7 @@ class PodcastService {
     List<Episode> episodes = rssFeed.items!.map((rssItem) {
       return Episode(
         title: rssItem.itunes!.title!,
+        author: rssItem.author ?? rssItem.itunes?.author ?? '',
         image: rssItem.itunes?.image?.href ?? rssFeed.itunes!.image!.href,
         duration: rssItem.itunes!.duration!.inMilliseconds,
         date: rssItem.pubDate!,

@@ -41,7 +41,7 @@ class MyTextField extends StatelessWidget {
         filled: true,
         errorMaxLines: 2,
         hintText: hintText,
-        hintStyle: kSFBodyBold2,
+        hintStyle: kSFTextFieldStyle,
         fillColor: kBlueLight,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(

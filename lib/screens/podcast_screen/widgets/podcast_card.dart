@@ -21,10 +21,14 @@ class PodcastCard extends StatelessWidget {
           width: 170,
           height: 170,
           decoration: BoxDecoration(
+            boxShadow: [
+              kBoxShadow,
+            ],
             color: kBlue, // card background color if imgae is null
             borderRadius: const BorderRadius.all(
               Radius.circular(15),
             ),
+
             image: DecorationImage(
               fit: BoxFit.cover,
               image: CachedNetworkImageProvider(podcast.imageUrl),
