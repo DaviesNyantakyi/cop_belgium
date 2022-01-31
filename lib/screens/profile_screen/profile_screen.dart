@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
+import 'package:cop_belgium/screens/auth_screens/login_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
@@ -10,7 +10,6 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum WhyFarther { editProfile, settings }
 
@@ -34,7 +33,7 @@ class _ProfileScreensState extends State<ProfileScreens>
 
   Future<void> popUp(String? result) async {
     try {
-      if (result == WelcomeScreen.welcomeScreen) {
+      if (result == LoginScreen.loginScreen) {
         await FireAuth().singout();
         Navigator.pop(context);
       }
@@ -81,13 +80,13 @@ class _ProfileScreensState extends State<ProfileScreens>
             TabBar(
               controller: tabController,
               labelStyle: kSFBodyBold,
-              labelColor: kBlueDark,
+              labelColor: kBlack,
               isScrollable: true,
-              indicatorColor: kBlueDark,
+              indicatorColor: kBlack,
               padding: const EdgeInsets.symmetric(horizontal: 25),
-              unselectedLabelColor: kBlueDark,
+              unselectedLabelColor: kBlack,
               indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: kBlueDark, width: 2),
+                borderSide: BorderSide(color: kBlack, width: 2),
               ),
               tabs: const [
                 Tab(text: 'Podcasts'),
@@ -99,7 +98,7 @@ class _ProfileScreensState extends State<ProfileScreens>
               child: TabBarView(
                 controller: tabController,
                 children: const [
-                  UserSavedPodcastView(),
+                  SavedPodcastView(),
                   UserTestimoniesView(),
                   UserFastingHistoryView()
                 ],
@@ -136,14 +135,14 @@ class _ProfileScreensState extends State<ProfileScreens>
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
         radius: 50,
-        backgroundColor: kBlueDark,
+        backgroundColor: kBlack,
       );
     }
     return const CircleAvatar(
       radius: 50,
-      backgroundColor: kBlueDark,
+      backgroundColor: kBlack,
       child: Icon(
-        FontAwesomeIcons.userAlt,
+        Icons.person_outline_outlined,
         color: Colors.white,
       ),
     );
@@ -158,7 +157,7 @@ class _ProfileScreensState extends State<ProfileScreens>
       ),
       elevation: 4,
       icon: const Icon(
-        FontAwesomeIcons.ellipsisV,
+        Icons.more_vert_outlined,
         size: 20,
       ),
       onSelected: popUp,
@@ -171,7 +170,7 @@ class _ProfileScreensState extends State<ProfileScreens>
             ),
           ),
           PopupMenuItem<String>(
-            value: WelcomeScreen.welcomeScreen,
+            value: LoginScreen.loginScreen,
             child: const Text(
               'Logout',
             ),

@@ -85,7 +85,7 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
           }
           if (snapshot.hasError) {
             return TryAgainView(
-              btnColor: isLoading ? kGrey : kYellowDark,
+              btnColor: isLoading ? kGrey : kBlue,
               onPressed: isLoading ? null : tryAgain,
             );
           }

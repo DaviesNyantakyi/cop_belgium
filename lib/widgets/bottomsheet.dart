@@ -7,11 +7,14 @@ Future<void> showMyBottomSheet({
   required BuildContext context,
   Widget? child,
   bool? isDismissible = true,
+  bool isScrollControlled = true,
+  bool enableDrag = true,
   double? height = kBottomSheetHeight,
 }) async {
   return await showModalBottomSheet<void>(
-    isScrollControlled: true,
+    isScrollControlled: isScrollControlled,
     isDismissible: isDismissible!,
+    enableDrag: enableDrag,
     context: context,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
@@ -61,7 +64,10 @@ Future<void> showMyFastingBottomSheet(
             topRight: Radius.circular(10),
           ),
         ),
-        child: child,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(kBodyPadding),
+          child: child,
+        ),
       );
     },
   );

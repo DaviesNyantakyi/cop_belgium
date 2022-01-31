@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
@@ -16,7 +14,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -152,14 +149,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       bool isValid = validateForm();
 
       if (isValid) {
-        final user = CopUser(
-          firstName: firstNameCntlr.text,
-          lastName: lastNameCntlr.text,
-          email: emailCntlr.text,
-          birthDate: birthDate!,
-          gender: genderCntlr.text,
-          isAdmin: isAdimin!,
-        );
+        // final user = CopUser(
+        //   firstName: firstNameCntlr.text,
+        //   lastName: lastNameCntlr.text,
+        //   email: emailCntlr.text,
+        //   birthDate: birthDate!,
+        //   gender: genderCntlr.text,
+        //   isAdmin: isAdimin!,
+        // );
         if (mounted) {
           setState(() {});
         }
@@ -209,7 +206,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await EasyLoading.show(
           maskType: EasyLoadingMaskType.black,
           indicator: const CircularProgressIndicator(
-            color: kBlueDark,
+            color: kBlack,
           ),
         );
         await FireAuth().deleteUser(password: passwordCntlr.text);
@@ -284,7 +281,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return CircleAvatar(
         backgroundImage: Image.file(image!).image,
         radius: 60,
-        backgroundColor: kBlueDark,
+        backgroundColor: kBlack,
         child: TextButton(
           style: kTextButtonStyle.copyWith(
             shape: MaterialStateProperty.all(
@@ -307,7 +304,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(photoUrl!),
         radius: 60,
-        backgroundColor: kBlueDark,
+        backgroundColor: kBlack,
         child: TextButton(
           style: kTextButtonStyle.copyWith(
             shape: MaterialStateProperty.all(
@@ -328,7 +325,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     return CircleAvatar(
       radius: 60,
-      backgroundColor: kBlueDark,
+      backgroundColor: kBlack,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
         child: SizedBox(
@@ -337,7 +334,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: TextButton(
             style: kTextButtonStyle,
             child: const Icon(
-              FontAwesomeIcons.camera,
+              Icons.photo_camera_outlined,
               color: Colors.white,
             ),
             onPressed: () async {
@@ -356,7 +353,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         children: [
           _buildBtn(
             btText: 'Reset Password',
-            textColor: kBlueDark,
+            textColor: kBlack,
             onPressed: resetPassword,
           ),
           _buildBtn(
@@ -387,7 +384,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ],
         androidUiSettings: const AndroidUiSettings(
           toolbarTitle: 'Cropper',
-          toolbarColor: kBlueDark,
+          toolbarColor: kBlack,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.original,
           lockAspectRatio: false,
@@ -536,8 +533,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Row(
                 children: [
                   const Icon(
-                    FontAwesomeIcons.calendar,
-                    color: kBlueDark,
+                    Icons.calendar_today_outlined,
+                    color: kBlack,
                     size: kIconSize,
                   ),
                   const SizedBox(width: 10),
@@ -727,8 +724,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     await pickImage(type: 'camera');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.camera,
-                    color: kBlueDark,
+                    Icons.photo_camera_outlined,
+                    color: kBlack,
                     size: kIconSize,
                   ),
                   title: const Text(
@@ -741,8 +738,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     await pickImage(type: 'gallery');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.images,
-                    color: kBlueDark,
+                    Icons.collections_outlined,
+                    color: kBlack,
                     size: kIconSize,
                   ),
                   title: const Text(
@@ -761,7 +758,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           Navigator.pop(context);
                         },
                         leading: const Icon(
-                          FontAwesomeIcons.trash,
+                          Icons.delete_outline_outlined,
                           color: kRed,
                           size: kIconSize,
                         ),
@@ -832,8 +829,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
+            Icons.chevron_left_outlined,
+            color: kBlack,
           ),
         ),
         onPressed: () {

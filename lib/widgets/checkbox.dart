@@ -1,6 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyCheckBox extends StatefulWidget {
   final String label;
@@ -37,10 +36,10 @@ class _MyCheckBoxState extends State<MyCheckBox> {
             child: widget.groupsValue != null
                 ? Icon(
                     widget.value == widget.groupsValue
-                        ? FontAwesomeIcons.check
+                        ? Icons.check_outlined
                         : null,
                     size: 15,
-                    color: kBlueDark,
+                    color: kBlack,
                   )
                 : Container(),
           ),

@@ -1,7 +1,6 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 TextStyle _textStyle = kSFBodyBold;
 
@@ -88,8 +87,8 @@ class AboutChruchScreen extends StatelessWidget {
       ),
       leading: TextButton(
         child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          Icons.chevron_left_outlined,
+          color: kBlack,
         ),
         onPressed: () {
           Navigator.pop(context);

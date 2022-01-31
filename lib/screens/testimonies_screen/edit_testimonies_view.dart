@@ -60,12 +60,14 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
           List<TestimonyInfo> allTestmonies = [];
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const TestimoniesViewShimmer();
+            return const Center(
+              child: kProgressIndicator,
+            );
           }
 
           if (snapshot.hasError) {
             return TryAgainView(
-              btnColor: isLoading ? kGrey : kYellowDark,
+              btnColor: isLoading ? kGrey : kBlue,
               onPressed: isLoading ? null : tryAgain,
             );
           }
@@ -96,7 +98,6 @@ class _EditTestimoniesViewState extends State<EditTestimoniesView> {
             separatorBuilder: (context, index) => const SizedBox(height: 14),
             itemBuilder: (context, index) {
               return TestimonyCard(
-                editable: true,
                 testimonyInfo: allTestmonies[index],
                 onPressedEdit: () async {
                   await Navigator.push(context,

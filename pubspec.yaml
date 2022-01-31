@@ -33,7 +33,6 @@ dependencies:
 
 
   cupertino_icons: ^1.0.2
-  font_awesome_flutter: ^9.2.0
 
 
   numberpicker: ^2.1.1 # fasting pciker
@@ -53,7 +52,6 @@ dependencies:
   just_audio: ^0.9.18 #audio player
   webfeed: ^0.7.0 # for parsing rss 
   http: ^0.13.4 #making http request
-  skeletons: ^0.0.3 #body of shimmers 
   html: ^0.15.0 #r emoves p tag from podcast description
   cached_network_image: ^3.2.0
   image_picker: ^0.8.4+4
@@ -64,6 +62,7 @@ dependencies:
   table_calendar: ^3.0.3 # events
   date_time_picker: ^2.1.0 # to pick date or time
   timeago: ^3.1.0 # eg: 2 day ago
+
 
  
 

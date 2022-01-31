@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class FastingHistoryScreen extends StatefulWidget {
   static String fastingHistoryScreen = 'fastingHistoryScreen';
@@ -88,7 +87,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
             }
             if (snapshot.hasError) {
               return TryAgainView(
-                btnColor: isLoading ? kGrey : kYellowDark,
+                btnColor: isLoading ? kGrey : kBlue,
                 onPressed: isLoading ? null : tryAgain,
               );
             }
@@ -135,8 +134,8 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: kAppbarPadding),
           child: Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
+            Icons.chevron_left_outlined,
+            color: kBlack,
           ),
         ),
         onPressed: () {

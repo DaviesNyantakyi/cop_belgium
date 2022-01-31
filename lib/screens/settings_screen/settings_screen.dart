@@ -6,7 +6,6 @@ import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 TextStyle _textStyle = kSFBodyBold;
@@ -205,8 +204,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       leading: TextButton(
         child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          Icons.chevron_left_outlined,
+          color: kBlack,
         ),
         onPressed: () {
           Navigator.pop(context);

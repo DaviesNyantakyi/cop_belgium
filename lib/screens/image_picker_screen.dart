@@ -1,17 +1,18 @@
 import 'dart:io';
 
-import 'package:cop_belgium/services/fire_storage.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/church_selector.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 // TODO: ask for permision gallary and camera (check whatsaap process)
@@ -30,7 +31,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   File? image;
   bool isLoading = false;
 
-  TextStyle fontStyle = kSFBodyBold;
+  TextStyle fontStyle = kSFBody;
 
   Future<void> pickImage({required String type}) async {
     final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
@@ -52,7 +53,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             ],
             androidUiSettings: const AndroidUiSettings(
               toolbarTitle: 'Cropper',
-              toolbarColor: kBlueDark,
+              toolbarColor: kBlack,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false,
@@ -91,14 +92,21 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       }
       await EaslyLoadingIndicator.showLoading();
 
-      await FireStorage().uploadProfileImage(image: image);
+      // await FireStorage().uploadProfileImage(image: image);
+
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
       await EaslyLoadingIndicator.dismissLoading();
-      Navigator.pop(context);
+      // Navigator.pop(context);
+
+      Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const ChurchSelectorScreen(),
+          ));
     } on FirebaseException catch (e) {
       await EaslyLoadingIndicator.dismissLoading();
       debugPrint(e.toString());
@@ -129,10 +137,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 90),
-                const Text(
-                  'Choose a photo',
-                  style: kSFBodyBold,
-                ),
+                const Text('Add profile image.', style: kSFBodyBold),
                 const SizedBox(height: 40),
                 _buildImage(),
                 const SizedBox(height: 40),
@@ -154,13 +159,13 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           fit: BoxFit.cover,
         ).image,
         backgroundColor: kGrey,
-        child: TextButton(
-          onPressed: showBottomSheet,
-          style: kTextButtonStyle,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(kButtonRadius),
-            ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(100),
+          ),
+          child: TextButton(
+            onPressed: showBottomSheet,
+            style: kTextButtonStyle,
             child: Container(),
           ),
         ),
@@ -169,13 +174,18 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return CircleAvatar(
       radius: 90,
       backgroundColor: kGrey,
-      child: TextButton(
-        onPressed: showBottomSheet,
-        style: kTextButtonStyle,
-        child: const Center(
-          child: Icon(
-            FontAwesomeIcons.plus,
-            color: kBlueDark,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(100),
+        ),
+        child: TextButton(
+          onPressed: showBottomSheet,
+          style: kTextButtonStyle,
+          child: const Center(
+            child: Icon(
+              Icons.photo_camera_outlined,
+              color: kBlack,
+            ),
           ),
         ),
       ),
@@ -197,8 +207,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     await pickImage(type: 'camera');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.camera,
-                    color: kBlueDark,
+                    Icons.photo_camera_outlined,
+                    color: kBlack,
                     size: kIconSize,
                   ),
                   title: Text(
@@ -211,8 +221,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                     await pickImage(type: 'gallery');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.images,
-                    color: kBlueDark,
+                    Icons.collections_outlined,
+                    color: kBlack,
                     size: kIconSize,
                   ),
                   title: Text(
@@ -228,7 +238,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                           Navigator.pop(context);
                         },
                         leading: const Icon(
-                          FontAwesomeIcons.trash,
+                          Icons.delete_outline,
                           color: kRed,
                           size: kIconSize,
                         ),
@@ -249,7 +259,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   Widget _buildDoneBtn() {
     return Buttons.buildBtn(
       context: context,
-      color: isLoading ? kGrey : kYellowDark,
+      color: isLoading ? kGrey : kBlue,
       width: double.infinity,
       btnText: 'Done',
       onPressed: isLoading ? null : submit,

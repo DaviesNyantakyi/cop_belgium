@@ -11,6 +11,7 @@ class MyTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool? obscureText;
   final Widget? suffixIcon;
+  final Function(String)? onSubmitted;
   final TextEditingController? controller;
 
   const MyTextField({
@@ -19,6 +20,7 @@ class MyTextField extends StatelessWidget {
     this.initialValue,
     this.keyboardType,
     this.controller,
+    this.onSubmitted,
     this.onChanged,
     this.obscureText = false,
     this.validator,
@@ -33,7 +35,7 @@ class MyTextField extends StatelessWidget {
       key: key,
       validator: validator,
       initialValue: initialValue,
-      style: kSFBodyBold,
+      style: kSFTextFieldStyle,
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
@@ -41,8 +43,8 @@ class MyTextField extends StatelessWidget {
         filled: true,
         errorMaxLines: 2,
         hintText: hintText,
-        hintStyle: kSFTextFieldStyle,
-        fillColor: kBlueLight,
+        hintStyle: kSFTextFieldStyle.copyWith(color: Colors.black54),
+        fillColor: kGrey,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -59,6 +61,7 @@ class MyTextField extends StatelessWidget {
         ),
       ),
       onChanged: onChanged,
+      onFieldSubmitted: onSubmitted,
     );
   }
 }

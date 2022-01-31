@@ -5,11 +5,11 @@ import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletons/skeletons.dart';
 //TODO: Keeps loading when the screen is opened for the first time and the slider is moved
 
 class PodcastPlayerScreen extends StatefulWidget {
@@ -29,9 +29,10 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   double totalDuration = 0;
   double currentposition = 0;
   Episode? episode;
+  double playBackSpeed = 1.00;
 
   Duration? newPosition;
-  int seekDuration = 15000;
+  int seekDuration = 15000; // 15 sec fast forward and backward
 
   Future<void> stop() async {
     await player.stop();
@@ -48,30 +49,25 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   }
 
   Future<void> init() async {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) async {
-      if (mounted) {
-        episode = Provider.of<Episode>(context, listen: false);
-      }
+    if (mounted) {
+      episode = Provider.of<Episode>(context, listen: false);
+    }
 
-      Duration? duration = await player.setUrl(episode!.audio);
+    final duration = await player.setUrl(episode!.audio);
 
-      getTotalDuration(duration: duration);
-      getcurretPostion();
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    getTotalDuration(duration: duration);
+    getcurretPostion();
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void getTotalDuration({Duration? duration}) {
     DateTime date =
         DateTime.fromMillisecondsSinceEpoch(duration!.inMilliseconds.toInt());
-    if (mounted) {
-      setState(() {
-        totalDurationText = FormalDates.calculateTime(date: date);
-        totalDuration = duration.inMilliseconds.toDouble();
-      });
-    }
+    totalDurationText = FormalDates.calculateEpisodeTime(date: date);
+    totalDuration = duration.inMilliseconds.toDouble();
   }
 
   void getcurretPostion() {
@@ -81,7 +77,10 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
       if (mounted) {
         setState(() {
           currentposition = duration.inMilliseconds.toDouble();
-          currentPostionText = FormalDates.calculateTime(date: date);
+          currentPostionText = FormalDates.calculateEpisodeTime(date: date);
+          if (playBackSpeed != player.speed) {
+            player.setSpeed(playBackSpeed);
+          }
         });
       }
     });
@@ -104,17 +103,165 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                _buildImage(),
+                _BuildImage(episode: episode!),
                 const SizedBox(height: 20),
-                _buildTitleDescription(),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.06),
+                _BuildTitle(episode: episode),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+                _buildOptionsControls(),
                 _slider(),
-                const SizedBox(height: 32),
                 _buildMediaControls(),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildOptionsControls() {
+    Color color = kBlack.withOpacity(0.5);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Tooltip(
+          message: 'Playback speed',
+          child: IconButton(
+            onPressed: () {
+              _showPlayBackBottomSheet(context: context, episode: episode);
+            },
+            icon: Icon(
+              Icons.speed_outlined,
+              size: 30,
+              color: color,
+            ),
+          ),
+        ),
+        Tooltip(
+          message: 'Sleep timer',
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.mode_night_outlined,
+              size: 30,
+              color: color,
+            ),
+          ),
+        ),
+        Tooltip(
+          message: 'About podcast',
+          child: IconButton(
+            icon: Icon(
+              Icons.info_outline_rounded,
+              size: 30,
+              color: color,
+            ),
+            onPressed: () {
+              _showAboutBottomSheet(context: context, episode: episode);
+            },
+          ),
+        ),
+        Tooltip(
+          message: 'Volume',
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.volume_up_outlined,
+              size: 30,
+              color: color,
+            ),
+          ),
+        ),
+        Tooltip(
+          message: 'Download',
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.file_download_outlined,
+              size: 30,
+              color: color,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showAboutBottomSheet({
+    required BuildContext context,
+    required Episode? episode,
+  }) {
+    return showMyBottomSheet(
+      context: context,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              episode?.title ?? '',
+              style: kSFHeadLine2,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              episode?.description ?? '',
+              style: kSFBody,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _showPlayBackBottomSheet({
+    required BuildContext context,
+    required Episode? episode,
+  }) {
+    return showMyFastingBottomSheet(
+      context: context,
+      child: StatefulBuilder(
+        builder: (context, state) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Playback speed',
+                style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '$playBackSpeed x',
+                style: kSFHeadLine2,
+              ),
+              const SizedBox(height: 16),
+              Slider(
+                divisions: 10,
+                min: 0.5,
+                max: 3.0,
+                value: double.parse(playBackSpeed.toStringAsFixed(1)),
+                onChanged: (value) {
+                  playBackSpeed = value;
+                  state(() {});
+                },
+              ),
+              const SizedBox(height: kButtonSpacing),
+              Buttons.buildBtn(
+                width: 100,
+                context: context,
+                btnText: 'Save',
+                onPressed: () {
+                  setState(() {});
+                  Navigator.pop(context);
+                  print(playBackSpeed);
+                },
+              )
+            ],
+          );
+        },
       ),
     );
   }
@@ -144,91 +291,30 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     );
   }
 
-  Widget _buildDurationText() {
-    if (episode != null) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            currentPostionText!,
-            style: kSFBody,
-          ),
-          Text(
-            totalDurationText!,
-            style: kSFBody,
-          )
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          SkeletonItem(
-            child: Text(
-              '00:00',
-              style: kSFBody,
-            ),
-          ),
-          SkeletonItem(
-            child: Text(
-              '00:00',
-              style: kSFBody,
-            ),
-          )
-        ],
-      );
-    }
-  }
-
-  Widget _buildImage() {
-    if (episode?.image != null) {
-      return Container(
-        width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.40,
-        decoration: BoxDecoration(
-          boxShadow: [kBoxShadow],
-          color: kGrey,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(episode!.image!),
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-        ),
-      );
-    } else {
-      return SkeletonItem(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * 0.40,
-          decoration: const BoxDecoration(
-            color: kBlue,
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-          ),
-        ),
-      );
-    }
-  }
-
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white,
       leading: TextButton(
-        child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
-        ),
+        child: kBackButton(context: context),
         onPressed: () {
           Navigator.pop(context);
         },
         style: kTextButtonStyle,
       ),
-      actions: [
-        TextButton(
-          child: const Icon(
-            FontAwesomeIcons.arrowDown,
-            color: kBlueDark,
-          ),
-          onPressed: () {},
+    );
+  }
+
+  Widget _buildDurationText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          currentPostionText ?? '',
+          style: kSFBody,
+        ),
+        Text(
+          totalDurationText ?? '',
+          style: kSFBody,
         )
       ],
     );
@@ -241,171 +327,120 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.backward,
+              Icons.replay_30_outlined,
               size: 35,
             ),
-            color: kBlueDark,
-            onPressed: episode != null
-                ? () {
-                    var newduration =
-                        player.position - Duration(milliseconds: seekDuration);
+            color: kBlack,
+            onPressed: () {
+              var newduration =
+                  player.position - Duration(milliseconds: seekDuration);
 
-                    if (newduration > Duration.zero) {
-                      player.seek(newduration);
-                    }
-                    if (newduration.inMilliseconds < 0) {
-                      player.seek(Duration.zero);
-                    }
-                  }
-                : null,
+              if (newduration > Duration.zero) {
+                player.seek(newduration);
+              }
+              if (newduration.inMilliseconds < 0) {
+                player.seek(Duration.zero);
+              }
+            },
           ),
         ),
         const Flexible(child: SizedBox(width: 30)),
         player.processingState == ProcessingState.loading ||
                 player.processingState == ProcessingState.buffering
-            ? kCircularProgress
+            ? kProgressIndicator
             : IconButton(
                 padding: const EdgeInsets.all(0),
                 icon: Icon(
                   isPlaying == true
-                      ? FontAwesomeIcons.pause
-                      : FontAwesomeIcons.play,
-                  size: 45,
+                      ? Icons.pause_outlined
+                      : Icons.play_arrow_outlined,
+                  size: 50,
                 ),
-                color: kBlueDark,
-                onPressed: episode != null
-                    ? () {
-                        if (isPlaying) {
-                          stop();
-                        } else {
-                          play();
-                        }
-
-                        setState(() {
-                          isPlaying = !isPlaying;
-                        });
-                      }
-                    : null,
+                color: kBlack,
+                onPressed: () {
+                  if (isPlaying) {
+                    stop();
+                  } else {
+                    play();
+                  }
+                  setState(() {
+                    isPlaying = !isPlaying;
+                  });
+                },
               ),
         const Flexible(child: SizedBox(width: 30)),
         Flexible(
           child: IconButton(
             icon: const Icon(
-              FontAwesomeIcons.forward,
+              Icons.forward_30_outlined,
               size: 35,
             ),
-            color: kBlueDark,
-            onPressed: episode != null
-                ? () {
-                    newPosition =
-                        player.position + Duration(milliseconds: seekDuration);
-                    player.seek(newPosition);
+            color: kBlack,
+            onPressed: () {
+              newPosition =
+                  player.position + Duration(milliseconds: seekDuration);
+              player.seek(newPosition);
 
-                    if (newPosition! > player.duration!) {
-                      player.seek(player.duration);
-                    }
-                  }
-                : null,
+              if (newPosition! > player.duration!) {
+                player.seek(player.duration);
+              }
+            },
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildTitleDescription() {
-    if (episode != null) {
-      return TextButton(
-        style: kTextButtonStyle,
-        onPressed: () {
-          _showBottomSheet(context: context, episode: episode);
-        },
-        child: Column(
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                episode?.title ?? '',
-                style: kSFHeadLine2,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'by ${episode?.author ?? ''}',
-                style: kSFCaption,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                episode?.description ?? '',
-                style: kSFBody,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
+class _BuildImage extends StatelessWidget {
+  final Episode episode;
+  const _BuildImage({Key? key, required this.episode}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.79,
+      height: MediaQuery.of(context).size.height * 0.40,
+      decoration: BoxDecoration(
+        boxShadow: [kBoxShadow],
+        color: kGrey,
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: CachedNetworkImageProvider(episode.image!),
         ),
-      );
-    } else {
-      return Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              '...',
-              style: kSFHeadLine2,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              '...',
-              style: kSFBody,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      );
-    }
-  }
-
-  Future<void> _showBottomSheet({
-    required BuildContext context,
-    required Episode? episode,
-  }) {
-    return showMyBottomSheet(
-      context: context,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              episode?.title ?? '',
-              style: kSFHeadLine2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              episode?.description ?? '',
-              style: kSFBody,
-            ),
-          ),
-        ],
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
+    );
+  }
+}
+
+class _BuildTitle extends StatelessWidget {
+  final Episode? episode;
+  const _BuildTitle({Key? key, required this.episode}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            episode?.title ?? '',
+            style: kSFHeadLine3,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'by ${episode?.author ?? ''}',
+            style: kSFBody2,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 }

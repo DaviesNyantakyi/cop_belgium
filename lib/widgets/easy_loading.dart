@@ -5,7 +5,7 @@ class EaslyLoadingIndicator {
   static Future<void> showLoading() async {
     await EasyLoading.show(
       maskType: EasyLoadingMaskType.black,
-      indicator: kCircularProgress,
+      indicator: kProgressIndicator,
     );
   }
 

@@ -2,7 +2,7 @@
 export 'package:cop_belgium/screens/bottom_nav_selector.dart';
 
 //Auth Screens
-export 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
+export 'package:cop_belgium/screens/auth_screens/login_screen.dart';
 export 'package:cop_belgium/screens/auth_screens/sign_up_screen.dart';
 export 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
 export 'package:cop_belgium/screens/auth_screens/forgot_password_screen.dart';
@@ -26,7 +26,7 @@ export 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 export 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 
 //Testimonies Screens
-export 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
+export 'package:cop_belgium/screens/testimonies_screen/all_testimonies_tab_view.dart';
 export 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 export 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
 export 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';

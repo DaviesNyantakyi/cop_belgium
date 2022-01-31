@@ -4,7 +4,6 @@ import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/services/fire_storage.dart';
-import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -216,70 +215,6 @@ class CloudFireStore {
     }
   }
 
-  Future<void> addPodcast({required String rssLink}) async {
-    // add podcast rssLink and title to firestore
-    try {
-      if (rssLink.isNotEmpty) {
-        // get the podcast title
-        final rssFeed = await PodcastService().getRssFeed(rssLink: rssLink);
-        final podcastTitle = rssFeed.itunes?.title ?? rssFeed.title;
-
-        // create podcast rssInfo
-        final rssInfo = PodcastRssInfo(title: podcastTitle, rssLink: rssLink);
-
-        // check if the podcasts exists
-        final doc = await _firestore
-            .collection('podcasts')
-            .where('rssLink', isEqualTo: rssInfo.rssLink)
-            .get();
-
-        final docExists = doc.docs.isEmpty;
-        if (docExists) {
-          // add podcast rssinfo to firstore
-          await FirebaseFirestore.instance
-              .collection('podcasts')
-              .add(rssInfo.toMap())
-              .then((docRef) {
-            docRef.update({'id': docRef.id});
-          });
-        } else {
-          throw FirebaseException(
-            plugin: 'firestore',
-            message: 'Podcast already added.',
-            code: 'Podcast add failed',
-          );
-        }
-      }
-    } on FirebaseAuthException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    } catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<List<PodcastRssInfo?>> getUserSavedPodcast() async {
-    // get the podcast rss link and page link from firestore.
-    try {
-      final qSnap = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .collection('savedPodcasts')
-          .get();
-      final listQDocSnap = qSnap.docs;
-
-      List<PodcastRssInfo> listPodRssInfo = listQDocSnap.map((doc) {
-        return PodcastRssInfo.fromMap(map: doc.data());
-      }).toList();
-
-      return listPodRssInfo;
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
   Future<void> deleteTestimonyLikeDoc(
       {required TestimonyInfo tInfo, required String docRef}) async {
     try {
@@ -293,38 +228,6 @@ class CloudFireStore {
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
-    }
-  }
-
-  Future<void> saveUnsavePodcast({required PodcastRssInfo rssInfo}) async {
-    try {
-      final doc = await _firestore
-          .collection('users')
-          .doc(_user!.uid)
-          .collection('savedPodcasts')
-          .doc(rssInfo.rssLink)
-          .get();
-
-      if (!doc.exists) {
-        await _firestore
-            .collection('users')
-            .doc(_user!.uid)
-            .collection('savedPodcasts')
-            .doc(rssInfo.rssLink)
-            .set(rssInfo.toMap());
-      } else {
-        await _firestore
-            .collection('users')
-            .doc(_user!.uid)
-            .collection('savedPodcasts')
-            .doc(rssInfo.rssLink)
-            .delete();
-      }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    } catch (e) {
-      debugPrint(e.toString());
     }
   }
 

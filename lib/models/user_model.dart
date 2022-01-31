@@ -1,5 +1,3 @@
-//TODO: add admin to user account firbase
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CopUser {

@@ -1,10 +1,9 @@
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
-import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_view.dart';
+import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_tab_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TestimoniesScreen extends StatefulWidget {
   static String testimoniesScreen = 'testimoniesScreen';
@@ -32,7 +31,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
         child: TabBarView(
           controller: _tabController,
           children: const [
-            TestimoniesView(),
+            TestimoniesTabView(),
             EditTestimoniesView(),
           ],
         ),
@@ -44,7 +43,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
   Widget _builFloActionBtn() {
     return FloatingActionButton(
       tooltip: 'Create testimony',
-      child: const Icon(FontAwesomeIcons.plus),
+      child: const Icon(Icons.add_outlined),
       onPressed: () {
         Navigator.push(
           context,
@@ -68,13 +67,13 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
             indicatorColor: kBlue,
             indicatorSize: TabBarIndicatorSize.label,
             labelStyle: kSFBodyBold,
-            labelColor: kBlueDark,
+            labelColor: kBlack,
             indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: kBlueDark, width: 2),
+              borderSide: BorderSide(color: kBlack, width: 2),
             ),
             isScrollable: true,
             controller: controller,
-            unselectedLabelColor: kBlueDark,
+            unselectedLabelColor: kBlack,
             onTap: (index) {
               setState(() {});
             },

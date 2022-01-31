@@ -1,9 +1,7 @@
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
@@ -60,17 +58,15 @@ class _EventCardState extends State<EventCard> {
   Widget _buildImage() {
     return Container(
       width: 121,
-      decoration: const BoxDecoration(
-        color: kBlueDark,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: kBlack,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(10),
           bottomLeft: Radius.circular(10),
         ),
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(
-            'https://images.unsplash.com/photo-1443981257024-40c63080b3ed?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1283&q=80',
-          ),
+          image: AssetImage(widget.event.image),
         ),
       ),
     );
@@ -114,14 +110,14 @@ class _EventCardState extends State<EventCard> {
         Container(
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-            color: kBlueDark.withOpacity(0.1),
+            color: kBlack.withOpacity(0.1),
             borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
           ),
           child: const Icon(
-            FontAwesomeIcons.calendar,
-            color: kBlueDark,
+            Icons.calendar_today_outlined,
+            color: kBlack,
             size: 20,
           ),
         ),
@@ -151,7 +147,7 @@ class _EventCardState extends State<EventCard> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: kBlueDark.withOpacity(0.1),
+              color: kBlack.withOpacity(0.1),
               borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
@@ -176,14 +172,14 @@ class _EventCardState extends State<EventCard> {
         Container(
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-            color: kBlueDark.withOpacity(0.1),
+            color: kBlack.withOpacity(0.1),
             borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
           ),
           child: const Icon(
-            FontAwesomeIcons.mapMarkerAlt,
-            color: kBlueDark,
+            Icons.location_on_outlined,
+            color: kBlack,
             size: 20,
           ),
         ),

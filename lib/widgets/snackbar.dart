@@ -20,7 +20,7 @@ dynamic kshowSnackbar({
 
     default:
       backgroundColor = kGrey;
-      textColor = kBlueDark;
+      textColor = kBlack;
       break;
   }
   ScaffoldMessenger.of(context).removeCurrentSnackBar();

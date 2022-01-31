@@ -9,7 +9,6 @@ import 'package:cop_belgium/widgets/testimony_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:skeletons/skeletons.dart';
 
 class UserTestimoniesView extends StatefulWidget {
   static String userTestimoniesView = 'userTestimoniesView';
@@ -63,12 +62,12 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
           List<TestimonyInfo> allTestmonies = [];
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const TestimoniesViewShimmer();
+            return const Center(child: kProgressIndicator);
           }
 
           if (snapshot.hasError) {
             return TryAgainView(
-              btnColor: isLoading ? kGrey : kYellowDark,
+              btnColor: isLoading ? kGrey : kBlue,
               onPressed: isLoading ? null : tryAgain,
             );
           }
@@ -97,7 +96,6 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
             separatorBuilder: (context, index) => const SizedBox(height: 14),
             itemBuilder: (context, index) {
               return TestimonyCard(
-                editable: true,
                 testimonyInfo: allTestmonies[index],
                 onPressedEdit: () async {
                   await Navigator.push(context,
@@ -176,33 +174,6 @@ class NoTestimonyView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class TestimoniesViewShimmer extends StatelessWidget {
-  const TestimoniesViewShimmer({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SkeletonItem(
-      child: ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 4,
-        separatorBuilder: (context, index) => const SizedBox(height: 14),
-        itemBuilder: (context, index) {
-          return Container(
-            width: double.infinity,
-            height: 210,
-            decoration: BoxDecoration(
-              color: kBlue.withAlpha(170),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

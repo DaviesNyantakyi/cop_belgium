@@ -1,24 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/widgets/snackbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TestimonyCard extends StatefulWidget {
   final VoidCallback? onPressedCard;
   final VoidCallback? onPressedEdit;
   final TestimonyInfo testimonyInfo;
 
-  //show the edit icon
-  final bool? editable;
-
   const TestimonyCard({
     Key? key,
-    this.editable = false,
     this.onPressedCard,
     this.onPressedEdit,
     required this.testimonyInfo,
@@ -29,13 +21,10 @@ class TestimonyCard extends StatefulWidget {
 }
 
 class _TestimonyCardState extends State<TestimonyCard> {
-  final User? _user = FirebaseAuth.instance.currentUser;
-
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 210,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.all(
@@ -49,181 +38,15 @@ class _TestimonyCardState extends State<TestimonyCard> {
         onPressed: widget.onPressedCard,
         style: kTextButtonStyle,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 23),
+          padding: const EdgeInsets.all(kCardContentPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildTitleAndEditIcon(),
-              const SizedBox(height: 7),
-              _buildName(),
-              const SizedBox(height: 3),
-              _buildDateCreated(),
-              const SizedBox(height: 8),
-              _buildTestimonyDescription(),
-              const Flexible(child: SizedBox(height: 10)),
-              _buildLikeButton(context: context),
-            ],
+            children: const [],
           ),
         ),
       ),
     );
-  }
-
-  Widget _buildTestimonyDescription() {
-    return Text(
-      widget.testimonyInfo.description.toString(),
-      style: kSFBody.copyWith(color: kBlueDark.withAlpha(180)),
-      maxLines: 2,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  Widget _buildDateCreated() {
-    return Text(
-      FormalDates.formatDmyy(date: widget.testimonyInfo.date),
-      style: kSFCaption.copyWith(
-        color: kBlueDark.withOpacity(0.50),
-      ),
-    );
-  }
-
-  Widget _buildName() {
-    if (widget.testimonyInfo.isAnonymous == false) {
-      String? name =
-          FirebaseAuth.instance.currentUser!.uid == widget.testimonyInfo.userId
-              ? 'by me'
-              : 'by ${widget.testimonyInfo.userName}';
-
-      return Text(
-        name,
-        style: kSFCaption.copyWith(color: kBlueDark),
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  Widget _buildLikeButton({required BuildContext context}) {
-    return TextButton(
-      onPressed: () async {
-        try {
-          await CloudFireStore()
-              .likeDislikeTestimony(tInfo: widget.testimonyInfo);
-        } on FirebaseException catch (e) {
-          debugPrint(e.toString());
-          kshowSnackbar(
-            context: context,
-            errorType: 'normal',
-            text: e.message.toString(),
-          );
-        }
-      },
-      style: kTextButtonStyle,
-      child: SizedBox(
-        height: 25,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildLikeIcon(),
-            const SizedBox(width: 7),
-            _buildLikeCount(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLikeIcon() {
-    String docRef = widget.testimonyInfo.id.toString() + _user!.uid;
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('testimonies')
-          .doc(widget.testimonyInfo.id)
-          .collection('likers')
-          .where('id', isEqualTo: docRef)
-          .where('userId', isEqualTo: _user!.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        final docs = snapshot.data?.docs ?? [];
-        if (docs.isNotEmpty) {
-          //user has likes the testimony
-          return const Icon(
-            FontAwesomeIcons.solidHeart,
-            color: kRed,
-          );
-        }
-        return const Icon(
-          FontAwesomeIcons.heart,
-          color: kBlueDark,
-        );
-      },
-    );
-  }
-
-  Widget _buildLikeCount() {
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('testimonies')
-          .doc(widget.testimonyInfo.id)
-          .collection('likers')
-          .snapshots(),
-      builder: (context, snapshot) {
-        List? likes;
-        if (snapshot.data != null) {
-          likes = snapshot.data!.docs;
-        }
-
-        if (snapshot.hasData) {
-          return Text('${likes!.length}', style: kSFCaption);
-        }
-        return const Text('...', style: kSFCaption);
-      },
-    );
-  }
-
-  Widget _buildTitleAndEditIcon() {
-    return Row(
-      children: [
-        Expanded(
-          flex: 9,
-          child: Text(
-            widget.testimonyInfo.title.toString(),
-            style: kSFBodyBold.copyWith(color: kBlueDark),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        const Expanded(
-          flex: 1,
-          child: SizedBox(width: 10),
-        ),
-        Expanded(
-          flex: 1,
-          child: _showEditIcon(),
-        )
-      ],
-    );
-  }
-
-  Widget _showEditIcon() {
-    if (widget.editable == true) {
-      return SizedBox(
-        width: 30,
-        height: 40,
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Icon(
-            FontAwesomeIcons.edit,
-            size: 20,
-            color: kBlueDark,
-          ),
-          onPressed: widget.onPressedEdit,
-        ),
-      );
-    } else {
-      return Container();
-    }
   }
 }

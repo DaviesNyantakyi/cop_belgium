@@ -3,15 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
+import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:dart_date/dart_date.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class PodcastDetailScreen extends StatefulWidget {
@@ -36,120 +37,72 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
 
     return Scaffold(
       appBar: _buildAppbar(context: context),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: kBodyPadding),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildHeaderImage(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: kBodyPadding,
-                  vertical: kBodyPadding,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    _buildTitle(),
-                    const SizedBox(height: 32),
-                    _buildDescription(),
-                    const SizedBox(height: 19),
-                  ],
-                ),
-              ),
-              _buildEpisodesList()
-            ],
-          ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(kBodyPadding),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(),
+            const SizedBox(height: kTextFieldSpacing),
+            _buildSubButton(),
+            const SizedBox(height: 32),
+            _buildDescription(),
+            const SizedBox(height: 19),
+            const _BuildPodcastsList(),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeaderImage() {
-    if (podcast?.imageUrl != null) {
-      return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 10),
-        height: MediaQuery.of(context).size.height * 0.25,
-        decoration: BoxDecoration(
-          color: kBlue,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: CachedNetworkImageProvider(podcast!.imageUrl),
-          ),
-        ),
-      );
-    } else {
-      return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(top: 10),
-        height: MediaQuery.of(context).size.height * 0.25,
-        decoration: const BoxDecoration(
-          color: kBlueDark,
-        ),
-      );
-    }
-  }
-
-  Column _buildEpisodesList() {
-    //TODO: Episode card images keeps reloading on scroll
-
-    return Column(
+  Widget _buildHeader() {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: const EdgeInsets.only(left: kBodyPadding),
-          alignment: Alignment.centerLeft,
-          child: const Text('Episodes', style: kSFBodyBold),
+          height: 170,
+          width: 150,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(kCardRadius),
+            ),
+            color: kBlue,
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: CachedNetworkImageProvider(podcast!.imageUrl),
+            ),
+          ),
         ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 200,
-          child: ListView.builder(
-            itemCount: podcast?.episodes!.length,
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.only(left: kBodyPadding),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Provider.value(
-                  value: podcast!.episodes![index],
-                  child: EpisodeCard(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                          builder: (context) => Provider.value(
-                            value: podcast!.episodes![index],
-                            child: const PodcastPlayerScreen(),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+        const SizedBox(width: kTextFieldSpacing),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                podcast?.title ?? ' ',
+                style: kSFHeadLine3,
+              ),
+              const SizedBox(height: 5),
+              Text(podcast?.author ?? ''),
+            ],
           ),
         ),
       ],
     );
   }
 
-  Widget _buildTitle() {
+  Widget _buildSubButton() {
     return Container(
       alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            podcast?.title ?? '',
-            style: kSFHeadLine1,
-          ),
-          Text(
-            podcast?.author ?? '',
-            style: kSFBody,
-          )
-        ],
+      child: Buttons.buildOutlinedButton(
+        context: context,
+        child: Text(
+          'Subscribe',
+          style: kSFTextFieldStyle,
+        ),
+        onPressed: () {},
       ),
     );
   }
@@ -160,7 +113,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         Container(
           alignment: Alignment.centerLeft,
           child: const Text(
-            'Description',
+            'About',
             style: kSFBodyBold,
           ),
         ),
@@ -200,13 +153,13 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           if (docs.isNotEmpty) {
             //user has saved to podcast
             return const Icon(
-              FontAwesomeIcons.solidBookmark,
-              color: kBlueDark,
+              Icons.bookmark,
+              color: kBlack,
             );
           }
           return const Icon(
-            FontAwesomeIcons.bookmark,
-            color: kBlueDark,
+            Icons.bookmark,
+            color: kBlack,
           );
         },
       ),
@@ -217,18 +170,12 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
     return AppBar(
       backgroundColor: Colors.white,
       leading: TextButton(
-        child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
-        ),
+        child: kBackButton(context: context),
         onPressed: () {
           Navigator.pop(context);
         },
         style: kTextButtonStyle,
       ),
-      actions: [
-        _buildBookmarkIcon,
-      ],
     );
   }
 
@@ -256,6 +203,64 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _BuildPodcastsList extends StatelessWidget {
+  const _BuildPodcastsList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Episode> podcast = [
+      Episode(
+        image:
+            'https://media.redcircle.com/images/2022/1/20/9/0f91ce01-fc7e-4f17-9e8d-134ffd971764_3bbc32945_50d6bb29-3378-4b2c-bf15-73b9850bcffa.jpg',
+        title: 'Don\'t Drag Your Sin Along',
+        author: 'Amonie Akens & Elijah Wilson',
+        description:
+            '''The title is straightforward, yet so many of us literally drag our sin along anyway. Today, we dive into what the bible says this is and what it suggests about it.''',
+        audio:
+            'https://stream.redcircle.com/episodes/76f8d881-fa3e-49e7-a45b-c1e68850cea9/stream.mp3',
+        duration: 3755,
+        date: DateTime.now(),
+      ),
+      Episode(
+        image:
+            'https://images.rss.com/thezapatistaspodcast/400/20210706_114021_9ee273b1554e7b193a5379c082173f93.jpg',
+        title: 'Episode 5: Community Media',
+        author: 'Media',
+        description:
+            '''In this episode, Nancy Serano speaks with Ana Hernandez and Mario Najera from Promedios Mexico/Promedios Community Media. Promedios Mexico is a community media collective that has worked for over two decades with the Zapatistas, the Mexican revolutionary indigenous movement that governs many autonomous zones in Chiapas, Mexico. The Zapatistas' produce their own independent media within their own communities and in their own languages. By using community media, they document human rights violations, share ancestral knowledge, and promote modern technologies and practices. Their messaging goes beyond traditional political framings of struggles and instead includes creative and playful elements such as indigenous mythology and story-telling. This episode tells the story of how independent media became a powerful tool of resistance, independence, learning and sharing for the Zapatistas and it aims at inspiring communities and grassroots movements in Ireland and elsewhere.Links:https://web.facebook.com/F%C3%A1ilte-go-h%C3%89irinn-Zapatistas-2021-101658158954082https://promedioschiapas.wordpress.com/https://www.facebook.com/promedios.decomunicacioncomunitariahttps://radiozapatista.org/?lang=enhttps://www.facebook.com/RadioZapaVideos:The land belongs to those who work it. https://www.youtube.com/watch?v=PJf4FGP4jBMCorazon del Tiempo / Heart of Time (Spanish only)https://www.youtube.com/watch?v=taHoxs1xcrAVotan Kop -Documentary about Promedios Communication Projecthttps://www.youtube.com/watch?v=0UPhx3t1k0kPromedios Youtube Channelhttps://www.youtube.com/user/PromediosMexico/videosSongs:Cancion para los Caracoles del EZLN , Erick de JesusBegi Estalitako Indioa, SaggaroiRadios Comunitarios Zapatistas, unknown Zapatista bandLa Tierra (Corazon del Tiempo Soundtrack), Descemer BuenoText:The Story of the Calendar; Stories of Don Antonio, Subcomandante Insurgente MarcosImage:Beatriz Aurora''',
+        audio:
+            'https://media.rss.com/thezapatistaspodcast/20210814_103612_d1bccb48c8a65836b3ac4525af598290.mp3',
+        duration: 3227,
+        date: DateTime.now(),
+      ),
+    ];
+    return ListView.separated(
+      separatorBuilder: (context, index) => const SizedBox(
+        height: kCardSpacing,
+      ),
+      itemCount: podcast.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return EpisodeCard(
+          episode: podcast[index],
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => Provider<Episode>.value(
+                  value: podcast[index],
+                  child: const PodcastPlayerScreen(),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

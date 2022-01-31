@@ -1,3 +1,5 @@
+import 'package:cop_belgium/utilities/constant.dart';
+import 'package:flutter/material.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
@@ -52,5 +54,26 @@ class Validators {
     }
 
     return errorText;
+  }
+}
+
+class ErrorTextWidget extends StatelessWidget {
+  final String? errorText;
+  const ErrorTextWidget({Key? key, this.errorText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (errorText == null) {
+      return Container();
+    }
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          errorText!,
+          style: kSFCaption.copyWith(color: kRed),
+        )
+      ],
+    );
   }
 }

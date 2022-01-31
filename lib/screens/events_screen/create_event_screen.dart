@@ -3,14 +3,11 @@ import 'dart:io';
 import 'package:cop_belgium/screens/events_screen/events_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -38,7 +35,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   DateTime? startDate;
 
   DateTime? endDate;
-  DateTime? birthDate;
 
   File? image;
   bool isLoading = false;
@@ -62,7 +58,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           ],
           androidUiSettings: const AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: kBlueDark,
+            toolbarColor: kBlack,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false,
@@ -114,7 +110,9 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     );
   }
 
-  Future<void> showDatePicker() async {
+  Future<void> showDatePicker(
+      {required CupertinoDatePickerMode mode,
+      required Function(DateTime) onChanged}) async {
     FocusScope.of(context).requestFocus(FocusNode());
     await showMyBottomSheet(
       isDismissible: false,
@@ -130,20 +128,13 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               child: Theme(
                 data: ThemeData(),
                 child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
+                  mode: mode,
                   initialDateTime: DateTime.now(),
                   maximumDate: DateTime.now(),
                   minimumDate: DateTime(1900, 01, 31),
                   minimumYear: 1900,
                   maximumYear: DateTime.now().year,
-                  onDateTimeChanged: (date) {
-                    HapticFeedback.lightImpact();
-
-                    birthDate = date;
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
+                  onDateTimeChanged: onChanged,
                 ),
               ),
             ),
@@ -175,8 +166,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     }
     return ListTile(
       leading: const Icon(
-        FontAwesomeIcons.mapMarkerAlt,
-        color: kBlueDark,
+        Icons.location_on_outlined,
+        color: kBlack,
       ),
       title: const Text(
         'Add Location',
@@ -215,75 +206,88 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       children: [
         ListTile(
           leading: const Icon(
-            FontAwesomeIcons.calendar,
-            color: kBlueDark,
+            Icons.calendar_today,
+            color: kBlack,
           ),
           title: startDate != null
-              ? Text(FormalDates.formatEDmy(date: startDate))
-              : Text(FormalDates.formatEDmy(date: DateTime.now())),
+              ? Text(
+                  FormalDates.formatEDmy(date: startDate),
+                  style: kSFBody2,
+                )
+              : Text(
+                  FormalDates.formatEDmy(date: DateTime.now()),
+                  style: kSFBody2,
+                ),
+          trailing: startDate != null
+              ? Text(FormalDates.formatHm(date: startDate))
+              : Text(FormalDates.formatHm(date: DateTime.now())),
           onTap: () async {
-            showDatePicker();
-            //   DateTime? pickedDate = await showDatePicker(
-            //     context: context,
-            //     initialDate: DateTime.now(),
-            //     firstDate: DateTime.utc(1999, 01, 31),
-            //     lastDate: DateTime.utc(2030, 12, 31),
-            //   );
+            await showDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                onChanged: (date) {
+                  HapticFeedback.lightImpact();
 
-            //   TimeOfDay? pickedTime = await showTimePicker(
-            //     context: context,
-            //     initialTime: TimeOfDay.now(),
-            //   );
+                  startDate = date;
+                  if (mounted) {
+                    setState(() {});
+                  }
+                });
+            await showDatePicker(
+              mode: CupertinoDatePickerMode.time,
+              onChanged: (date) {
+                HapticFeedback.lightImpact();
 
-            //   if (pickedDate != null && pickedTime != null) {
-            //     DateTime newDateTime = DateTime(
-            //       pickedDate.year,
-            //       pickedDate.month,
-            //       pickedDate.day,
-            //       pickedTime.hour,
-            //       pickedTime.minute,
-            //     );
-            //     startDate = newDateTime;
-            //   }
-
-            //   setState(() {});
+                startDate = date;
+                if (mounted) {
+                  setState(() {});
+                }
+              },
+            );
           },
         ),
         ListTile(
           leading: const Icon(
-            FontAwesomeIcons.calendar,
-            color: kBlueDark,
+            Icons.calendar_today,
+            color: kBlack,
           ),
           title: endDate != null
-              ? Text(FormalDates.formatEDmy(date: endDate))
-              : Text(FormalDates.formatEDmy(
-                  date: DateTime.now().add(const Duration(
-                  minutes: 30,
-                )))),
+              ? Text(
+                  FormalDates.formatEDmy(date: endDate),
+                  style: kSFBody2,
+                )
+              : Text(
+                  FormalDates.formatEDmy(date: DateTime.now()),
+                  style: kSFBody2,
+                ),
+          trailing: endDate != null
+              ? Text(FormalDates.formatHm(date: endDate))
+              : Text(FormalDates.formatHm(
+                  date: DateTime.now().add(
+                    const Duration(minutes: 30),
+                  ),
+                )),
           onTap: () async {
-            // DateTime? pickedDate = await showDatePicker(
-            //   context: context,
-            //   initialDate: DateTime.now(),
-            //   firstDate: DateTime.utc(1999, 01, 31),
-            //   lastDate: DateTime.utc(2030, 12, 31),
-            // );
+            await showDatePicker(
+                mode: CupertinoDatePickerMode.date,
+                onChanged: (date) {
+                  HapticFeedback.lightImpact();
 
-            // TimeOfDay? pickedTime = await showTimePicker(
-            //   context: context,
-            //   initialTime: TimeOfDay.now(),
-            // );
+                  endDate = date;
+                  if (mounted) {
+                    setState(() {});
+                  }
+                });
+            await showDatePicker(
+              mode: CupertinoDatePickerMode.time,
+              onChanged: (date) {
+                HapticFeedback.lightImpact();
 
-            // if (pickedDate != null && pickedTime != null) {
-            //   DateTime newDateTime = DateTime(
-            //     pickedDate.year,
-            //     pickedDate.month,
-            //     pickedDate.day,
-            //     pickedTime.hour,
-            //     pickedTime.minute,
-            //   );
-            //   endDate = newDateTime;
-            //   setState(() {});
-            // }
+                endDate = date;
+                if (mounted) {
+                  setState(() {});
+                }
+              },
+            );
           },
         ),
       ],
@@ -301,7 +305,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       style: style,
       minLines: 1,
       cursorWidth: 3,
-      cursorColor: kBlueDark,
+      cursorColor: kBlack,
       maxLines: null,
       keyboardType: TextInputType.multiline,
       decoration: InputDecoration(
@@ -348,8 +352,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         style: kTextButtonStyle,
         child: const Center(
           child: Icon(
-            FontAwesomeIcons.plus,
-            color: kBlueDark,
+            Icons.calendar_today,
+            color: kBlack,
           ),
         ),
       ),
@@ -371,8 +375,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     await pickImage(type: 'camera');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.camera,
-                    color: kBlueDark,
+                    Icons.camera_alt_outlined,
+                    color: kBlack,
                   ),
                   title: const Text(
                     'Camera',
@@ -384,8 +388,8 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                     await pickImage(type: 'gallery');
                   },
                   leading: const Icon(
-                    FontAwesomeIcons.images,
-                    color: kBlueDark,
+                    Icons.collections_outlined,
+                    color: kBlack,
                   ),
                   title: const Text(
                     'Gallery',
@@ -400,7 +404,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                           Navigator.pop(context);
                         },
                         leading: const Icon(
-                          FontAwesomeIcons.trash,
+                          Icons.delete_outline_outlined,
                           color: kRed,
                         ),
                         title: Text(
@@ -421,10 +425,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return AppBar(
       backgroundColor: Colors.transparent,
       leading: TextButton(
-        child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
-        ),
+        child: kBackButton(context: context),
         onPressed: () {
           Navigator.pop(context);
           Navigator.pop(context);
@@ -448,7 +449,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         elevation: 4,
         icon: const Icon(
-          FontAwesomeIcons.ellipsisV,
+          Icons.more_vert,
           size: 20,
         ),
         onSelected: (String result) async {},

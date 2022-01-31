@@ -5,8 +5,8 @@ class Buttons {
   static Widget buildBtn({
     required BuildContext context,
     required String btnText,
-    Color color = kYellowDark,
-    Color fontColor = kBlueDark,
+    Color color = kBlue,
+    Color fontColor = kWhite,
     VoidCallback? onPressed,
     double? width,
     double? height = kButtonHeight,
@@ -37,8 +37,8 @@ class Buttons {
 
   static Widget buildSocialBtn({
     required BuildContext context,
-    Color color = kYellowDark,
-    Color fontColor = kBlueDark,
+    Color color = Colors.transparent,
+    Color fontColor = kBlack,
     VoidCallback? onPressed,
     required Widget icon,
     required Widget label,
@@ -46,7 +46,7 @@ class Buttons {
     return SizedBox(
       width: double.infinity,
       height: kButtonHeight,
-      child: ElevatedButton.icon(
+      child: OutlinedButton.icon(
         icon: icon,
         label: Padding(
           padding: const EdgeInsets.only(right: 40),
@@ -55,8 +55,8 @@ class Buttons {
           ),
         ),
         style: ButtonStyle(
-          alignment: Alignment.centerLeft,
           backgroundColor: MaterialStateProperty.all(color),
+          side: MaterialStateProperty.all(const BorderSide()),
           shape: MaterialStateProperty.all(
             const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
@@ -66,6 +66,36 @@ class Buttons {
           ),
         ),
         onPressed: onPressed,
+      ),
+    );
+  }
+
+  static Widget buildOutlinedButton({
+    required BuildContext context,
+    Color color = Colors.transparent,
+    Color fontColor = kBlack,
+    VoidCallback? onPressed,
+    required Widget child,
+    double? width,
+    double? height = kButtonHeight,
+  }) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: OutlinedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(color),
+          side: MaterialStateProperty.all(const BorderSide()),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(kButtonRadius),
+              ),
+            ),
+          ),
+        ),
+        onPressed: onPressed,
+        child: child,
       ),
     );
   }

@@ -3,8 +3,6 @@ import 'package:cop_belgium/screens/announcements_screen/announcements_card.dart
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 class AnnouncementsScreen extends StatelessWidget {
   const AnnouncementsScreen({Key? key}) : super(key: key);
@@ -104,10 +102,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
         style: kSFHeadLine2,
       ),
       leading: TextButton(
-        child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
-        ),
+        child: kBackButton(context: context),
         onPressed: () {
           Navigator.pop(context);
         },

@@ -5,7 +5,6 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -83,14 +82,14 @@ class _MoreScreenState extends State<MoreScreen> {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(user.photoURL!),
         radius: 35,
-        backgroundColor: kBlueDark,
+        backgroundColor: kBlack,
       );
     }
     return const CircleAvatar(
       radius: 35,
-      backgroundColor: kBlueDark,
+      backgroundColor: kBlack,
       child: Icon(
-        FontAwesomeIcons.userAlt,
+        Icons.person_outline_outlined,
         color: Colors.white,
       ),
     );

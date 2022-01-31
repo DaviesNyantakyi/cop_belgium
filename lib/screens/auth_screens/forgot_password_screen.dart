@@ -1,13 +1,12 @@
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:regexpattern/regexpattern.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static String forgotPasswordScreen = 'forgotPasswordScreen';
@@ -67,7 +66,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(context: context),
+      appBar: AppBar(
+        leading: kBackButton(context: context),
+        title: const Text('Forgot Password', style: kSFHeadLine3),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -78,11 +80,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildFrgPassText(),
-                const SizedBox(height: 29),
+                _buildForgotPassText(),
+                const SizedBox(height: 39),
                 _buildEmailForm(),
                 const SizedBox(height: kButtonSpacing),
-                _buildSendBtn(),
+                _buildSendButton()
               ],
             ),
           ),
@@ -99,91 +101,36 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         MyTextField(
           controller: emailCntlr,
           hintText: 'Email',
-          obscureText: false,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter email';
-            }
-            if (!value.isEmail()) {
-              return 'Please enter valid email address';
-            }
-            return null;
-          },
           keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.done,
           onChanged: (value) {
             emailErrorText = Validators.emailValidator(email: value);
             setState(() {});
           },
+          onSubmitted: (value) async {
+            await resetPassword();
+          },
         ),
-        _buildEmailErrorText(),
+        ErrorTextWidget(errorText: emailErrorText)
       ],
     );
   }
 
-  Widget _buildEmailErrorText() {
-    if (emailErrorText == null) {
-      return Container();
-    }
-    return Column(
-      children: [
-        const SizedBox(height: 5),
-        Text(
-          emailErrorText!,
-          style: kSFCaption.copyWith(color: kRed),
-        )
-      ],
+  Widget _buildForgotPassText() {
+    return const Text(
+      'Please enter the email address associated with your account.',
+      style: kSFBody,
     );
   }
 
-  Widget _buildFrgPassText() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Forgot',
-              style: kSFHeadLine1,
-            ),
-            Text(
-              'Password',
-              style: kSFHeadLine1,
-            ),
-          ],
-        ),
-        const SizedBox(height: 25),
-        const Text(
-          'Don\'t worry! It happens. Please enter the email address associated with your account.',
-          style: kSFBody,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSendBtn() {
-    return SizedBox(
+  Widget _buildSendButton() {
+    return Buttons.buildBtn(
+      context: context,
+      color: isLoading ? kGrey : kBlue,
+      btnText: 'Send',
+      onPressed: isLoading ? null : resetPassword,
       width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            isLoading ? kGrey : kYellowDark,
-          ),
-          shape: MaterialStateProperty.all(
-            const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(kButtonRadius),
-              ),
-            ),
-          ),
-        ),
-        onPressed: isLoading ? null : resetPassword,
-        child: const Text(
-          'Send',
-          style: kSFBodyBold,
-        ),
-      ),
+      fontColor: Colors.white,
     );
   }
 
@@ -210,24 +157,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: const Text('OK', style: kSFCaptionBold),
           ),
         ],
-      ),
-    );
-  }
-
-  dynamic _buildAppbar({required BuildContext context}) {
-    return AppBar(
-      leading: Container(
-        margin: const EdgeInsets.symmetric(horizontal: kAppbarPadding),
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
       ),
     );
   }

@@ -1,14 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_screen_skeletons.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:cop_belgium/services/podcast_provider.dart';
-import 'package:cop_belgium/services/podcast_service.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -16,14 +10,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/latest_release_card.dart';
-import 'package:cop_belgium/widgets/error_views.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:provider/provider.dart';
 
-//TODO: show loading indicator when try again button is pressed
-//TODO: Reduce getting podcasts time and try getting each podcast indiviualy
+const imagePlayHolder =
+    'https://images.unsplash.com/photo-1614102073832-030967418971?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80';
 
 class PodcastScreen extends StatefulWidget {
   static String podcastScreen = 'podcastScreen';
@@ -35,84 +26,60 @@ class PodcastScreen extends StatefulWidget {
 
 class _PodcastScreenState extends State<PodcastScreen> {
   TextEditingController rssLinkCntlr = TextEditingController();
-  bool isLoading = false;
-
-  Future<void> tryAgain() async {
-    try {
-      isLoading = true;
-      if (mounted) {
-        setState(() {});
-      }
-      EasyLoading.show();
-      await Provider.of<PodcastProvider>(context, listen: false).getPodcasts();
-    } on FirebaseException catch (e) {
-      kshowSnackbar(
-        context: context,
-        errorType: 'error',
-        text: e.message.toString(),
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      EasyLoading.dismiss();
-      isLoading = false;
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
-
-  Future<void> addPodcast() async {
-    try {
-      if (rssLinkCntlr.text.isNotEmpty) {
-        EasyLoading.show();
-        await CloudFireStore().addPodcast(rssLink: rssLinkCntlr.text);
-        Navigator.pop(context);
-        rssLinkCntlr.clear();
-      }
-    } on FirebaseException catch (e) {
-      Navigator.pop(context);
-      kshowSnackbar(
-        context: context,
-        errorType: 'error',
-        text: e.message!,
-      );
-      debugPrint(e.toString());
-    } catch (e) {
-      Navigator.pop(context);
-      debugPrint(e.toString());
-    } finally {
-      EasyLoading.dismiss();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: const Padding(
+          padding: EdgeInsets.only(left: kBodyPadding),
+          child: FittedBox(
+            child: Text(
+              'Podcasts',
+              style: kSFHeadLine2,
+              overflow: TextOverflow.visible,
+            ),
+          ),
+        ),
+        leadingWidth: 130,
+        actions: [
+          Container(
+            padding: const EdgeInsets.only(right: kBodyPadding, bottom: 25),
+            child: TextButton(
+              style: kTextButtonStyle,
+              child: const Icon(
+                Icons.notifications_outlined,
+                color: kBlack,
+                size: kIconSize,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => const AnnouncementsScreen(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(FontAwesomeIcons.plus),
+        child: const Icon(Icons.add_outlined),
         onPressed: () {
-          _showAddDialog();
+          _addPodcastDialog();
         },
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          color: kBlueDark,
-          onRefresh: () async {
-            await Provider.of<PodcastProvider>(context, listen: false)
-                .getPodcasts();
-          },
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: _buildBody(),
-          ),
+      body: const SafeArea(
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(kBodyPadding),
+          child: _Body(),
         ),
       ),
     );
   }
 
-  Future<String?> _showAddDialog() async {
+  Future<String?> _addPodcastDialog() async {
     const String _deleteConformationText = 'Copy and paste the RSS feed here.';
     return await showDialog<String?>(
       barrierDismissible: true,
@@ -135,66 +102,11 @@ class _PodcastScreenState extends State<PodcastScreen> {
           ),
           const SizedBox(height: kButtonSpacing),
           TextButton(
-            onPressed: addPodcast,
+            onPressed: () => {},
             child: const Text('OK', style: kSFBodyBold),
           ),
           const SizedBox(height: kTextFieldSpacing)
         ],
-      ),
-    );
-  }
-
-  Widget _buildBody() {
-    List<Podcast> podcasts = [];
-
-    bool hasError = Provider.of<PodcastProvider>(context).hasError;
-    bool isLoading = Provider.of<PodcastProvider>(context).isLoading;
-    podcasts = Provider.of<PodcastProvider>(context).podcasts;
-    if (hasError) {
-      return _buildErrorSkeleton();
-    }
-
-    if (isLoading) {
-      return const PodcastScreenSkeleton();
-    }
-
-    if (podcasts.isEmpty) {
-      return _buildNoPodcastsSkeleton();
-    }
-
-    return Provider.value(
-      value: podcasts,
-      child: const _Body(),
-    );
-  }
-
-  Widget _buildNoPodcastsSkeleton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kBodyPadding,
-        vertical: kBodyPadding,
-      ),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: NoPodcastsView(
-          onPressed: () {},
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorSkeleton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: kBodyPadding,
-        vertical: kBodyPadding,
-      ),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: TryAgainView(
-          btnColor: isLoading ? kGrey : kYellowDark,
-          onPressed: isLoading ? null : tryAgain,
-        ),
       ),
     );
   }
@@ -205,116 +117,230 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var podcats = Provider.of<List<Podcast>>(context, listen: false);
-    return Provider.value(
-      value: podcats,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildGreetingAndIcon(context: context),
-                const SizedBox(height: 42),
-                const Text(
-                  'Featured Episode',
-                  style: kSFHeadLine2,
-                ),
-                const SizedBox(height: 16),
-                Provider.value(
-                  value: podcats,
-                  child: const FeaturedReleaseCard(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 35),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: kBodyPadding),
-            child: Text(
-              'Podcasts',
-              style: kSFHeadLine2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildSeriesList(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGreetingAndIcon({required BuildContext context}) {
-    final userName = FirebaseAuth.instance.currentUser?.displayName;
-    //TODO: Display name does not show after registrations
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              Greeting.showGreetings(),
-              style: kSFBodyBold,
-            ),
-            Text(
-              userName ?? '',
-              style: kSFBody.copyWith(color: Colors.yellow.shade900),
-            ),
-          ],
-        ),
-        Container(
-          alignment: Alignment.center,
-          child: IconButton(
-            icon: const Icon(FontAwesomeIcons.bell),
-            tooltip: 'Announcements',
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => const AnnouncementsScreen(),
-                ),
-              );
-            },
-          ),
-        )
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        _BuildGreeting(),
+        SizedBox(height: 30),
+        Text('Featured Episode', style: kSFHeadLine3),
+        SizedBox(height: 15),
+        _BuildLatestEpisodeCard(),
+        SizedBox(height: 25),
+        Text('Podcasts', style: kSFHeadLine3),
+        SizedBox(height: 16),
+        _BuildPodcastsList()
       ],
     );
   }
+}
 
-  Widget _buildSeriesList() {
-    return Consumer<List<Podcast>>(builder: (context, podcasts, _) {
-      return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          childAspectRatio: 1,
-          crossAxisSpacing: 12,
-          crossAxisCount: 2,
-          mainAxisExtent: 220,
+class _BuildGreeting extends StatelessWidget {
+  const _BuildGreeting({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final userName = FirebaseAuth.instance.currentUser?.displayName;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          Greeting.showGreetings(),
+          style: kSFHeadLine3.copyWith(color: kBlue),
         ),
-        itemCount: podcasts.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-        itemBuilder: (context, index) {
-          return PodcastCard(
-            podcast: podcasts[index],
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => Provider.value(
-                    value: podcasts[index],
-                    child: const PodcastDetailScreen(),
-                  ),
+        Text(
+          userName ?? '',
+          style: kSFBody,
+        ),
+      ],
+    );
+  }
+}
+
+class _BuildPodcastsList extends StatelessWidget {
+  const _BuildPodcastsList({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Podcast> podcast = [
+      Podcast(
+        title: 'Deeper Waters',
+        author: 'Amonie Akens & Elijah Wilson',
+        imageUrl:
+            'https://media.redcircle.com/images/2021/9/27/20/ffe841f6-dba3-4e5e-b19e-363b036a3ecf_cc6f0f04-6416-49b8-9bdf-2dbad7238e93_blob.jpg',
+        description:
+            '''The creators of Pescados Bros, Amonie Akens & Elijah Wilson are here to dive deep into the word of God to help us become better disciples. Fulfilling the call in Matthew 4:19 to be fishers of men, we strive to present the complexities of the Bible in a form that's a bit easier to digest. Essentially, this podcast is a Gen Z Bible study designed to equip young disciples and create new disciples.''',
+        pageLink: '',
+        episodes: [],
+      ),
+      Podcast(
+        title: 'The Zapatistas Podcast - Lessons and Stories from Chiapas',
+        author: 'Church of Pentecost Belgium ',
+        imageUrl:
+            'https://images.rss.com/thezapatistaspodcast/400/20210706_114021_9ee273b1554e7b193a5379c082173f93.jpg',
+        description: '''
+'The Zapatistas Podcast - Lessons and Stories from Chiapas' is an educational and culturally immersive audio series that delves into the Zapatista movement from the early days of the uprising until the present day with news of their much anticipated European tour in the Summer of 2021. Over this podcast series by the Galway Feminist Collective and Promedios Mexico, you'll learn about who the Zapatistas are, their history of struggles and the lessons that we can learn from them, as well as songs and stories from within the movement, bringing each episode to life. The release of this podcast coincides with the Zapatistas' first visit to Europe and aims at giving folks in Ireland (and elsewhere) an insight into the Zapatistas through interviews with some of those who have worked closely with the movement on topics such as community media, womxn's organising, agriculture, education and autonomy, retracing some of the steps that their struggle has taken on its long and steady road to autonomy. Throughout this series, we will highlight their learnings, and obstacles, but above all their creativity and determination to make other worlds a reality.''',
+        pageLink: '',
+        episodes: [],
+      ),
+    ];
+    return ListView.separated(
+      separatorBuilder: (context, index) => const SizedBox(
+        height: kCardSpacing,
+      ),
+      itemCount: podcast.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return PodcastCard(
+          podcast: podcast[index],
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => Provider<Podcast>.value(
+                  value: podcast[index],
+                  child: const PodcastDetailScreen(),
                 ),
-              );
-            },
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _BuildLatestEpisodeCard extends StatelessWidget {
+  const _BuildLatestEpisodeCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 380,
+      height: 189,
+      decoration: BoxDecoration(
+        color: kBlack,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(kCardRadius),
+        ),
+        image: const DecorationImage(
+          fit: BoxFit.cover,
+          image: CachedNetworkImageProvider(imagePlayHolder),
+        ),
+        boxShadow: [kBoxShadow],
+      ),
+      child: TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => const PodcastPlayerScreen(),
+            ),
           );
         },
-      );
-    });
+        style: kTextButtonStyle,
+        child: Container(
+          width: 380,
+          height: 190,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5),
+            ),
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Colors.black.withOpacity(0.9),
+                Colors.black.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(kCardContentPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Deep Truths',
+                  style: kSFHeadLine2.copyWith(color: kWhite),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  '''The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel, brining greater hope. The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel,''',
+                  style: kSFBody.copyWith(color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 15),
+                Expanded(
+                  child: _BuildPlayButton(onPressed: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => const PodcastPlayerScreen(),
+                      ),
+                    );
+                  }),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BuildPlayButton extends StatelessWidget {
+  final VoidCallback? onPressed;
+  const _BuildPlayButton({Key? key, this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 40,
+      width: 125,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            Colors.white,
+          ),
+          shape: MaterialStateProperty.all(
+            const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(kButtonRadius),
+              ),
+            ),
+          ),
+        ),
+        onPressed: onPressed,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 7,
+              child: Text(
+                'Play Now',
+                style: kSFBody.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            const Expanded(
+              child: Icon(
+                Icons.play_arrow_outlined,
+                size: 16,
+                color: kBlack,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

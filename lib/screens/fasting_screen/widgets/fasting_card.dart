@@ -1,6 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 double _size = 170;
 
@@ -95,7 +94,6 @@ class CustomFastingCard extends StatelessWidget {
       width: _size,
       height: _size,
       decoration: BoxDecoration(
-        color: kBlueDark2,
         borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
@@ -120,7 +118,7 @@ class CustomFastingCard extends StatelessWidget {
               const Flexible(child: SizedBox(height: 10)),
               const Expanded(
                 child: Icon(
-                  FontAwesomeIcons.plus,
+                  Icons.add_outlined,
                   size: 31,
                   color: Colors.white,
                 ),

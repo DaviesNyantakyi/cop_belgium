@@ -1,20 +1,7 @@
-import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-String _description =
-    'Laborum ut non adipisicing labore eiusmod enim ex fugiat Lorem esse ea do. Pariatur officia nisi nulla enim non nostrud minim cillum voluptate ex mollit. Elit dolor non adipisicing nulla in elit ipsum magna labore ea aliqua minim. Amet excepteur ullamco aliqua reprehenderit in sint. Minim excepteur commodo anim incididunt officia anim nisi id Lorem excepteur et in quis ea.';
-
-String _title = 'Laborum ut non adipisicing labore eiusmod enim ex ';
 
 class EventDetailScreen extends StatefulWidget {
   final String eventType;
@@ -76,14 +63,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         Container(
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-            color: kBlueDark.withOpacity(0.1),
+            color: kBlack.withOpacity(0.1),
             borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
           ),
           child: const Icon(
-            FontAwesomeIcons.calendar,
-            color: kBlueDark,
+            Icons.calendar_today_outlined,
+            color: kBlack,
             size: 24,
           ),
         ),
@@ -119,7 +106,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: kBlueDark.withOpacity(0.1),
+              color: kBlack.withOpacity(0.1),
               borderRadius: const BorderRadius.all(
                 Radius.circular(5),
               ),
@@ -145,14 +132,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         Container(
           padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
-            color: kBlueDark.withOpacity(0.1),
+            color: kBlack.withOpacity(0.1),
             borderRadius: const BorderRadius.all(
               Radius.circular(5),
             ),
           ),
           child: const Icon(
-            FontAwesomeIcons.mapMarkerAlt,
-            color: kBlueDark,
+            Icons.location_on_outlined,
+            color: kBlack,
             size: 20,
           ),
         ),
@@ -193,13 +180,11 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Widget _buildImage() {
     return Container(
       height: MediaQuery.of(context).size.height * 0.25,
-      decoration: const BoxDecoration(
-        color: kBlueDark,
+      decoration: BoxDecoration(
+        color: kBlack,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(
-            'https://images.unsplash.com/photo-1620982591827-5e003e8d26fb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=435&q=80',
-          ),
+          image: AssetImage(widget.event.image),
         ),
       ),
     );
@@ -219,7 +204,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            _description,
+            widget.event.description,
             style: kSFBody,
           ),
         ),
@@ -232,8 +217,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       backgroundColor: Colors.transparent,
       leading: TextButton(
         child: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          Icons.more_vert,
+          color: kBlack,
         ),
         onPressed: () {
           Navigator.pop(context);

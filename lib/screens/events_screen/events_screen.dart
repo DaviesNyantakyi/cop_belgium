@@ -5,7 +5,6 @@ import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 enum EventType { normal, online }
@@ -27,39 +26,29 @@ class _EventsScreenState extends State<EventsScreen> {
 
   List<Event> events = [
     Event(
-      title: 'S04 E37 - Season 4 Finale Episode: Make Room',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(
-        const Duration(hours: 3),
-      ),
+      title: 'Revival Equipped to accomplish a great commission',
+      startDate: DateTime(2022, 1, 26, 7),
+      endDate: DateTime(2022, 1, 28, 21),
       type: 'online',
-      description:
-          'As we wrap up 2021 & Season 4, it’s time to evaluate What’s taking up space and Make ROOM for your healing, your goals and all that God has for you. In this episode I share some personal revelations on my healing journey from this year, from acknowledging the hard t',
-      image:
-          'https://images.unsplash.com/photo-1642793891075-4f53583a2079?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
+      description: 'National Proposed Officer Training Program Selection',
+      image: 'assets/images/devotion.jpeg',
       zoomLink:
           'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
     ),
     Event(
-      title: 'S04 E37 - Season 4 Finale Episode: Make Room',
-      startDate: DateTime.now(),
-      endDate: DateTime.now().add(
-        const Duration(hours: 3),
-      ),
+      title: 'National Proposed Officer Training Program',
+      startDate: DateTime(2022, 01, 08, 19),
+      endDate: DateTime(2022, 01, 08, 19),
       location: {
-        'street': 'Middelolenlaan 123',
-        'podstcode': '2100',
-        'city': 'Deurne',
-        'lat': '51.31830821507976',
-        'long': '4.939745926843822'
+        'street': 'Van der Keilenstraat',
+        'podstcode': '2000',
+        'city': 'Antwerp',
+        'lat': '51.216896921177835',
+        'long': '4.400080602355622'
       },
       type: 'normal',
-      description:
-          'As we wrap up 2021 & Season 4, it’s time to evaluate What’s taking up space and Make ROOM for your healing, your goals and all that God has for you. In this episode I share some personal revelations on my healing journey from this year, from acknowledging the hard t',
-      image:
-          'https://images.unsplash.com/photo-1642793891075-4f53583a2079?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80',
-      zoomLink:
-          'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
+      description: 'National Proposed Officer Training Program',
+      image: 'assets/images/army.jpeg',
     ),
   ];
   @override
@@ -76,7 +65,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: const Icon(FontAwesomeIcons.plus),
+        child: const Icon(Icons.add_outlined),
         onPressed: () async {
           _showEventDialog();
           // await showDialog<void>(
@@ -160,12 +149,12 @@ class _EventsScreenState extends State<EventsScreen> {
         rightChevronMargin: const EdgeInsets.only(right: 2, left: 10),
         formatButtonTextStyle: kSFBtnStyleBold,
         leftChevronIcon: const Icon(
-          FontAwesomeIcons.chevronLeft,
-          color: kBlueDark,
+          Icons.chevron_left_outlined,
+          color: kBlack,
         ),
         rightChevronIcon: const Icon(
-          FontAwesomeIcons.chevronRight,
-          color: kBlueDark,
+          Icons.chevron_right_outlined,
+          color: kBlack,
         ),
         formatButtonDecoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -186,7 +175,7 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
         selectedDecoration: BoxDecoration(
-          color: kBlueDark.withOpacity(0.4),
+          color: kBlack.withOpacity(0.4),
           shape: BoxShape.rectangle,
           borderRadius: const BorderRadius.all(
             Radius.circular(5),
@@ -199,14 +188,14 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
         todayDecoration: const BoxDecoration(
-          color: kBlueDark,
+          color: kBlack,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(
             Radius.circular(5),
           ),
         ),
         outsideTextStyle: kSFBodyBold.copyWith(
-          color: kBlueDark.withOpacity(0.3),
+          color: kBlack.withOpacity(0.3),
         ),
       ),
       selectedDayPredicate: (day) {
@@ -266,7 +255,7 @@ class _EventsScreenState extends State<EventsScreen> {
               children: [
                 RadioListTile<EventType>(
                   contentPadding: contentPadding,
-                  activeColor: kBlueDark,
+                  activeColor: kBlack,
                   value: EventType.normal,
                   groupValue: _eventType,
                   title: const Text('Normal', style: kSFBody),
@@ -277,7 +266,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 ),
                 RadioListTile<EventType>(
                   contentPadding: contentPadding,
-                  activeColor: kBlueDark,
+                  activeColor: kBlack,
                   value: EventType.online,
                   groupValue: _eventType,
                   title: const Text('Online', style: kSFBody),

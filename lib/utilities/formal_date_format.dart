@@ -33,10 +33,12 @@ class FormalDates {
     return date!.format('hh:mm:ss');
   }
 
-  static String calculateTime({required DateTime? date}) {
+  static String calculateEpisodeTime({required DateTime? date}) {
+    // returns the format H:m:s is the audio length is more then one our
     if (date!.hour <= 1) {
       return formatMs(date: date);
     }
+
     return formatHms(date: date);
   }
 

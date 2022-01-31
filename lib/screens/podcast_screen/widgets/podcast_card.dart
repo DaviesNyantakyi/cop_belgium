@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -14,44 +15,71 @@ class PodcastCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 170,
-          height: 170,
-          decoration: BoxDecoration(
-            boxShadow: [
-              kBoxShadow,
-            ],
-            color: kBlue, // card background color if imgae is null
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15),
-            ),
-
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: CachedNetworkImageProvider(podcast.imageUrl),
-            ),
-          ),
-          child: TextButton(
-            style: kTextButtonStyle,
-            onPressed: onPressed,
-            child: Container(),
-          ),
+    return Container(
+      width: double.infinity,
+      height: 140,
+      decoration: BoxDecoration(
+        boxShadow: [
+          kBoxShadow,
+        ],
+        gradient: kPurpleGradient,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(kCardRadius),
         ),
-        const SizedBox(height: 5),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-          width: double.infinity,
-          child: Text(
-            podcast.title,
-            style: kSFBodyBold,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        )
-      ],
+      ),
+      child: TextButton(
+        style: kTextButtonStyle,
+        onPressed: onPressed,
+        child: Row(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(podcast.imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius:
+                      const BorderRadius.all(Radius.circular(kCardRadius))),
+              width: 120,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(kCardContentPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        podcast.title,
+                        style: kSFBodyBold.copyWith(color: kWhite),
+                        maxLines: 2,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        podcast.description,
+                        style: kSFBody2.copyWith(
+                          color: kWhite,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                    const Spacer(),
+                    Expanded(
+                      child: Text(
+                        'Episodes ${podcast.episodes?.length}',
+                        style: kSFCaption.copyWith(color: kWhite),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

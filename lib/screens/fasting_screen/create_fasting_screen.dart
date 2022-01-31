@@ -8,7 +8,6 @@ import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class CreateFastingScreens extends StatefulWidget {
@@ -119,8 +118,8 @@ dynamic _buildAppbar({required BuildContext context}) {
     ),
     leading: TextButton(
       child: const Icon(
-        FontAwesomeIcons.chevronLeft,
-        color: kBlueDark,
+        Icons.chevron_left_outlined,
+        color: kBlack,
       ),
       onPressed: () {
         Navigator.pop(context);
@@ -133,7 +132,7 @@ dynamic _buildAppbar({required BuildContext context}) {
 Widget _buildBtn({
   required String btText,
   VoidCallback? onPressed,
-  Color? buttonColor = kYellow,
+  Color? buttonColor = kBlue,
   Color? textColor = Colors.white,
 }) {
   return SizedBox(

@@ -2,7 +2,7 @@ import 'package:cop_belgium/models/announcement_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeAgo;
+import 'package:timeago/timeago.dart' as timeago;
 
 class AnnouncementsCard extends StatelessWidget {
   final Announcement announcement;
@@ -16,7 +16,7 @@ class AnnouncementsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _buildDate() {
-      String time = timeAgo.format(announcement.dateTime);
+      String time = timeago.format(announcement.dateTime);
 
       if (time.contains('years ago') || time.contains('about a year ago')) {
         time = FormalDates.formatEDmyHm(date: announcement.dateTime);

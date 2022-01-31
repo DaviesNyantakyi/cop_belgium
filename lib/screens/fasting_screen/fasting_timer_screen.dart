@@ -8,7 +8,6 @@ import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 String _text =
     'Be still, and know that I am God. I will be exalted among the nations, I will be exalted in the earth!';
@@ -394,8 +393,8 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         child: const Padding(
           padding: EdgeInsets.all(8.0),
           child: Icon(
-            FontAwesomeIcons.chevronLeft,
-            color: kBlueDark,
+            Icons.chevron_left_outlined,
+            color: kBlack,
           ),
         ),
         onPressed: () {

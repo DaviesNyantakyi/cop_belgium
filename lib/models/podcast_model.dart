@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cop_belgium/models/episodes_model.dart';
 
 class Podcast {
@@ -9,7 +7,6 @@ class Podcast {
   final String author;
   final String pageLink;
   final List<Episode>? episodes;
-  final int totalEpisodes;
 
   Podcast({
     required this.imageUrl,
@@ -18,7 +15,6 @@ class Podcast {
     required this.author,
     required this.pageLink,
     required this.episodes,
-    required this.totalEpisodes,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,7 +25,6 @@ class Podcast {
       'author': author,
       'pageLink': pageLink,
       'episodes': episodes,
-      'totalEpisodes': totalEpisodes,
     };
   }
 
@@ -41,7 +36,6 @@ class Podcast {
       author: map['author'] ?? '',
       pageLink: map['pageLink'] ?? '',
       episodes: map['episodes'] ?? [],
-      totalEpisodes: map['totalEpisodes'] ?? 0,
     );
   }
 }
@@ -72,3 +66,29 @@ class PodcastRssInfo {
     );
   }
 }
+//  Podcast createPodcast({required RssFeed rssFeed}) {
+//     // creates a podcast using the rss info and also adds all the episodes
+
+//     List<Episode> episodes = rssFeed.items!.map((rssItem) {
+//       return Episode(
+//         title: rssItem.itunes?.title ?? rssItem.title ?? '',
+//         author:
+//             rssItem.itunes?.author ?? rssItem.author ?? rssFeed.author ?? '',
+//         image: rssFeed.itunes?.image?.href ?? rssFeed.image?.url ?? '',
+//         duration: rssItem.itunes?.duration?.inMilliseconds ?? 0,
+//         date: rssItem.pubDate ?? DateTime.now(),
+//         audio: rssItem.enclosure?.url ?? '',
+//         description: RssHelper.getDescription(item: rssItem), // remove p tag
+//       );
+//     }).toList();
+
+//     return Podcast(
+//       pageLink: rssFeed.link ?? '',
+//       imageUrl: rssFeed.image?.url ?? rssFeed.itunes?.image?.href ?? ' ',
+//       title: rssFeed.itunes?.title ?? rssFeed.title ?? ' ',
+//       description: rssFeed.description ?? rssFeed.itunes?.summary ?? '',
+//       author: rssFeed.itunes?.author ?? rssFeed.author ?? '',
+//       episodes: episodes,
+//       totalEpisodes: rssFeed.items?.length ?? 0,
+//     );
+//   }

@@ -3,84 +3,81 @@ import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class EpisodeCard extends StatelessWidget {
-  final VoidCallback? onPressed;
+  final Episode episode;
+  final Function()? onPressed;
   const EpisodeCard({
     Key? key,
     this.onPressed,
+    required this.episode,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final episode = Provider.of<Episode>(context, listen: false);
-
     return Container(
-      height: 200,
-      width: 143,
+      width: double.infinity,
+      height: 140,
       decoration: BoxDecoration(
-        color: kBlueDark,
+        boxShadow: [
+          kBoxShadow,
+        ],
+        gradient: kPurpleGradient,
         borderRadius: const BorderRadius.all(
-          Radius.circular(15),
-        ),
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: CachedNetworkImageProvider(episode.image!, scale: 1),
+          Radius.circular(kCardRadius),
         ),
       ),
       child: TextButton(
-        onPressed: onPressed,
         style: kTextButtonStyle,
-        child: Stack(
+        onPressed: onPressed,
+        child: Row(
           children: [
-            Positioned(
-              right: 12.0,
-              top: 14.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: kBlueDark.withOpacity(0.7),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(5),
+            Container(
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(episode.image!),
+                    fit: BoxFit.cover,
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Center(
-                    child: Text(
-                      FormalDates.calculateTime(
-                        date: DateTime.fromMillisecondsSinceEpoch(
-                            episode.duration),
-                      ),
-                      style: kSFCaptionBold.copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
+                  borderRadius:
+                      const BorderRadius.all(Radius.circular(kCardRadius))),
+              width: 120,
             ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                // bottom card
-                height: 80,
-                width: 143,
-                decoration: const BoxDecoration(
-                  color: kBlueDark,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Center(
-                    child: Text(
-                      episode.title,
-                      style: kSFBody.copyWith(color: Colors.white),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(kCardContentPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        episode.title,
+                        style: kSFBodyBold.copyWith(color: kWhite),
+                        maxLines: 2,
+                      ),
                     ),
-                  ),
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        episode.description,
+                        style: kSFBody2.copyWith(
+                          color: kWhite,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                    const Spacer(),
+                    Expanded(
+                      child: Text(
+                        FormalDates.calculateEpisodeTime(
+                          date: DateTime.fromMillisecondsSinceEpoch(
+                            episode.duration,
+                          ),
+                        ),
+                        style: kSFCaption.copyWith(color: kWhite),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

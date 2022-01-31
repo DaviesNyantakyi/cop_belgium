@@ -4,7 +4,6 @@ import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BottomNavSelectorPage extends StatefulWidget {
   static String bottomNavSelectorPage = 'bottomNavSelectorPage';
@@ -15,7 +14,7 @@ class BottomNavSelectorPage extends StatefulWidget {
 }
 
 class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   final List<Widget> _screens = const [
     PodcastScreen(),
@@ -33,9 +32,11 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
       bottomNavigationBar: _buildBottomNavBar(
         index: _selectedIndex,
         onTap: (value) {
-          setState(() {
-            _selectedIndex = value;
-          });
+          if (mounted) {
+            setState(() {
+              _selectedIndex = value;
+            });
+          }
         },
       ),
     );
@@ -45,37 +46,33 @@ class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
 Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
   return BottomNavigationBar(
     backgroundColor: Colors.white,
-    selectedItemColor: kBlueDark,
-    unselectedItemColor: kYellow,
-    showSelectedLabels: false,
-    showUnselectedLabels: false,
-    selectedFontSize: 0, // if not set to 0 bottom nav exception bug
-    unselectedFontSize: 0, // if not set to 0 bottom nav exception bug
-    selectedIconTheme: const IconThemeData(
-      color: kBlueDark,
-    ),
-    unselectedIconTheme: const IconThemeData(
-      color: kBlue,
-    ),
+    selectedItemColor: kBlue,
+    unselectedItemColor: kBlack,
+    selectedFontSize:
+        kSFCaption.fontSize!, // if not set to 0 bottom nav exception bug
+    unselectedFontSize:
+        kSFCaption.fontSize!, // if not set to 0 bottom nav exception bug
+    selectedLabelStyle: kSFBody2,
+
     currentIndex: index,
     type: BottomNavigationBarType.fixed,
     onTap: onTap,
     items: [
       _buildBottomNavItem(
         label: 'Podcasts',
-        icon: FontAwesomeIcons.headphones,
+        icon: Icons.podcasts_outlined,
       ),
       _buildBottomNavItem(
         label: 'Events',
-        icon: FontAwesomeIcons.calendar,
+        icon: Icons.calendar_today_outlined,
       ),
       _buildBottomNavItem(
         label: 'Testimonies',
-        icon: FontAwesomeIcons.quoteRight,
+        icon: Icons.format_quote_outlined,
       ),
       _buildBottomNavItem(
-        label: 'More',
-        icon: FontAwesomeIcons.bars,
+        label: 'Profile',
+        icon: Icons.person_outline,
       ),
     ],
   );
@@ -96,7 +93,7 @@ BottomNavigationBarItem _buildBottomNavItem({
     ),
     activeIcon: Icon(
       icon,
-      color: kBlueDark,
+      color: kBlue,
     ),
   );
 }

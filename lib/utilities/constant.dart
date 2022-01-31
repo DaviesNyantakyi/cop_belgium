@@ -6,13 +6,13 @@ const String _sfDisplayFont = 'SFDisplay';
 //
 const kSFCaption = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 12,
   fontFamily: _sfDisplayFont,
 );
 const kSFCaptionBold = TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 12,
   fontFamily: _sfDisplayFont,
 );
@@ -20,45 +20,45 @@ const kSFCaptionBold = TextStyle(
 // for normal text eg when reading
 const kSFBody = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBodyBold = TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBody2 = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 14,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 const kSFBody2Bold = TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 14,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 
-TextStyle kSFTextFieldStyle = TextStyle(
+TextStyle kSFTextFieldStyle = const TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlueDark.withOpacity(0.5),
+  color: kBlack,
   fontSize: 16,
   height: 1.4,
   fontFamily: _sfDisplayFont,
 );
 
 // used for buttons
-const kSFBtnStyleNormal = TextStyle(
+const kSFBtnStyle = TextStyle(
   fontWeight: FontWeight.w400,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 14,
   height: 1.4,
   fontFamily: _sfDisplayFont,
@@ -66,7 +66,7 @@ const kSFBtnStyleNormal = TextStyle(
 
 const kSFBtnStyleBold = TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlueDark,
+  color: kBlack,
   fontSize: 14,
   height: 1.4,
   fontFamily: _sfDisplayFont,
@@ -75,32 +75,41 @@ const kSFBtnStyleBold = TextStyle(
 // headlines of articals
 const kSFHeadLine1 = TextStyle(
   fontWeight: FontWeight.bold,
+  fontSize: 34,
+  color: kBlack,
+  fontFamily: _sfDisplayFont,
+);
+const kSFHeadLine2 = TextStyle(
+  fontWeight: FontWeight.bold,
   fontSize: 24,
-  color: kBlueDark,
+  color: kBlack,
   fontFamily: _sfDisplayFont,
 );
 
-const kSFHeadLine2 = TextStyle(
+const kSFHeadLine3 = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 20,
-  color: kBlueDark,
+  color: kBlack,
   fontFamily: _sfDisplayFont,
 );
 
 //Colors
+//White
+const Color kWhite = Color(0xFFFFFFFF);
+
+//Black
+const Color kBlack = Color(0xFF000000);
 
 //Blues
-const Color kBlue = Color(0xFF0009EB);
+
+const Color kBlue = Color(0xFF4F6BFE);
+
 const Color kBlueLight = Color(0xFFF1F6F9);
-const Color kBlueDark = Color(0xFF1E2B5F);
+
 const Color kBlueDark2 = Color(0xFF384859);
 
 //Reds
 const Color kRed = Color(0xFFFE4F4F);
-
-//Yellow
-const Color kYellow = Color(0xFFFDD835);
-const Color kYellowDark = Color(0xFFFFBA3C);
 
 //Green
 const Color kGreen = Color(0xFF00B488);
@@ -138,8 +147,9 @@ List<LinearGradient> kGradients = [
   kBlueDarkGradient,
 ];
 //Stay
-const double kButtonHeight = 45;
+const double kButtonHeight = 50;
 const double kButtonRadius = 5;
+const double kCardRadius = 5;
 const double kTextFieldSpacing = 12;
 const double kButtonSpacing = 25;
 const double kAppbarPadding = 20.0;
@@ -155,8 +165,9 @@ BoxShadow kBoxShadow = BoxShadow(
   color: Colors.black.withOpacity(0.2),
 );
 
-const kCircularProgress = CircularProgressIndicator(
+const kProgressIndicator = CircularProgressIndicator(
   strokeWidth: 5,
+  color: kBlack,
 );
 
 const double kBottomSheetHeight = 470;
@@ -168,3 +179,16 @@ ButtonStyle kTextButtonStyle = TextButton.styleFrom(
   padding: EdgeInsets.zero,
   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
 );
+dynamic kBackButton({required BuildContext context}) {
+  return TextButton(
+    style: kTextButtonStyle,
+    child: const Icon(
+      Icons.chevron_left,
+      color: kBlack,
+      size: 40,
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },
+  );
+}
