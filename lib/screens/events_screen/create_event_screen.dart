@@ -114,7 +114,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       {required CupertinoDatePickerMode mode,
       required Function(DateTime) onChanged}) async {
     FocusScope.of(context).requestFocus(FocusNode());
-    await showMyBottomSheet(
+    await showBottomSheet1(
       isDismissible: false,
       context: context,
       height: 300,
@@ -361,7 +361,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Future<void> showBottomSheet() async {
-    await showMyFastingBottomSheet(
+    await showBottomSheet2(
       height: 170,
       context: context,
       child: Material(

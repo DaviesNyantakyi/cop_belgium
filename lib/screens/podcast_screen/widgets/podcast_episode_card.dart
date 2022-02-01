@@ -48,34 +48,27 @@ class EpisodeCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        episode.title,
-                        style: kSFBodyBold.copyWith(color: kWhite),
-                        maxLines: 2,
-                      ),
+                    Text(
+                      episode.title,
+                      style: kSFBodyBold.copyWith(color: kWhite),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        episode.description,
-                        style: kSFBody2.copyWith(
-                          color: kWhite,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 2,
+                    Text(
+                      episode.description,
+                      style: kSFBody2.copyWith(
+                        color: kWhite,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const Spacer(),
-                    Expanded(
-                      child: Text(
-                        FormalDates.calculateEpisodeTime(
-                          date: DateTime.fromMillisecondsSinceEpoch(
-                            episode.duration,
-                          ),
-                        ),
-                        style: kSFCaption.copyWith(color: kWhite),
+                    Text(
+                      FormalDates.getEpisodeDuration(
+                        duration: episode.duration,
                       ),
+                      style: kSFCaption.copyWith(color: kWhite),
                     ),
                   ],
                 ),

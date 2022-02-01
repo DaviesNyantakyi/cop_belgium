@@ -173,16 +173,6 @@ class _BuildPodcastsList extends StatelessWidget {
         pageLink: '',
         episodes: [],
       ),
-      Podcast(
-        title: 'The Zapatistas Podcast - Lessons and Stories from Chiapas',
-        author: 'Church of Pentecost Belgium ',
-        imageUrl:
-            'https://images.rss.com/thezapatistaspodcast/400/20210706_114021_9ee273b1554e7b193a5379c082173f93.jpg',
-        description: '''
-'The Zapatistas Podcast - Lessons and Stories from Chiapas' is an educational and culturally immersive audio series that delves into the Zapatista movement from the early days of the uprising until the present day with news of their much anticipated European tour in the Summer of 2021. Over this podcast series by the Galway Feminist Collective and Promedios Mexico, you'll learn about who the Zapatistas are, their history of struggles and the lessons that we can learn from them, as well as songs and stories from within the movement, bringing each episode to life. The release of this podcast coincides with the Zapatistas' first visit to Europe and aims at giving folks in Ireland (and elsewhere) an insight into the Zapatistas through interviews with some of those who have worked closely with the movement on topics such as community media, womxn's organising, agriculture, education and autonomy, retracing some of the steps that their struggle has taken on its long and steady road to autonomy. Throughout this series, we will highlight their learnings, and obstacles, but above all their creativity and determination to make other worlds a reality.''',
-        pageLink: '',
-        episodes: [],
-      ),
     ];
     return ListView.separated(
       separatorBuilder: (context, index) => const SizedBox(

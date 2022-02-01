@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showMyBottomSheet({
+Future<void> showBottomSheet1({
   required BuildContext context,
   Widget? child,
   bool? isDismissible = true,
@@ -31,21 +31,20 @@ Future<void> showMyBottomSheet({
             topRight: Radius.circular(kButtonRadius),
           ),
         ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(25),
-            child: child,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          child: child,
         ),
       );
     },
   );
 }
 
-Future<void> showMyFastingBottomSheet(
-    {required BuildContext context,
-    Widget? child,
-    double? height = 300}) async {
+Future<void> showBottomSheet2({
+  required BuildContext context,
+  Widget? child,
+  double? height = 300,
+}) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: true,
     context: context,
@@ -64,17 +63,14 @@ Future<void> showMyFastingBottomSheet(
             topRight: Radius.circular(10),
           ),
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(kBodyPadding),
-          child: child,
-        ),
+        child: child,
       );
     },
   );
 }
 
 void loadMdFile({required BuildContext context, required String mdFile}) {
-  showMyBottomSheet(
+  showBottomSheet1(
     context: context,
     child: FutureBuilder(
       future: rootBundle.loadString(mdFile),

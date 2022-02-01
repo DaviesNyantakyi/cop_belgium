@@ -556,7 +556,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> showDatePicker() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    await showMyBottomSheet(
+    await showBottomSheet1(
       isDismissible: false,
       context: context,
       height: 300,
@@ -710,7 +710,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<void> showBottomSheet() async {
-    await showMyFastingBottomSheet(
+    await showBottomSheet2(
       height: 170,
       context: context,
       child: Material(

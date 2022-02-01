@@ -78,7 +78,7 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
                   } else {
                     return CustomFastingCard(
                       onPressed: () {
-                        showMyFastingBottomSheet(
+                        showBottomSheet2(
                           context: context,
                           child: const FastingPicker(),
                         );

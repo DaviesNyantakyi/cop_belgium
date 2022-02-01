@@ -69,7 +69,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
     required BuildContext context,
     required Announcement announcement,
   }) {
-    return showMyBottomSheet(
+    return showBottomSheet1(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,

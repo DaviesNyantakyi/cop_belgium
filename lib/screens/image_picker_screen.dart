@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -193,7 +192,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
 
   Future<void> showBottomSheet() async {
-    await showMyFastingBottomSheet(
+    await showBottomSheet2(
       height: kPickerBottomSheetHeight,
       context: context,
       child: Material(

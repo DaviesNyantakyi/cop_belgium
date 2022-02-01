@@ -1,4 +1,5 @@
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
+import 'package:cop_belgium/utilities/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,19 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:provider/provider.dart';
+
+//TODO: Firebase project setup
+//-Password recovery message: link and sender email
+
+//TODO: -Ios setup
+//-iOS Firebase Project Setup
+
+//TODO:  -Image picker
+//    - image picker setup ios
+
+//TODO:  Authors project
+//   - type in vs code command pallet: Authors
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

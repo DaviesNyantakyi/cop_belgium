@@ -159,7 +159,7 @@ class _DateGenderViewState extends State<DateGenderView> {
 
   Future<void> showDatePicker() async {
     FocusScope.of(context).requestFocus(FocusNode());
-    await showMyBottomSheet(
+    await showBottomSheet1(
       isDismissible: false,
       isScrollControlled: false,
       enableDrag: false,

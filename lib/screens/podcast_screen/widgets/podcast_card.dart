@@ -48,30 +48,26 @@ class PodcastCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(
-                        podcast.title,
-                        style: kSFBodyBold.copyWith(color: kWhite),
-                        maxLines: 2,
-                      ),
+                    //TODO: Title is clipped half way sam with the episode card
+
+                    Text(
+                      podcast.title,
+                      style: kSFBodyBold.copyWith(color: kWhite),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        podcast.description,
-                        style: kSFBody2.copyWith(
-                          color: kWhite,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        maxLines: 2,
+                    Text(
+                      podcast.description,
+                      style: kSFBody2.copyWith(
+                        color: kWhite,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                      maxLines: 2,
                     ),
                     const Spacer(),
-                    Expanded(
-                      child: Text(
-                        'Episodes ${podcast.episodes?.length}',
-                        style: kSFCaption.copyWith(color: kWhite),
-                      ),
+                    Text(
+                      'Episodes ${podcast.episodes?.length}',
+                      style: kSFCaption.copyWith(color: kWhite),
                     ),
                   ],
                 ),

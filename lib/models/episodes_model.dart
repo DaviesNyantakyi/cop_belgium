@@ -4,7 +4,7 @@ class Episode {
   final String description;
   final String audio;
   final String author;
-  final int duration;
+  final Duration duration;
   final DateTime date;
   Episode({
     required this.image,

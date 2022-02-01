@@ -1,15 +1,17 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
+import 'package:cop_belgium/utilities/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 //TODO: Keeps loading when the screen is opened for the first time and the slider is moved
 
 class PodcastPlayerScreen extends StatefulWidget {
@@ -29,7 +31,9 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   double totalDuration = 0;
   double currentposition = 0;
   Episode? episode;
-  double playBackSpeed = 1.00;
+  double playBackSpeed = 1.0;
+  bool isMuted = false;
+  int sleepDuration = 30;
 
   Duration? newPosition;
   int seekDuration = 15000; // 15 sec fast forward and backward
@@ -64,20 +68,19 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   }
 
   void getTotalDuration({Duration? duration}) {
-    DateTime date =
-        DateTime.fromMillisecondsSinceEpoch(duration!.inMilliseconds.toInt());
-    totalDurationText = FormalDates.calculateEpisodeTime(date: date);
-    totalDuration = duration.inMilliseconds.toDouble();
+    totalDuration = duration?.inMilliseconds.toDouble() ?? 0;
+    totalDurationText = FormalDates.getEpisodeDuration(duration: duration!);
   }
 
   void getcurretPostion() {
     player.positionStream.listen((Duration duration) {
-      DateTime date =
-          DateTime.fromMillisecondsSinceEpoch(duration.inMilliseconds.toInt());
       if (mounted) {
         setState(() {
+          currentPostionText =
+              FormalDates.getEpisodeDuration(duration: duration);
           currentposition = duration.inMilliseconds.toDouble();
-          currentPostionText = FormalDates.calculateEpisodeTime(date: date);
+
+          // changes the playback speed if is not the same
           if (playBackSpeed != player.speed) {
             player.setSpeed(playBackSpeed);
           }
@@ -109,6 +112,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.07),
                 _buildOptionsControls(),
                 _slider(),
+                const SizedBox(height: 15),
                 _buildMediaControls(),
               ],
             ),
@@ -120,6 +124,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
 
   Widget _buildOptionsControls() {
     Color color = kBlack.withOpacity(0.5);
+    const spacing = 15.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -136,10 +141,13 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             ),
           ),
         ),
+        const SizedBox(width: spacing),
         Tooltip(
           message: 'Sleep timer',
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _showSleepTimerBottomSheet(context: context);
+            },
             icon: Icon(
               Icons.mode_night_outlined,
               size: 30,
@@ -147,6 +155,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             ),
           ),
         ),
+        const SizedBox(width: spacing),
         Tooltip(
           message: 'About podcast',
           child: IconButton(
@@ -160,17 +169,28 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
             },
           ),
         ),
+        const SizedBox(width: spacing),
         Tooltip(
           message: 'Volume',
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              isMuted = !isMuted;
+              if (isMuted) {
+                player.setVolume(0);
+              } else {
+                player.setVolume(1);
+              }
+
+              setState(() {});
+            },
             icon: Icon(
-              Icons.volume_up_outlined,
+              isMuted ? Icons.volume_off_outlined : Icons.volume_up_outlined,
               size: 30,
               color: color,
             ),
           ),
         ),
+        const SizedBox(width: spacing),
         Tooltip(
           message: 'Download',
           child: IconButton(
@@ -190,7 +210,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     required BuildContext context,
     required Episode? episode,
   }) {
-    return showMyBottomSheet(
+    return showBottomSheet1(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -219,49 +239,117 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     required BuildContext context,
     required Episode? episode,
   }) {
-    return showMyFastingBottomSheet(
+    return showBottomSheet2(
       context: context,
-      child: StatefulBuilder(
-        builder: (context, state) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Playback speed',
-                style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                '$playBackSpeed x',
-                style: kSFHeadLine2,
-              ),
-              const SizedBox(height: 16),
-              Slider(
-                divisions: 10,
-                min: 0.5,
-                max: 3.0,
-                value: double.parse(playBackSpeed.toStringAsFixed(1)),
-                onChanged: (value) {
-                  playBackSpeed = value;
-                  state(() {});
-                },
-              ),
-              const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
-                width: 100,
-                context: context,
-                btnText: 'Save',
-                onPressed: () {
-                  setState(() {});
-                  Navigator.pop(context);
-                  print(playBackSpeed);
-                },
-              )
-            ],
-          );
-        },
+      child: Center(
+        child: SingleChildScrollView(
+          child: StatefulBuilder(
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Playback speed',
+                    style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '${double.parse(playBackSpeed.toStringAsFixed(2))} x',
+                    style: kSFHeadLine2,
+                  ),
+                  const SizedBox(height: 16),
+                  SfSlider(
+                    activeColor: kBlue,
+                    inactiveColor: Colors.grey.shade300,
+                    min: 0.5,
+                    max: 3.0,
+                    value: double.parse(playBackSpeed.toStringAsFixed(2)),
+                    interval: 0.5,
+                    showTicks: true,
+                    showLabels: true,
+                    stepSize: 0.1,
+                    minorTicksPerInterval: 5,
+                    onChanged: (value) {
+                      playBackSpeed = value;
+                      state(() {});
+                    },
+                  ),
+                  const SizedBox(height: kButtonSpacing),
+                  Buttons.buildBtn(
+                    width: 100,
+                    context: context,
+                    btnText: 'Close',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showSleepTimerBottomSheet({required BuildContext context}) {
+    double selectedDuration = 30;
+    return showBottomSheet2(
+      context: context,
+      child: Center(
+        child: SingleChildScrollView(
+          child: StatefulBuilder(
+            builder: (context, state) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Sleep timer',
+                    style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    '${selectedDuration.toStringAsFixed(0)} min',
+                    style: kSFHeadLine2,
+                  ),
+                  const SizedBox(height: 16),
+                  SfSlider(
+                    activeColor: kBlue,
+                    inactiveColor: Colors.grey.shade300,
+                    min: 5.0,
+                    max: 105.0,
+                    value: selectedDuration,
+                    stepSize: 5,
+                    interval: 5,
+                    showTicks: true,
+                    onChanged: (dynamic value) {
+                      selectedDuration = value;
+                      state(() {});
+                    },
+                  ),
+                  const SizedBox(height: kButtonSpacing),
+                  Buttons.buildBtn(
+                    width: 100,
+                    context: context,
+                    btnText: 'Start',
+                    onPressed: () async {
+                      final duration =
+                          Duration(minutes: selectedDuration.toInt());
+                      Timer.periodic(duration, (timer) {
+                        //The timer function will be called if the timer is complete.
+                        player.stop();
+                      });
+                    },
+                  )
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -285,7 +373,6 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           },
           onChangeEnd: (value) {},
         ),
-        const SizedBox(height: 8),
         _buildDurationText()
       ],
     );
@@ -310,11 +397,11 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
       children: [
         Text(
           currentPostionText ?? '',
-          style: kSFBody,
+          style: kSFBody2,
         ),
         Text(
           totalDurationText ?? '',
-          style: kSFBody,
+          style: kSFBody2,
         )
       ],
     );

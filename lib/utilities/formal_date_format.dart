@@ -33,13 +33,18 @@ class FormalDates {
     return date!.format('hh:mm:ss');
   }
 
-  static String calculateEpisodeTime({required DateTime? date}) {
-    // returns the format H:m:s is the audio length is more then one our
-    if (date!.hour <= 1) {
-      return formatMs(date: date);
-    }
+  static String getEpisodeDuration({required Duration duration}) {
+    // formats the episode duration in hh:mm:ss
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
 
-    return formatHms(date: date);
+    // return mm:ss if the duration is less then one hour
+
+    if (duration.inHours < 1) {
+      return "$twoDigitMinutes:$twoDigitSeconds";
+    }
+    return "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
 
   static String getFastGoalDate({
