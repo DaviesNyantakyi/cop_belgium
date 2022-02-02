@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
+import 'package:cop_belgium/utilities/audio_provider.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -164,35 +164,46 @@ class _BuildPodcastsList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Podcast> podcast = [
       Podcast(
-        title: 'Deeper Waters',
-        author: 'Amonie Akens & Elijah Wilson',
+        title: 'Deep Truths',
+        author: 'Church of Pentecost Belgium',
         imageUrl:
-            'https://media.redcircle.com/images/2021/9/27/20/ffe841f6-dba3-4e5e-b19e-363b036a3ecf_cc6f0f04-6416-49b8-9bdf-2dbad7238e93_blob.jpg',
+            'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
         description:
-            '''The creators of Pescados Bros, Amonie Akens & Elijah Wilson are here to dive deep into the word of God to help us become better disciples. Fulfilling the call in Matthew 4:19 to be fishers of men, we strive to present the complexities of the Bible in a form that's a bit easier to digest. Essentially, this podcast is a Gen Z Bible study designed to equip young disciples and create new disciples.''',
+            '''Welcome to the Pentecostal Church First Podcast! Here we dive and discover the deep truth from the Scriptures.''',
         pageLink: '',
         episodes: [],
       ),
     ];
-    return ListView.separated(
-      separatorBuilder: (context, index) => const SizedBox(
-        height: kCardSpacing,
-      ),
-      itemCount: podcast.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return PodcastCard(
-          podcast: podcast[index],
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => Provider<Podcast>.value(
-                  value: podcast[index],
-                  child: const PodcastDetailScreen(),
-                ),
-              ),
+    return Consumer<AudioProvider>(
+      builder: (context, audioProvider, _) {
+        return ListView.separated(
+          separatorBuilder: (context, index) => const SizedBox(
+            height: kCardSpacing,
+          ),
+          itemCount: podcast.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return PodcastCard(
+              podcast: podcast[index],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MultiProvider(
+                      providers: [
+                        Provider<Podcast>.value(
+                          value: podcast[index],
+                        ),
+                        ChangeNotifierProvider<AudioProvider>.value(
+                          value: audioProvider,
+                        ),
+                      ],
+                      child: const PodcastDetailScreen(),
+                    ),
+                  ),
+                );
+              },
             );
           },
         );

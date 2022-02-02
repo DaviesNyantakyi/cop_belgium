@@ -1,6 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/screens/podcast_screen/podcast_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';

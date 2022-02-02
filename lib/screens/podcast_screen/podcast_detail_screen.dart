@@ -42,7 +42,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: kTextFieldSpacing),
+            const SizedBox(height: kButtonSpacing),
             _buildSubButton(),
             const SizedBox(height: 32),
             _buildDescription(),
@@ -67,6 +67,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
               Radius.circular(kCardRadius),
             ),
             color: kBlue,
+            boxShadow: [kBoxShadow],
             image: DecorationImage(
               fit: BoxFit.cover,
               image: CachedNetworkImageProvider(podcast!.imageUrl),
@@ -210,42 +211,49 @@ class _BuildPodcastsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Episode> podcast = [
+    List<Episode> episodes = [
       Episode(
         image:
-            'https://media.redcircle.com/images/2022/1/31/4/22c2af0a-445b-439f-9388-8fd3dd617d09_973f7793-8ee2-459a-905c-317a3e32abfb.jpg',
-        title: 'Don\'t Drag Your Sin Along',
-        author: 'Amonie Akens & Elijah Wilson',
-        description:
-            '''The title is straightforward, yet so many of us literally drag our sin along anyway. Today, we dive into what the bible says this is and what it suggests about it.''',
+            'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
+        title: 'Deception',
+        author: 'Church of Pentecost Belgium',
+        description: '''What is going on in the end times.''',
         audio:
-            'https://stream.redcircle.com/episodes/2e495e6f-825c-4320-8661-6b44938712f7/stream.mp3',
-        duration: const Duration(seconds: 3755),
+            'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
+        duration: const Duration(seconds: 1404),
         date: DateTime.now(),
       ),
     ];
-    return ListView.separated(
-      separatorBuilder: (context, index) => const SizedBox(
-        height: kCardSpacing,
-      ),
-      itemCount: podcast.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return EpisodeCard(
-          episode: podcast[index],
-          onPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => ChangeNotifierProvider<AudioProvider>(
-                  create: (context) => AudioProvider(),
-                  child: Provider<Episode>.value(
-                    value: podcast[index],
-                    child: const PodcastPlayerScreen(),
+    return Consumer<AudioProvider>(
+      builder: (context, audioProvider, _) {
+        return ListView.separated(
+          separatorBuilder: (context, index) => const SizedBox(
+            height: kCardSpacing,
+          ),
+          itemCount: episodes.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            return EpisodeCard(
+              episode: episodes[index],
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MultiProvider(
+                      providers: [
+                        Provider<Episode>.value(
+                          value: episodes[index],
+                        ),
+                        ChangeNotifierProvider<AudioProvider>.value(
+                          value: audioProvider,
+                        ),
+                      ],
+                      child: const PodcastPlayerScreen(),
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         );

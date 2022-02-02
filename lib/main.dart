@@ -1,6 +1,8 @@
-import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
+import 'dart:math';
+
 import 'package:cop_belgium/utilities/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -51,7 +53,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Cop Belgium',
-      home: const AuthSwitcher(),
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<AudioProvider>(
+            create: (context) => AudioProvider(),
+          ),
+        ],
+        child: const AuthSwitcher(),
+      ),
       theme: _theme,
       routes: _routes,
       builder: EasyLoading.init(),
@@ -112,19 +121,116 @@ ThemeData _theme = ThemeData(
     activeTrackColor: kBlue,
     thumbColor: kBlue,
     inactiveTrackColor: Colors.grey.shade300,
-    thumbShape: const RoundSliderThumbShape(
-      enabledThumbRadius: 7,
-    ),
   ),
 );
 
-class Test extends StatelessWidget {
+class Test extends StatefulWidget {
   const Test({Key? key}) : super(key: key);
 
   @override
+  State<Test> createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  @override
+  void initState() {
+    Provider.of<AudioProvider>(context, listen: false).setUrl(
+      url:
+          'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
+    );
+    Provider.of<AudioProvider>(context, listen: false).init();
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: CreateFastingScreens(),
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    Provider.of<AudioProvider>(context, listen: false).play();
+                  },
+                  icon: Icon(
+                    Provider.of<AudioProvider>(context).isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                ),
+              ],
+            ),
+            Slider(
+              min: 0.0,
+              max: Provider.of<AudioProvider>(context)
+                  .totalDuration
+                  .inMilliseconds
+                  .toDouble(),
+              value: min(
+                  Provider.of<AudioProvider>(context)
+                      .currentPostion
+                      .inMilliseconds
+                      .toDouble(),
+                  Provider.of<AudioProvider>(context)
+                      .totalDuration
+                      .inMilliseconds
+                      .toDouble()),
+              onChanged: (value) {
+                Provider.of<AudioProvider>(context, listen: false).seek(
+                  newPosition: value.toInt(),
+                );
+              },
+              onChangeEnd: (value) {},
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    FormalDates.getEpisodeDuration(
+                      duration:
+                          Provider.of<AudioProvider>(context).currentPostion,
+                    ),
+                  ),
+                  Text(
+                    FormalDates.getEpisodeDuration(
+                      duration:
+                          Provider.of<AudioProvider>(context).totalDuration,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Provider.of<AudioProvider>(context, listen: false)
+                          .fastRewind();
+                    },
+                    icon: const Icon(Icons.fast_rewind),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Provider.of<AudioProvider>(context, listen: false)
+                          .fastForward();
+                    },
+                    icon: const Icon(Icons.fast_forward),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
