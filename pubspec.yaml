@@ -49,7 +49,8 @@ dependencies:
   internet_connection_checker: ^0.0.1+3  # check for actual internet coonection.
   provider: ^6.0.1 # makes passing object arround easer
   flutter_native_splash: ^1.3.2 #plash screen
-  just_audio: ^0.9.18 #audio player
+  just_audio: ^0.9.18 # just plays audio 
+  audio_service: ^0.18.3 # for more audio controls eg lockscreen
   webfeed: ^0.7.0 # for parsing rss 
   http: ^0.13.4 #making http request
   html: ^0.15.0 #r emoves p tag from podcast description

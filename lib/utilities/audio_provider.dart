@@ -1,20 +1,26 @@
-import 'dart:async';
-
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:just_audio/just_audio.dart';
 
 // Was abstracting the audio player functionality
 class AudioProvider extends ChangeNotifier {
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayer _audioPlayer = AudioPlayer();
 
-  final int _seekDuration = 30000; // 30 sec fast forward and backward
+  // skip the audio 30 sec forward or backward
+  final int _seekDuration = 30000;
   bool _isPlaying = false;
+
+  // The current audio state. This can be: loading, buffering, idle, ready, completed
   ProcessingState? _playerState;
 
+  // the value used to speed up the audio
   double _playbackSpeed = 1.0;
 
+  // the total audio duration
   Duration _totalDurtion = const Duration(milliseconds: 0);
+
+  // the current audio postion
   Duration _currentPostion = const Duration(milliseconds: 0);
 
   Duration get totalDuration => _totalDurtion;
@@ -23,15 +29,18 @@ class AudioProvider extends ChangeNotifier {
   bool get isPlaying => _isPlaying;
   double get playbackSpeed => _playbackSpeed;
 
-  void init() {
+  AudioProvider() {
+    // listen to the audio position changes.
     _audioPlayer.positionStream.listen((duration) {
       _currentPostion = duration;
       notifyListeners();
     });
 
+    // listen to the player state changes.
     _getPlayerState();
   }
 
+  // Play or pause the audio depending on isPlaying
   Future<void> play() async {
     if (_isPlaying) {
       _audioPlayer.pause();
@@ -39,16 +48,18 @@ class AudioProvider extends ChangeNotifier {
       _audioPlayer.play();
     }
     _isPlaying = !_isPlaying;
+
     notifyListeners();
   }
 
+  // set the audio you want to play
   Future<void> setUrl({required String url}) async {
     _totalDurtion = (await _audioPlayer.setUrl(url))!;
     notifyListeners();
   }
 
+  // skip to the postion you want. for eg slider
   void seek({required int newPosition}) {
-    // skipping
     _audioPlayer.seek(Duration(milliseconds: newPosition));
     notifyListeners();
   }
@@ -84,7 +95,8 @@ class AudioProvider extends ChangeNotifier {
   }
 
   void _getPlayerState() {
-    // the current state of the audio
+    // the current audio state. This can be: loading, buffering, idle, ready, completed
+
     _audioPlayer.processingStateStream.listen((state) {
       _playerState = state;
 
@@ -92,13 +104,11 @@ class AudioProvider extends ChangeNotifier {
     });
   }
 
-  @override
-  void dispose() {
+  Future<void> close() async {
     _audioPlayer.dispose();
-    notifyListeners();
-    super.dispose();
   }
 
+  // speed up the audio
   void setPlaybackSpeed({required double speed}) {
     _audioPlayer.setSpeed(speed);
     _playbackSpeed = speed;

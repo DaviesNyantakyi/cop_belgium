@@ -44,7 +44,9 @@ class _PodcastScreenState extends State<PodcastScreen> {
         leadingWidth: 130,
         actions: [
           Container(
-            padding: const EdgeInsets.only(right: kBodyPadding, bottom: 25),
+            width: 45,
+            height: 45,
+            margin: const EdgeInsets.only(right: 5),
             child: TextButton(
               style: kTextButtonStyle,
               child: const Icon(

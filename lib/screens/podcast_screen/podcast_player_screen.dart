@@ -33,17 +33,9 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   Future<void> init() async {
     final episode = Provider.of<Episode>(context, listen: false);
 
-    Provider.of<AudioProvider>(context, listen: false).setUrl(
+    await Provider.of<AudioProvider>(context, listen: false).setUrl(
       url: episode.audio,
     );
-    Provider.of<AudioProvider>(context, listen: false).init();
-  }
-
-  @override
-  void dispose() {
-    Provider.of<AudioProvider>(context, listen: false).dispose();
-
-    super.dispose();
   }
 
   @override
@@ -58,7 +50,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
               const _BuildImage(),
               const SizedBox(height: 20),
               const _BuildTitle(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.07),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.06),
               const _BuildAudioControls(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               const _BuildOptionsControls(),
@@ -196,37 +188,46 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Flexible(
-          child: IconButton(
-            icon: const Icon(
-              Icons.replay_30_outlined,
-              size: 35,
+          child: SizedBox(
+            width: 70,
+            child: IconButton(
+              icon: const Icon(
+                Icons.replay_30_outlined,
+                size: 35,
+              ),
+              color: kBlack,
+              onPressed: () {
+                Provider.of<AudioProvider>(context, listen: false).fastRewind();
+              },
             ),
-            color: kBlack,
-            onPressed: () {
-              Provider.of<AudioProvider>(context, listen: false).fastRewind();
-            },
           ),
         ),
-        const Flexible(child: SizedBox(width: 30)),
-        _buildPausPlayIcon(),
-        const Flexible(child: SizedBox(width: 30)),
+        SizedBox(
+          width: 80,
+          height: 80,
+          child: _buildPlayPauseIcon(),
+        ),
         Flexible(
-          child: IconButton(
-            icon: const Icon(
-              Icons.forward_30_outlined,
-              size: 35,
+          child: SizedBox(
+            width: 70,
+            child: IconButton(
+              icon: const Icon(
+                Icons.forward_30_outlined,
+                size: 35,
+              ),
+              color: kBlack,
+              onPressed: () {
+                Provider.of<AudioProvider>(context, listen: false)
+                    .fastForward();
+              },
             ),
-            color: kBlack,
-            onPressed: () {
-              Provider.of<AudioProvider>(context, listen: false).fastForward();
-            },
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPausPlayIcon() {
+  Widget _buildPlayPauseIcon() {
     final state = Provider.of<AudioProvider>(context).state;
     if (state == ProcessingState.loading ||
         state == ProcessingState.buffering) {
@@ -241,7 +242,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
         Provider.of<AudioProvider>(context).isPlaying == true
             ? Icons.pause_outlined
             : Icons.play_arrow_outlined,
-        size: 50,
+        size: 70,
       ),
       color: kBlack,
       onPressed: () {

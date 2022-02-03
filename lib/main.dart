@@ -138,7 +138,6 @@ class _TestState extends State<Test> {
       url:
           'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
     );
-    Provider.of<AudioProvider>(context, listen: false).init();
 
     super.initState();
   }
