@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/utilities/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
@@ -24,14 +25,16 @@ import 'package:provider/provider.dart';
 //TODO:  Authors project
 //   - type in vs code command pallet: Authors
 
+late AudioProvider _audioHandler;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  init();
+  await init();
   runApp(const MyApp());
 }
 
-void init() {
+Future<void> init() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -44,6 +47,21 @@ void init() {
     ..indicatorWidget = kProgressIndicator
     ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
+
+  // Initialize the notifications and expose the AudioProvider class
+  Duration _skipDuration = AudioProvider().skipDuration;
+
+  _audioHandler = await AudioService.init<AudioProvider>(
+    builder: () => AudioProvider(),
+    config: AudioServiceConfig(
+      androidNotificationChannelId: 'com.apkeroo.cop_belgium.channel.audio',
+      androidNotificationChannelName: 'Cop Belgium',
+      androidNotificationOngoing: true,
+      androidStopForegroundOnPause: true,
+      fastForwardInterval: _skipDuration,
+      rewindInterval: _skipDuration,
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -57,6 +75,9 @@ class MyApp extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<AudioProvider>(
             create: (context) => AudioProvider(),
+          ),
+          ChangeNotifierProvider<AudioProvider>.value(
+            value: _audioHandler,
           ),
         ],
         child: const AuthSwitcher(),
@@ -121,115 +142,25 @@ ThemeData _theme = ThemeData(
     activeTrackColor: kBlue,
     thumbColor: kBlue,
     inactiveTrackColor: Colors.grey.shade300,
+    trackShape: CustomTrackShape(),
   ),
 );
 
-class Test extends StatefulWidget {
-  const Test({Key? key}) : super(key: key);
-
+// Slider padding
+class CustomTrackShape extends RoundedRectSliderTrackShape {
   @override
-  State<Test> createState() => _TestState();
-}
-
-class _TestState extends State<Test> {
-  @override
-  void initState() {
-    Provider.of<AudioProvider>(context, listen: false).setUrl(
-      url:
-          'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
-    );
-
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    Provider.of<AudioProvider>(context, listen: false).play();
-                  },
-                  icon: Icon(
-                    Provider.of<AudioProvider>(context).isPlaying
-                        ? Icons.pause
-                        : Icons.play_arrow,
-                  ),
-                ),
-              ],
-            ),
-            Slider(
-              min: 0.0,
-              max: Provider.of<AudioProvider>(context)
-                  .totalDuration
-                  .inMilliseconds
-                  .toDouble(),
-              value: min(
-                  Provider.of<AudioProvider>(context)
-                      .currentPostion
-                      .inMilliseconds
-                      .toDouble(),
-                  Provider.of<AudioProvider>(context)
-                      .totalDuration
-                      .inMilliseconds
-                      .toDouble()),
-              onChanged: (value) {
-                Provider.of<AudioProvider>(context, listen: false).seek(
-                  newPosition: value.toInt(),
-                );
-              },
-              onChangeEnd: (value) {},
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    FormalDates.getEpisodeDuration(
-                      duration:
-                          Provider.of<AudioProvider>(context).currentPostion,
-                    ),
-                  ),
-                  Text(
-                    FormalDates.getEpisodeDuration(
-                      duration:
-                          Provider.of<AudioProvider>(context).totalDuration,
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Provider.of<AudioProvider>(context, listen: false)
-                          .fastRewind();
-                    },
-                    icon: const Icon(Icons.fast_rewind),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      Provider.of<AudioProvider>(context, listen: false)
-                          .fastForward();
-                    },
-                    icon: const Icon(Icons.fast_forward),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final double trackHeight = sliderTheme.trackHeight!;
+    final double trackLeft = offset.dx;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackWidth = parentBox.size.width;
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

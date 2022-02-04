@@ -24,6 +24,8 @@ class PodcastPlayerScreen extends StatefulWidget {
 }
 
 class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     init();
@@ -33,9 +35,8 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   Future<void> init() async {
     final episode = Provider.of<Episode>(context, listen: false);
 
-    await Provider.of<AudioProvider>(context, listen: false).setUrl(
-      url: episode.audio,
-    );
+    await Provider.of<AudioProvider>(context, listen: false)
+        .init(episode.audio);
   }
 
   @override
@@ -52,12 +53,11 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
               const _BuildTitle(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.06),
               const _BuildAudioControls(),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              const _BuildOptionsControls(),
             ],
           ),
         ),
       ),
+      bottomNavigationBar: const _BuildOptionsControls(),
     );
   }
 
@@ -135,50 +135,59 @@ class _BuildAudioControls extends StatefulWidget {
 class _BuildAudioControlsState extends State<_BuildAudioControls> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildAudioControls(),
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                FormalDates.getEpisodeDuration(
-                  duration: Provider.of<AudioProvider>(context).currentPostion,
-                ),
-              ),
-              Text(
-                FormalDates.getEpisodeDuration(
-                  duration: Provider.of<AudioProvider>(context).totalDuration,
-                ),
-              )
-            ],
-          ),
-        ),
-        Slider(
-          min: 0.0,
-          max: Provider.of<AudioProvider>(context)
-              .totalDuration
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+      child: Column(
+        children: [
+          _buildAudioControls(),
+          const SizedBox(height: 20),
+          _buildDurationText(),
+          _buildSlider(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSlider() {
+    return Slider(
+      min: 0.0,
+      max: Provider.of<AudioProvider>(context)
+          .totalDuration
+          .inMilliseconds
+          .toDouble(),
+      value: min(
+          Provider.of<AudioProvider>(context)
+              .currentPosition
               .inMilliseconds
               .toDouble(),
-          value: min(
-              Provider.of<AudioProvider>(context)
-                  .currentPostion
-                  .inMilliseconds
-                  .toDouble(),
-              Provider.of<AudioProvider>(context)
-                  .totalDuration
-                  .inMilliseconds
-                  .toDouble()),
-          onChanged: (value) {
-            Provider.of<AudioProvider>(context, listen: false).seek(
-              newPosition: value.toInt(),
-            );
-          },
-          onChangeEnd: (value) {},
+          Provider.of<AudioProvider>(context)
+              .totalDuration
+              .inMilliseconds
+              .toDouble()),
+      onChanged: (value) {
+        final position = Duration(milliseconds: value.toInt());
+        Provider.of<AudioProvider>(
+          context,
+          listen: false,
+        ).seek(position);
+      },
+    );
+  }
+
+  Widget _buildDurationText() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          FormalDates.getEpisodeDuration(
+            duration: Provider.of<AudioProvider>(context).currentPosition,
+          ),
         ),
+        Text(
+          FormalDates.getEpisodeDuration(
+            duration: Provider.of<AudioProvider>(context).totalDuration,
+          ),
+        )
       ],
     );
   }
@@ -197,13 +206,14 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
               ),
               color: kBlack,
               onPressed: () {
-                Provider.of<AudioProvider>(context, listen: false).fastRewind();
+                Provider.of<AudioProvider>(context, listen: false)
+                    .fastForward();
               },
             ),
           ),
         ),
         SizedBox(
-          width: 80,
+          width: 90,
           height: 80,
           child: _buildPlayPauseIcon(),
         ),
@@ -228,25 +238,33 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   }
 
   Widget _buildPlayPauseIcon() {
-    final state = Provider.of<AudioProvider>(context).state;
-    if (state == ProcessingState.loading ||
-        state == ProcessingState.buffering) {
-      return const IconButton(
-        icon: kProgressIndicator,
-        onPressed: null,
+    Widget widget = const Icon(Icons.play_arrow_outlined, size: 60);
+    bool isPlaying = Provider.of<AudioProvider>(context).isPlaying;
+    ProcessingState? state = Provider.of<AudioProvider>(context).playState;
+
+    if (isPlaying) {
+      widget = const Icon(
+        Icons.pause_outlined,
+        size: 60,
       );
     }
+
+    if (state == ProcessingState.loading) {
+      widget = kProgressIndicator;
+    }
+
     return IconButton(
-      padding: const EdgeInsets.all(0),
-      icon: Icon(
-        Provider.of<AudioProvider>(context).isPlaying == true
-            ? Icons.pause_outlined
-            : Icons.play_arrow_outlined,
-        size: 70,
-      ),
-      color: kBlack,
+      icon: widget,
       onPressed: () {
-        Provider.of<AudioProvider>(context, listen: false).play();
+        if (isPlaying) {
+          Provider.of<AudioProvider>(context, listen: false).pause();
+        } else {
+          Provider.of<AudioProvider>(context, listen: false).play();
+        }
+
+        if (state == ProcessingState.completed && isPlaying == false) {
+          Provider.of<AudioProvider>(context, listen: false).restart();
+        }
       },
     );
   }
@@ -263,7 +281,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
   double playBackSpeed = 1.0;
   int sleepDuration = 30;
   Color color = kBlack.withOpacity(0.5);
-  double spacing = 15.0;
+  double spacing = 50;
 
   @override
   void initState() {
@@ -390,7 +408,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
                     minorTicksPerInterval: 5,
                     onChanged: (value) {
                       playBackSpeed = value;
-                      audioProvider.setPlaybackSpeed(speed: playBackSpeed);
+                      audioProvider.setPlaybackSpeed(playBackSpeed);
                       state(() {});
                     },
                   ),
