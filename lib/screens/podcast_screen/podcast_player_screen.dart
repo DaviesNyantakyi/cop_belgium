@@ -220,8 +220,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
               ),
               color: kBlack,
               onPressed: () {
-                Provider.of<AudioProvider>(context, listen: false)
-                    .fastForward();
+                Provider.of<AudioProvider>(context, listen: false).rewind();
               },
             ),
           ),

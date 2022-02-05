@@ -211,13 +211,14 @@ class _BuildPodcastsList extends StatelessWidget {
     List<Episode> episodes = [
       Episode(
         image:
-            'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
-        title: 'Deception',
-        author: 'Church of Pentecost Belgium',
-        description: '''What is going on in the end times.''',
+            'https://media.redcircle.com/images/2022/1/31/4/22c2af0a-445b-439f-9388-8fd3dd617d09_973f7793-8ee2-459a-905c-317a3e32abfb.jpg',
+        title: 'Don\'t Drag Your Sin Along',
+        author: 'Deeper Waters',
+        description:
+            '''The title is straightforward, yet so many of us literally drag our sin along anyway. Today, we dive into what the bible says this is and what it suggests about it.''',
         audio:
-            'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
-        duration: const Duration(seconds: 1404),
+            'https://stream.redcircle.com/episodes/2e495e6f-825c-4320-8661-6b44938712f7/stream.mp3',
+        duration: const Duration(seconds: 3755),
         date: DateTime.now(),
       ),
     ];
