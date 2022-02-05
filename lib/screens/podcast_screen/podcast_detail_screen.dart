@@ -4,7 +4,7 @@ import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
 import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
-import 'package:cop_belgium/utilities/audio_provider.dart';
+import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -44,9 +44,9 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             _buildHeader(),
             const SizedBox(height: kButtonSpacing),
             _buildSubButton(),
-            const SizedBox(height: 32),
+            const SizedBox(height: kButtonSpacing),
             _buildDescription(),
-            const SizedBox(height: 19),
+            const SizedBox(height: kButtonSpacing),
             const _BuildPodcastsList(),
           ],
         ),
@@ -59,18 +59,20 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          height: 170,
-          width: 150,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(kCardRadius),
-            ),
-            color: kBlue,
-            boxShadow: [kBoxShadow],
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: CachedNetworkImageProvider(podcast!.imageUrl),
+        Expanded(
+          child: Container(
+            height: 190,
+            width: 170,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(kCardRadius),
+              ),
+              color: kBlue,
+              boxShadow: [kBoxShadow],
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: CachedNetworkImageProvider(podcast!.imageUrl),
+              ),
             ),
           ),
         ),
@@ -81,10 +83,13 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             children: [
               Text(
                 podcast?.title ?? ' ',
-                style: kSFHeadLine3,
+                style: podcast!.title.length > 40 ? kSFBodyBold : kSFHeadLine2,
               ),
               const SizedBox(height: 5),
-              Text(podcast?.author ?? ''),
+              Text(
+                podcast?.author ?? '',
+                style: podcast!.title.length > 40 ? kSFBody2 : kSFBody,
+              ),
             ],
           ),
         ),
@@ -109,14 +114,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   Widget _buildDescription() {
     return Column(
       children: [
-        Container(
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            'About',
-            style: kSFBodyBold,
-          ),
-        ),
-        const SizedBox(height: 12),
         TextButton(
           style: kTextButtonStyle,
           onPressed: () {

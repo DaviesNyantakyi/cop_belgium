@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
-import 'package:cop_belgium/utilities/audio_provider.dart';
+import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -166,7 +166,7 @@ class _BuildPodcastsList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Podcast> podcast = [
       Podcast(
-        title: 'Deep Truths',
+        title: 'The Zapatistas PodcastPodcastPodcastPodcast',
         author: 'Church of Pentecost Belgium',
         imageUrl:
             'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:cop_belgium/utilities/audio_provider.dart';
+import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:firebase_core/firebase_core.dart';

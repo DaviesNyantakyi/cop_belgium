@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
-import 'package:cop_belgium/utilities/audio_provider.dart';
+import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -104,6 +104,24 @@ class _BuildTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final episode = Provider.of<Episode>(context, listen: false);
+    ProcessingState? state = Provider.of<AudioProvider>(context).playState;
+
+    Widget _buildBufferingText() {
+      Widget widget = Text(
+        episode.author,
+        style: kSFBody2,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      );
+      if (state == ProcessingState.buffering) {
+        widget = const Text('Buffering...');
+      }
+
+      return SizedBox(
+        height: 20,
+        child: widget,
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -114,12 +132,8 @@ class _BuildTitle extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        Text(
-          episode.author,
-          style: kSFBody2,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        const SizedBox(height: kTextFieldSpacing),
+        _buildBufferingText(),
       ],
     );
   }
