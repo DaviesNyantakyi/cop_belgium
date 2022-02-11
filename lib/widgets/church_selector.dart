@@ -1,7 +1,9 @@
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChurchSelectorScreen extends StatefulWidget {
   const ChurchSelectorScreen({Key? key}) : super(key: key);
@@ -17,13 +19,17 @@ class _ChurchSelectorScreenState extends State<ChurchSelectorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: PageView(
-          controller: pageController,
-          children: const [
-            DistrictSelectorView(),
-            CitySelectorView(),
-            AssemblySelectorView()
-          ],
+        child: ChangeNotifierProvider<PageController>.value(
+          value: pageController,
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            children: const [
+              DistrictSelectorView(),
+              CitySelectorView(),
+              AssemblySelectorView()
+            ],
+          ),
         ),
       ),
     );
@@ -41,20 +47,30 @@ class _DistrictSelectorViewState extends State<DistrictSelectorView> {
   List<String> districts = ['Antwerp', 'Brussels', 'Ghent'];
   String? groupValue;
 
+  Future<void> onSubmit() async {
+    await Provider.of<PageController>(context, listen: false).nextPage(
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeOutExpo,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Select your district.',
+          style: kSFHeadLine3,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(kBodyPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Select your district.',
-                style: kSFHeadLine2,
-              ),
-              const SizedBox(height: kButtonSpacing),
               ListView.builder(
                 padding: const EdgeInsets.all(0),
                 shrinkWrap: true,
@@ -65,7 +81,7 @@ class _DistrictSelectorViewState extends State<DistrictSelectorView> {
                     contentPadding: const EdgeInsets.all(0),
                     value: districts[index],
                     groupValue: groupValue,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       setState(() {
                         groupValue = value!;
                       });
@@ -73,6 +89,13 @@ class _DistrictSelectorViewState extends State<DistrictSelectorView> {
                     title: Text(districts[index], style: kSFBody),
                   );
                 },
+              ),
+              const SizedBox(height: kButtonSpacing),
+              Buttons.buildBtn(
+                context: context,
+                btnText: 'Continue',
+                width: double.infinity,
+                onPressed: onSubmit,
               ),
             ],
           ),
@@ -93,20 +116,29 @@ class _CitySelectorViewState extends State<CitySelectorView> {
   List<String> districts = ['Antwerp', 'Turnhout', 'Mol', 'Herentals'];
   String? groupValue;
 
+  Future<void> onSubmit() async {
+    await Provider.of<PageController>(context, listen: false).nextPage(
+      duration: const Duration(milliseconds: 800),
+      curve: Curves.easeOutExpo,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Select your city.',
+          style: kSFHeadLine3,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(kBodyPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Select your city.',
-                style: kSFHeadLine2,
-              ),
-              const SizedBox(height: kButtonSpacing),
               ListView.builder(
                 padding: const EdgeInsets.all(0),
                 shrinkWrap: true,
@@ -125,6 +157,13 @@ class _CitySelectorViewState extends State<CitySelectorView> {
                     title: Text(districts[index], style: kSFBody),
                   );
                 },
+              ),
+              const SizedBox(height: kButtonSpacing),
+              Buttons.buildBtn(
+                context: context,
+                btnText: 'Continue',
+                width: double.infinity,
+                onPressed: onSubmit,
               ),
             ],
           ),
@@ -152,20 +191,29 @@ class _AssemblySelectorViewState extends State<AssemblySelectorView> {
   ];
   Map<String, dynamic>? groupValue;
 
+  Future<void> onSubmit() async {
+    await Navigator.push(
+      context,
+      CupertinoPageRoute(builder: (context) => const BottomNavSelectorPage()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Select your Assembly.',
+          style: kSFHeadLine3,
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(kBodyPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Select your Assembly.',
-                style: kSFHeadLine2,
-              ),
-              const SizedBox(height: kButtonSpacing),
               ListView.builder(
                 padding: const EdgeInsets.all(0),
                 shrinkWrap: true,
@@ -197,6 +245,13 @@ class _AssemblySelectorViewState extends State<AssemblySelectorView> {
                     ),
                   );
                 },
+              ),
+              const SizedBox(height: kButtonSpacing),
+              Buttons.buildBtn(
+                context: context,
+                btnText: 'Done',
+                width: double.infinity,
+                onPressed: onSubmit,
               ),
             ],
           ),

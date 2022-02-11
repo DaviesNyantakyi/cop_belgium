@@ -116,6 +116,7 @@ const Color kGreen = Color(0xFF00B488);
 
 //Grey
 const Color kGrey = Color(0xFFF8F9FA);
+Color kDisabledColor = Colors.grey.shade800;
 
 const LinearGradient kRedGradient = LinearGradient(
   colors: [
@@ -161,6 +162,9 @@ const double kIconSize = 24;
 const double kCardSpacing = 10;
 
 const double kCardContentPadding = 16;
+
+Duration kPagViewDuration = const Duration(milliseconds: 800);
+Curve kPagViewCurve = Curves.easeOutExpo;
 
 BoxShadow kBoxShadow = BoxShadow(
   offset: const Offset(0, 4),

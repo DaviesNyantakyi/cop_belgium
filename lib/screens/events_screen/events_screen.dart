@@ -31,7 +31,8 @@ class _EventsScreenState extends State<EventsScreen> {
       endDate: DateTime(2022, 1, 28, 21),
       type: 'online',
       description: 'National Proposed Officer Training Program Selection',
-      image: 'assets/images/devotion.jpeg',
+      image:
+          'https://images.unsplash.com/photo-1614598632236-70bcd1c2f833?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
       zoomLink:
           'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
     ),
@@ -48,7 +49,24 @@ class _EventsScreenState extends State<EventsScreen> {
       },
       type: 'normal',
       description: 'National Proposed Officer Training Program',
-      image: 'assets/images/army.jpeg',
+      image:
+          'https://images.unsplash.com/photo-1643993574860-c1d7fe258ff3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=327&q=80',
+    ),
+    Event(
+      title: 'National Proposed Officer Training Program',
+      startDate: DateTime(2022, 01, 08, 19),
+      endDate: DateTime(2022, 01, 08, 19),
+      location: {
+        'street': 'Van der Keilenstraat',
+        'podstcode': '2000',
+        'city': 'Antwerp',
+        'lat': '51.216896921177835',
+        'long': '4.400080602355622'
+      },
+      type: 'normal',
+      description: 'National Proposed Officer Training Program',
+      image:
+          'https://images.unsplash.com/photo-1643906652169-a750f3f70848?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
     ),
   ];
   @override
@@ -68,30 +86,6 @@ class _EventsScreenState extends State<EventsScreen> {
         child: const Icon(Icons.add_outlined),
         onPressed: () async {
           _showEventDialog();
-          // await showDialog<void>(
-          //   context: context,
-          //   builder: (BuildContext context) {
-          //     int? selectedRadio = 0;
-          //     return AlertDialog(
-          //       content: StatefulBuilder(
-          //         builder: (BuildContext context, StateSetter setState) {
-          //           return Column(
-          //             mainAxisSize: MainAxisSize.min,
-          //             children: List<Widget>.generate(4, (int index) {
-          //               return Radio<int>(
-          //                 value: index,
-          //                 groupValue: selectedRadio,
-          //                 onChanged: (int? value) {
-          //                   setState(() => selectedRadio = value);
-          //                 },
-          //               );
-          //             }),
-          //           );
-          //         },
-          //       ),
-          //     );
-          //   },
-          // );
         },
       ),
       body: SingleChildScrollView(
@@ -100,6 +94,7 @@ class _EventsScreenState extends State<EventsScreen> {
             _buildCalendar(),
             const SizedBox(height: 35),
             ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
               separatorBuilder: (context, _) => const SizedBox(
                 height: kCardSpacing,
@@ -144,17 +139,19 @@ class _EventsScreenState extends State<EventsScreen> {
         weekendStyle: kSFCaption,
       ),
       headerStyle: HeaderStyle(
-        titleTextStyle: kSFHeadLine2,
-        leftChevronMargin: const EdgeInsets.only(left: 2, right: 10),
-        rightChevronMargin: const EdgeInsets.only(right: 2, left: 10),
+        titleTextStyle: kSFHeadLine3,
+        leftChevronMargin: const EdgeInsets.only(right: 10),
+        rightChevronMargin: const EdgeInsets.only(left: 10),
         formatButtonTextStyle: kSFBtnStyleBold,
-        leftChevronIcon: const Icon(
+        leftChevronIcon: Icon(
           Icons.chevron_left_outlined,
-          color: kBlack,
+          color: kBlack.withOpacity(0.7),
+          size: 40,
         ),
-        rightChevronIcon: const Icon(
+        rightChevronIcon: Icon(
           Icons.chevron_right_outlined,
-          color: kBlack,
+          color: kBlack.withOpacity(0.7),
+          size: 40,
         ),
         formatButtonDecoration: BoxDecoration(
           borderRadius: const BorderRadius.all(
@@ -175,7 +172,7 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
         selectedDecoration: BoxDecoration(
-          color: kBlack.withOpacity(0.4),
+          color: kBlue.withOpacity(0.4),
           shape: BoxShape.rectangle,
           borderRadius: const BorderRadius.all(
             Radius.circular(5),
@@ -188,7 +185,7 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
         todayDecoration: const BoxDecoration(
-          color: kBlack,
+          color: kBlue,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.all(
             Radius.circular(5),
@@ -245,7 +242,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ),
         title: const Text(
           'Create event',
-          style: kSFBodyBold,
+          style: kSFHeadLine3,
         ),
         content: StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
@@ -255,7 +252,7 @@ class _EventsScreenState extends State<EventsScreen> {
               children: [
                 RadioListTile<EventType>(
                   contentPadding: contentPadding,
-                  activeColor: kBlack,
+                  activeColor: kBlue,
                   value: EventType.normal,
                   groupValue: _eventType,
                   title: const Text('Normal', style: kSFBody),
@@ -266,7 +263,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 ),
                 RadioListTile<EventType>(
                   contentPadding: contentPadding,
-                  activeColor: kBlack,
+                  activeColor: kBlue,
                   value: EventType.online,
                   groupValue: _eventType,
                   title: const Text('Online', style: kSFBody),
@@ -301,7 +298,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 ),
               );
             },
-            child: const Text('OK', style: kSFBodyBold),
+            child: const Text('OK', style: kSFBody2Bold),
           ),
         ],
       ),

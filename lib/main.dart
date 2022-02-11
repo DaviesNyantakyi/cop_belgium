@@ -1,5 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
+import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
+import 'package:cop_belgium/screens/events_screen/events_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -76,8 +79,11 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<AudioProvider>.value(
             value: _audioHandler,
           ),
+          ChangeNotifierProvider<SignUpProvider>(
+            create: (context) => SignUpProvider(),
+          ),
         ],
-        child: const AuthSwitcher(),
+        child: const WelcomeScreen(),
       ),
       theme: _theme,
       routes: _routes,

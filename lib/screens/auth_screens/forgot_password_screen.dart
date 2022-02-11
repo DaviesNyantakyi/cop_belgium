@@ -126,7 +126,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget _buildSendButton() {
     return Buttons.buildBtn(
       context: context,
-      color: isLoading ? kGrey : kBlue,
+      color: isLoading ? kDisabledColor : kBlue,
       btnText: 'Send',
       onPressed: isLoading ? null : resetPassword,
       width: double.infinity,

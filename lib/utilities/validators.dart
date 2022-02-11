@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
-  static String? normalValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Text field must not be empty.';
-    }
-  }
-
   static String? nameValidator({String? firstName, String? lastName}) {
     String? errorText;
-    if (firstName != null && firstName.isEmpty ||
-        lastName != null && lastName.isEmpty) {
-      errorText = 'Please enter your first and last name.';
+
+    if (firstName != null) {
+      if (firstName.isEmpty) {
+        errorText = 'Enter your first name.';
+      }
+    }
+
+    if (lastName != null) {
+      if (lastName.isEmpty) {
+        errorText = 'Enter your last name.';
+      }
     }
 
     return errorText;
@@ -22,15 +24,14 @@ class Validators {
   static String? emailValidator({String? email}) {
     String? errorText;
     if (email != null && email.isEmpty) {
-      errorText = 'Please enter your email address.';
+      errorText = 'Enter your email address.';
     }
-
     return errorText;
   }
 
   static String? passwordTextValidator({String? password}) {
     if (password == null || password.isEmpty) {
-      return 'Please enter password.';
+      return 'Password must not be empty. ';
     }
 
     if (!password.isPasswordEasy()) {

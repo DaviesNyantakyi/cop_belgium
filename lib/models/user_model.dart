@@ -8,7 +8,6 @@ class CopUser {
   String email;
   String gender;
   DateTime birthDate;
-
   bool isAdmin;
 
   CopUser({

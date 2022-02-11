@@ -157,7 +157,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           image!,
           fit: BoxFit.cover,
         ).image,
-        backgroundColor: kGrey,
+        backgroundColor: kBlueLight,
         child: ClipRRect(
           borderRadius: const BorderRadius.all(
             Radius.circular(100),
@@ -172,7 +172,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     }
     return CircleAvatar(
       radius: 90,
-      backgroundColor: kGrey,
+      backgroundColor: kBlueLight,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(
           Radius.circular(100),

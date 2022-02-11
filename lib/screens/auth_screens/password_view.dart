@@ -3,6 +3,7 @@ import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PasswordView extends StatefulWidget {
   const PasswordView({Key? key}) : super(key: key);
@@ -12,14 +13,37 @@ class PasswordView extends StatefulWidget {
 }
 
 class _PasswordViewState extends State<PasswordView> {
-  bool showPasswordField1 = false;
-  bool showPasswordField2 = false;
+  bool showPassField1 = false;
+  bool showPassField2 = false;
 
-  TextEditingController passwordField1Cntlr = TextEditingController();
-  TextEditingController passwordField2Cntlr = TextEditingController();
+  TextEditingController passField1Cntlr = TextEditingController();
+  TextEditingController passField2Cntlr = TextEditingController();
 
-  String? passwordField1ErrorText;
-  String? passwordField2ErrorText;
+  String? passField1ErrorText;
+  String? passField2ErrorText;
+
+  Future<void> onSubmit() async {
+    // validate the fields
+    bool isValid = validForm();
+    if (isValid) {
+      await Provider.of<PageController>(context, listen: false).nextPage(
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeOutExpo,
+      );
+    }
+  }
+
+  bool validForm() {
+    bool isValid = false;
+    passField1ErrorText =
+        Validators.passwordTextValidator(password: passField1Cntlr.text);
+    passField2ErrorText =
+        Validators.passwordTextValidator(password: passField2Cntlr.text);
+
+    setState(() {});
+    return isValid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,20 +61,18 @@ class _PasswordViewState extends State<PasswordView> {
                 height: kButtonSpacing,
               ),
               MyTextField(
-                controller: passwordField1Cntlr,
+                controller: passField1Cntlr,
                 hintText: 'Password',
-                obscureText: showPasswordField1 ? false : true,
+                obscureText: showPassField1 ? false : true,
                 textInputAction: TextInputAction.next,
                 suffixIcon: GestureDetector(
                   child: Icon(
-                    showPasswordField1
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    showPassField1 ? Icons.visibility : Icons.visibility_off,
                     color: kBlack,
                   ),
                   onTap: () {
                     setState(() {
-                      showPasswordField1 = !showPasswordField1;
+                      showPassField1 = !showPassField1;
                     });
                   },
                 ),
@@ -58,23 +80,21 @@ class _PasswordViewState extends State<PasswordView> {
                   setState(() {});
                 },
               ),
-              ErrorTextWidget(errorText: passwordField1ErrorText),
+              ErrorTextWidget(errorText: passField1ErrorText),
               const SizedBox(height: kTextFieldSpacing),
               MyTextField(
-                controller: passwordField2Cntlr,
+                controller: passField2Cntlr,
                 hintText: 'Confirm Password',
-                obscureText: showPasswordField2 ? false : true,
+                obscureText: showPassField2 ? false : true,
                 textInputAction: TextInputAction.done,
                 suffixIcon: GestureDetector(
                   child: Icon(
-                    showPasswordField2
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+                    showPassField2 ? Icons.visibility : Icons.visibility_off,
                     color: kBlack,
                   ),
                   onTap: () {
                     setState(() {
-                      showPasswordField2 = !showPasswordField2;
+                      showPassField2 = !showPassField2;
                     });
                   },
                 ),
@@ -83,13 +103,19 @@ class _PasswordViewState extends State<PasswordView> {
                 },
                 onSubmitted: (value) {},
               ),
-              ErrorTextWidget(errorText: passwordField1ErrorText),
+              ErrorTextWidget(errorText: passField1ErrorText),
               const SizedBox(height: kButtonSpacing),
               Buttons.buildBtn(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
-                onPressed: () {},
+                onPressed: () async {
+                  await Provider.of<PageController>(context, listen: false)
+                      .nextPage(
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutExpo,
+                  );
+                },
               )
             ],
           ),
@@ -106,7 +132,12 @@ class _PasswordViewState extends State<PasswordView> {
         color: kBlack,
         size: 40,
       ),
-      onPressed: () {},
+      onPressed: () async {
+        await Provider.of<PageController>(context, listen: false).previousPage(
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
+        );
+      },
     );
   }
 
@@ -115,11 +146,7 @@ class _PasswordViewState extends State<PasswordView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
         Text(
-          'Please choose a',
-          style: kSFHeadLine2,
-        ),
-        Text(
-          'password.',
+          'Choose a password',
           style: kSFHeadLine2,
         ),
         Text(

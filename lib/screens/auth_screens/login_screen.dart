@@ -30,17 +30,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> loginEmail() async {
     FocusScope.of(context).unfocus();
-    EasyLoading.show();
+
     try {
       isLoading = true;
 
       bool isValid = validateForm();
 
       if (isValid) {
-        if (mounted) {
-          setState(() {});
-        }
-
+        EasyLoading.show();
         await FireAuth().login(
           email: emailCntlr.text,
           password: passwordCntlr.text,
@@ -80,9 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   bool validateForm() {
-    emailErrorText = Validators.emailValidator(
-      email: emailCntlr.text,
-    );
+    emailErrorText = Validators.emailValidator(email: emailCntlr.text);
     passwordErrorText = Validators.passwordTextValidator(
       password: passwordCntlr.text,
     );
@@ -159,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildLogInBtn() {
     return Buttons.buildBtn(
       context: context,
-      color: isLoading ? kGrey : kBlue,
+      color: isLoading ? kDisabledColor : kBlue,
       btnText: 'Log in',
       onPressed: isLoading ? null : loginEmail,
       width: double.infinity,

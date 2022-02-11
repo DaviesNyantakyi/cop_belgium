@@ -184,7 +184,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         color: kBlack,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: AssetImage(widget.event.image),
+          image: NetworkImage(widget.event.image),
         ),
       ),
     );
@@ -216,10 +216,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return AppBar(
       backgroundColor: Colors.transparent,
       leading: TextButton(
-        child: const Icon(
-          Icons.more_vert,
-          color: kBlack,
-        ),
+        child: kBackButton(context: context),
         onPressed: () {
           Navigator.pop(context);
         },

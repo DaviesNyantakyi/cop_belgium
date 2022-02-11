@@ -1,9 +1,11 @@
+import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String welcomeScreen = 'welcomeScreen';
@@ -63,10 +65,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             style: kSFBtnStyleBold,
           ),
           onPressed: () {
+            final signUpProvider =
+                Provider.of<SignUpProvider>(context, listen: false);
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const SignUpScreen(),
+                builder: (context) => ChangeNotifierProvider.value(
+                  value: signUpProvider,
+                  child: const SignUpScreen(),
+                ),
               ),
             );
           },

@@ -166,12 +166,12 @@ class _BuildPodcastsList extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Podcast> podcast = [
       Podcast(
-        title: 'The Zapatistas PodcastPodcastPodcastPodcast',
+        title: 'Deep Truths',
         author: 'Church of Pentecost Belgium',
         imageUrl:
             'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
         description:
-            '''Welcome to the Pentecostal Church First Podcast! Here we dive and discover the deep truth from the Scriptures.''',
+            '''Welcome to the Pentecostal Church podcast! Here we dive and discover the deep truth from the Scriptures.''',
         pageLink: '',
         episodes: [],
       ),

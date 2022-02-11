@@ -7,6 +7,7 @@ import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class DateGenderView extends StatefulWidget {
   const DateGenderView({Key? key}) : super(key: key);
@@ -46,7 +47,13 @@ class _DateGenderViewState extends State<DateGenderView> {
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
-                onPressed: () {},
+                onPressed: () async {
+                  await Provider.of<PageController>(context, listen: false)
+                      .nextPage(
+                    duration: const Duration(milliseconds: 800),
+                    curve: Curves.easeOutExpo,
+                  );
+                },
               )
             ],
           ),

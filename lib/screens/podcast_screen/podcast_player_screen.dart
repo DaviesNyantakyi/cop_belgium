@@ -24,8 +24,6 @@ class PodcastPlayerScreen extends StatefulWidget {
 }
 
 class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
-  int _selectedIndex = 0;
-
   @override
   void initState() {
     init();
