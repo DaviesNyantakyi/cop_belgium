@@ -38,7 +38,7 @@ class _MyCheckBoxState extends State<MyCheckBox> {
                     widget.value == widget.groupsValue
                         ? Icons.check_outlined
                         : null,
-                    size: 15,
+                    size: kIconSize,
                     color: kBlack,
                   )
                 : Container(),

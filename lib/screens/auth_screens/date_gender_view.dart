@@ -85,7 +85,7 @@ class _DateGenderViewState extends State<DateGenderView> {
             style: kSFBody,
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: kTextFieldSpacing),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -122,6 +122,14 @@ class _DateGenderViewState extends State<DateGenderView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            'Date of birth',
+            style: kSFBody,
+          ),
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        Container(
           height: 64,
           decoration: const BoxDecoration(
             color: kBlueLight,
@@ -137,23 +145,38 @@ class _DateGenderViewState extends State<DateGenderView> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.calendar_today_outlined,
-                    color: kBlack,
-                    size: kIconSize,
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        color: kBlack,
+                        size: kIconSize,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        birthDate == null
+                            ? FormalDates.formatDmyyyy(date: DateTime.now())
+                            : FormalDates.formatDmyyyy(date: birthDate),
+                        style: kSFTextFieldStyle.copyWith(
+                          fontWeight: birthDate == null
+                              ? FontWeight.normal
+                              : FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 10),
                   Text(
                     birthDate == null
-                        ? FormalDates.formatDmyyyy(date: DateTime.now())
-                        : FormalDates.formatDmyyyy(date: birthDate),
+                        ? ''
+                        : ' ${DateTime.now().year - birthDate!.year} years',
                     style: kSFTextFieldStyle.copyWith(
                       fontWeight: birthDate == null
                           ? FontWeight.normal
                           : FontWeight.bold,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
