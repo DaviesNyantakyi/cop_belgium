@@ -1,7 +1,6 @@
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/fasting_history_card.dart';
-import 'package:dart_date/dart_date.dart';
 
 import 'package:flutter/material.dart';
 

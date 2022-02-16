@@ -40,39 +40,26 @@ class PresetFastingCard extends StatelessWidget {
             right: 26,
             bottom: 22,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  '$duration:${day - duration} TRF',
-                  style: kSFBody.copyWith(color: Colors.white),
+          child: Container(
+            alignment: Alignment.bottomLeft,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '$duration',
+                  style: kSFHeadLine1.copyWith(
+                    color: Colors.white,
+                    fontSize: 46,
+                  ),
                 ),
-              ),
-              const Flexible(child: SizedBox(height: 37)),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$duration',
-                    style: kSFHeadLine1.copyWith(
-                      color: Colors.white,
-                      fontSize: 36,
-                    ),
-                  ),
-                  const Flexible(child: SizedBox(height: 3)),
-                  Text(
-                    'Hours',
-                    style: kSFCaptionBold.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                const Flexible(child: SizedBox(height: 3)),
+                Text(
+                  'Hours',
+                  style: kSFBodyBold.copyWith(color: Colors.white),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -94,6 +81,7 @@ class CustomFastingCard extends StatelessWidget {
       width: _size,
       height: _size,
       decoration: BoxDecoration(
+        gradient: kBlueDarkGradient,
         borderRadius: const BorderRadius.all(
           Radius.circular(20),
         ),
@@ -119,7 +107,7 @@ class CustomFastingCard extends StatelessWidget {
               const Expanded(
                 child: Icon(
                   Icons.add_outlined,
-                  size: 31,
+                  size: 50,
                   color: Colors.white,
                 ),
               ),

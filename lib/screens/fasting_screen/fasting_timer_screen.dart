@@ -54,38 +54,39 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       appBar: _buildAppbar(),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(kBodyPadding).copyWith(top: 20),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kBodyPadding)
-                    .copyWith(top: kBodyPadding),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: kGreen.withOpacity(0.2),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  border: Border.all(color: kGreen, width: 2),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      _buildHeader(people: peopleFasting),
+                      const SizedBox(height: 30),
+                      Stack(
+                        children: [
+                          const Positioned(
+                            top: 65,
+                            right: 65,
+                            child: Text('Remaining 40%', style: kSFBody),
+                          ),
+                          _buildTimer(context),
+                        ],
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            _buildHeader(people: peopleFasting),
-                            const SizedBox(height: 30),
-                            _buildTimer(context),
-                            const SizedBox(height: 30),
-                            _buildStartEndDate(),
-                            const SizedBox(height: 23),
-                            _buildstartEndBtn()
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                      const SizedBox(height: 30),
+                      _buildStartEndDate(),
+                      const SizedBox(height: 23),
+                      _buildstartEndBtn()
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 10),
@@ -104,8 +105,6 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
         itemCount: 20,
         physics: const ClampingScrollPhysics(),
         shrinkWrap: true,
-        padding:
-            const EdgeInsets.only(left: kBodyPadding, bottom: kBodyPadding),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return TextButton(
@@ -127,8 +126,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
               ),
               width: 350,
               decoration: BoxDecoration(
-                color: kGreen.withOpacity(0.2),
-                border: Border.all(color: kGreen),
+                border: Border.all(color: kGreen, width: 2),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(kButtonRadius),
                 ),
@@ -165,8 +163,8 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
       duration: fastingInfo!.duration.inSeconds,
       isReverse: true,
       strokeWidth: 20,
-      fillColor: isFasting == true ? kGreen : Colors.grey,
-      ringColor: Colors.white,
+      fillColor: isFasting == true ? kGreen : Colors.grey.shade300,
+      ringColor: Colors.grey.shade300,
       strokeCap: StrokeCap.round,
       textFormat: CountdownTextFormat.HH_MM_SS,
       textStyle: kSFHeadLine1,
@@ -253,7 +251,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
           }
         },
         child: Text(
-          !isFasting ? 'Start Fasting' : 'End Fast Early',
+          !isFasting ? 'Start fasting' : 'End fast early',
           style: kSFBodyBold.copyWith(color: Colors.white),
         ),
       ),
@@ -281,7 +279,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, 'save'),
-            child: const Text('Save Fast', style: kSFBodyBold),
+            child: const Text('Save', style: kSFBody),
           ),
         ],
       ),
@@ -388,19 +386,8 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
 
   dynamic _buildAppbar() {
     return AppBar(
-      centerTitle: true,
-      leading: TextButton(
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.chevron_left_outlined,
-            color: kBlack,
-          ),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      elevation: kAppbarElevation,
+      leading: kBackButton(context: context),
     );
   }
 }

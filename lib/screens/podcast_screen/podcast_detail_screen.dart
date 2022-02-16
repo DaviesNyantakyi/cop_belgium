@@ -47,6 +47,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             const SizedBox(height: kButtonSpacing),
             _buildDescription(),
             const SizedBox(height: kButtonSpacing),
+            const Text('Episodes', style: kSFHeadLine3),
+            const SizedBox(height: 16),
             const _BuildPodcastsList(),
           ],
         ),

@@ -10,16 +10,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class CreateFastingScreens extends StatefulWidget {
+class CreateFastingScreen extends StatefulWidget {
   static String createFastingScreens = 'createFastingScreens';
-  const CreateFastingScreens({Key? key}) : super(key: key);
+  const CreateFastingScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateFastingScreens> createState() => _CreateFastingScreensState();
+  State<CreateFastingScreen> createState() => _CreateFastingScreenState();
 }
 
-class _CreateFastingScreensState extends State<CreateFastingScreens> {
+class _CreateFastingScreenState extends State<CreateFastingScreen> {
   User? auth = FirebaseAuth.instance.currentUser;
+  int peopleFasting = 0;
 
   List<FastingInfo> fastingPresets = [
     //When the user presses the card the startDate and endDate are set.
@@ -44,12 +45,14 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
       appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(kBodyPadding).copyWith(top: 20),
           child: Column(
             children: [
+              _buildHeader(people: peopleFasting),
+              const SizedBox(height: 30),
               GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: kBodyPadding)
-                    .copyWith(top: kBodyPadding),
+
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -94,6 +97,21 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
     );
   }
 
+  Widget _buildHeader({required int people}) {
+    return Column(
+      children: [
+        const Text(
+          'Create a fast',
+          style: kSFHeadLine2,
+        ),
+        Text(
+          '$people People are fasting right now',
+          style: kSFBody,
+        ),
+      ],
+    );
+  }
+
   void _calculateStartGoalDate({required int index}) {
     //when the user selects a card the startDate and goalDate are calculated.
     //before going to the fasting screen.
@@ -111,21 +129,11 @@ class _CreateFastingScreensState extends State<CreateFastingScreens> {
 
 dynamic _buildAppbar({required BuildContext context}) {
   return AppBar(
-    backgroundColor: Colors.transparent,
     title: const Text(
       'Fasting',
-      style: kSFBodyBold,
+      style: kSFHeadLine3,
     ),
-    leading: TextButton(
-      child: const Icon(
-        Icons.chevron_left_outlined,
-        color: kBlack,
-      ),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-      style: kTextButtonStyle,
-    ),
+    leading: kBackButton(context: context),
   );
 }
 

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
+import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +23,6 @@ class _MoreScreenState extends State<MoreScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('More', style: kSFHeadLine3),
-        elevation: kAppbarElevation,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
@@ -48,7 +49,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const CreateFastingScreens(),
+                builder: (context) => const CreateFastingScreen(),
               ),
             );
           },
@@ -59,7 +60,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const CreateFastingScreens(),
+                builder: (context) => const DonateScreen(),
               ),
             );
           },
@@ -70,7 +71,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const CreateFastingScreens(),
+                builder: (context) => const RequestBatismScreen(),
               ),
             );
           },

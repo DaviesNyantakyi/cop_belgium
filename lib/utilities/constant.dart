@@ -138,7 +138,10 @@ const LinearGradient kPurpleGradient = LinearGradient(
   ],
 );
 const LinearGradient kBlueDarkGradient = LinearGradient(
-  colors: [kBlueDark2],
+  colors: [
+    kBlueDark2,
+    kBlueDark2,
+  ],
 );
 
 List<LinearGradient> kGradients = [

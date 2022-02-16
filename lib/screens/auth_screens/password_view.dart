@@ -64,6 +64,7 @@ class _PasswordViewState extends State<PasswordView> {
                 controller: passField1Cntlr,
                 hintText: 'Password',
                 obscureText: showPassField1 ? false : true,
+                maxLines: 1,
                 textInputAction: TextInputAction.next,
                 suffixIcon: GestureDetector(
                   child: Icon(
@@ -85,6 +86,7 @@ class _PasswordViewState extends State<PasswordView> {
               MyTextField(
                 controller: passField2Cntlr,
                 hintText: 'Confirm Password',
+                maxLines: 1,
                 obscureText: showPassField2 ? false : true,
                 textInputAction: TextInputAction.done,
                 suffixIcon: GestureDetector(

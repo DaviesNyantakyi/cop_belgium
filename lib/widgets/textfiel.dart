@@ -11,6 +11,7 @@ class MyTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool? obscureText;
   final Widget? suffixIcon;
+  final int? maxLines;
   final Function(String)? onSubmitted;
   final TextEditingController? controller;
 
@@ -18,6 +19,7 @@ class MyTextField extends StatelessWidget {
     Key? key,
     this.hintText,
     this.initialValue,
+    this.maxLines,
     this.keyboardType,
     this.controller,
     this.onSubmitted,
@@ -39,6 +41,7 @@ class MyTextField extends StatelessWidget {
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
+      maxLines: maxLines,
       decoration: InputDecoration(
         filled: true,
         errorMaxLines: 2,

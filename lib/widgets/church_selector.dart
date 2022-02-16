@@ -60,7 +60,7 @@ class _DistrictSelectorViewState extends State<DistrictSelectorView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Select your district.',
+          'Select your district',
           style: kSFHeadLine3,
         ),
       ),
@@ -129,7 +129,7 @@ class _CitySelectorViewState extends State<CitySelectorView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Select your city.',
+          'Select your city',
           style: kSFHeadLine3,
         ),
       ),
@@ -204,7 +204,7 @@ class _AssemblySelectorViewState extends State<AssemblySelectorView> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text(
-          'Select your Assembly.',
+          'Select your assembly',
           style: kSFHeadLine3,
         ),
       ),

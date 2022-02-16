@@ -169,6 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
         MyTextField(
           controller: emailCntlr,
           hintText: 'Email',
+          maxLines: 1,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           onChanged: (value) {
@@ -181,6 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
         MyTextField(
           controller: passwordCntlr,
           hintText: 'Password',
+          maxLines: 1,
           obscureText: showPassword ? false : true,
           textInputAction: TextInputAction.done,
           suffixIcon: GestureDetector(

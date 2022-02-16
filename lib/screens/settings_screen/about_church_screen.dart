@@ -19,8 +19,8 @@ class AboutChruchScreen extends StatelessWidget {
             children: [
               Image.asset(
                 'assets/images/logos/cop_logo.jpg',
-                height: 140,
-                width: 140,
+                height: 100,
+                width: 100,
               ),
               const SizedBox(height: 39),
               ListTile(
@@ -80,21 +80,11 @@ class AboutChruchScreen extends StatelessWidget {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       title: const Text(
         'About Church',
-        style: kSFBodyBold,
+        style: kSFHeadLine3,
       ),
-      leading: TextButton(
-        child: const Icon(
-          Icons.chevron_left_outlined,
-          color: kBlack,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: kTextButtonStyle,
-      ),
+      leading: kBackButton(context: context),
     );
   }
 }

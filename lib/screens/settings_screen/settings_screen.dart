@@ -108,6 +108,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Center(
             child: Column(
               children: [
+                const SizedBox(height: kBodyPadding),
                 _buildImage(),
                 const SizedBox(height: 39),
                 _buildFeedBackTiles(),
@@ -197,21 +198,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       title: const Text(
         'Settings',
-        style: kSFBodyBold,
+        style: kSFHeadLine3,
       ),
-      leading: TextButton(
-        child: const Icon(
-          Icons.chevron_left_outlined,
-          color: kBlack,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: kTextButtonStyle,
-      ),
+      leading: kBackButton(context: context),
     );
   }
 }

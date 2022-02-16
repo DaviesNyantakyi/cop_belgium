@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/more_screen/more_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -71,9 +72,6 @@ class MyApp extends StatelessWidget {
       title: 'Cop Belgium',
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AudioProvider>(
-            create: (context) => AudioProvider(),
-          ),
           ChangeNotifierProvider<AudioProvider>.value(
             value: _audioHandler,
           ),
@@ -124,7 +122,7 @@ ThemeData _theme = ThemeData(
     size: kIconSize,
   ),
   appBarTheme: const AppBarTheme(
-    elevation: 0,
+    elevation: kAppbarElevation,
     iconTheme: IconThemeData(
       size: kIconSize,
       color: kBlack,

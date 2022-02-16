@@ -72,22 +72,24 @@ Future<void> showBottomSheet2({
 void loadMdFile({required BuildContext context, required String mdFile}) {
   showBottomSheet1(
     context: context,
-    child: FutureBuilder(
-      future: rootBundle.loadString(mdFile),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.hasData) {
-          return MarkdownBody(
-            styleSheet: MarkdownStyleSheet(
-              p: kSFBody,
-            ),
-            data: snapshot.data!,
-          );
-        }
+    child: SingleChildScrollView(
+      child: FutureBuilder(
+        future: rootBundle.loadString(mdFile),
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+          if (snapshot.hasData) {
+            return MarkdownBody(
+              styleSheet: MarkdownStyleSheet(
+                p: kSFBody,
+              ),
+              data: snapshot.data!,
+            );
+          }
 
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
     ),
   );
 }

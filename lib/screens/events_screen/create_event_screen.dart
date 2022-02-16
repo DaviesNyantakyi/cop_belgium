@@ -516,7 +516,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       leading: TextButton(
         child: kBackButton(context: context),
         onPressed: () {

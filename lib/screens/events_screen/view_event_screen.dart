@@ -197,7 +197,12 @@ class _ViewEventScreenState extends State<ViewEventScreen> {
           fit: BoxFit.cover,
           image: NetworkImage(widget.event.image),
         ),
-        borderRadius: const BorderRadius.all(Radius.circular(kCardRadius)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(kCardRadius),
+        ),
+        boxShadow: [
+          kBoxShadow,
+        ],
       ),
     );
   }
@@ -226,7 +231,6 @@ class _ViewEventScreenState extends State<ViewEventScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
       leading: kBackButton(context: context),
     );
   }

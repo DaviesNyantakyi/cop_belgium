@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
-import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
@@ -71,14 +69,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> initUserInfo() async {
     setState(() {
-      firstNameCntlr.text = widget.user!.firstName;
-      firstNameCntlr.text = widget.user!.firstName;
-      lastNameCntlr.text = widget.user!.lastName;
-      emailCntlr.text = widget.user!.email;
-      genderCntlr.text = widget.user!.gender;
-      photoUrl = widget.user!.photoUrl;
-      isAdimin = widget.user!.isAdmin;
-      birthDate = widget.user!.birthDate;
+      // firstNameCntlr.text = widget.user!.firstName;
+      // firstNameCntlr.text = widget.user!.firstName;
+      // lastNameCntlr.text = widget.user!.lastName;
+      // emailCntlr.text = widget.user!.email;
+      // genderCntlr.text = widget.user!.gender;
+      // photoUrl = widget.user!.photoUrl;
+      // isAdimin = widget.user!.isAdmin;
+      // birthDate = widget.user!.birthDate;
     });
   }
 
@@ -161,13 +159,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           setState(() {});
         }
 
-        await FireStorage().uploadProfileImage(image: image);
-        await CloudFireStore().updateUserInfo(
-          firstName: firstNameCntlr.text,
-          lastName: lastNameCntlr.text,
-          email: emailCntlr.text,
-          gender: genderCntlr.text,
-        );
+        // await FireStorage().uploadProfileImage(image: image);
+        // await CloudFireStore().updateUserInfo(
+        //   firstName: firstNameCntlr.text,
+        //   lastName: lastNameCntlr.text,
+        //   email: emailCntlr.text,
+        //   gender: genderCntlr.text,
+        // );
 
         await EasyLoading.dismiss();
       }
@@ -281,7 +279,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       return CircleAvatar(
         backgroundImage: Image.file(image!).image,
         radius: 60,
-        backgroundColor: kBlack,
+        backgroundColor: kBlueLight,
         child: TextButton(
           style: kTextButtonStyle.copyWith(
             shape: MaterialStateProperty.all(
@@ -303,8 +301,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (photoUrl != null) {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(photoUrl!),
-        radius: 60,
-        backgroundColor: kBlack,
+        radius: 70,
+        backgroundColor: kBlueLight,
         child: TextButton(
           style: kTextButtonStyle.copyWith(
             shape: MaterialStateProperty.all(
@@ -324,8 +322,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     return CircleAvatar(
-      radius: 60,
-      backgroundColor: kBlack,
+      radius: 70,
+      backgroundColor: kBlueLight,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(60),
         child: SizedBox(
@@ -335,7 +333,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: kTextButtonStyle,
             child: const Icon(
               Icons.photo_camera_outlined,
-              color: Colors.white,
+              color: kBlack,
             ),
             onPressed: () async {
               await showBottomSheet();
@@ -352,12 +350,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       child: Column(
         children: [
           _buildBtn(
-            btText: 'Reset Password',
+            btText: 'RESET PASSWORD',
             textColor: kBlack,
             onPressed: resetPassword,
           ),
           _buildBtn(
-            btText: 'Delete account',
+            btText: 'DELETE ACCOUNT',
             textColor: kRed,
             onPressed: () async {
               await _showDeleteAlert();
@@ -365,6 +363,66 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildBirthdayPicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: const Text(
+            'Date of birth',
+            style: kSFBody,
+          ),
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        Container(
+          height: 64,
+          decoration: const BoxDecoration(
+            color: kBlueLight,
+            borderRadius: BorderRadius.all(
+              Radius.circular(
+                kButtonRadius,
+              ),
+            ),
+          ),
+          child: TextButton(
+            onPressed: showDatePicker,
+            style: kTextButtonStyle,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        color: kBlack,
+                        size: kIconSize,
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        birthDate == null
+                            ? FormalDates.formatDmyyyy(date: DateTime.now())
+                            : FormalDates.formatDmyyyy(date: birthDate),
+                        style: kSFTextFieldStyle.copyWith(
+                          fontWeight: birthDate == null
+                              ? FontWeight.normal
+                              : FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        _buildBirthDateErrorText()
+      ],
     );
   }
 
@@ -410,44 +468,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-              child: MyTextField(
-                controller: firstNameCntlr,
-                hintText: 'First Name',
-                obscureText: false,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  nameErrorText = Validators.nameValidator(
-                    firstName: value,
-                    lastName: lastNameCntlr.text,
-                  );
+        MyTextField(
+          controller: firstNameCntlr,
+          hintText: 'First Name',
+          obscureText: false,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          onChanged: (value) {
+            nameErrorText = Validators.nameValidator(
+              firstName: value,
+              lastName: lastNameCntlr.text,
+            );
 
-                  setState(() {});
-                },
-              ),
-            ),
-            const SizedBox(width: kTextFieldSpacing),
-            Expanded(
-              child: MyTextField(
-                controller: lastNameCntlr,
-                hintText: 'Last Name',
-                obscureText: false,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  nameErrorText = Validators.nameValidator(
-                    firstName: firstNameCntlr.text,
-                    lastName: value,
-                  );
-                  setState(() {});
-                },
-              ),
-            ),
-          ],
+            setState(() {});
+          },
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        MyTextField(
+          controller: lastNameCntlr,
+          hintText: 'Last Name',
+          obscureText: false,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          onChanged: (value) {
+            nameErrorText = Validators.nameValidator(
+              firstName: firstNameCntlr.text,
+              lastName: value,
+            );
+            setState(() {});
+          },
         ),
         _buildNameErrorText(),
         const SizedBox(height: kTextFieldSpacing),
@@ -511,49 +560,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Widget _buildBirthdayPicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 64,
-          decoration: const BoxDecoration(
-            color: kBlueLight,
-            borderRadius: BorderRadius.all(
-              Radius.circular(
-                kButtonRadius,
-              ),
-            ),
-          ),
-          child: TextButton(
-            onPressed: showDatePicker,
-            style: kTextButtonStyle,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today_outlined,
-                    color: kBlack,
-                    size: kIconSize,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    birthDate == null
-                        ? 'Birthday'
-                        : FormalDates.formatDmyyyy(date: birthDate),
-                    style: birthDate == null ? kSFBodyBold : kSFBodyBold,
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-        _buildBirthDateErrorText()
-      ],
-    );
-  }
-
   Future<void> showDatePicker() async {
     FocusScope.of(context).requestFocus(FocusNode());
     await showBottomSheet1(
@@ -572,10 +578,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: CupertinoDatePicker(
                   mode: CupertinoDatePickerMode.date,
                   initialDateTime: birthDate,
-                  maximumDate: DateTime.now(),
-                  minimumDate: DateTime(1900, 01, 31),
-                  minimumYear: 1900,
-                  maximumYear: DateTime.now().year,
+                  maximumDate: kMaxDate,
+                  minimumDate: kMinDate,
+                  minimumYear: kMinDate.year,
+                  maximumYear: kMaxDate.year,
                   onDateTimeChanged: (date) {
                     HapticFeedback.lightImpact();
                     birthDate = date;
@@ -645,7 +651,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<String?> _showDeleteAlert() async {
     const String _deleteConformationText =
-        'Confirm you want to delete this account by typing its password.';
+        'Confirm that you want to delete this account by entering the password.';
     return await showDialog<String?>(
       barrierDismissible: true,
       context: context,
@@ -666,13 +672,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: kSFBodyBold),
+            child: const Text('Cancel', style: kSFBody),
           ),
           const SizedBox(height: kButtonSpacing),
           TextButton(
             onPressed: () => deleteAccount,
-            child: Text('Delete account',
-                style: kSFBodyBold.copyWith(color: kRed)),
+            child: Text('Delete account', style: kSFBody.copyWith(color: kRed)),
           ),
           const SizedBox(height: kTextFieldSpacing)
         ],
@@ -702,7 +707,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           padding: const EdgeInsets.all(5),
           child: Text(
             btText,
-            style: kSFBodyBold.copyWith(color: textColor),
+            style: kSFBody.copyWith(color: textColor),
           ),
         ),
       ),
@@ -823,20 +828,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return AppBar(
       title: const Text(
         'Edit Profile',
-        style: kSFBodyBold,
+        style: kSFHeadLine3,
       ),
-      leading: TextButton(
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.chevron_left_outlined,
-            color: kBlack,
-          ),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      leading: kBackButton(context: context),
       actions: [
         TextButton(
           child: const Padding(
