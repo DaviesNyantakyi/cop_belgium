@@ -28,6 +28,8 @@ class FireAuth {
         await _fireStore.createUserDoc(user: user);
 
         return _auth.currentUser;
+      } else {
+        return null;
       }
     } on FirebaseAuthException catch (e) {
       debugPrint(e.hashCode.toString());
@@ -74,6 +76,8 @@ class FireAuth {
           password: password,
         );
         return user.user;
+      } else {
+        return null;
       }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());

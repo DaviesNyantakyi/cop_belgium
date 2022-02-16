@@ -1,13 +1,13 @@
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
-import 'package:cop_belgium/screens/events_screen/event_details_screen.dart';
+import 'package:cop_belgium/screens/events_screen/edit_event_screen.dart';
+import 'package:cop_belgium/screens/events_screen/view_event_screen.dart';
 import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:table_calendar/table_calendar.dart';
-
-enum EventType { normal, online }
 
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key? key}) : super(key: key);
@@ -22,7 +22,7 @@ class _EventsScreenState extends State<EventsScreen> {
   DateTime? _selectedDay;
   Map<DateTime, List<Event>>? _selectedEvents;
 
-  EventType _eventType = EventType.normal;
+  // String _chosenEventType = 'normal';
 
   List<Event> events = [
     Event(
@@ -33,7 +33,7 @@ class _EventsScreenState extends State<EventsScreen> {
       description: 'National Proposed Officer Training Program Selection',
       image:
           'https://images.unsplash.com/photo-1614598632236-70bcd1c2f833?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
-      zoomLink:
+      link:
           'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
     ),
     Event(
@@ -82,10 +82,21 @@ class _EventsScreenState extends State<EventsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 1,
+        title: const Text('Events', style: kSFHeadLine3),
+      ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_outlined),
         onPressed: () async {
-          _showEventDialog();
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) {
+                return const CreateEventScreen();
+              },
+            ),
+          );
         },
       ),
       body: SingleChildScrollView(
@@ -108,7 +119,19 @@ class _EventsScreenState extends State<EventsScreen> {
                     Navigator.push(
                       context,
                       CupertinoPageRoute(
-                        builder: (context) => EventDetailScreen(
+                        builder: (context) => ViewEventScreen(
+                          eventType: events[index].type,
+                          event: events[index],
+                        ),
+                      ),
+                    );
+                  },
+                  onLongPressed: () {
+                    HapticFeedback.selectionClick();
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        builder: (context) => EditEventScreen(
                           eventType: events[index].type,
                           event: events[index],
                         ),
@@ -224,84 +247,8 @@ class _EventsScreenState extends State<EventsScreen> {
         }
       },
       onPageChanged: (focusedDay) {
-        // No need to call `setState()` here
         _focusedDay = focusedDay;
       },
-    );
-  }
-
-  Future<String?> _showEventDialog() async {
-    return await showDialog<String?>(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(
-          'Create event',
-          style: kSFHeadLine3,
-        ),
-        content: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            const contentPadding = EdgeInsets.all(0);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RadioListTile<EventType>(
-                  contentPadding: contentPadding,
-                  activeColor: kBlue,
-                  value: EventType.normal,
-                  groupValue: _eventType,
-                  title: const Text('Normal', style: kSFBody),
-                  onChanged: (value) {
-                    _eventType = value!;
-                    setState(() {});
-                  },
-                ),
-                RadioListTile<EventType>(
-                  contentPadding: contentPadding,
-                  activeColor: kBlue,
-                  value: EventType.online,
-                  groupValue: _eventType,
-                  title: const Text('Online', style: kSFBody),
-                  onChanged: (value) {
-                    _eventType = value!;
-                    setState(() {});
-                  },
-                ),
-              ],
-            );
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text(
-              'Cancel',
-              style: kSFBody2Bold,
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) {
-                    return CreateEventScreen(
-                      eventType: _eventType,
-                      editable: false,
-                    );
-                  },
-                ),
-              );
-            },
-            child: const Text('OK', style: kSFBody2Bold),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimonies_view.dart';
 import 'package:cop_belgium/screens/testimonies_screen/all_testimonies_tab_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,14 +26,8 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppbar(controller: _tabController),
-      body: SafeArea(
-        child: TabBarView(
-          controller: _tabController,
-          children: const [
-            TestimoniesTabView(),
-            EditTestimoniesView(),
-          ],
-        ),
+      body: const SafeArea(
+        child: TestimoniesTabView(),
       ),
       floatingActionButton: _builFloActionBtn(),
     );
@@ -59,35 +52,8 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
 
   dynamic _buildAppbar({TabController? controller}) {
     return AppBar(
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: TabBar(
-            indicatorColor: kBlue,
-            indicatorSize: TabBarIndicatorSize.label,
-            labelStyle: kSFBodyBold,
-            labelColor: kBlack,
-            indicator: const UnderlineTabIndicator(
-              borderSide: BorderSide(color: kBlack, width: 2),
-            ),
-            isScrollable: true,
-            controller: controller,
-            unselectedLabelColor: kBlack,
-            onTap: (index) {
-              setState(() {});
-            },
-            tabs: const [
-              Tab(
-                text: 'Testimonies',
-              ),
-              Tab(
-                text: 'My Testimonies',
-              ),
-            ],
-          ),
-        ),
-      ),
+      elevation: kAppbarElevation,
+      title: const Text('Testimonies', style: kSFHeadLine3),
     );
   }
 }

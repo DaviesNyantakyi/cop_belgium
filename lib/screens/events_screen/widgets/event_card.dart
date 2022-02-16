@@ -3,26 +3,23 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 
-class EventCard extends StatefulWidget {
+class EventCard extends StatelessWidget {
   final Event event;
   final VoidCallback onPressed;
+  final VoidCallback onLongPressed;
 
   const EventCard({
     Key? key,
     required this.event,
     required this.onPressed,
+    required this.onLongPressed,
   }) : super(key: key);
 
   @override
-  State<EventCard> createState() => _EventCardState();
-}
-
-class _EventCardState extends State<EventCard> {
-  double avatarRadius = 12;
-  @override
   Widget build(BuildContext context) {
     return TextButton(
-      onPressed: widget.onPressed,
+      onPressed: onPressed,
+      onLongPress: onLongPressed,
       style: kTextButtonStyle,
       child: Stack(
         children: [
@@ -39,7 +36,7 @@ class _EventCardState extends State<EventCard> {
               ),
               image: DecorationImage(
                 image: NetworkImage(
-                  widget.event.image,
+                  event.image,
                 ),
                 fit: BoxFit.cover,
               ),
@@ -93,7 +90,7 @@ class _EventCardState extends State<EventCard> {
   Widget _buildLogoType() {
     IconData? icon = Icons.place_outlined;
 
-    if (widget.event.type == 'online') {
+    if (event.type == 'online') {
       icon = Icons.language_outlined;
     }
 
@@ -123,18 +120,18 @@ class _EventCardState extends State<EventCard> {
         Row(
           children: [
             Text(
-              FormalDates.formatEDmy(date: widget.event.startDate),
+              FormalDates.formatEDmyyyy(date: event.startDate),
               style: kSFCaption.copyWith(color: Colors.white),
             ),
-            Text(' - ', style: kSFCaption.copyWith(color: Colors.white)),
+            const SizedBox(width: kTextFieldSpacing),
             Text(
-              '${FormalDates.formatHm(date: widget.event.startDate)} - ${FormalDates.formatHm(date: widget.event.endDate)}',
+              '${FormalDates.formatHm(date: event.startDate)} - ${FormalDates.formatHm(date: event.endDate)}',
               style: kSFCaption.copyWith(color: Colors.white),
             ),
           ],
         ),
         Text(
-          widget.event.title,
+          event.title,
           style: kSFBody.copyWith(color: Colors.white),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,

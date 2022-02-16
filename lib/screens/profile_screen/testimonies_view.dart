@@ -1,14 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
 import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/error_views.dart';
-import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/testimony_card.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class UserTestimoniesView extends StatefulWidget {
   static String userTestimoniesView = 'userTestimoniesView';
@@ -20,157 +17,121 @@ class UserTestimoniesView extends StatefulWidget {
 }
 
 class _UserTestimoniesViewState extends State<UserTestimoniesView> {
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  bool isLoading = false;
-  Future<void> tryAgain() async {
-    try {
-      isLoading = true;
-      if (mounted) {
-        setState(() {});
-      }
-      EasyLoading.show();
-    } on FirebaseException catch (e) {
-      kshowSnackbar(
-        context: context,
-        errorType: 'error',
-        text: e.message.toString(),
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      EasyLoading.dismiss();
-      isLoading = false;
-      if (mounted) {
-        setState(() {});
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return ListView.separated(
       padding: const EdgeInsets.symmetric(
-        horizontal: kBodyPadding,
-        vertical: kBodyPadding,
-      ),
-      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance
-            .collection('testimonies')
-            .orderBy('date', descending: true)
-            .snapshots(),
-        builder: (context, snapshot) {
-          List<TestimonyInfo> allTestmonies = [];
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: kProgressIndicator);
-          }
-
-          if (snapshot.hasError) {
-            return TryAgainView(
-              btnColor: isLoading ? kGrey : kBlue,
-              onPressed: isLoading ? null : tryAgain,
+              horizontal: kBodyPadding, vertical: kBodyPadding)
+          .copyWith(top: 20),
+      separatorBuilder: (BuildContext context, int index) =>
+          const SizedBox(height: kCardSpacing),
+      itemCount: 50,
+      itemBuilder: (context, index) {
+        return TestimonyCard(
+          onPressedLike: () {},
+          testimony: TestimonyInfo(
+              title:
+                  'Enim mollit non ipsum ipsum qui aliqua est Lorem adipisicing qui labore.',
+              description:
+                  'Laboris officia eu duis eu pariatur nulla cupidatat labore incididunt id amet et eiusmod irure. Ut laboris est et labore officia cupidatat veniam excepteur magna adipisicing. Qui magna nostrud labore officia duis Lorem.',
+              date: DateTime.now(),
+              userId: 'Davies',
+              userName: 'Davies Nyantakyi',
+              likes: 200),
+          onPressed: () {
+            _showBottomSheet(
+              context: context,
+              testimony: TestimonyInfo(
+                title:
+                    'Enim mollit non ipsum ipsum qui aliqua est Lorem adipisicing qui labore.',
+                description:
+                    'Laboris officia eu duis eu pariatur nulla cupidatat labore incididunt id amet et eiusmod irure. Ut laboris est et labore officia cupidatat veniam excepteur magna adipisicing. Qui magna nostrud labore officia duis Lorem.Adipisicing ullamco duis incididunt duis esse fugiat eiusmod dolor dolore ipsum magna sit et. Nulla dolor esse duis elit reprehenderit laborum eu cupidatat est labore. Aliqua ea ut ullamco enim adipisicing cillum amet officia velit id id ipsum. Enim cupidatat culpa ut dolor veniam Lorem mollit. Minim occaecat elit amet ad. Aliquip proident voluptate enim et voluptate. Sunt qui do elit occaecat reprehenderit sunt veniam qui velit proident.',
+                date: DateTime.now(),
+                userId: 'Davies',
+                userName: 'Davies Nyantakyi',
+                likes: 200,
+              ),
             );
-          }
-
-          if (snapshot.data != null) {
-            if (snapshot.data!.docs.isEmpty) {
-              return const NoTestimonyView();
-            }
-          }
-
-          for (var doc in snapshot.data!.docs) {
-            final testimony = TestimonyInfo.fromMap(map: doc.data());
-
-            // if current user id matches TestimonyInfo id add to list
-            if (testimony.userId == currentUser!.uid) {
-              allTestmonies.add(testimony);
-            }
-          }
-
-          if (allTestmonies.isEmpty) {
-            return const NoTestimonyView();
-          }
-
-          return ListView.separated(
-            itemCount: allTestmonies.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 14),
-            itemBuilder: (context, index) {
-              return TestimonyCard(
-                testimonyInfo: allTestmonies[index],
-                onPressedEdit: () async {
-                  await Navigator.push(context,
-                      MaterialPageRoute(builder: (context) {
-                    return CreateTestimonyScreen(
-                      editable: true,
-                      testimonyInfo: allTestmonies[index],
-                    );
-                  }));
-                },
-                onPressedCard: () {
-                  _showBottomSheet(
-                    context: context,
-                    title: allTestmonies[index].title!,
-                    testimony: allTestmonies[index].description!,
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+          },
+          onLongPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => CreateTestimonyScreen(
+                  editable: true,
+                  testimonyInfo: TestimonyInfo(
+                    title:
+                        'Enim mollit non ipsum ipsum qui aliqua est Lorem adipisicing qui labore.',
+                    description:
+                        'Laboris officia eu duis eu pariatur nulla cupidatat labore incididunt id amet et eiusmod irure. Ut laboris est et labore officia cupidatat veniam excepteur magna adipisicing. Qui magna nostrud labore officia duis Lorem.Adipisicing ullamco duis incididunt duis esse fugiat eiusmod dolor dolore ipsum magna sit et. Nulla dolor esse duis elit reprehenderit laborum eu cupidatat est labore. Aliqua ea ut ullamco enim adipisicing cillum amet officia velit id id ipsum. Enim cupidatat culpa ut dolor veniam Lorem mollit. Minim occaecat elit amet ad. Aliquip proident voluptate enim et voluptate. Sunt qui do elit occaecat reprehenderit sunt veniam qui velit proident.',
+                    date: DateTime.now(),
+                    userId: 'Davies',
+                    userName: 'Davies Nyantakyi',
+                    likes: 200,
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
   Future<void> _showBottomSheet({
     required BuildContext context,
-    required String title,
-    required String testimony,
+    required TestimonyInfo testimony,
   }) {
+    _buildDate() {
+      String time = timeago.format(testimony.date!);
+
+      if (time.contains('years ago') || time.contains('about a year ago')) {
+        time = FormalDates.formatEDmyyyyHm(date: testimony.date);
+      }
+
+      return Text(
+        time,
+        style: kSFBody2,
+      );
+    }
+
     return showBottomSheet1(
       context: context,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: kSFHeadLine2,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              testimony,
-              style: kSFBody,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class NoTestimonyView extends StatelessWidget {
-  const NoTestimonyView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
+      child: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/images/create_testimony.png',
-              height: 200,
-              width: 200,
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                testimony.title ?? '',
+                style: kSFHeadLine3,
+              ),
             ),
-            const Text('No Testimonies', style: kSFHeadLine2),
-            const Text(
-              'Get started by saving a creating a testimony',
-              style: kSFBody,
+            const SizedBox(height: kTextFieldSpacing),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: [
+                  Text(
+                    testimony.userName ?? ' ',
+                    style: kSFBody2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  _buildDate(),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                testimony.description ?? '',
+                style: kSFBody,
+              ),
             ),
           ],
         ),

@@ -21,10 +21,6 @@ class FastingHistoryCard extends StatefulWidget {
 class _FastingHistoryCardState extends State<FastingHistoryCard> {
   Color? cardColor;
 
-  // changed card color if the goal is reached.
-  // if the endFast == goal Colors green
-  // if the endFast < goal Colors red
-
   @override
   void initState() {
     super.initState();

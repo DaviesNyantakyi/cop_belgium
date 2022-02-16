@@ -151,10 +151,10 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
       padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
       child: Column(
         children: [
-          _buildAudioControls(),
           const SizedBox(height: 20),
           _buildDurationText(),
           _buildSlider(),
+          _buildAudioControls(),
         ],
       ),
     );

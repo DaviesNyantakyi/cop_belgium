@@ -167,16 +167,6 @@ class _DateGenderViewState extends State<DateGenderView> {
                       ),
                     ],
                   ),
-                  Text(
-                    birthDate == null
-                        ? ''
-                        : ' ${DateTime.now().year - birthDate!.year} years',
-                    style: kSFTextFieldStyle.copyWith(
-                      fontWeight: birthDate == null
-                          ? FontWeight.normal
-                          : FontWeight.bold,
-                    ),
-                  ),
                 ],
               ),
             ),

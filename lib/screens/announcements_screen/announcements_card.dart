@@ -19,7 +19,7 @@ class AnnouncementsCard extends StatelessWidget {
       String time = timeago.format(announcement.dateTime);
 
       if (time.contains('years ago') || time.contains('about a year ago')) {
-        time = FormalDates.formatEDmyHm(date: announcement.dateTime);
+        time = FormalDates.formatEDmyyyyHm(date: announcement.dateTime);
       }
 
       return Text(
@@ -30,6 +30,7 @@ class AnnouncementsCard extends StatelessWidget {
 
     return Container(
       width: double.infinity,
+      height: 200,
       decoration: BoxDecoration(
         boxShadow: [
           kBoxShadow,

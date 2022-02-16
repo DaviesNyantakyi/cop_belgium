@@ -42,7 +42,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
       appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: ListView.separated(
-          padding: const EdgeInsets.all(kBodyPadding),
+          padding: const EdgeInsets.all(kBodyPadding).copyWith(top: 20),
           separatorBuilder: (context, _) => const SizedBox(
             height: kCardSpacing,
           ),
@@ -71,35 +71,37 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
   }) {
     return showBottomSheet1(
       context: context,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              announcement.title,
-              style: kSFHeadLine2,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                announcement.title,
+                style: kSFHeadLine2,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              announcement.description,
-              style: kSFBody,
+            const SizedBox(height: 16),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                announcement.description,
+                style: kSFBody,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      elevation: kAppbarElevation,
       title: const Text(
         'Announcements',
-        style: kSFHeadLine2,
+        style: kSFHeadLine3,
       ),
       leading: TextButton(
         child: kBackButton(context: context),

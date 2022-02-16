@@ -11,8 +11,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-enum WhyFarther { editProfile, settings }
-
 class ProfileScreens extends StatefulWidget {
   static String profileScreens = 'profileScreens';
   const ProfileScreens({Key? key}) : super(key: key);
@@ -31,63 +29,37 @@ class _ProfileScreensState extends State<ProfileScreens>
     tabController = TabController(initialIndex: 0, vsync: this, length: 3);
   }
 
-  Future<void> popUp(String? result) async {
-    try {
-      if (result == LoginScreen.loginScreen) {
-        await FireAuth().singout();
-        Navigator.pop(context);
-      }
-      if (result == EditProfileScreen.editProfileScreen) {
-        final user = await CloudFireStore().getUserFirstore();
-
-        if (user != null) {
-          await Navigator.push(context, CupertinoPageRoute(
-            builder: (context) {
-              return EditProfileScreen(user: user);
-            },
-          ));
-        }
-      }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          _buildPopupMenu(context: context),
-        ],
-      ),
       body: NestedScrollView(
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, value) {
           return [
-            SliverToBoxAdapter(
-              child: _buildProfilInfo(context: context),
+            SliverAppBar(
+              leading: kBackButton(context: context),
+              elevation: 1,
+              title: const Text('Profile', style: kSFHeadLine3),
+              actions: [
+                _buildActions(context: context),
+              ],
             ),
           ];
         },
         body: Column(
           children: <Widget>[
-            const SizedBox(height: 10),
             TabBar(
               controller: tabController,
               labelStyle: kSFBodyBold,
-              labelColor: kBlack,
+              labelColor: kBlue,
+              enableFeedback: true,
               isScrollable: true,
               indicatorColor: kBlack,
-              padding: const EdgeInsets.symmetric(horizontal: 25),
               unselectedLabelColor: kBlack,
               indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(color: kBlack, width: 2),
+                borderSide: BorderSide(color: kBlue, width: 2),
               ),
+              padding: const EdgeInsets.only(top: 30),
               tabs: const [
                 Tab(text: 'Podcasts'),
                 Tab(text: 'Testimonies'),
@@ -148,35 +120,28 @@ class _ProfileScreensState extends State<ProfileScreens>
     );
   }
 
-  Widget _buildPopupMenu({required BuildContext context}) {
-    return PopupMenuButton<String>(
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(7),
+  Widget _buildActions({required BuildContext context}) {
+    return Row(
+      children: [
+        TextButton(
+          style: kTextButtonStyle,
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            child: const Text('Edit profile', style: kSFBody),
+          ),
+          onPressed: () async {},
         ),
-      ),
-      elevation: 4,
-      icon: const Icon(
-        Icons.more_vert_outlined,
-        size: 20,
-      ),
-      onSelected: popUp,
-      itemBuilder: (BuildContext context) {
-        return <PopupMenuEntry<String>>[
-          PopupMenuItem<String>(
-            value: EditProfileScreen.editProfileScreen,
-            child: const Text(
-              'Edit Profile',
-            ),
+        TextButton(
+          style: kTextButtonStyle,
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            child: const Text('Logout', style: kSFBody),
           ),
-          PopupMenuItem<String>(
-            value: LoginScreen.loginScreen,
-            child: const Text(
-              'Logout',
-            ),
-          ),
-        ];
-      },
+          onPressed: () async {},
+        ),
+      ],
     );
   }
 }

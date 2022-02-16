@@ -7,18 +7,19 @@ class FormalDates {
     return date!.format('dd MMM yy');
   }
 
-  static String formatEDmy({required DateTime? date}) {
+  static String formatEDmyyyy({required DateTime? date}) {
     // Wed, 26 Jan 22
-    return date!.format('E, dd MMM yy');
+    return date!.format('E, dd MMM yyyy');
   }
 
   static String formatDmyyyy({required DateTime? date}) {
+    // Wed, 26 Jan 2022
     return date!.format('dd MMM yyyy');
   }
 
-  static String formatEDmyHm({required DateTime? date}) {
+  static String formatEDmyyyyHm({required DateTime? date}) {
     // Wed, 26 Jan 22
-    return date!.format('E, dd MMM yy - hh:mm');
+    return date!.format('E, dd MMM yyyy - hh:mm');
   }
 
   static String formatHm({required DateTime? date}) {

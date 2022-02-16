@@ -157,6 +157,7 @@ const double kCardRadius = 5;
 const double kTextFieldSpacing = 12;
 const double kButtonSpacing = 25;
 const double kAppbarPadding = 20.0;
+const double kAppbarElevation = 1;
 const double kBodyPadding = 10.0;
 const double kIconSize = 24;
 const double kCardSpacing = 10;
@@ -176,6 +177,9 @@ const kProgressIndicator = CircularProgressIndicator(
   strokeWidth: 5,
   color: kBlack,
 );
+
+DateTime kMaxDate = DateTime(2050, 12, 31);
+DateTime kMinDate = DateTime(1900, 01, 31);
 
 const double kBottomSheetHeight = 470;
 const double kPickerBottomSheetHeight = 170;

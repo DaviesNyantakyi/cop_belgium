@@ -31,17 +31,18 @@ class _PodcastScreenState extends State<PodcastScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
         leading: const Padding(
           padding: EdgeInsets.only(left: kBodyPadding),
           child: FittedBox(
             child: Text(
               'Podcasts',
-              style: kSFHeadLine2,
+              style: kSFHeadLine3,
               overflow: TextOverflow.visible,
             ),
           ),
         ),
-        leadingWidth: 130,
+        leadingWidth: 100,
         actions: [
           Container(
             width: 45,
@@ -123,6 +124,7 @@ class _Body extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: const [
+        SizedBox(height: 15),
         _BuildGreeting(),
         SizedBox(height: 30),
         Text('Featured Episode', style: kSFHeadLine3),

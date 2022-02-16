@@ -1,45 +1,40 @@
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
-class EventDetailScreen extends StatefulWidget {
+class ViewEventScreen extends StatefulWidget {
   final String eventType;
   final Event event;
   static String podcastDetailScreen = 'podcastDetailScreen';
-  const EventDetailScreen({
+  const ViewEventScreen({
     Key? key,
     required this.eventType,
     required this.event,
   }) : super(key: key);
 
   @override
-  State<EventDetailScreen> createState() => _EventDetailScreenState();
+  State<ViewEventScreen> createState() => _ViewEventScreenState();
 }
 
-class _EventDetailScreenState extends State<EventDetailScreen> {
+class _ViewEventScreenState extends State<ViewEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppbar(context: context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(kBodyPadding),
         child: Column(
           children: [
             _buildImage(),
             const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(kBodyPadding),
-              child: Column(
-                children: [
-                  _buildTitle(),
-                  const SizedBox(height: 20),
-                  _buildEventInfo(),
-                  const SizedBox(height: 25),
-                  _buildDescription(),
-                ],
-              ),
-            )
+            _buildTitle(),
+            const SizedBox(height: 20),
+            _buildEventInfo(),
+            const SizedBox(height: 25),
+            _buildDescription()
           ],
         ),
       ),
@@ -51,12 +46,12 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       alignment: Alignment.centerLeft,
       child: Text(
         widget.event.title,
-        style: kSFHeadLine2,
+        style: kSFHeadLine3,
       ),
     );
   }
 
-  Widget _buildCalendarInfo() {
+  Widget _buildDateTime() {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -71,34 +66,40 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           child: const Icon(
             Icons.calendar_today_outlined,
             color: kBlack,
-            size: 24,
+            size: 30,
           ),
         ),
-        const SizedBox(width: 6),
-        Flexible(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                FormalDates.formatEDmy(date: widget.event.startDate),
-                style: kSFBodyBold,
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${FormalDates.formatHm(date: widget.event.startDate)} - ${FormalDates.formatHm(date: widget.event.endDate)}',
-                    style: kSFCaption,
-                  ),
-                ],
-              ),
-            ],
-          ),
+        const SizedBox(width: kTextFieldSpacing),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              FormalDates.formatEDmyyyy(date: widget.event.startDate),
+              style: kSFBodyBold,
+            ),
+            Row(
+              children: [
+                Text(
+                  '${FormalDates.formatHm(date: widget.event.startDate)} - ${FormalDates.formatHm(date: widget.event.endDate)}',
+                  style: kSFBody2,
+                ),
+              ],
+            ),
+          ],
         ),
+        const Spacer(),
+        Buttons.buildOutlinedButton(
+          height: 26,
+          width: 90,
+          context: context,
+          child: const Text('Calendar', style: kSFBtnStyle),
+          onPressed: () {},
+        )
       ],
     );
   }
 
-  Widget _buildLocationInfo() {
+  Widget _buildEventLocation() {
     if (widget.eventType == 'online') {
       return Row(
         mainAxisSize: MainAxisSize.min,
@@ -111,15 +112,17 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 Radius.circular(5),
               ),
             ),
-            child: Image.asset(
-              'assets/images/logos/zoom.png',
-              width: 24,
-            ),
+            child: const Icon(Icons.language_outlined, size: 30),
           ),
-          const SizedBox(width: 6),
-          const Text(
-            'Zoom',
-            style: kSFBody,
+          const SizedBox(width: kTextFieldSpacing),
+          const Text('Zoom', style: kSFBodyBold),
+          const Spacer(),
+          Buttons.buildOutlinedButton(
+            height: 26,
+            width: 90,
+            context: context,
+            child: const Text('Join', style: kSFBtnStyle),
+            onPressed: () {},
           )
         ],
       );
@@ -140,10 +143,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           child: const Icon(
             Icons.location_on_outlined,
             color: kBlack,
-            size: 20,
+            size: 30,
           ),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: kTextFieldSpacing),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -151,41 +154,50 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             Flexible(
               child: Text(
                 widget.event.location!['street'],
-                style: kSFBody,
+                style: kSFBodyBold,
               ),
             ),
             Flexible(
               child: Text(
                 widget.event.location!['city'],
-                style: kSFCaption,
+                style: kSFBody2,
               ),
             ),
           ],
         ),
+        const Spacer(),
+        Buttons.buildOutlinedButton(
+          height: 26,
+          width: 90,
+          context: context,
+          child: const Text('Maps', style: kSFBtnStyle),
+          onPressed: () {},
+        )
       ],
     );
   }
 
   Widget _buildEventInfo() {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildCalendarInfo(),
+        _buildDateTime(),
         const SizedBox(height: 18),
-        _buildLocationInfo(),
+        _buildEventLocation(),
       ],
     );
   }
 
   Widget _buildImage() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.25,
+      height: MediaQuery.of(context).size.height * 0.35,
       decoration: BoxDecoration(
         color: kBlack,
         image: DecorationImage(
           fit: BoxFit.cover,
           image: NetworkImage(widget.event.image),
         ),
+        borderRadius: const BorderRadius.all(Radius.circular(kCardRadius)),
       ),
     );
   }
@@ -215,13 +227,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
       backgroundColor: Colors.transparent,
-      leading: TextButton(
-        child: kBackButton(context: context),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: kTextButtonStyle,
-      ),
+      leading: kBackButton(context: context),
     );
   }
 }

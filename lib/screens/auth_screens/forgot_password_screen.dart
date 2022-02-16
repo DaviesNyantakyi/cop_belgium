@@ -71,22 +71,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         title: const Text('Forgot Password', style: kSFHeadLine3),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(kBodyPadding),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kBodyPadding,
-              vertical: kBodyPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildForgotPassText(),
-                const SizedBox(height: 39),
-                _buildEmailForm(),
-                const SizedBox(height: kButtonSpacing),
-                _buildSendButton()
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildForgotPassText(),
+              const SizedBox(height: 39),
+              _buildEmailForm(),
+              const SizedBox(height: kButtonSpacing),
+              _buildSendButton()
+            ],
           ),
         ),
       ),
@@ -154,7 +149,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK', style: kSFCaptionBold),
+            child: const Text('OK', style: kSFBody2Bold),
           ),
         ],
       ),

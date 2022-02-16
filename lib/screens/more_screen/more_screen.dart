@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -17,6 +19,10 @@ class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('More', style: kSFHeadLine3),
+        elevation: kAppbarElevation,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
           vertical: kBodyPadding,
@@ -26,47 +32,78 @@ class _MoreScreenState extends State<MoreScreen> {
           children: [
             _buildProfileTile(),
             const Divider(),
-            _buildTile(
-              title: 'Fasting',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const CreateFastingScreens(),
-                  ),
-                );
-              },
-            ),
-            _buildTile(
-              title: 'About Church',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const AboutChruchScreen(),
-                  ),
-                );
-              },
-            ),
-            _buildTile(
-              title: 'Settings',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const SettingsScreen(),
-                  ),
-                );
-              },
-            ),
+            _buildOtherTiles(),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildOtherTiles() {
+    return Column(
+      children: [
+        _buildTile(
+          title: 'Fasting',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const CreateFastingScreens(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Donate',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const CreateFastingScreens(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Request baptism',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const CreateFastingScreens(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'About Church',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const AboutChruchScreen(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Settings',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildTile({required String title, required VoidCallback onTap}) {
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       title: Text(
         title,
         style: kSFBodyBold,
@@ -81,12 +118,12 @@ class _MoreScreenState extends State<MoreScreen> {
     if (user.photoURL != null) {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(user.photoURL!),
-        radius: 35,
+        radius: 30,
         backgroundColor: kBlack,
       );
     }
     return const CircleAvatar(
-      radius: 35,
+      radius: 30,
       backgroundColor: kBlack,
       child: Icon(
         Icons.person_outline_outlined,
@@ -105,7 +142,7 @@ class _MoreScreenState extends State<MoreScreen> {
       children: [
         Text(
           user?.displayName ?? '',
-          style: kSFHeadLine2,
+          style: kSFHeadLine3,
         ),
         Text(
           user?.email ?? '',
@@ -121,10 +158,17 @@ class _MoreScreenState extends State<MoreScreen> {
         overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
       ),
       onPressed: () async {
+        final audioProvider = Provider.of<AudioProvider>(
+          context,
+          listen: false,
+        );
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => const ProfileScreens(),
+            builder: (context) => ChangeNotifierProvider<AudioProvider>.value(
+              value: audioProvider,
+              child: const ProfileScreens(),
+            ),
           ),
         );
       },

@@ -22,9 +22,23 @@ class CreateTestimonyScreen extends StatefulWidget {
 }
 
 class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
+  TextEditingController titleCntlr = TextEditingController();
+  TextEditingController descriptionCntlr = TextEditingController();
+
   @override
   void initState() {
+    if (widget.editable!) {
+      titleCntlr.text = widget.testimonyInfo!.title!;
+      descriptionCntlr.text = widget.testimonyInfo!.description!;
+    }
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    titleCntlr.dispose();
+    descriptionCntlr.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,17 +56,15 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTF(
-                  initialValue: 'title',
                   hintText: 'Title',
-                  style: kSFHeadLine1,
-                  onChanged: (value) {},
+                  style: kSFHeadLine3,
+                  controller: titleCntlr,
                 ),
                 const SizedBox(height: 16),
                 _buildTF(
-                  initialValue: 'testimony',
-                  style: kSFBodyBold,
-                  hintText: 'Testimony',
-                  onChanged: (value) {},
+                  style: kSFBody,
+                  hintText: 'Your testimony',
+                  controller: descriptionCntlr,
                 ),
               ],
             ),
@@ -63,13 +75,12 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   }
 
   Widget _buildTF({
-    String? initialValue,
     String? hintText,
     TextStyle? style,
-    Function(String)? onChanged,
+    TextEditingController? controller,
   }) {
     return TextFormField(
-      initialValue: initialValue,
+      controller: controller,
       style: style,
       minLines: 1,
       cursorWidth: 3,
@@ -80,85 +91,32 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         hintText: hintText,
         border: InputBorder.none,
       ),
-      onChanged: onChanged,
     );
   }
 
-  Widget _buildAppbarTitle() {
-    if (widget.editable == false) {
-      return const Text(
-        'Create',
-        style: kSFBodyBold,
-      );
-    } else {
-      return const Text(
-        'Edit',
-        style: kSFBodyBold,
-      );
-    }
-  }
-
-  // Future<String?> _showDeleteAlert() async {
-  //   return await showDialog<String?>(
-  //     barrierDismissible: true,
-  //     context: context,
-  //     builder: (BuildContext context) => AlertDialog(
-  //       shape: const RoundedRectangleBorder(
-  //         borderRadius: BorderRadius.all(
-  //           Radius.circular(kButtonRadius),
-  //         ),
-  //       ),
-  //       title: const Text(
-  //         'Delete this testimony?',
-  //         style: kSFBodyBold,
-  //       ),
-  //       actions: <Widget>[
-  //         TextButton(
-  //           onPressed: () => Navigator.pop(context, 'cancel'),
-  //           child: const Text('Cancel', style: kSFBody),
-  //         ),
-  //         TextButton(
-  //           onPressed: () => Navigator.pop(context, 'ok'),
-  //           child: Text('Delete', style: kSFBodyBold.copyWith(color: kRed)),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildPopupMenu({required BuildContext context}) {
     if (widget.editable == true) {
-      return PopupMenuButton<String>(
-        tooltip: 'Save & Delete',
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(7),
+      return Row(
+        children: [
+          TextButton(
+            style: kTextButtonStyle,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+              child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
+            ),
+            onPressed: () async {},
           ),
-        ),
-        elevation: 4,
-        icon: const Icon(
-          Icons.more_vert_outlined,
-          size: 20,
-        ),
-        onSelected: (String result) async {},
-        itemBuilder: (BuildContext context) {
-          return <PopupMenuEntry<String>>[
-            const PopupMenuItem<String>(
-              value: 'save',
-              child: Text(
-                'Save',
-                style: kSFBody,
-              ),
+          TextButton(
+            style: kTextButtonStyle,
+            child: Container(
+              alignment: Alignment.center,
+              margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+              child: const Text('Save', style: kSFBody),
             ),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Text(
-                'Delete',
-                style: kSFBody.copyWith(color: kRed),
-              ),
-            ),
-          ];
-        },
+            onPressed: () async {},
+          ),
+        ],
       );
     } else {
       return TextButton(
@@ -166,36 +124,26 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         child: Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-          child: const Text('Post', style: kSFBodyBold),
+          child: const Text('Create', style: kSFBodyBold),
         ),
         onPressed: () async {},
       );
     }
   }
 
+  Widget _buildTitle() {
+    if (widget.editable!) {
+      return const Text('Edit', style: kSFHeadLine3);
+    }
+    return const Text('');
+  }
+
   dynamic _buildAppbar({required bool editable}) {
     return AppBar(
       elevation: 1,
-      title: _buildAppbarTitle(),
-      leading: TextButton(
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(
-            Icons.chevron_left_outlined,
-            color: kBlack,
-          ),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      actions: [
-        Container(
-          alignment: Alignment.center,
-          child: const Text('Announymous', style: kSFBodyBold),
-        ),
-        _buildPopupMenu(context: context),
-      ],
+      leading: kBackButton(context: context),
+      title: _buildTitle(),
+      actions: [_buildPopupMenu(context: context)],
     );
   }
 }

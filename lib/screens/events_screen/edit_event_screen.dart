@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -10,25 +11,26 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
-class CreateEventScreen extends StatefulWidget {
-  const CreateEventScreen({Key? key}) : super(key: key);
+class EditEventScreen extends StatefulWidget {
+  final String eventType;
+  final Event event;
+
+  const EditEventScreen({
+    Key? key,
+    required this.eventType,
+    required this.event,
+  }) : super(key: key);
 
   @override
-  _CreateEventScreenState createState() => _CreateEventScreenState();
+  _EditEventScreenState createState() => _EditEventScreenState();
 }
 
-class _CreateEventScreenState extends State<CreateEventScreen> {
+class _EditEventScreenState extends State<EditEventScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  String? eventType = 'normal';
+  String? eventType;
 
-  String? title;
-  String? description;
-  String? zoomLink;
-  String? location;
-  DateTime? startDate;
-
-  DateTime? endDate;
+  Event? event;
 
   File? image;
   bool isLoading = false;
@@ -73,6 +75,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     } on PlatformException catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  @override
+  void initState() {
+    event = widget.event;
+    eventType = event?.type;
+    if (mounted) {
+      setState(() {});
+    }
+    super.initState();
   }
 
   @override
@@ -147,6 +159,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   Widget _buildAddEventTypeDetails() {
     if (eventType == 'online') {
       return _buildTF(
+        initialValue: event?.link,
         hintText: 'Add link',
         style: kSFBody,
         icon: const Icon(
@@ -154,7 +167,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           color: Colors.black,
         ),
         onChanged: (value) {
-          title = value;
+          event?.link = value;
         },
       );
     }
@@ -173,11 +186,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget _buildTypeSelection() {
-    IconData icon = Icons.place_outlined;
-
-    if (eventType == 'online') {
-      icon = Icons.link_outlined;
-    }
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       title: const Text(
@@ -266,20 +274,20 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
     return Column(
       children: [
         _buildTF(
-          initialValue: title,
+          initialValue: event?.title,
           hintText: 'Title',
           style: kSFHeadLine3,
           onChanged: (value) {
-            title = value;
+            event?.title = value;
           },
         ),
         const Divider(),
         _buildTF(
-          initialValue: description,
+          initialValue: event?.description,
           style: kSFBody,
           hintText: 'About event',
           onChanged: (value) {
-            description = value;
+            event?.description = value;
           },
         ),
       ],
@@ -295,39 +303,35 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Icons.calendar_today,
             color: kBlack,
           ),
-          title: startDate != null
+          title: event?.startDate != null
               ? Text(
-                  FormalDates.formatEDmyyyy(date: startDate),
+                  FormalDates.formatEDmyyyy(date: event!.startDate),
                   style: kSFBody2,
                 )
               : Text(
                   FormalDates.formatEDmyyyy(date: DateTime.now()),
                   style: kSFBody2,
                 ),
-          trailing: startDate != null
-              ? Text(FormalDates.formatHm(date: startDate))
+          trailing: event?.startDate != null
+              ? Text(FormalDates.formatHm(date: event!.startDate))
               : Text(FormalDates.formatHm(date: DateTime.now())),
           onTap: () async {
             await _showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              date: startDate,
+              date: event?.startDate,
               onChanged: (date) {
                 HapticFeedback.lightImpact();
 
-                startDate = date;
-                if (mounted) {
-                  setState(() {});
-                }
+                event?.startDate = date;
               },
             );
 
             await _showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              date: startDate,
+              date: event?.startDate,
               onChanged: (date) {
                 HapticFeedback.lightImpact();
-
-                startDate = date;
+                event?.startDate = date;
               },
             );
           },
@@ -338,17 +342,17 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             Icons.calendar_today,
             color: kBlack,
           ),
-          title: endDate != null
+          title: event?.endDate != null
               ? Text(
-                  FormalDates.formatEDmyyyy(date: endDate),
+                  FormalDates.formatEDmyyyy(date: event!.endDate),
                   style: kSFBody2,
                 )
               : Text(
                   FormalDates.formatEDmyyyy(date: DateTime.now()),
                   style: kSFBody2,
                 ),
-          trailing: endDate != null
-              ? Text(FormalDates.formatHm(date: endDate))
+          trailing: event?.endDate != null
+              ? Text(FormalDates.formatHm(date: event!.endDate))
               : Text(FormalDates.formatHm(
                   date: DateTime.now().add(
                     const Duration(minutes: 30),
@@ -357,20 +361,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           onTap: () async {
             await _showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              date: endDate,
+              date: event?.endDate,
               onChanged: (date) {
                 HapticFeedback.lightImpact();
 
-                endDate = date;
+                event?.endDate = date;
               },
             );
             await _showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              date: endDate,
+              date: event?.endDate,
               onChanged: (date) {
                 HapticFeedback.lightImpact();
-
-                endDate = date;
+                event?.endDate = date;
               },
             );
           },
@@ -404,6 +407,31 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget _buildImage() {
+    if (event?.image != null) {
+      return Container(
+        height: 260,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
+            image: NetworkImage(event!.image),
+          ),
+          color: kGrey,
+          borderRadius: const BorderRadius.all(
+            Radius.circular(kCardRadius),
+          ),
+        ),
+        child: TextButton(
+          onPressed: showBottomSheet,
+          style: kTextButtonStyle,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(kButtonRadius),
+            ),
+            child: Container(),
+          ),
+        ),
+      );
+    }
     if (image?.path != null) {
       return Container(
         height: 260,
@@ -517,6 +545,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
       backgroundColor: Colors.transparent,
+      title: const Text('Edit', style: kSFHeadLine3),
       leading: TextButton(
         child: kBackButton(context: context),
         onPressed: () {
@@ -525,20 +554,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         style: kTextButtonStyle,
       ),
       actions: [
-        _buildCreateButton(context: context),
+        TextButton(
+          style: kTextButtonStyle,
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
+          ),
+          onPressed: () async {},
+        ),
+        TextButton(
+          style: kTextButtonStyle,
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            child: const Text('Create', style: kSFBody),
+          ),
+          onPressed: () async {},
+        ),
       ],
-    );
-  }
-
-  Widget _buildCreateButton({required BuildContext context}) {
-    return TextButton(
-      style: kTextButtonStyle,
-      child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-        child: const Text('Create', style: kSFBodyBold),
-      ),
-      onPressed: () async {},
     );
   }
 }

@@ -258,7 +258,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   Widget _buildDoneBtn() {
     return Buttons.buildBtn(
       context: context,
-      color: isLoading ? kGrey : kBlue,
+      color: isLoading ? kDisabledColor : kBlue,
       width: double.infinity,
       btnText: 'Done',
       onPressed: isLoading ? null : submit,

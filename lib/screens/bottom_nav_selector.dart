@@ -14,7 +14,7 @@ class BottomNavSelectorPage extends StatefulWidget {
 }
 
 class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 3;
 
   final List<Widget> _screens = const [
     PodcastScreen(),
@@ -71,8 +71,8 @@ Widget _buildBottomNavBar({Function(int)? onTap, required int index}) {
         icon: Icons.format_quote_outlined,
       ),
       _buildBottomNavItem(
-        label: 'Profile',
-        icon: Icons.person_outline,
+        label: 'More',
+        icon: Icons.menu_outlined,
       ),
     ],
   );

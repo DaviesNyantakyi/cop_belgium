@@ -5,7 +5,7 @@ class Event {
   String description;
   String type;
   String image;
-  String? zoomLink;
+  String? link;
   Map<String, dynamic>? location;
 
   Event({
@@ -15,7 +15,7 @@ class Event {
     required this.description,
     required this.type,
     required this.image,
-    this.zoomLink,
+    this.link,
     this.location,
   });
 
@@ -27,7 +27,7 @@ class Event {
       'description': description,
       'type': type,
       'image': image,
-      'zoomLink': zoomLink,
+      'zoomLink': link,
     };
   }
 
@@ -39,7 +39,7 @@ class Event {
       description: map['description'] ?? '',
       type: map['type'] ?? '',
       image: map['image'] ?? '',
-      zoomLink: map['zoomLink'] ?? '',
+      link: map['zoomLink'] ?? '',
     );
   }
 }
