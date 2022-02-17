@@ -179,7 +179,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
 
   Future<void> _showBottomSheet(
       {required BuildContext context, required Podcast? podcast}) {
-    return showBottomSheet1(
+    return showNormalBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,

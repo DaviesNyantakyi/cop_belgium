@@ -95,7 +95,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
       );
     }
 
-    return showBottomSheet1(
+    return showNormalBottomSheet(
       context: context,
       child: SingleChildScrollView(
         child: Column(

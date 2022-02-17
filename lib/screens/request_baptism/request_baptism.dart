@@ -58,7 +58,7 @@ class RequestBatismScreen extends StatelessWidget {
                             const EdgeInsets.symmetric(vertical: kBodyPadding),
                         child: SizedBox(
                           width: double.infinity,
-                          child: Buttons.buildBtn(
+                          child: Buttons.buildButton(
                             context: context,
                             btnText: 'Send',
                             onPressed: () {},

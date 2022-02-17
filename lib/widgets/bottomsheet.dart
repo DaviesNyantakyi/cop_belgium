@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showBottomSheet1({
+Future<void> showNormalBottomSheet({
   required BuildContext context,
   Widget? child,
   bool? isDismissible = true,
@@ -40,7 +40,7 @@ Future<void> showBottomSheet1({
   );
 }
 
-Future<void> showBottomSheet2({
+Future<void> showSmallBottomSheet({
   required BuildContext context,
   Widget? child,
   double? height = 300,
@@ -70,7 +70,7 @@ Future<void> showBottomSheet2({
 }
 
 void loadMdFile({required BuildContext context, required String mdFile}) {
-  showBottomSheet1(
+  showNormalBottomSheet(
     context: context,
     child: SingleChildScrollView(
       child: FutureBuilder(

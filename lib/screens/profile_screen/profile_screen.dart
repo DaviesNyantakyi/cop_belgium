@@ -1,12 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/screens/profile_screen/edit_profile_screen.dart';
 import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/image_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreens extends StatefulWidget {
   static String profileScreens = 'profileScreens';
@@ -81,76 +82,49 @@ class _ProfileScreensState extends State<ProfileScreens>
     );
   }
 
-  Widget _buildProfilInfo({required BuildContext context}) {
-    final user = FirebaseAuth.instance.currentUser;
-    return Column(
-      children: [
-        _buildAvatar(),
-        const SizedBox(height: 10),
-        Text(
-          user?.displayName ?? '',
-          style: kSFBodyBold.copyWith(fontSize: 18),
-        ),
-        Text(
-          user?.email ?? '',
-          style: kSFCaption,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAvatar() {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user?.photoURL != null) {
-      return CircleAvatar(
-        backgroundImage: CachedNetworkImageProvider(user!.photoURL!),
-        radius: 50,
-        backgroundColor: kBlack,
-      );
-    }
-    return const CircleAvatar(
-      radius: 50,
-      backgroundColor: kBlack,
-      child: Icon(
-        Icons.person_outline_outlined,
-        color: Colors.white,
-      ),
-    );
-  }
-
   Widget _buildActions({required BuildContext context}) {
-    return Row(
-      children: [
-        TextButton(
-          style: kTextButtonStyle,
-          child: Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-            child: const Text('Edit profile', style: kSFBody),
-          ),
-          onPressed: () async {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const EditProfileScreen(),
+    return Consumer<ImageSelectorProvider>(
+      builder: (context, imageProvider, _) {
+        return Row(
+          children: [
+            TextButton(
+              style: kTextButtonStyle,
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+                child: const Text('Edit profile', style: kSFBody),
               ),
-            );
-          },
-        ),
-        TextButton(
-          style: kTextButtonStyle,
-          child: Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-            child: const Text('Logout', style: kSFBody),
-          ),
-          onPressed: () async {
-            await FirebaseAuth.instance.signOut();
-            Navigator.pop(context);
-          },
-        ),
-      ],
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => MultiProvider(
+                      providers: [
+                        ChangeNotifierProvider<ImageSelectorProvider>.value(
+                          value: imageProvider,
+                        ),
+                      ],
+                      child: const EditProfileScreen(),
+                    ),
+                  ),
+                );
+              },
+            ),
+            TextButton(
+              style: kTextButtonStyle,
+              child: Container(
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+                child: const Text('Logout', style: kSFBody),
+              ),
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

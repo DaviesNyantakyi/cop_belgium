@@ -358,7 +358,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
     required BuildContext context,
   }) {
     final episode = Provider.of<Episode>(context, listen: false);
-    return showBottomSheet1(
+    return showNormalBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -385,7 +385,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
 
   Future<void> _showPlayBackBottomSheet(
       {required BuildContext context, required AudioProvider audioProvider}) {
-    return showBottomSheet2(
+    return showSmallBottomSheet(
       context: context,
       child: Center(
         child: SingleChildScrollView(
@@ -457,7 +457,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
 
   Future<void> _showSleepTimerBottomSheet({required BuildContext context}) {
     double selectedDuration = 30;
-    return showBottomSheet2(
+    return showSmallBottomSheet(
       context: context,
       child: Center(
         child: SingleChildScrollView(
@@ -503,17 +503,17 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
     );
   }
 
-  Widget _sleepTimer() {
-    return IconButton(
-      tooltip: 'Sleep timer',
-      onPressed: () {
-        _showSleepTimerBottomSheet(context: context);
-      },
-      icon: Icon(
-        Icons.mode_night_outlined,
-        size: 30,
-        color: color,
-      ),
-    );
-  }
+  // Widget _sleepTimer() {
+  //   return IconButton(
+  //     tooltip: 'Sleep timer',
+  //     onPressed: () {
+  //       _showSleepTimerBottomSheet(context: context);
+  //     },
+  //     icon: Icon(
+  //       Icons.mode_night_outlined,
+  //       size: 30,
+  //       color: color,
+  //     ),
+  //   );
+  // }
 }

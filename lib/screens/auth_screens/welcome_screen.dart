@@ -1,4 +1,7 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
+import 'package:cop_belgium/utilities/image_selector.dart';
+import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +32,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                _buildLogo(),
+                const BuildCopLogo(),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.10),
                 _buildSocialButtons(),
                 const SizedBox(height: kButtonSpacing),
@@ -44,72 +47,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildLogo() {
-    return Image.asset(
-      'assets/images/logos/cop_logo.jpg',
-      width: 120,
-    );
-  }
-
-  Widget _buildSocialButtons() {
-    return Column(
-      children: [
-        Buttons.buildSocialBtn(
-          context: context,
-          icon: const Icon(
-            Icons.email_outlined,
-            color: kBlack,
-          ),
-          label: const Text(
-            'Continue with Email',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {
-            final signUpProvider =
-                Provider.of<SignUpProvider>(context, listen: false);
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => ChangeNotifierProvider.value(
-                  value: signUpProvider,
-                  child: const SignUpScreen(),
-                ),
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: kTextFieldSpacing),
-        Buttons.buildSocialBtn(
-          context: context,
-          icon: Image.asset(
-            'assets/images/logos/google.png',
-            width: kIconSize,
-          ),
-          label: const Text(
-            'Continue with Google',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {},
-        ),
-        const SizedBox(height: kTextFieldSpacing),
-        Buttons.buildSocialBtn(
-          context: context,
-          icon: Image.asset(
-            'assets/images/logos/apple.png',
-            width: kIconSize,
-          ),
-          label: const Text(
-            'Continue with Apple',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
   Widget _buildLogInButton() {
-    return Buttons.buildBtn(
+    return Buttons.buildButton(
       context: context,
       btnText: 'Log in',
       onPressed: () {
@@ -122,6 +61,48 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       },
       width: double.infinity,
       fontColor: Colors.white,
+    );
+  }
+
+  Widget _buildSocialButtons() {
+    return Column(
+      children: [
+        Buttons.buildSocialButton(
+          context: context,
+          icon: const Icon(
+            Icons.email_outlined,
+            color: kBlack,
+          ),
+          label: const Text(
+            'Continue with Email',
+            style: kSFBtnStyleBold,
+          ),
+          onPressed: () {
+            final signUpProvider =
+                Provider.of<SignUpProvider>(context, listen: false);
+            final imageSelector =
+                Provider.of<ImageSelectorProvider>(context, listen: false);
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<SignUpProvider>.value(
+                      value: signUpProvider,
+                    ),
+                    ChangeNotifierProvider<ImageSelectorProvider>.value(
+                      value: imageSelector,
+                    )
+                  ],
+                  child: const SignUpScreen(),
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: kTextFieldSpacing),
+        const BuildSocialSignupButtons()
+      ],
     );
   }
 

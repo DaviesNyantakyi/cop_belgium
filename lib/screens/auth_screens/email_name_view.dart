@@ -90,7 +90,7 @@ class _EmailNameViewState extends State<EmailNameView> {
                 errorText: Provider.of<SignUpProvider>(context).emailErrorText,
               ),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,

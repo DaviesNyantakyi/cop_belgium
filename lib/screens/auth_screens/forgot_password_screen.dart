@@ -119,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildSendButton() {
-    return Buttons.buildBtn(
+    return Buttons.buildButton(
       context: context,
       color: isLoading ? kDisabledColor : kBlue,
       btnText: 'Send',

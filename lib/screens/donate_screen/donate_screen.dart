@@ -30,7 +30,7 @@ class DonateScreen extends StatelessWidget {
                   Expanded(child: Container(height: 90)),
                   Padding(
                     padding: const EdgeInsets.all(kBodyPadding),
-                    child: Buttons.buildBtn(
+                    child: Buttons.buildButton(
                       width: double.infinity,
                       context: context,
                       btnText: 'Continue',

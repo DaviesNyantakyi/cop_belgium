@@ -1,24 +1,22 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
+import 'package:cop_belgium/utilities/image_selector.dart';
 import 'package:cop_belgium/utilities/validators.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/buttons.dart';
+
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 // TODO: if the user information is the same do not update information
 // TODO: ask for permision gallary and camera (check whatsaap process)
@@ -44,6 +42,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   String? passwordErrorText;
   String? birthDateErrorText;
   String? genderErrorText;
+  DateTime? birthDate;
 
   bool? isAdimin;
 
@@ -54,17 +53,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController emailCntlr = TextEditingController();
   TextEditingController passwordCntlr = TextEditingController();
   TextEditingController genderCntlr = TextEditingController();
-  DateTime? birthDate;
 
-  final ImagePicker _picker = ImagePicker();
+  late final ImageSelectorProvider imageSelector;
 
-  File? image;
+  DatePicker datePicker = DatePicker();
 
   @override
   void initState() {
-    super.initState();
+    imageSelector = Provider.of<ImageSelectorProvider>(context, listen: false);
 
     initUserInfo();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    imageSelector.close();
+    super.dispose();
   }
 
   Future<void> initUserInfo() async {
@@ -275,9 +281,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAvatar() {
+    final image =
+        Provider.of<ImageSelectorProvider>(context, listen: true).image;
     if (image != null) {
       return CircleAvatar(
-        backgroundImage: Image.file(image!).image,
+        backgroundImage: Image.file(image).image,
         radius: 60,
         backgroundColor: kBlueLight,
         child: TextButton(
@@ -292,8 +300,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await showBottomSheet();
-            setState(() {});
+            await Provider.of<ImageSelectorProvider>(context, listen: false)
+                .showSelectionSheet(context: context);
           },
         ),
       );
@@ -315,7 +323,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await showBottomSheet();
+            await Provider.of<ImageSelectorProvider>(context, listen: false)
+                .showSelectionSheet(context: context);
           },
         ),
       );
@@ -336,7 +345,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: kBlack,
             ),
             onPressed: () async {
-              await showBottomSheet();
+              await Provider.of<ImageSelectorProvider>(context, listen: false)
+                  .showSelectionSheet(context: context);
             },
           ),
         ),
@@ -389,7 +399,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           child: TextButton(
-            onPressed: showDatePicker,
             style: kTextButtonStyle,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -404,21 +413,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         size: kIconSize,
                       ),
                       const SizedBox(width: 10),
-                      Text(
-                        birthDate == null
-                            ? FormalDates.formatDmyyyy(date: DateTime.now())
-                            : FormalDates.formatDmyyyy(date: birthDate),
-                        style: kSFTextFieldStyle.copyWith(
-                          fontWeight: birthDate == null
-                              ? FontWeight.normal
-                              : FontWeight.bold,
-                        ),
-                      ),
+                      _buildBirthDateText()
                     ],
                   ),
                 ],
               ),
             ),
+            onPressed: () async {
+              datePicker.showDatePicker(
+                initialDate: DateTime.now(),
+                mode: CupertinoDatePickerMode.date,
+                context: context,
+                onChanged: (date) {
+                  birthDate = date;
+                },
+              );
+            },
           ),
         ),
         _buildBirthDateErrorText()
@@ -426,42 +436,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Future<void> pickImage({required String type}) async {
-    final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
-    try {
-      final pickedImage = await _picker.pickImage(source: source);
-
-      File? croppedImage = await ImageCropper.cropImage(
-        sourcePath: pickedImage!.path,
-        aspectRatioPresets: [
-          CropAspectRatioPreset.square,
-          CropAspectRatioPreset.ratio3x2,
-          CropAspectRatioPreset.original,
-          CropAspectRatioPreset.ratio4x3,
-          CropAspectRatioPreset.ratio16x9
-        ],
-        androidUiSettings: const AndroidUiSettings(
-          toolbarTitle: 'Cropper',
-          toolbarColor: kBlack,
-          toolbarWidgetColor: Colors.white,
-          initAspectRatio: CropAspectRatioPreset.original,
-          lockAspectRatio: false,
-        ),
-        iosUiSettings: const IOSUiSettings(
-          minimumAspectRatio: 1.0,
-        ),
-      );
-
-      if (croppedImage != null) {
-        setState(() {
-          image = File(croppedImage.path);
-        });
-      }
-
-      Navigator.pop(context);
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
-    }
+  Widget _buildBirthDateText() {
+    return Text(
+      birthDate == null
+          ? FormalDates.formatDmyyyy(date: DateTime.now())
+          : FormalDates.formatDmyyyy(date: birthDate),
+      style: kSFTextFieldStyle.copyWith(
+        fontWeight: birthDate == null ? FontWeight.normal : FontWeight.bold,
+      ),
+    );
   }
 
   Widget _buildForm() {
@@ -557,53 +540,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           style: kSFCaption.copyWith(color: kRed),
         )
       ],
-    );
-  }
-
-  Future<void> showDatePicker() async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    await showBottomSheet1(
-      isDismissible: false,
-      context: context,
-      height: 300,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: 200,
-              child: Theme(
-                data: ThemeData(),
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: birthDate,
-                  maximumDate: kMaxDate,
-                  minimumDate: kMinDate,
-                  minimumYear: kMinDate.year,
-                  maximumYear: kMaxDate.year,
-                  onDateTimeChanged: (date) {
-                    HapticFeedback.lightImpact();
-                    birthDate = date;
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                ),
-              ),
-            ),
-            Buttons.buildBtn(
-              context: context,
-              btnText: 'Done',
-              height: kButtonHeight,
-              width: double.infinity,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -708,73 +644,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: Text(
             btText,
             style: kSFBody.copyWith(color: textColor),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> showBottomSheet() async {
-    await showBottomSheet2(
-      height: 170,
-      context: context,
-      child: Material(
-        child: SizedBox(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'camera');
-                  },
-                  leading: const Icon(
-                    Icons.photo_camera_outlined,
-                    color: kBlack,
-                    size: kIconSize,
-                  ),
-                  title: const Text(
-                    'Camera',
-                    style: kSFBody,
-                  ),
-                ),
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'gallery');
-                  },
-                  leading: const Icon(
-                    Icons.collections_outlined,
-                    color: kBlack,
-                    size: kIconSize,
-                  ),
-                  title: const Text(
-                    'Gallery',
-                    style: kSFBody,
-                  ),
-                ),
-                image != null || photoUrl != null
-                    ? ListTile(
-                        onTap: () async {
-                          image = null;
-                          photoUrl = null;
-
-                          //TODO: add delete photoUrl
-                          setState(() {});
-                          Navigator.pop(context);
-                        },
-                        leading: const Icon(
-                          Icons.delete_outline_outlined,
-                          color: kRed,
-                          size: kIconSize,
-                        ),
-                        title: Text(
-                          'Delete',
-                          style: kSFBody.copyWith(color: kRed),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
           ),
         ),
       ),

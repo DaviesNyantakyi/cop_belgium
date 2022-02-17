@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -19,6 +20,7 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   final ImagePicker _picker = ImagePicker();
+  DatePicker datePicker = DatePicker();
 
   String? eventType = 'normal';
 
@@ -96,50 +98,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Future<void> _showDatePicker({
-    required CupertinoDatePickerMode mode,
-    required Function(DateTime) onChanged,
-    DateTime? date,
-  }) async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    await showBottomSheet1(
-      isDismissible: false,
-      context: context,
-      enableDrag: false,
-      height: 300,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 200,
-            child: Theme(
-              data: ThemeData(),
-              child: CupertinoDatePicker(
-                mode: mode,
-                initialDateTime: date ?? DateTime.now(),
-                maximumDate: kMaxDate,
-                minimumDate: kMinDate,
-                minimumYear: kMinDate.year,
-                maximumYear: kMaxDate.year,
-                onDateTimeChanged: onChanged,
-                use24hFormat: true,
-              ),
-            ),
-          ),
-          Buttons.buildBtn(
-            context: context,
-            btnText: 'Done',
-            height: kButtonHeight,
-            width: double.infinity,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
       ),
     );
   }
@@ -308,25 +266,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
               ? Text(FormalDates.formatHm(date: startDate))
               : Text(FormalDates.formatHm(date: DateTime.now())),
           onTap: () async {
-            await _showDatePicker(
+            await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              date: startDate,
+              initialDate: startDate ?? DateTime.now(),
+              context: context,
               onChanged: (date) {
-                HapticFeedback.lightImpact();
-
                 startDate = date;
-                if (mounted) {
-                  setState(() {});
-                }
               },
             );
-
-            await _showDatePicker(
+            await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              date: startDate,
+              initialDate: startDate!,
+              context: context,
               onChanged: (date) {
-                HapticFeedback.lightImpact();
-
                 startDate = date;
               },
             );
@@ -355,21 +307,19 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   ),
                 )),
           onTap: () async {
-            await _showDatePicker(
+            await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              date: endDate,
+              initialDate: endDate ?? DateTime.now(),
+              context: context,
               onChanged: (date) {
-                HapticFeedback.lightImpact();
-
                 endDate = date;
               },
             );
-            await _showDatePicker(
+            await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              date: endDate,
+              initialDate: endDate!,
+              context: context,
               onChanged: (date) {
-                HapticFeedback.lightImpact();
-
                 endDate = date;
               },
             );
@@ -454,7 +404,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Future<void> showBottomSheet() async {
-    await showBottomSheet2(
+    await showSmallBottomSheet(
       height: 170,
       context: context,
       child: Material(

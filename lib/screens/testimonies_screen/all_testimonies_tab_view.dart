@@ -95,7 +95,7 @@ Future<void> _showBottomSheet({
     );
   }
 
-  return showBottomSheet1(
+  return showNormalBottomSheet(
     context: context,
     child: SingleChildScrollView(
       child: Column(

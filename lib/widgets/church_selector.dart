@@ -91,7 +91,7 @@ class _DistrictSelectorViewState extends State<DistrictSelectorView> {
                 },
               ),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
@@ -159,7 +159,7 @@ class _CitySelectorViewState extends State<CitySelectorView> {
                 },
               ),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
@@ -247,7 +247,7 @@ class _AssemblySelectorViewState extends State<AssemblySelectorView> {
                 },
               ),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Done',
                 width: double.infinity,

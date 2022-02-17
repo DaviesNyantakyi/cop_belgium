@@ -1,3 +1,4 @@
+import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -110,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: kButtonSpacing),
                 _buildDivderText(),
                 const SizedBox(height: kButtonSpacing),
-                _buildSocialButtons(),
+                const BuildSocialSignupButtons()
               ],
             ),
           ),
@@ -119,40 +120,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialButtons() {
-    return Column(
-      children: [
-        Buttons.buildSocialBtn(
-          context: context,
-          icon: Image.asset(
-            'assets/images/logos/google.png',
-            width: kIconSize,
-          ),
-          label: const Text(
-            'Continue with Google',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {},
-        ),
-        const SizedBox(height: kTextFieldSpacing),
-        Buttons.buildSocialBtn(
-          context: context,
-          icon: Image.asset(
-            'assets/images/logos/apple.png',
-            width: kIconSize,
-          ),
-          label: const Text(
-            'Continue with Apple',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
   Widget _buildLogInBtn() {
-    return Buttons.buildBtn(
+    return Buttons.buildButton(
       context: context,
       color: isLoading ? kDisabledColor : kBlue,
       btnText: 'Log in',

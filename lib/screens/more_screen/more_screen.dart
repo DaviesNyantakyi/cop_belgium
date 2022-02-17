@@ -5,6 +5,7 @@ import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/image_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +136,6 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Widget _buildAccountInfo() {
     final user = FirebaseAuth.instance.currentUser;
-    //TODO: Display name does not show when user registers
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,35 +154,42 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildProfileTile() {
-    return TextButton(
-      style: kTextButtonStyle.copyWith(
-        overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
-      ),
-      onPressed: () async {
-        final audioProvider = Provider.of<AudioProvider>(
-          context,
-          listen: false,
-        );
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => ChangeNotifierProvider<AudioProvider>.value(
-              value: audioProvider,
-              child: const ProfileScreens(),
+    return Consumer2<AudioProvider, ImageSelectorProvider>(
+      builder: (context, audioProvider, imageSelector, _) {
+        return TextButton(
+          style: kTextButtonStyle.copyWith(
+            overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
+          ),
+          onPressed: () async {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<AudioProvider>.value(
+                      value: audioProvider,
+                    ),
+                    ChangeNotifierProvider<ImageSelectorProvider>.value(
+                      value: imageSelector,
+                    ),
+                  ],
+                  child: const ProfileScreens(),
+                ),
+              ),
+            );
+          },
+          child: SizedBox(
+            height: 100,
+            child: Row(
+              children: [
+                _buildAvatar(),
+                const SizedBox(width: 15),
+                _buildAccountInfo(),
+              ],
             ),
           ),
         );
       },
-      child: SizedBox(
-        height: 100,
-        child: Row(
-          children: [
-            _buildAvatar(),
-            const SizedBox(width: 15),
-            _buildAccountInfo(),
-          ],
-        ),
-      ),
     );
   }
 }

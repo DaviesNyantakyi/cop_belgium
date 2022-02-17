@@ -17,7 +17,6 @@ class PresetFastingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int day = 24;
     return Container(
       width: _size,
       height: _size,

@@ -17,11 +17,6 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),

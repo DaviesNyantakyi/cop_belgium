@@ -155,6 +155,7 @@ const double kButtonHeight = 50;
 
 const double kButtonWidth = 100;
 
+const double kImageSize = 120;
 const double kButtonRadius = 5;
 const double kCardRadius = 5;
 const double kTextFieldSpacing = 12;

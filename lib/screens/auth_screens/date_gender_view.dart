@@ -1,4 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -25,6 +26,8 @@ class _DateGenderViewState extends State<DateGenderView> {
 
   String? birthDateErrorText;
 
+  DatePicker datePicker = DatePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +46,7 @@ class _DateGenderViewState extends State<DateGenderView> {
               const SizedBox(height: kButtonSpacing),
               _buildBirthdayPicker(),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
@@ -140,7 +143,18 @@ class _DateGenderViewState extends State<DateGenderView> {
             ),
           ),
           child: TextButton(
-            onPressed: showDatePicker,
+            onPressed: () async {
+              final date = DateTime.now();
+              await datePicker.showDatePicker(
+                initialDate: birthDate ?? date,
+                maxDate: date,
+                mode: CupertinoDatePickerMode.date,
+                context: context,
+                onChanged: (date) {
+                  birthDate = date;
+                },
+              );
+            },
             style: kTextButtonStyle,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -174,56 +188,6 @@ class _DateGenderViewState extends State<DateGenderView> {
         ),
         _buildBirthDateErrorText()
       ],
-    );
-  }
-
-  Future<void> showDatePicker() async {
-    FocusScope.of(context).requestFocus(FocusNode());
-    await showBottomSheet1(
-      isDismissible: false,
-      isScrollControlled: false,
-      enableDrag: false,
-      context: context,
-      height: 300,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: 200,
-              child: Theme(
-                data: ThemeData(),
-                child: CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: birthDate ?? DateTime.now(),
-                  maximumDate: DateTime.now(),
-                  minimumDate: DateTime(1900, 01, 31),
-                  minimumYear: 1900,
-                  maximumYear: DateTime.now().year,
-                  onDateTimeChanged: (date) {
-                    HapticFeedback.lightImpact();
-
-                    birthDate = date;
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                ),
-              ),
-            ),
-            Buttons.buildBtn(
-              context: context,
-              btnText: 'Done',
-              height: kButtonHeight,
-              width: double.infinity,
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 

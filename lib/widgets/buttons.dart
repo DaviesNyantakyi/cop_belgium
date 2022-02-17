@@ -2,7 +2,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
 class Buttons {
-  static Widget buildBtn({
+  static Widget buildButton({
     required BuildContext context,
     required String btnText,
     Color color = kBlue,
@@ -35,7 +35,7 @@ class Buttons {
     );
   }
 
-  static Widget buildSocialBtn({
+  static Widget buildSocialButton({
     required BuildContext context,
     Color color = Colors.transparent,
     Color fontColor = kBlack,

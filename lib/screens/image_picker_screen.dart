@@ -1,8 +1,5 @@
-import 'dart:io';
-
-import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/utilities/image_selector.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/church_selector.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
@@ -11,9 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 // TODO: ask for permision gallary and camera (check whatsaap process)
 
 class ImagePickerScreen extends StatefulWidget {
@@ -24,63 +19,11 @@ class ImagePickerScreen extends StatefulWidget {
 }
 
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  final ImagePicker _picker = ImagePicker();
-  final _connectionChecker = ConnectionChecker();
-
-  File? image;
   bool isLoading = false;
 
+  late final ImageSelectorProvider imageSelector;
+
   TextStyle fontStyle = kSFBody;
-
-  Future<void> pickImage({required String type}) async {
-    final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
-    try {
-      bool hasConnection = await _connectionChecker.checkConnection();
-      final pickedImage = await _picker.pickImage(source: source);
-      if (hasConnection) {
-        if (pickedImage != null) {
-          image = File(pickedImage.path);
-
-          File? croppedImage = await ImageCropper.cropImage(
-            sourcePath: image!.path,
-            aspectRatioPresets: [
-              CropAspectRatioPreset.square,
-              CropAspectRatioPreset.ratio3x2,
-              CropAspectRatioPreset.original,
-              CropAspectRatioPreset.ratio4x3,
-              CropAspectRatioPreset.ratio16x9
-            ],
-            androidUiSettings: const AndroidUiSettings(
-              toolbarTitle: 'Cropper',
-              toolbarColor: kBlack,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: false,
-            ),
-            iosUiSettings: const IOSUiSettings(
-              minimumAspectRatio: 1.0,
-            ),
-          );
-
-          if (mounted) {
-            setState(() {
-              image = croppedImage;
-            });
-          }
-        }
-      } else {
-        kshowSnackbar(
-          context: context,
-          errorType: 'normal',
-          text: ConnectionChecker.connectionException.message!,
-        );
-      }
-
-      Navigator.pop(context);
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
-    }
-  }
 
   Future<void> submit() async {
     try {
@@ -102,10 +45,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       // Navigator.pop(context);
 
       Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const ChurchSelectorScreen(),
-          ));
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const ChurchSelectorScreen(),
+        ),
+      );
     } on FirebaseException catch (e) {
       await EaslyLoadingIndicator.dismissLoading();
       debugPrint(e.toString());
@@ -124,6 +68,18 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
       }
       await EaslyLoadingIndicator.dismissLoading();
     }
+  }
+
+  @override
+  void dispose() {
+    imageSelector.close();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    imageSelector = Provider.of<ImageSelectorProvider>(context, listen: false);
+    super.initState();
   }
 
   @override
@@ -150,11 +106,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
 
   Widget _buildImage() {
-    if (image?.path != null) {
+    if (Provider.of<ImageSelectorProvider>(context).image?.path != null) {
       return CircleAvatar(
         radius: 90,
         backgroundImage: Image.file(
-          image!,
+          Provider.of<ImageSelectorProvider>(context).image!,
           fit: BoxFit.cover,
         ).image,
         backgroundColor: kBlueLight,
@@ -163,7 +119,10 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
             Radius.circular(100),
           ),
           child: TextButton(
-            onPressed: showBottomSheet,
+            onPressed: () async {
+              await Provider.of<ImageSelectorProvider>(context, listen: false)
+                  .showSelectionSheet(context: context);
+            },
             style: kTextButtonStyle,
             child: Container(),
           ),
@@ -178,77 +137,13 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           Radius.circular(100),
         ),
         child: TextButton(
-          onPressed: showBottomSheet,
+          onPressed: () async {
+            await Provider.of<ImageSelectorProvider>(context, listen: false)
+                .showSelectionSheet(context: context);
+          },
           style: kTextButtonStyle,
           child: const Center(
-            child: Icon(
-              Icons.photo_camera_outlined,
-              color: kBlack,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> showBottomSheet() async {
-    await showBottomSheet2(
-      height: kPickerBottomSheetHeight,
-      context: context,
-      child: Material(
-        child: SizedBox(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'camera');
-                  },
-                  leading: const Icon(
-                    Icons.photo_camera_outlined,
-                    color: kBlack,
-                    size: kIconSize,
-                  ),
-                  title: Text(
-                    'Camera',
-                    style: fontStyle,
-                  ),
-                ),
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'gallery');
-                  },
-                  leading: const Icon(
-                    Icons.collections_outlined,
-                    color: kBlack,
-                    size: kIconSize,
-                  ),
-                  title: Text(
-                    'Gallery',
-                    style: fontStyle,
-                  ),
-                ),
-                image != null
-                    ? ListTile(
-                        onTap: () async {
-                          image = null;
-                          setState(() {});
-                          Navigator.pop(context);
-                        },
-                        leading: const Icon(
-                          Icons.delete_outline,
-                          color: kRed,
-                          size: kIconSize,
-                        ),
-                        title: Text(
-                          'Delete',
-                          style: fontStyle.copyWith(color: kRed),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
+            child: Icon(Icons.photo_camera_outlined, color: kBlack),
           ),
         ),
       ),
@@ -256,7 +151,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   }
 
   Widget _buildDoneBtn() {
-    return Buttons.buildBtn(
+    return Buttons.buildButton(
       context: context,
       color: isLoading ? kDisabledColor : kBlue,
       width: double.infinity,

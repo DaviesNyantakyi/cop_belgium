@@ -344,7 +344,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
     required String chapter,
     required String verse,
   }) {
-    return showBottomSheet1(
+    return showNormalBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,

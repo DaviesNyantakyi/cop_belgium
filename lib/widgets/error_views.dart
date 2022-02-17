@@ -33,7 +33,7 @@ class TryAgainView extends StatelessWidget {
                 child: Text('Something went wrong.', style: kSFBody)),
             const Flexible(child: SizedBox(height: 30)),
             Flexible(
-              child: Buttons.buildBtn(
+              child: Buttons.buildButton(
                 width: double.infinity,
                 color: btnColor,
                 context: context,

@@ -107,7 +107,7 @@ class _PasswordViewState extends State<PasswordView> {
               ),
               ErrorTextWidget(errorText: passField1ErrorText),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildBtn(
+              Buttons.buildButton(
                 context: context,
                 btnText: 'Continue',
                 width: double.infinity,
