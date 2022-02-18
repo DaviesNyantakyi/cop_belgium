@@ -10,15 +10,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class CreateFastingScreen extends StatefulWidget {
-  static String createFastingScreens = 'createFastingScreens';
-  const CreateFastingScreen({Key? key}) : super(key: key);
+class FastingScreen extends StatefulWidget {
+  static String fastingScreen = 'fastingScreen';
+  const FastingScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreateFastingScreen> createState() => _CreateFastingScreenState();
+  State<FastingScreen> createState() => _FastingScreenState();
 }
 
-class _CreateFastingScreenState extends State<CreateFastingScreen> {
+class _FastingScreenState extends State<FastingScreen> {
   User? auth = FirebaseAuth.instance.currentUser;
   int peopleFasting = 0;
 
@@ -209,10 +209,7 @@ class _FastingPickerState extends State<FastingPicker> {
                     },
                   ),
                 ),
-                const Text(
-                  'Days',
-                  style: kSFHeadLine2,
-                ),
+                const Text('Days', style: kSFHeadLine2),
               ],
             ),
             Row(

@@ -106,7 +106,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             await resetPassword();
           },
         ),
-        ErrorTextWidget(errorText: emailErrorText)
       ],
     );
   }

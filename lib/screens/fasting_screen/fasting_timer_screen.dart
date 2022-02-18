@@ -1,5 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_details_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/services/cloud_firestore.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -71,20 +72,11 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
                     children: [
                       _buildHeader(people: peopleFasting),
                       const SizedBox(height: 30),
-                      Stack(
-                        children: [
-                          const Positioned(
-                            top: 65,
-                            right: 65,
-                            child: Text('Remaining 40%', style: kSFBody),
-                          ),
-                          _buildTimer(context),
-                        ],
-                      ),
+                      _buildTimer(context),
                       const SizedBox(height: 30),
                       _buildStartEndDate(),
                       const SizedBox(height: 23),
-                      _buildstartEndBtn()
+                      _buildStartEndButton()
                     ],
                   ),
                 ),
@@ -155,23 +147,37 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   }
 
   Widget _buildTimer(BuildContext context) {
-    return CircularCountDownTimer(
-      initialDuration: 0,
-      controller: _controller,
-      width: 240,
-      height: 240,
-      duration: fastingInfo!.duration.inSeconds,
-      isReverse: true,
-      strokeWidth: 20,
-      fillColor: isFasting == true ? kGreen : Colors.grey.shade300,
-      ringColor: Colors.grey.shade300,
-      strokeCap: StrokeCap.round,
-      textFormat: CountdownTextFormat.HH_MM_SS,
-      textStyle: kSFHeadLine1,
-      autoStart: false,
-      onComplete: () async {
-        await submitFast();
-      },
+    return Stack(
+      children: [
+        const Positioned(
+          top: 65,
+          right: 65,
+          child: Text('Remaining 40%', style: kSFBody),
+        ),
+        CircularCountDownTimer(
+          initialDuration: 0,
+          controller: _controller,
+          width: 240,
+          height: 240,
+          duration: fastingInfo!.duration.inSeconds,
+          isReverse: true,
+          strokeWidth: 20,
+          fillColor: isFasting == true ? kGreen : Colors.grey.shade300,
+          ringColor: Colors.grey.shade300,
+          strokeCap: StrokeCap.round,
+          textFormat: CountdownTextFormat.HH_MM_SS,
+          textStyle: kSFHeadLine1,
+          autoStart: false,
+          onComplete: () async {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const FastingDetailsScreen(),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -189,29 +195,13 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
     });
 
     try {
-      String? result = await _showSaveConformationAlert();
-
-      if (result == 'save') {
-        await CloudFireStore().createFastHistory(fInfo: fastingInfo!);
-        await Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const FastingHistoryScreen(),
-          ),
-        );
-      }
-
-      if (result == 'delete') {
-        Navigator.pop(context);
-      }
-
-      if (result == null) {
-        _controller.resume();
-        setState(() {
-          peopleFasting++;
-          isFasting = true;
-        });
-      }
+      await CloudFireStore().createFastHistory(fInfo: fastingInfo!);
+      await Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const FastingHistoryScreen(),
+        ),
+      );
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
     }
@@ -226,7 +216,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
     });
   }
 
-  Widget _buildstartEndBtn() {
+  Widget _buildStartEndButton() {
     return SizedBox(
       width: double.infinity,
       height: 48,
@@ -246,41 +236,19 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
             // isnot started fasting
             startFasting();
           } else {
-            await submitFast();
+            _controller.pause();
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const FastingDetailsScreen(),
+              ),
+            );
           }
         },
         child: Text(
           !isFasting ? 'Start fasting' : 'End fast early',
           style: kSFBodyBold.copyWith(color: Colors.white),
         ),
-      ),
-    );
-  }
-
-  Future<String?> _showSaveConformationAlert() async {
-    return await showDialog<String?>(
-      barrierDismissible: true,
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(
-          'You completed your fast!',
-          style: kSFBodyBold,
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'delete'),
-            child: const Text('Delete', style: kSFBody),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'save'),
-            child: const Text('Save', style: kSFBody),
-          ),
-        ],
       ),
     );
   }

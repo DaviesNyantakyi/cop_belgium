@@ -50,7 +50,7 @@ class _MoreScreenState extends State<MoreScreen> {
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => const CreateFastingScreen(),
+                builder: (context) => const FastingScreen(),
               ),
             );
           },

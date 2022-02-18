@@ -18,7 +18,7 @@ class FormalDates {
   }
 
   static String formatEDmyyyyHm({required DateTime? date}) {
-    // Wed, 26 Jan 22
+    // Wed, 26 Jan 2022 - 21:00
     return date!.format('E, dd MMM yyyy - hh:mm');
   }
 

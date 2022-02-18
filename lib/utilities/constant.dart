@@ -182,6 +182,12 @@ const kProgressIndicator = CircularProgressIndicator(
   color: kBlack,
 );
 
+const kTextFieldOutlined = OutlineInputBorder(
+  borderRadius: BorderRadius.all(
+    Radius.circular(10),
+  ),
+);
+
 DateTime kMaxDate = DateTime(2050, 12, 31);
 DateTime kMinDate = DateTime(1900, 01, 31);
 

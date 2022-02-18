@@ -1,6 +1,7 @@
 import 'package:cop_belgium/models/testimony_model.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/textfiel.dart';
 
 import 'package:flutter/material.dart';
 
@@ -79,18 +80,13 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     TextStyle? style,
     TextEditingController? controller,
   }) {
-    return TextFormField(
+    return MyTextField(
       controller: controller,
-      style: style,
-      minLines: 1,
-      cursorWidth: 3,
-      cursorColor: kBlack,
+      hintText: hintText,
       maxLines: null,
       keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        hintText: hintText,
-        border: InputBorder.none,
-      ),
+      fillColor: Colors.transparent,
+      style: style,
     );
   }
 

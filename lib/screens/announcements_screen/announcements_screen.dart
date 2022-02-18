@@ -1,6 +1,7 @@
 import 'package:cop_belgium/models/announcement_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 
@@ -79,7 +80,15 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
               alignment: Alignment.centerLeft,
               child: Text(
                 announcement.title,
-                style: kSFHeadLine2,
+                style: kSFHeadLine3,
+              ),
+            ),
+            const SizedBox(height: kTextFieldSpacing),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                FormalDates.formatEDmyyyyHm(date: announcement.dateTime),
+                style: kSFCaption,
               ),
             ),
             const SizedBox(height: 16),

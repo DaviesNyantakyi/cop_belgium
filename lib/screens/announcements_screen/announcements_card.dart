@@ -54,9 +54,9 @@ class AnnouncementsCard extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: kTextFieldSpacing),
               _buildDate(),
-              const SizedBox(height: 15),
+              const SizedBox(height: 14),
               Text(
                 announcement.description,
                 style: kSFBody,

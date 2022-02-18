@@ -128,7 +128,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
       elevation: 1,
       title: const Text(
         'Fasting History',
-        style: kSFBodyBold,
+        style: kSFHeadLine3,
       ),
       leading: TextButton(
         child: const Padding(
@@ -136,11 +136,11 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
           child: Icon(
             Icons.chevron_left_outlined,
             color: kBlack,
+            size: 35,
           ),
         ),
         onPressed: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
+          Navigator.of(context)..pop()..pop();
         },
         style: kTextButtonStyle,
       ),

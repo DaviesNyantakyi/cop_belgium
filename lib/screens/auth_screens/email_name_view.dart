@@ -1,6 +1,5 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
@@ -17,18 +16,10 @@ class _EmailNameViewState extends State<EmailNameView> {
   Future<void> onSubmit() async {
     FocusScope.of(context).unfocus();
 
-    validForm();
-
     await Provider.of<PageController>(context, listen: false).nextPage(
       duration: const Duration(milliseconds: 800),
       curve: Curves.easeOutExpo,
     );
-  }
-
-  bool validForm() {
-    bool isValid = false;
-
-    return isValid;
   }
 
   @override
@@ -45,61 +36,57 @@ class _EmailNameViewState extends State<EmailNameView> {
             children: [
               _buildInstuctionText(),
               const SizedBox(height: kButtonSpacing),
-              MyTextField(
-                controller: Provider.of<SignUpProvider>(context).firstNameCntlr,
-                hintText: 'First Name',
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  Provider.of<SignUpProvider>(context, listen: false)
-                      .validateName(firstName: value);
-                },
-              ),
-              ErrorTextWidget(
-                errorText:
-                    Provider.of<SignUpProvider>(context).firstNameErrorText,
-              ),
+              _buildFirstName(),
               const SizedBox(height: kTextFieldSpacing),
-              MyTextField(
-                controller: Provider.of<SignUpProvider>(context).lastNameCntlr,
-                hintText: 'Last Name',
-                textInputAction: TextInputAction.next,
-                onChanged: (value) {
-                  Provider.of<SignUpProvider>(context, listen: false)
-                      .validateName(lastName: value);
-                },
-              ),
-              ErrorTextWidget(
-                errorText:
-                    Provider.of<SignUpProvider>(context).lastNameErrorText,
-              ),
+              _buildLastName(),
               const SizedBox(height: kTextFieldSpacing),
-              MyTextField(
-                controller: Provider.of<SignUpProvider>(context).emailCntlr,
-                hintText: 'Email',
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.done,
-                onChanged: (value) {
-                  Provider.of<SignUpProvider>(context, listen: false)
-                      .validateEmail(email: value);
-                },
-                onSubmitted: (value) async {
-                  await onSubmit();
-                },
-              ),
-              ErrorTextWidget(
-                errorText: Provider.of<SignUpProvider>(context).emailErrorText,
-              ),
+              _buildEmail(),
               const SizedBox(height: kButtonSpacing),
-              Buttons.buildButton(
-                context: context,
-                btnText: 'Continue',
-                width: double.infinity,
-                onPressed: onSubmit,
-              )
+              _buildContinueButton()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildContinueButton() {
+    return Buttons.buildButton(
+      context: context,
+      btnText: 'Continue',
+      width: double.infinity,
+      onPressed: onSubmit,
+    );
+  }
+
+  Widget _buildEmail() {
+    return MyTextField(
+      controller: Provider.of<SignUpProvider>(context).emailCntlr,
+      hintText: 'Email',
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done,
+      onChanged: (value) {},
+      onSubmitted: (value) async {
+        await onSubmit();
+      },
+    );
+  }
+
+  Widget _buildLastName() {
+    return MyTextField(
+      controller: Provider.of<SignUpProvider>(context).lastNameCntlr,
+      hintText: 'Last Name',
+      textInputAction: TextInputAction.next,
+      onChanged: (value) {},
+    );
+  }
+
+  Widget _buildFirstName() {
+    return MyTextField(
+      controller: Provider.of<SignUpProvider>(context).firstNameCntlr,
+      hintText: 'First Name',
+      textInputAction: TextInputAction.next,
+      onChanged: (value) {},
     );
   }
 

@@ -28,35 +28,44 @@ class _DateGenderViewState extends State<DateGenderView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: _backButton(context: context),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(kBodyPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildInfoText(),
-              const SizedBox(height: kButtonSpacing),
-              _buildGenderSelector(),
-              const SizedBox(height: kButtonSpacing),
-              _buildBirthdayPicker(),
-              const SizedBox(height: kButtonSpacing),
-              Buttons.buildButton(
-                context: context,
-                btnText: 'Continue',
-                width: double.infinity,
-                onPressed: () async {
-                  await Provider.of<PageController>(context, listen: false)
-                      .nextPage(
-                    duration: const Duration(milliseconds: 800),
-                    curve: Curves.easeOutExpo,
-                  );
-                },
-              )
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        await Provider.of<PageController>(context, listen: false).previousPage(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutExpo,
+        );
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: _backButton(context: context),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(kBodyPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildInfoText(),
+                const SizedBox(height: kButtonSpacing),
+                _buildGenderSelector(),
+                const SizedBox(height: kButtonSpacing),
+                _buildBirthdayPicker(),
+                const SizedBox(height: kButtonSpacing),
+                Buttons.buildButton(
+                  context: context,
+                  btnText: 'Continue',
+                  width: double.infinity,
+                  onPressed: () async {
+                    await Provider.of<PageController>(context, listen: false)
+                        .nextPage(
+                      duration: const Duration(milliseconds: 800),
+                      curve: Curves.easeOutExpo,
+                    );
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -71,7 +80,12 @@ class _DateGenderViewState extends State<DateGenderView> {
         color: kBlack,
         size: 40,
       ),
-      onPressed: () {},
+      onPressed: () async {
+        await Provider.of<PageController>(context, listen: false).previousPage(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutExpo,
+        );
+      },
     );
   }
 
@@ -113,7 +127,6 @@ class _DateGenderViewState extends State<DateGenderView> {
             ),
           ],
         ),
-        ErrorTextWidget(errorText: genderErrorText)
       ],
     );
   }

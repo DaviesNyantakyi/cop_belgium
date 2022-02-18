@@ -13,6 +13,9 @@ class MyTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final int? maxLines;
   final Function(String)? onSubmitted;
+  final Color? fillColor;
+  final InputBorder? focusedBorder;
+  final TextStyle? style;
   final TextEditingController? controller;
 
   const MyTextField({
@@ -23,6 +26,9 @@ class MyTextField extends StatelessWidget {
     this.keyboardType,
     this.controller,
     this.onSubmitted,
+    this.style,
+    this.focusedBorder,
+    this.fillColor,
     this.onChanged,
     this.obscureText = false,
     this.validator,
@@ -37,7 +43,7 @@ class MyTextField extends StatelessWidget {
       key: key,
       validator: validator,
       initialValue: initialValue,
-      style: kSFTextFieldStyle,
+      style: style ?? kSFTextFieldStyle,
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
@@ -46,8 +52,9 @@ class MyTextField extends StatelessWidget {
         filled: true,
         errorMaxLines: 2,
         hintText: hintText,
-        hintStyle: kSFTextFieldStyle.copyWith(color: Colors.black54),
-        fillColor: kBlueLight,
+        hintStyle: style?.copyWith(color: Colors.black54) ??
+            kSFTextFieldStyle.copyWith(color: Colors.black54),
+        fillColor: fillColor ?? kBlueLight,
         suffixIcon: suffixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -56,12 +63,7 @@ class MyTextField extends StatelessWidget {
             style: BorderStyle.none,
           ),
         ),
-        focusColor: Colors.yellow,
-        focusedBorder: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
+        focusedBorder: focusedBorder,
       ),
       onChanged: onChanged,
       onFieldSubmitted: onSubmitted,

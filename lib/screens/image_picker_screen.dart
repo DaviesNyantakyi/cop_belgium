@@ -83,23 +83,53 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-          child: Center(
-            child: Column(
-              children: [
-                const SizedBox(height: 90),
-                const Text('Add profile image.', style: kSFBodyBold),
-                const SizedBox(height: 40),
-                _buildImage(),
-                const SizedBox(height: 40),
-                _buildDoneBtn(),
-              ],
+    return WillPopScope(
+      onWillPop: () async {
+        await Provider.of<PageController>(context, listen: false).previousPage(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeOutExpo,
+        );
+        return false;
+      },
+      child: Scaffold(
+        appBar: _backButton(context: context),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+            child: Center(
+              child: Column(
+                children: [
+                  const SizedBox(height: 90),
+                  const Text('Add profile image.', style: kSFBodyBold),
+                  const SizedBox(height: 40),
+                  _buildImage(),
+                  const SizedBox(height: 40),
+                  _buildDoneBtn(),
+                ],
+              ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  dynamic _backButton({required BuildContext context}) {
+    return AppBar(
+      leading: TextButton(
+        style: kTextButtonStyle,
+        child: const Icon(
+          Icons.chevron_left,
+          color: kBlack,
+          size: 40,
+        ),
+        onPressed: () async {
+          await Provider.of<PageController>(context, listen: false)
+              .previousPage(
+            duration: kPagViewDuration,
+            curve: kPagViewCurve,
+          );
+        },
       ),
     );
   }

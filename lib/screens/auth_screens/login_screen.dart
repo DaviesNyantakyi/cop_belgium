@@ -1,5 +1,4 @@
 import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
-import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +22,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailCntlr = TextEditingController();
   TextEditingController passwordCntlr = TextEditingController();
-  String? emailErrorText;
-  String? passwordErrorText;
 
   bool isLoading = false;
   bool showPassword = false;
@@ -35,17 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       isLoading = true;
 
-      bool isValid = validateForm();
+      EasyLoading.show();
+      await FireAuth().login(
+        email: emailCntlr.text,
+        password: passwordCntlr.text,
+      );
 
-      if (isValid) {
-        EasyLoading.show();
-        await FireAuth().login(
-          email: emailCntlr.text,
-          password: passwordCntlr.text,
-        );
-
-        Navigator.pop(context);
-      }
+      Navigator.pop(context);
 
       if (mounted) {
         setState(() {});
@@ -75,18 +68,6 @@ class _LoginScreenState extends State<LoginScreen> {
     passwordCntlr.dispose();
 
     super.dispose();
-  }
-
-  bool validateForm() {
-    emailErrorText = Validators.emailValidator(email: emailCntlr.text);
-    passwordErrorText = Validators.passwordTextValidator(
-      password: passwordCntlr.text,
-    );
-
-    if (emailErrorText == null && passwordErrorText == null) {
-      return true;
-    }
-    return false;
   }
 
   @override
@@ -141,12 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
           maxLines: 1,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
-          onChanged: (value) {
-            emailErrorText = Validators.emailValidator(email: value);
-            setState(() {});
-          },
+          onChanged: (value) {},
         ),
-        ErrorTextWidget(errorText: emailErrorText),
         const SizedBox(height: kTextFieldSpacing),
         MyTextField(
           controller: passwordCntlr,
@@ -165,16 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
               });
             },
           ),
-          onChanged: (value) {
-            passwordErrorText =
-                Validators.passwordTextValidator(password: value);
-            setState(() {});
-          },
+          onChanged: (value) {},
           onSubmitted: (value) async {
             await loginEmail();
           },
         ),
-        ErrorTextWidget(errorText: passwordErrorText),
         const SizedBox(height: kTextFieldSpacing),
         Container(
           alignment: Alignment.centerRight,
