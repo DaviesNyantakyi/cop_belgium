@@ -147,37 +147,28 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   }
 
   Widget _buildTimer(BuildContext context) {
-    return Stack(
-      children: [
-        const Positioned(
-          top: 65,
-          right: 65,
-          child: Text('Remaining 40%', style: kSFBody),
-        ),
-        CircularCountDownTimer(
-          initialDuration: 0,
-          controller: _controller,
-          width: 240,
-          height: 240,
-          duration: fastingInfo!.duration.inSeconds,
-          isReverse: true,
-          strokeWidth: 20,
-          fillColor: isFasting == true ? kGreen : Colors.grey.shade300,
-          ringColor: Colors.grey.shade300,
-          strokeCap: StrokeCap.round,
-          textFormat: CountdownTextFormat.HH_MM_SS,
-          textStyle: kSFHeadLine1,
-          autoStart: false,
-          onComplete: () async {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const FastingDetailsScreen(),
-              ),
-            );
-          },
-        ),
-      ],
+    return CircularCountDownTimer(
+      initialDuration: 0,
+      controller: _controller,
+      width: 240,
+      height: 240,
+      duration: fastingInfo!.duration.inSeconds,
+      isReverse: true,
+      strokeWidth: 20,
+      fillColor: isFasting == true ? kGreen : Colors.grey.shade300,
+      ringColor: Colors.grey.shade300,
+      strokeCap: StrokeCap.round,
+      textFormat: CountdownTextFormat.HH_MM_SS,
+      textStyle: kSFHeadLine1,
+      autoStart: false,
+      onComplete: () async {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const FastingDetailsScreen(),
+          ),
+        );
+      },
     );
   }
 
