@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
@@ -8,7 +7,6 @@ import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +23,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   bool bookMark = false;
   bool isLiked = false;
   Podcast? podcast;
-  final User? _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -132,35 +129,6 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget get _buildBookmarkIcon {
-    String docRef = podcast!.pageLink;
-    return TextButton(
-      onPressed: () {},
-      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .doc(_user!.uid)
-            .collection('savedPodcasts')
-            .where('id', isEqualTo: docRef)
-            .snapshots(),
-        builder: (context, snapshot) {
-          final docs = snapshot.data?.docs ?? [];
-          if (docs.isNotEmpty) {
-            //user has saved to podcast
-            return const Icon(
-              Icons.bookmark,
-              color: kBlack,
-            );
-          }
-          return const Icon(
-            Icons.bookmark,
-            color: kBlack,
-          );
-        },
-      ),
     );
   }
 

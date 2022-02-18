@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
-//TODO: Keeps loading when the screen is opened for the first time and the slider is moved
 
 class PodcastPlayerScreen extends StatefulWidget {
   static String podcastPlayerScreen = 'podcastPlayerScreen';
@@ -441,67 +440,64 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
     );
   }
 
-  Widget _buildSleepButton({required int duration}) {
-    return Buttons.buildOutlinedButton(
-      child: const Text('Start', style: kSFBody),
-      width: kButtonWidth,
-      height: kButtonHeight,
-      context: context,
-      onPressed: () {
-        sleepDuration = duration.toInt();
-        setState(() {});
-        Navigator.pop(context);
-      },
-    );
-  }
-
-  Future<void> _showSleepTimerBottomSheet({required BuildContext context}) {
-    double selectedDuration = 30;
-    return showSmallBottomSheet(
-      context: context,
-      child: Center(
-        child: SingleChildScrollView(
-          child: StatefulBuilder(
-            builder: (context, state) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Sleep timer',
-                    style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    '${selectedDuration.toStringAsFixed(0)} min',
-                    style: kSFHeadLine2,
-                  ),
-                  const SizedBox(height: 16),
-                  SfSlider(
-                    activeColor: kBlue,
-                    inactiveColor: Colors.grey.shade300,
-                    min: 1,
-                    max: 105.0,
-                    value: selectedDuration,
-                    stepSize: 5,
-                    interval: 5,
-                    showTicks: true,
-                    onChanged: (dynamic value) {
-                      selectedDuration = value;
-                      state(() {});
-                    },
-                  ),
-                  const SizedBox(height: kButtonSpacing),
-                  _buildSleepButton(duration: selectedDuration.toInt()),
-                ],
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Future<void> _showSleepTimerBottomSheet(
+  //     {required BuildContext context, required int duration}) {
+  //   double selectedDuration = 30;
+  //   return showSmallBottomSheet(
+  //     context: context,
+  //     child: Center(
+  //       child: SingleChildScrollView(
+  //         child: StatefulBuilder(
+  //           builder: (context, state) {
+  //             return Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 Text(
+  //                   'Sleep timer',
+  //                   style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
+  //                 ),
+  //                 const SizedBox(height: 16),
+  //                 Text(
+  //                   '${selectedDuration.toStringAsFixed(0)} min',
+  //                   style: kSFHeadLine2,
+  //                 ),
+  //                 const SizedBox(height: 16),
+  //                 SfSlider(
+  //                   activeColor: kBlue,
+  //                   inactiveColor: Colors.grey.shade300,
+  //                   min: 1,
+  //                   max: 105.0,
+  //                   value: selectedDuration,
+  //                   stepSize: 5,
+  //                   interval: 5,
+  //                   showTicks: true,
+  //                   onChanged: (dynamic value) {
+  //                     selectedDuration = value;
+  //                     state(() {});
+  //                   },
+  //                 ),
+  //                 const SizedBox(height: kButtonSpacing),
+  //                 Buttons.buildOutlinedButton(
+  //                   child: const Text('Start', style: kSFBody),
+  //                   width: kButtonWidth,
+  //                   height: kButtonHeight,
+  //                   context: context,
+  //                   onPressed: () {
+  //                     sleepDuration = duration.toInt();
+  //                     setState(() {});
+  //                     Navigator.pop(context);
+  //                   },
+  //                 )
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Widget _sleepTimer() {
   //   return IconButton(

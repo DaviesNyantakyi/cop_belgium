@@ -46,8 +46,6 @@ class PodcastCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //TODO: Title is clipped half way sam with the episode card
-
                     Text(
                       podcast.title,
                       style: kSFBodyBold.copyWith(color: kWhite),

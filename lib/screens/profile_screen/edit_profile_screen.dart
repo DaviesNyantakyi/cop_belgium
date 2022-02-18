@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/utilities/image_selector.dart';
+import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -17,9 +17,6 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:provider/provider.dart';
-
-// TODO: if the user information is the same do not update information
-// TODO: ask for permision gallary and camera (check whatsaap process)
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;

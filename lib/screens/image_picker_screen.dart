@@ -1,5 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/image_selector.dart';
+import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/church_selector.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
@@ -9,7 +9,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// TODO: ask for permision gallary and camera (check whatsaap process)
 
 class ImagePickerScreen extends StatefulWidget {
   const ImagePickerScreen({Key? key}) : super(key: key);

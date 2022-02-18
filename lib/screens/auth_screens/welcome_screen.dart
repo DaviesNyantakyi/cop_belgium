@@ -1,6 +1,6 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
-import 'package:cop_belgium/utilities/image_selector.dart';
+import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

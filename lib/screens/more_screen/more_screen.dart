@@ -5,7 +5,7 @@ import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/image_selector.dart';
+import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

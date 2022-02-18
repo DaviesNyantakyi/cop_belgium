@@ -7,7 +7,6 @@ import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-//TODO: fix: if a testimony field is null in firbase then have an error
 class TestimoniesTabView extends StatefulWidget {
   const TestimoniesTabView({Key? key}) : super(key: key);
 

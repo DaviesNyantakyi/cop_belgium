@@ -220,7 +220,6 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   Future<void> startFasting() async {
     setState(() {
       isFasting = true;
-      //TODO: increase the fasting people firstore
       peopleFasting++;
 
       _controller.start();
