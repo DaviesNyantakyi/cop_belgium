@@ -1,57 +1,63 @@
+import 'package:cop_belgium/utilities/constant.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
-  static String? nameValidator({String? firstName, String? lastName}) {
-    String? errorText;
-
-    if (firstName != null) {
-      if (firstName.isEmpty) {
-        errorText = 'Enter your first name.';
-      }
+  static String? nameValidator(String? firstName) {
+    if (firstName == null || firstName.isEmpty) {
+      return 'Enter your name.';
     }
-
-    if (lastName != null) {
-      if (lastName.isEmpty) {
-        errorText = 'Enter your last name.';
-      }
-    }
-
-    return errorText;
+    return null;
   }
 
-  static String? emailValidator({String? email}) {
-    String? errorText;
-    if (email != null && email.isEmpty) {
-      errorText = 'Enter your email address.';
+  static String? emailValidator(String? email) {
+    if (email == null ||
+        email.isEmpty ||
+        !email.contains('@') ||
+        !email.contains('.')) {
+      return 'Enter a valid email address.';
     }
-    return errorText;
+
+    return null;
   }
 
-  static String? passwordTextValidator({String? password}) {
-    if (password == null || password.isEmpty) {
-      return 'Password must not be empty. ';
-    }
-
-    if (!password.isPasswordEasy()) {
+  static String? passwordValidator(String? password) {
+    if (!password!.isPasswordEasy() || password.isEmpty) {
       return 'Password must contain at least 8 characters.';
     }
     return null;
   }
 
   static String? genderValidator({String? gender}) {
-    String? errorText;
     if (gender != null && gender.isEmpty) {
-      errorText = 'Please select your gender.';
+      return 'Please select your gender.';
     }
-    return errorText;
+    return null;
   }
 
   static String? birthdayValidator({DateTime? date}) {
-    String? errorText;
     if (date == null) {
-      errorText = 'Please select your date of birth.';
+      return 'Please select your date of birth.';
     }
 
-    return errorText;
+    return null;
+  }
+
+  Widget showValidationWidget({dynamic object, String? errorText}) {
+    if (object.runtimeType == String && object.toString().isNotEmpty) {
+      // Check only object of the type string.
+      return Container();
+    }
+    if (object != null) {
+      return Container();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        errorText!,
+        style: kSFBody2.copyWith(color: kRed),
+      ),
+    );
   }
 }

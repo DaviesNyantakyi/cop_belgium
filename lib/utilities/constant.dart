@@ -157,12 +157,12 @@ const double kButtonWidth = 100;
 
 const double kImageSize = 120;
 const double kButtonRadius = 5;
-const double kCardRadius = 5;
+const double kCardRadius = 10;
 const double kTextFieldSpacing = 12;
-const double kButtonSpacing = 25;
+const double kButtonSpacing = 32;
 const double kAppbarPadding = 20.0;
 const double kAppbarElevation = 1;
-const double kBodyPadding = 10.0;
+const double kBodyPadding = 16.0;
 const double kIconSize = 24;
 const double kCardSpacing = 10;
 

@@ -1,13 +1,14 @@
+import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/church_selector.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 class ImagePickerScreen extends StatefulWidget {
@@ -18,39 +19,30 @@ class ImagePickerScreen extends StatefulWidget {
 }
 
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  bool isLoading = false;
-
-  late final ImageSelectorProvider imageSelector;
-
-  TextStyle fontStyle = kSFBody;
+  late final ImagePickerProvider imageSelector;
 
   Future<void> submit() async {
     try {
-      if (mounted) {
-        setState(() {
-          isLoading = true;
-        });
-      }
-      await EaslyLoadingIndicator.showLoading();
-
-      // await FireStorage().uploadProfileImage(image: image);
-
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
       await EaslyLoadingIndicator.dismissLoading();
-      // Navigator.pop(context);
 
-      Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (context) => const ChurchSelectorScreen(),
-        ),
-      );
+      final hasConnection = await ConnectionChecker().checkConnection();
+
+      if (hasConnection) {
+        final signUpProvider =
+            Provider.of<SignUpProvider>(context, listen: false);
+        final image = Provider.of<ImagePickerProvider>(context, listen: false)
+            .selectedImage;
+
+        signUpProvider.setSelectedImage(image: image);
+
+        EasyLoading.show();
+
+        await signUpProvider.signUp();
+        Navigator.pop(context);
+      } else {
+        throw ConnectionChecker.connectionException;
+      }
     } on FirebaseException catch (e) {
-      await EaslyLoadingIndicator.dismissLoading();
       debugPrint(e.toString());
       kshowSnackbar(
         errorType: 'error',
@@ -60,12 +52,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-        });
-      }
-      await EaslyLoadingIndicator.dismissLoading();
+      EasyLoading.dismiss();
     }
   }
 
@@ -77,7 +64,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
 
   @override
   void initState() {
-    imageSelector = Provider.of<ImageSelectorProvider>(context, listen: false);
+    imageSelector = Provider.of<ImagePickerProvider>(context, listen: false);
     super.initState();
   }
 
@@ -91,26 +78,27 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         );
         return false;
       },
-      child: Scaffold(
-        appBar: _backButton(context: context),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-            child: Center(
+      child: Consumer<ImagePickerProvider>(
+          builder: (context, imagePickerProvider, _) {
+        return Scaffold(
+          appBar: _backButton(context: context),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: kBodyPadding, vertical: kBodyPadding),
               child: Column(
                 children: [
-                  const SizedBox(height: 90),
-                  const Text('Add profile image.', style: kSFBodyBold),
-                  const SizedBox(height: 40),
-                  _buildImage(),
-                  const SizedBox(height: 40),
-                  _buildDoneBtn(),
+                  const Text('Add profile image', style: kSFHeadLine2),
+                  const SizedBox(height: 32),
+                  _buildImage(imagePickerProvider: imagePickerProvider),
+                  const SizedBox(height: kButtonSpacing),
+                  _buildContinueButton(),
                 ],
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
@@ -134,12 +122,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     );
   }
 
-  Widget _buildImage() {
-    if (Provider.of<ImageSelectorProvider>(context).image?.path != null) {
+  Widget _buildImage({required ImagePickerProvider imagePickerProvider}) {
+    if (imagePickerProvider.selectedImage?.path != null) {
       return CircleAvatar(
         radius: 90,
         backgroundImage: Image.file(
-          Provider.of<ImageSelectorProvider>(context).image!,
+          imagePickerProvider.selectedImage!,
           fit: BoxFit.cover,
         ).image,
         backgroundColor: kBlueLight,
@@ -149,8 +137,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           ),
           child: TextButton(
             onPressed: () async {
-              await Provider.of<ImageSelectorProvider>(context, listen: false)
-                  .showSelectionSheet(context: context);
+              await imagePickerProvider.showBottomSheet(context: context);
             },
             style: kTextButtonStyle,
             child: Container(),
@@ -167,8 +154,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         ),
         child: TextButton(
           onPressed: () async {
-            await Provider.of<ImageSelectorProvider>(context, listen: false)
-                .showSelectionSheet(context: context);
+            await imagePickerProvider.showBottomSheet(context: context);
           },
           style: kTextButtonStyle,
           child: const Center(
@@ -179,13 +165,13 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     );
   }
 
-  Widget _buildDoneBtn() {
+  Widget _buildContinueButton() {
     return Buttons.buildButton(
       context: context,
-      color: isLoading ? kDisabledColor : kBlue,
+      color: kBlue,
       width: double.infinity,
-      btnText: 'Done',
-      onPressed: isLoading ? null : submit,
+      btnText: 'Continue',
+      onPressed: submit,
     );
   }
 }

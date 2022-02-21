@@ -48,20 +48,26 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildLogInButton() {
-    return Buttons.buildButton(
-      context: context,
-      btnText: 'Log in',
-      onPressed: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-        );
-      },
-      width: double.infinity,
-      fontColor: Colors.white,
-    );
+    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+      return Buttons.buildButton(
+        context: context,
+        btnText: 'Log in',
+        onPressed: () {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) =>
+                  ChangeNotifierProvider<SignUpProvider>.value(
+                value: signUpProvider,
+                child: const LoginScreen(),
+              ),
+            ),
+          );
+        },
+        width: double.infinity,
+        fontColor: Colors.white,
+      );
+    });
   }
 
   Widget _buildSocialButtons() {
@@ -81,7 +87,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             final signUpProvider =
                 Provider.of<SignUpProvider>(context, listen: false);
             final imageSelector =
-                Provider.of<ImageSelectorProvider>(context, listen: false);
+                Provider.of<ImagePickerProvider>(context, listen: false);
             Navigator.push(
               context,
               CupertinoPageRoute(
@@ -90,7 +96,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ChangeNotifierProvider<SignUpProvider>.value(
                       value: signUpProvider,
                     ),
-                    ChangeNotifierProvider<ImageSelectorProvider>.value(
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
                       value: imageSelector,
                     )
                   ],

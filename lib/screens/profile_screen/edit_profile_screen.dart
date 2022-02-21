@@ -51,13 +51,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordCntlr = TextEditingController();
   TextEditingController genderCntlr = TextEditingController();
 
-  late final ImageSelectorProvider imageSelector;
+  late final ImagePickerProvider imageSelector;
 
   DatePicker datePicker = DatePicker();
 
   @override
   void initState() {
-    imageSelector = Provider.of<ImageSelectorProvider>(context, listen: false);
+    imageSelector = Provider.of<ImagePickerProvider>(context, listen: false);
 
     initUserInfo();
 
@@ -120,14 +120,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   bool validateForm() {
-    nameErrorText = Validators.nameValidator(
-      firstName: firstNameCntlr.text,
-      lastName: lastNameCntlr.text,
-    );
-    emailErrorText = Validators.emailValidator(
-      email: emailCntlr.text,
-    );
-
     birthDateErrorText = Validators.birthdayValidator(date: birthDate);
 
     genderErrorText = Validators.genderValidator(gender: genderCntlr.text);
@@ -279,7 +271,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildAvatar() {
     final image =
-        Provider.of<ImageSelectorProvider>(context, listen: true).image;
+        Provider.of<ImagePickerProvider>(context, listen: true).selectedImage;
     if (image != null) {
       return CircleAvatar(
         backgroundImage: Image.file(image).image,
@@ -297,8 +289,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await Provider.of<ImageSelectorProvider>(context, listen: false)
-                .showSelectionSheet(context: context);
+            await Provider.of<ImagePickerProvider>(context, listen: false)
+                .showBottomSheet(context: context);
           },
         ),
       );
@@ -320,8 +312,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await Provider.of<ImageSelectorProvider>(context, listen: false)
-                .showSelectionSheet(context: context);
+            await Provider.of<ImagePickerProvider>(context, listen: false)
+                .showBottomSheet(context: context);
           },
         ),
       );
@@ -342,8 +334,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: kBlack,
             ),
             onPressed: () async {
-              await Provider.of<ImageSelectorProvider>(context, listen: false)
-                  .showSelectionSheet(context: context);
+              await Provider.of<ImagePickerProvider>(context, listen: false)
+                  .showBottomSheet(context: context);
             },
           ),
         ),
@@ -448,47 +440,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        MyTextField(
+        MyTextFormField(
           controller: firstNameCntlr,
           hintText: 'First Name',
           obscureText: false,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
-          onChanged: (value) {
-            nameErrorText = Validators.nameValidator(
-              firstName: value,
-              lastName: lastNameCntlr.text,
-            );
-
-            setState(() {});
-          },
+          onChanged: (value) {},
         ),
         const SizedBox(height: kTextFieldSpacing),
-        MyTextField(
+        MyTextFormField(
           controller: lastNameCntlr,
           hintText: 'Last Name',
           obscureText: false,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
           onChanged: (value) {
-            nameErrorText = Validators.nameValidator(
-              firstName: firstNameCntlr.text,
-              lastName: value,
-            );
             setState(() {});
           },
         ),
         _buildNameErrorText(),
         const SizedBox(height: kTextFieldSpacing),
-        MyTextField(
+        MyTextFormField(
           controller: emailCntlr,
           hintText: 'Email',
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.next,
-          onChanged: (value) {
-            emailErrorText = Validators.emailValidator(email: value);
-            setState(() {});
-          },
+          onChanged: (value) {},
         ),
         _buildEmailErrorText(),
       ],
@@ -595,7 +573,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
         title: const Text(_deleteConformationText, style: kSFBodyBold),
-        content: MyTextField(
+        content: MyTextFormField(
           hintText: 'Password',
           obscureText: true,
           onChanged: (value) {

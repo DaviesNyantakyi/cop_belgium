@@ -166,7 +166,6 @@ Widget _buildBtn({
   );
 }
 
-//TODO: Change to Ios style Picker
 class FastingPicker extends StatefulWidget {
   const FastingPicker({Key? key}) : super(key: key);
 

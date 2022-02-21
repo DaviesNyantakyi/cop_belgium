@@ -83,7 +83,7 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Widget _buildActions({required BuildContext context}) {
-    return Consumer<ImageSelectorProvider>(
+    return Consumer<ImagePickerProvider>(
       builder: (context, imageProvider, _) {
         return Row(
           children: [
@@ -100,7 +100,7 @@ class _ProfileScreensState extends State<ProfileScreens>
                   CupertinoPageRoute(
                     builder: (context) => MultiProvider(
                       providers: [
-                        ChangeNotifierProvider<ImageSelectorProvider>.value(
+                        ChangeNotifierProvider<ImagePickerProvider>.value(
                           value: imageProvider,
                         ),
                       ],

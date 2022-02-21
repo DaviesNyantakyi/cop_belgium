@@ -64,6 +64,11 @@ dependencies:
   date_time_picker: ^2.1.0 # to pick date or time
   timeago: ^3.1.0 # eg: 2 day ago
   syncfusion_flutter_sliders: ^19.4.48 #Slider with dividers
+  permission_handler: ^9.1.0
+  app_settings: ^4.1.1
+
+
+
 
 
 

@@ -1,33 +1,103 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class ImageSelectorProvider extends ChangeNotifier {
+class ImagePickerProvider extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
-  File? image;
+  File? _image;
   ImageSource? _selectedSource;
 
-  // Select  and crop a image from gallery or camera.
+  File? get selectedImage => _image;
+
+  // pick image from gallery or camera.
+  // The source is selected from the bottomsheet. The default source is gallery
   Future<void> pickImage({required BuildContext context}) async {
     try {
-      // pick image from gallery or camera.
-      // The source is selected from the bottomsheet. The default value is gallery
-      final selectedImage = await _picker.pickImage(
-        source: _selectedSource ?? ImageSource.gallery,
-      );
+      // Remove bottomSheet
+      Navigator.pop(context);
+
+      XFile? selectedImage;
+
+      if (_selectedSource == ImageSource.gallery) {
+        // pick image from storage if permission granted.
+        var status = await Permission.storage.request();
+        if (status == PermissionStatus.granted) {
+          selectedImage = await _picker.pickImage(
+            source: _selectedSource ?? ImageSource.gallery,
+          );
+        }
+        // If the permission permanlty denied showdialog
+        if (status == PermissionStatus.permanentlyDenied) {
+          await _showPermanltyDeniedDialog(
+            headerWidget: const Icon(
+              Icons.folder,
+              color: Colors.white,
+              size: 32,
+            ),
+            context: context,
+            instructions: 'Tap Settings > Permissions, and turn on Storage',
+          );
+        }
+      }
+
+      // pick image from storage and camera if permission granted.
+      if (_selectedSource == ImageSource.camera) {
+        //Request camera and storage permission.
+        var statusCamera = await Permission.camera.request();
+        var statusStorage = await Permission.storage.request();
+
+        //pick image if the permission is granted.
+        if (statusStorage == PermissionStatus.granted &&
+            statusCamera == PermissionStatus.granted) {
+          selectedImage = await _picker.pickImage(
+            source: _selectedSource ?? ImageSource.gallery,
+          );
+        }
+
+        // Ask to enable permission if permanlty denied.
+        if (statusStorage == PermissionStatus.permanentlyDenied ||
+            statusCamera == PermissionStatus.permanentlyDenied) {
+          await _showPermanltyDeniedDialog(
+            headerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Icon(
+                  Icons.photo_camera_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+                Icon(
+                  Icons.add_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+                Icon(
+                  Icons.folder_outlined,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ],
+            ),
+            context: context,
+            instructions:
+                'Tap Settings > Permissions, and turn on Camera and Storage',
+          );
+        }
+      }
 
       // Cropp the selected image.
       if (selectedImage != null) {
-        image = await _imageCropper(file: File(selectedImage.path));
+        _image = await _imageCropper(file: File(selectedImage.path));
       }
 
       notifyListeners();
-      Navigator.pop(context);
     } on PlatformException catch (e) {
       debugPrint(e.toString());
     }
@@ -58,8 +128,64 @@ class ImageSelectorProvider extends ChangeNotifier {
     return croppedImage;
   }
 
+  Future<String?> _showPermanltyDeniedDialog(
+      {required BuildContext context,
+      required String instructions,
+      required Widget headerWidget}) async {
+    return await showDialog<String?>(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(kCardRadius),
+          ),
+        ),
+        title: Container(
+          height: 100,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: kBlue,
+            borderRadius: BorderRadius.all(
+              Radius.circular(kCardRadius),
+            ),
+          ),
+          child: headerWidget,
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Allow Cop Belgium access to your device\'s photo\'s, media and files.',
+              style: kSFBody,
+            ),
+            Text(
+              instructions,
+              style: kSFBody,
+            )
+          ],
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('NOT NOW', style: kSFBody2Bold),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await AppSettings.openAppSettings();
+            },
+            child: const Text('SETTINGS', style: kSFBody2Bold),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Choose a image source and delete selected Image.
-  Future<void> showSelectionSheet({required BuildContext context}) async {
+  Future<void> showBottomSheet({required BuildContext context}) async {
     await showSmallBottomSheet(
       height: null,
       context: context,
@@ -89,10 +215,10 @@ class ImageSelectorProvider extends ChangeNotifier {
                   icon: Icons.collections_outlined,
                   text: 'Gallery',
                 ),
-                image != null
+                _image != null
                     ? _selectionTile(
                         onPressed: () {
-                          image = null;
+                          _image = null;
                           Navigator.pop(context);
                           notifyListeners();
                         },
@@ -129,7 +255,7 @@ class ImageSelectorProvider extends ChangeNotifier {
 
   // reset the selected image.
   void close() {
-    image = null;
+    _image = null;
     _selectedSource = null;
   }
 }

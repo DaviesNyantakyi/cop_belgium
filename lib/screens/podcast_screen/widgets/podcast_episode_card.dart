@@ -33,12 +33,15 @@ class EpisodeCard extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(episode.image!),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius:
-                      const BorderRadius.all(Radius.circular(kCardRadius))),
+                image: DecorationImage(
+                  image: NetworkImage(episode.image!),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(kCardRadius),
+                  bottomLeft: Radius.circular(kCardRadius),
+                ),
+              ),
               width: 120,
             ),
             Expanded(

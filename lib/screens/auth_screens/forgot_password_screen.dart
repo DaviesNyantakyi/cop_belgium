@@ -1,3 +1,4 @@
+import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/services/firebase_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:provider/provider.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static String forgotPasswordScreen = 'forgotPasswordScreen';
@@ -17,26 +19,21 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  bool isLoading = false;
+  GlobalKey<FormState> emailKey = GlobalKey<FormState>();
   TextEditingController emailCntlr = TextEditingController();
-  String? emailErrorText;
-
   Future<void> resetPassword() async {
     FocusScope.of(context).unfocus();
-    EasyLoading.show();
+
     try {
-      isLoading = true;
+      bool? isValid = emailKey.currentState?.validate();
 
-      bool isValid = validateForm();
+      Provider.of<SignUpProvider>(context, listen: false).setLoading();
 
-      if (isValid) {
-        setState(() {});
-
+      if (isValid == true) {
+        EasyLoading.show();
         await FireAuth().sendResetPassword(email: emailCntlr.text);
         _showMailConformationAlert();
       }
-
-      setState(() {});
     } on FirebaseAuthException catch (e) {
       await EasyLoading.dismiss();
       kshowSnackbar(
@@ -48,19 +45,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      isLoading = false;
+      Provider.of<SignUpProvider>(context, listen: false).setLoading();
+
       EasyLoading.dismiss();
-      setState(() {});
     }
   }
 
-  bool validateForm() {
-    emailErrorText = Validators.emailValidator(email: emailCntlr.text);
-
-    if (emailErrorText == null) {
-      return true;
-    }
-    return false;
+  @override
+  void dispose() {
+    emailKey.currentState?.dispose();
+    super.dispose();
   }
 
   @override
@@ -89,25 +83,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildEmailForm() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        MyTextField(
-          controller: emailCntlr,
-          hintText: 'Email',
-          keyboardType: TextInputType.emailAddress,
-          textInputAction: TextInputAction.done,
-          onChanged: (value) {
-            emailErrorText = Validators.emailValidator(email: value);
-            setState(() {});
-          },
-          onSubmitted: (value) async {
-            await resetPassword();
-          },
-        ),
-      ],
-    );
+    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Form(
+            key: emailKey,
+            child: MyTextFormField(
+              controller: emailCntlr,
+              hintText: 'Email',
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.done,
+              validator: Validators.emailValidator,
+              onChanged: (value) {
+                emailKey.currentState?.validate();
+              },
+              onSubmitted: (value) async {
+                await resetPassword();
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildForgotPassText() {
@@ -118,14 +117,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildSendButton() {
-    return Buttons.buildButton(
-      context: context,
-      color: isLoading ? kDisabledColor : kBlue,
-      btnText: 'Send',
-      onPressed: isLoading ? null : resetPassword,
-      width: double.infinity,
-      fontColor: Colors.white,
-    );
+    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+      return Buttons.buildButton(
+        context: context,
+        color: signUpProvider.isLoading ? kDisabledColor : kBlue,
+        btnText: 'Send',
+        onPressed: signUpProvider.isLoading ? null : resetPassword,
+        width: double.infinity,
+        fontColor: Colors.white,
+      );
+    });
   }
 
   Future<String?> _showMailConformationAlert() async {

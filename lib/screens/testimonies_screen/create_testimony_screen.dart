@@ -80,7 +80,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     TextStyle? style,
     TextEditingController? controller,
   }) {
-    return MyTextField(
+    return MyTextFormField(
       controller: controller,
       hintText: hintText,
       maxLines: null,

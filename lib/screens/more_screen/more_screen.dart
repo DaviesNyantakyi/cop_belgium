@@ -154,7 +154,7 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildProfileTile() {
-    return Consumer2<AudioProvider, ImageSelectorProvider>(
+    return Consumer2<AudioProvider, ImagePickerProvider>(
       builder: (context, audioProvider, imageSelector, _) {
         return TextButton(
           style: kTextButtonStyle.copyWith(
@@ -169,7 +169,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     ChangeNotifierProvider<AudioProvider>.value(
                       value: audioProvider,
                     ),
-                    ChangeNotifierProvider<ImageSelectorProvider>.value(
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
                       value: imageSelector,
                     ),
                   ],

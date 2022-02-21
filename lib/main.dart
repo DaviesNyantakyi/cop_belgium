@@ -1,6 +1,7 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/image_picker_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -73,8 +74,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<SignUpProvider>(
             create: (context) => SignUpProvider(),
           ),
-          ChangeNotifierProvider<ImageSelectorProvider>(
-            create: (context) => ImageSelectorProvider(),
+          ChangeNotifierProvider<ImagePickerProvider>(
+            create: (context) => ImagePickerProvider(),
           ),
         ],
         child: const AuthSwitcher(),

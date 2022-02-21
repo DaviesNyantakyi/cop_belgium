@@ -26,19 +26,19 @@ class RequestBatismScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: kTextFieldSpacing),
-                      const MyTextField(
+                      const MyTextFormField(
                         hintText: 'First & last name',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: kTextFieldSpacing),
-                      const MyTextField(
+                      const MyTextFormField(
                         hintText: 'Email',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
                       ),
                       const SizedBox(height: kTextFieldSpacing),
-                      const MyTextField(
+                      const MyTextFormField(
                         hintText: 'Phone nummer',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
@@ -46,7 +46,7 @@ class RequestBatismScreen extends StatelessWidget {
                       const SizedBox(height: kTextFieldSpacing),
                       const SizedBox(
                         height: 200,
-                        child: MyTextField(
+                        child: MyTextFormField(
                           hintText: 'Message',
                           keyboardType: TextInputType.multiline,
                           maxLines: 30,

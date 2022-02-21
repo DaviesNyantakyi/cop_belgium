@@ -1,7 +1,7 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextFormField extends StatelessWidget {
   final String? hintText;
   final String? initialValue;
 
@@ -18,7 +18,7 @@ class MyTextField extends StatelessWidget {
   final TextStyle? style;
   final TextEditingController? controller;
 
-  const MyTextField({
+  const MyTextFormField({
     Key? key,
     this.hintText,
     this.initialValue,
@@ -40,7 +40,6 @@ class MyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      key: key,
       validator: validator,
       initialValue: initialValue,
       style: style ?? kSFTextFieldStyle,

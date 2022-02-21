@@ -130,6 +130,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget _buildTypeSelection() {
+    // ignore: unused_local_variable
     IconData icon = Icons.place_outlined;
 
     if (eventType == 'online') {

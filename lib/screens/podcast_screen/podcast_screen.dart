@@ -94,7 +94,7 @@ class _PodcastScreenState extends State<PodcastScreen> {
           ),
         ),
         title: const Text(_deleteConformationText, style: kSFBodyBold),
-        content: MyTextField(
+        content: MyTextFormField(
           controller: rssLinkCntlr,
           hintText: 'RSS feed link',
         ),
@@ -123,27 +123,22 @@ class _Body extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        SizedBox(height: 15),
-        _BuildGreeting(),
-        SizedBox(height: 30),
-        Text('Featured Episode', style: kSFHeadLine3),
-        SizedBox(height: 15),
-        _BuildLatestEpisodeCard(),
-        SizedBox(height: 25),
-        Text('Podcasts', style: kSFHeadLine3),
-        SizedBox(height: 16),
-        _BuildPodcastsList()
+      children: [
+        const SizedBox(height: 12),
+        _buildGreeting(),
+        const SizedBox(height: 32),
+        const Text('Featured Episode', style: kSFHeadLine3),
+        const SizedBox(height: 12),
+        _buildLatestEpisodeCard(context: context),
+        const SizedBox(height: 24),
+        const Text('Podcasts', style: kSFHeadLine3),
+        const SizedBox(height: 16),
+        _buildPodcastsList(context: context)
       ],
     );
   }
-}
 
-class _BuildGreeting extends StatelessWidget {
-  const _BuildGreeting({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildGreeting() {
     final userName = FirebaseAuth.instance.currentUser?.displayName;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,144 +156,134 @@ class _BuildGreeting extends StatelessWidget {
   }
 }
 
-class _BuildPodcastsList extends StatelessWidget {
-  const _BuildPodcastsList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    List<Podcast> podcast = [
-      Podcast(
-        title: 'Deep Truths',
-        author: 'Church of Pentecost Belgium',
-        imageUrl:
-            'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
-        description:
-            '''Welcome to the Pentecostal Church podcast! Here we dive and discover the deep truth from the Scriptures.''',
-        pageLink: '',
-        episodes: [],
-      ),
-    ];
-    return Consumer<AudioProvider>(
-      builder: (context, audioProvider, _) {
-        return ListView.separated(
-          separatorBuilder: (context, index) => const SizedBox(
-            height: kCardSpacing,
-          ),
-          itemCount: podcast.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return PodcastCard(
-              podcast: podcast[index],
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => MultiProvider(
-                      providers: [
-                        Provider<Podcast>.value(
-                          value: podcast[index],
-                        ),
-                        ChangeNotifierProvider<AudioProvider>.value(
-                          value: audioProvider,
-                        ),
-                      ],
-                      child: const PodcastDetailScreen(),
-                    ),
+Widget _buildPodcastsList({required BuildContext context}) {
+  List<Podcast> podcast = [
+    Podcast(
+      title: 'Deep Truths',
+      author: 'Church of Pentecost Belgium',
+      imageUrl:
+          'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
+      description:
+          '''Welcome to the Pentecostal Church podcast! Here we dive and discover the deep truth from the Scriptures.''',
+      pageLink: '',
+      episodes: [],
+    ),
+  ];
+  return Consumer<AudioProvider>(
+    builder: (context, audioProvider, _) {
+      return ListView.separated(
+        separatorBuilder: (context, index) => const SizedBox(
+          height: kCardSpacing,
+        ),
+        itemCount: podcast.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return PodcastCard(
+            podcast: podcast[index],
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => MultiProvider(
+                    providers: [
+                      Provider<Podcast>.value(
+                        value: podcast[index],
+                      ),
+                      ChangeNotifierProvider<AudioProvider>.value(
+                        value: audioProvider,
+                      ),
+                    ],
+                    child: const PodcastDetailScreen(),
                   ),
-                );
-              },
-            );
-          },
-        );
-      },
-    );
-  }
-}
-
-class _BuildLatestEpisodeCard extends StatelessWidget {
-  const _BuildLatestEpisodeCard({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 380,
-      height: 189,
-      decoration: BoxDecoration(
-        color: kBlack,
-        borderRadius: const BorderRadius.all(
-          Radius.circular(kCardRadius),
-        ),
-        image: const DecorationImage(
-          fit: BoxFit.cover,
-          image: CachedNetworkImageProvider(imagePlayHolder),
-        ),
-        boxShadow: [kBoxShadow],
-      ),
-      child: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => const PodcastPlayerScreen(),
-            ),
+                ),
+              );
+            },
           );
         },
-        style: kTextButtonStyle,
-        child: Container(
-          width: 380,
-          height: 190,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(5),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                Colors.black.withOpacity(0.9),
-                Colors.black.withOpacity(0.1),
-              ],
-            ),
+      );
+    },
+  );
+}
+
+Widget _buildLatestEpisodeCard({required BuildContext context}) {
+  return Container(
+    width: 380,
+    height: 189,
+    decoration: BoxDecoration(
+      color: kBlack,
+      borderRadius: const BorderRadius.all(
+        Radius.circular(kCardRadius),
+      ),
+      image: const DecorationImage(
+        fit: BoxFit.cover,
+        image: CachedNetworkImageProvider(imagePlayHolder),
+      ),
+      boxShadow: [kBoxShadow],
+    ),
+    child: TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const PodcastPlayerScreen(),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(kCardContentPadding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Deep Truths',
-                  style: kSFHeadLine2.copyWith(color: kWhite),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  '''The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel, brining greater hope. The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel,''',
-                  style: kSFBody.copyWith(color: Colors.white),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 15),
-                Expanded(
-                  child: _BuildPlayButton(onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => const PodcastPlayerScreen(),
-                      ),
-                    );
-                  }),
-                )
-              ],
-            ),
+        );
+      },
+      style: kTextButtonStyle,
+      child: Container(
+        width: 380,
+        height: 190,
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(5),
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Colors.black.withOpacity(0.9),
+              Colors.black.withOpacity(0.1),
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(kCardContentPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Deep Truths',
+                style: kSFHeadLine2.copyWith(color: kWhite),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 5),
+              Text(
+                '''The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel, brining greater hope. The aim of this Podcast is to bring individuals a better understanding of some of the deeper aspects of the gospel,''',
+                style: kSFBody.copyWith(color: Colors.white),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+              ),
+              const SizedBox(height: 15),
+              Expanded(
+                child: _BuildPlayButton(onPressed: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => const PodcastPlayerScreen(),
+                    ),
+                  );
+                }),
+              )
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
 }
 
 class _BuildPlayButton extends StatelessWidget {

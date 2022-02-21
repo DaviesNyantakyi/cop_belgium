@@ -73,7 +73,7 @@ class _FastingDetailsScreenState extends State<FastingDetailsScreen> {
   }
 
   Widget _buildNoteField() {
-    return MyTextField(
+    return MyTextFormField(
       controller: noteCntlr,
       fillColor: Colors.transparent,
       maxLines: null,
