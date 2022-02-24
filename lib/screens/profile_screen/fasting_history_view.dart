@@ -20,7 +20,7 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
         separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: kCardSpacing),
+            const SizedBox(height: kContentSpacing12),
         itemCount: 5,
         itemBuilder: (context, index) {
           return FastingHistoryCard(

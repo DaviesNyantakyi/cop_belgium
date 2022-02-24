@@ -25,25 +25,25 @@ class RequestBatismScreen extends StatelessWidget {
                 child: IntrinsicHeight(
                   child: Column(
                     children: [
-                      const SizedBox(height: kTextFieldSpacing),
+                      const SizedBox(height: kContentSpacing12),
                       const MyTextFormField(
                         hintText: 'First & last name',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: kTextFieldSpacing),
+                      const SizedBox(height: kContentSpacing12),
                       const MyTextFormField(
                         hintText: 'Email',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: kTextFieldSpacing),
+                      const SizedBox(height: kContentSpacing12),
                       const MyTextFormField(
                         hintText: 'Phone nummer',
                         maxLines: 1,
                         textInputAction: TextInputAction.next,
                       ),
-                      const SizedBox(height: kTextFieldSpacing),
+                      const SizedBox(height: kContentSpacing12),
                       const SizedBox(
                         height: 200,
                         child: MyTextFormField(

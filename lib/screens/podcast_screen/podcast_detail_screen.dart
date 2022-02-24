@@ -39,11 +39,11 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: kButtonSpacing),
+            const SizedBox(height: kContentSpacing32),
             _buildSubButton(),
-            const SizedBox(height: kButtonSpacing),
+            const SizedBox(height: kContentSpacing32),
             _buildDescription(),
-            const SizedBox(height: kButtonSpacing),
+            const SizedBox(height: kContentSpacing32),
             const Text('Episodes', style: kSFHeadLine3),
             const SizedBox(height: 16),
             const _BuildPodcastsList(),
@@ -75,7 +75,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             ),
           ),
         ),
-        const SizedBox(width: kTextFieldSpacing),
+        const SizedBox(width: kContentSpacing12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +195,7 @@ class _BuildPodcastsList extends StatelessWidget {
       builder: (context, audioProvider, _) {
         return ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(
-            height: kCardSpacing,
+            height: kContentSpacing12,
           ),
           itemCount: episodes.length,
           shrinkWrap: true,

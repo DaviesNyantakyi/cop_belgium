@@ -64,11 +64,11 @@ class _DateGenderViewState extends State<DateGenderView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeaderText(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildGenderSelector(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildBirthdayPicker(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildContinueButton(),
               ],
             ),
@@ -116,7 +116,7 @@ class _DateGenderViewState extends State<DateGenderView> {
               style: kSFBody,
             ),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -179,7 +179,7 @@ class _DateGenderViewState extends State<DateGenderView> {
               style: kSFBody,
             ),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Container(
             height: 64,
             decoration: const BoxDecoration(

@@ -35,9 +35,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 const BuildCopLogo(),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.10),
                 _buildSocialButtons(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildDivderText(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildLogInButton(),
               ],
             ),
@@ -106,7 +106,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             );
           },
         ),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         const BuildSocialSignupButtons()
       ],
     );

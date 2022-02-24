@@ -212,7 +212,7 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
                   horizontal: kBodyPadding, vertical: kBodyPadding)
               .copyWith(top: 20),
           separatorBuilder: (context, index) => const SizedBox(
-            height: kCardSpacing,
+            height: kContentSpacing12,
           ),
           itemCount: podcast.length,
           shrinkWrap: true,

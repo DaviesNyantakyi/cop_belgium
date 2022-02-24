@@ -123,7 +123,7 @@ class EventCard extends StatelessWidget {
               FormalDates.formatEDmyyyy(date: event.startDate),
               style: kSFCaption.copyWith(color: Colors.white),
             ),
-            const SizedBox(width: kTextFieldSpacing),
+            const SizedBox(width: kContentSpacing12),
             Text(
               '${FormalDates.formatHm(date: event.startDate)} - ${FormalDates.formatHm(date: event.endDate)}',
               style: kSFCaption.copyWith(color: Colors.white),

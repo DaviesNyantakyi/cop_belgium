@@ -45,7 +45,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
         child: ListView.separated(
           padding: const EdgeInsets.all(kBodyPadding).copyWith(top: 20),
           separatorBuilder: (context, _) => const SizedBox(
-            height: kCardSpacing,
+            height: kContentSpacing12,
           ),
           itemCount: announcements.length,
           itemBuilder: (context, index) {
@@ -83,7 +83,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
                 style: kSFHeadLine3,
               ),
             ),
-            const SizedBox(height: kTextFieldSpacing),
+            const SizedBox(height: kContentSpacing12),
             Container(
               alignment: Alignment.centerLeft,
               child: Text(

@@ -253,11 +253,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Column(
               children: [
                 _buildAvatar(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildForm(),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: kContentSpacing12),
                 _buildBirthdayPicker(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildGenderSelector(),
                 const SizedBox(height: 24),
                 _buildDeleteReset()
@@ -376,7 +376,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             style: kSFBody,
           ),
         ),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         Container(
           height: 64,
           decoration: const BoxDecoration(
@@ -448,7 +448,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           textInputAction: TextInputAction.next,
           onChanged: (value) {},
         ),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         MyTextFormField(
           controller: lastNameCntlr,
           hintText: 'Last Name',
@@ -460,7 +460,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
         _buildNameErrorText(),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         MyTextFormField(
           controller: emailCntlr,
           hintText: 'Email',
@@ -585,12 +585,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel', style: kSFBody),
           ),
-          const SizedBox(height: kButtonSpacing),
+          const SizedBox(height: kContentSpacing32),
           TextButton(
             onPressed: () => deleteAccount,
             child: Text('Delete account', style: kSFBody.copyWith(color: kRed)),
           ),
-          const SizedBox(height: kTextFieldSpacing)
+          const SizedBox(height: kContentSpacing12)
         ],
       ),
     );

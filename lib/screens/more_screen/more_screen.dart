@@ -99,6 +99,12 @@ class _MoreScreenState extends State<MoreScreen> {
             );
           },
         ),
+        _buildTile(
+          title: 'Logout',
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
+          },
+        ),
       ],
     );
   }

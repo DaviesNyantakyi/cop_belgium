@@ -2,7 +2,7 @@ import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/date_gender_view.dart';
 import 'package:cop_belgium/screens/auth_screens/email_name_view.dart';
 import 'package:cop_belgium/screens/image_picker_screen.dart';
-import 'package:cop_belgium/widgets/church_selector.dart';
+import 'package:cop_belgium/widgets/church_selection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +54,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 EmailNamePasswordView(),
                 DateGenderView(),
                 ImagePickerScreen(),
-                ChurchSelectorScreen()
+                ChurchSelectionScreen()
               ],
             ),
           ),

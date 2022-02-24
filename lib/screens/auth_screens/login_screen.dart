@@ -90,11 +90,11 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildForm(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildLogInBtn(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 _buildDivderText(),
-                const SizedBox(height: kButtonSpacing),
+                const SizedBox(height: kContentSpacing32),
                 const BuildSocialSignupButtons()
               ],
             ),
@@ -136,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Form(
             key: signUpProvider.passwordKey,
             child: MyTextFormField(
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
             ),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Container(
             alignment: Alignment.centerRight,
             child: TextButton(

@@ -111,7 +111,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 const SizedBox(height: kBodyPadding),
                 const BuildCopLogo(),
-                const SizedBox(height: kTextFieldSpacing),
+                const SizedBox(height: kContentSpacing12),
                 _buildPackageVersion(),
                 const SizedBox(height: 39),
                 _buildFeedBackTiles(),

@@ -85,44 +85,28 @@ class _ProfileScreensState extends State<ProfileScreens>
   Widget _buildActions({required BuildContext context}) {
     return Consumer<ImagePickerProvider>(
       builder: (context, imageProvider, _) {
-        return Row(
-          children: [
-            TextButton(
-              style: kTextButtonStyle,
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-                child: const Text('Edit profile', style: kSFBody),
-              ),
-              onPressed: () async {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => MultiProvider(
-                      providers: [
-                        ChangeNotifierProvider<ImagePickerProvider>.value(
-                          value: imageProvider,
-                        ),
-                      ],
-                      child: const EditProfileScreen(),
+        return TextButton(
+          style: kTextButtonStyle,
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            child: const Text('Edit profile', style: kSFBody),
+          ),
+          onPressed: () async {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
+                      value: imageProvider,
                     ),
-                  ),
-                );
-              },
-            ),
-            TextButton(
-              style: kTextButtonStyle,
-              child: Container(
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-                child: const Text('Logout', style: kSFBody),
+                  ],
+                  child: const EditProfileScreen(),
+                ),
               ),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
-              },
-            ),
-          ],
+            );
+          },
         );
       },
     );

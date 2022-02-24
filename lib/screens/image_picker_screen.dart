@@ -25,23 +25,27 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     try {
       await EaslyLoadingIndicator.dismissLoading();
 
-      final hasConnection = await ConnectionChecker().checkConnection();
+      // final hasConnection = await ConnectionChecker().checkConnection();
 
-      if (hasConnection) {
-        final signUpProvider =
-            Provider.of<SignUpProvider>(context, listen: false);
-        final image = Provider.of<ImagePickerProvider>(context, listen: false)
-            .selectedImage;
+      // if (hasConnection) {
+      //   final signUpProvider =
+      //       Provider.of<SignUpProvider>(context, listen: false);
+      //   final image = Provider.of<ImagePickerProvider>(context, listen: false)
+      //       .selectedImage;
 
-        signUpProvider.setSelectedImage(image: image);
+      //   signUpProvider.setSelectedImage(image: image);
 
-        EasyLoading.show();
+      //   EasyLoading.show();
 
-        await signUpProvider.signUp();
-        Navigator.pop(context);
-      } else {
-        throw ConnectionChecker.connectionException;
-      }
+      //   await signUpProvider.signUp();
+      //   Navigator.pop(context);
+      // } else {
+      //   throw ConnectionChecker.connectionException;
+      // }
+      await Provider.of<PageController>(context, listen: false).nextPage(
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeOutExpo,
+      );
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       kshowSnackbar(
@@ -91,7 +95,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
                   const Text('Add profile image', style: kSFHeadLine2),
                   const SizedBox(height: 32),
                   _buildImage(imagePickerProvider: imagePickerProvider),
-                  const SizedBox(height: kButtonSpacing),
+                  const SizedBox(height: kContentSpacing32),
                   _buildContinueButton(),
                 ],
               ),

@@ -11,6 +11,7 @@ class MyTextFormField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final bool? obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final int? maxLines;
   final Function(String)? onSubmitted;
   final Color? fillColor;
@@ -29,6 +30,7 @@ class MyTextFormField extends StatelessWidget {
     this.style,
     this.focusedBorder,
     this.fillColor,
+    this.prefixIcon,
     this.onChanged,
     this.obscureText = false,
     this.validator,
@@ -55,6 +57,7 @@ class MyTextFormField extends StatelessWidget {
             kSFTextFieldStyle.copyWith(color: Colors.black54),
         fillColor: fillColor ?? kBlueLight,
         suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(

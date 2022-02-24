@@ -21,7 +21,7 @@ class BuildSocialSignupButtons extends StatelessWidget {
           ),
           onPressed: () {},
         ),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         Buttons.buildSocialButton(
           context: context,
           icon: Image.asset(

@@ -108,7 +108,7 @@ class _EventsScreenState extends State<EventsScreen> {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
               separatorBuilder: (context, _) => const SizedBox(
-                height: kCardSpacing,
+                height: kContentSpacing12,
               ),
               shrinkWrap: true,
               itemCount: events.length,

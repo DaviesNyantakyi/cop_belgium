@@ -21,7 +21,7 @@ class _TestimoniesTabViewState extends State<TestimoniesTabView> {
       padding: const EdgeInsets.all(kBodyPadding),
       child: ListView.separated(
         separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: kCardSpacing),
+            const SizedBox(height: kContentSpacing12),
         itemCount: 1,
         itemBuilder: (context, index) {
           return TestimonyCard(
@@ -107,7 +107,7 @@ Future<void> _showBottomSheet({
               style: kSFHeadLine3,
             ),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Container(
             alignment: Alignment.centerLeft,
             child: Row(

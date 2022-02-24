@@ -24,7 +24,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   double get playbackSpeed => _playbackSpeed;
 
   Future<void> init(String url) async {
-    playbackState.add(playbackState.value.copyWith(
+    playbackState.add(PlaybackState(
       controls: [
         MediaControl.rewind,
         MediaControl.play,
@@ -40,7 +40,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
     _audioState();
     _getAudioCurrentPosition();
 
-    playbackState.add(playbackState.value.copyWith(
+    playbackState.add(PlaybackState(
       processingState: AudioProcessingState.ready,
       systemActions: {
         MediaAction.seek,
@@ -66,7 +66,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   // Play the audio.
   @override
   Future<void> play() async {
-    playbackState.add(playbackState.value.copyWith(
+    playbackState.add(PlaybackState(
       playing: true,
       controls: [
         MediaControl.rewind,
@@ -92,7 +92,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   // Pause the audio.
   @override
   Future<void> pause() async {
-    playbackState.add(playbackState.value.copyWith(
+    playbackState.add(PlaybackState(
       playing: false,
       controls: [
         MediaControl.rewind,
@@ -167,7 +167,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
       if (_playState == ProcessingState.completed) {
         _isPlaying = false;
 
-        playbackState.add(playbackState.value.copyWith(
+        playbackState.add(PlaybackState(
           playing: false,
           controls: [
             MediaControl.rewind,

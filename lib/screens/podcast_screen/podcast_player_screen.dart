@@ -129,7 +129,7 @@ class _BuildTitle extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
-        const SizedBox(height: kTextFieldSpacing),
+        const SizedBox(height: kContentSpacing12),
         _buildBufferingText(),
       ],
     );
@@ -422,7 +422,7 @@ class _BuildOptionsControlsState extends State<_BuildOptionsControls> {
                       state(() {});
                     },
                   ),
-                  const SizedBox(height: kButtonSpacing),
+                  const SizedBox(height: kContentSpacing32),
                   Buttons.buildOutlinedButton(
                     width: 100,
                     context: context,

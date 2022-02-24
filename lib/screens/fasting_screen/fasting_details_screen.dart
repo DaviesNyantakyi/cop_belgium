@@ -44,7 +44,7 @@ class _FastingDetailsScreenState extends State<FastingDetailsScreen> {
                     children: [
                       _buildHeader(),
                       _buildDurationDetails(),
-                      const SizedBox(height: kTextFieldSpacing),
+                      const SizedBox(height: kContentSpacing12),
                       _buildNoteField(),
                       Expanded(child: Container()),
                       _buildSaveButton(),
@@ -134,7 +134,7 @@ class _FastingDetailsScreenState extends State<FastingDetailsScreen> {
             'Nice Effort.',
             style: kSFHeadLine2.copyWith(color: kWhite),
           ),
-          const SizedBox(height: kTextFieldSpacing),
+          const SizedBox(height: kContentSpacing12),
           Text(
             'You completed a fast for total of 0 minutes',
             style: kSFBody.copyWith(color: kWhite),

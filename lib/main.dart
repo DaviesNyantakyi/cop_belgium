@@ -1,16 +1,20 @@
+import 'dart:convert';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/screens/image_picker_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
+
 import 'package:provider/provider.dart';
 
 //TODO: -Ios setup

@@ -24,7 +24,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
               horizontal: kBodyPadding, vertical: kBodyPadding)
           .copyWith(top: 20),
       separatorBuilder: (BuildContext context, int index) =>
-          const SizedBox(height: kCardSpacing),
+          const SizedBox(height: kContentSpacing12),
       itemCount: 50,
       itemBuilder: (context, index) {
         return TestimonyCard(
@@ -108,7 +108,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
                 style: kSFHeadLine3,
               ),
             ),
-            const SizedBox(height: kTextFieldSpacing),
+            const SizedBox(height: kContentSpacing12),
             Container(
               alignment: Alignment.centerLeft,
               child: Row(

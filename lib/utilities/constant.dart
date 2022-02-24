@@ -151,22 +151,25 @@ List<LinearGradient> kGradients = [
   kBlueDarkGradient,
 ];
 //Stay
-const double kButtonHeight = 50;
 
-const double kButtonWidth = 100;
-
-const double kImageSize = 120;
-const double kButtonRadius = 5;
 const double kCardRadius = 10;
-const double kTextFieldSpacing = 12;
-const double kButtonSpacing = 32;
-const double kAppbarPadding = 20.0;
-const double kAppbarElevation = 1;
-const double kBodyPadding = 16.0;
-const double kIconSize = 24;
-const double kCardSpacing = 10;
+const double kButtonRadius = 5;
 
 const double kCardContentPadding = 16;
+const double kBodyPadding = 16.0;
+const double kAppbarPadding = 20.0;
+
+const double kButtonHeight = 50;
+const double kButtonWidth = 100;
+
+const double kCopLogoSize = 120;
+
+const double kContentSpacing12 = 12;
+const double kContentSpacing32 = 32;
+
+const double kAppbarElevation = 1;
+
+const double kIconSize = 24;
 
 Duration kPagViewDuration = const Duration(milliseconds: 800);
 Curve kPagViewCurve = Curves.easeOutExpo;

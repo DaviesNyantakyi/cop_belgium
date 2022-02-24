@@ -103,12 +103,12 @@ class _PodcastScreenState extends State<PodcastScreen> {
             onPressed: () => Navigator.pop(context),
             child: const Text('Cancel', style: kSFBodyBold),
           ),
-          const SizedBox(height: kButtonSpacing),
+          const SizedBox(height: kContentSpacing32),
           TextButton(
             onPressed: () => {},
             child: const Text('OK', style: kSFBodyBold),
           ),
-          const SizedBox(height: kTextFieldSpacing)
+          const SizedBox(height: kContentSpacing12)
         ],
       ),
     );
@@ -173,7 +173,7 @@ Widget _buildPodcastsList({required BuildContext context}) {
     builder: (context, audioProvider, _) {
       return ListView.separated(
         separatorBuilder: (context, index) => const SizedBox(
-          height: kCardSpacing,
+          height: kContentSpacing12,
         ),
         itemCount: podcast.length,
         shrinkWrap: true,

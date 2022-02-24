@@ -69,7 +69,7 @@ class _ViewEventScreenState extends State<ViewEventScreen> {
             size: 30,
           ),
         ),
-        const SizedBox(width: kTextFieldSpacing),
+        const SizedBox(width: kContentSpacing12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -114,7 +114,7 @@ class _ViewEventScreenState extends State<ViewEventScreen> {
             ),
             child: const Icon(Icons.language_outlined, size: 30),
           ),
-          const SizedBox(width: kTextFieldSpacing),
+          const SizedBox(width: kContentSpacing12),
           const Text('Zoom', style: kSFBodyBold),
           const Spacer(),
           Buttons.buildOutlinedButton(
@@ -146,7 +146,7 @@ class _ViewEventScreenState extends State<ViewEventScreen> {
             size: 30,
           ),
         ),
-        const SizedBox(width: kTextFieldSpacing),
+        const SizedBox(width: kContentSpacing12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

@@ -8,7 +8,7 @@ class BuildCopLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image.asset(
       'assets/images/logos/cop_logo.jpg',
-      width: kImageSize,
+      width: kCopLogoSize,
     );
   }
 }
