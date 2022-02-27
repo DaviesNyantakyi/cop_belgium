@@ -35,8 +35,8 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
         signUpProvider.togglePasswordView();
       }
       await Provider.of<PageController>(context, listen: false).nextPage(
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutExpo,
+        duration: kPagViewDuration,
+        curve: kPagViewCurve,
       );
     }
   }

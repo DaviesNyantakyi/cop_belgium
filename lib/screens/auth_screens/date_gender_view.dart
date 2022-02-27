@@ -37,8 +37,8 @@ class _DateGenderViewState extends State<DateGenderView> {
     if (signUpProvider.dateOfBirth != null &&
         signUpProvider.genderCntlr.text.isNotEmpty) {
       await Provider.of<PageController>(context, listen: false).nextPage(
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutExpo,
+        duration: kPagViewDuration,
+        curve: kPagViewCurve,
       );
     }
   }
@@ -48,8 +48,8 @@ class _DateGenderViewState extends State<DateGenderView> {
     return WillPopScope(
       onWillPop: () async {
         await Provider.of<PageController>(context, listen: false).previousPage(
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeOutExpo,
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
         );
         return false;
       },
@@ -97,8 +97,8 @@ class _DateGenderViewState extends State<DateGenderView> {
       ),
       onPressed: () async {
         await Provider.of<PageController>(context, listen: false).previousPage(
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeOutExpo,
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
         );
       },
     );

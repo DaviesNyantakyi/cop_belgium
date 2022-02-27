@@ -1,12 +1,13 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/church_selection.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
@@ -25,26 +26,17 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     try {
       await EaslyLoadingIndicator.dismissLoading();
 
-      // final hasConnection = await ConnectionChecker().checkConnection();
+      final signUpProvider =
+          Provider.of<SignUpProvider>(context, listen: false);
 
-      // if (hasConnection) {
-      //   final signUpProvider =
-      //       Provider.of<SignUpProvider>(context, listen: false);
-      //   final image = Provider.of<ImagePickerProvider>(context, listen: false)
-      //       .selectedImage;
-
-      //   signUpProvider.setSelectedImage(image: image);
-
-      //   EasyLoading.show();
-
-      //   await signUpProvider.signUp();
-      //   Navigator.pop(context);
-      // } else {
-      //   throw ConnectionChecker.connectionException;
-      // }
-      await Provider.of<PageController>(context, listen: false).nextPage(
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeOutExpo,
+      await Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => ChangeNotifierProvider.value(
+            value: signUpProvider,
+            child: const ChurchSelectionScreen(),
+          ),
+        ),
       );
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
@@ -77,8 +69,8 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     return WillPopScope(
       onWillPop: () async {
         await Provider.of<PageController>(context, listen: false).previousPage(
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeOutExpo,
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
         );
         return false;
       },

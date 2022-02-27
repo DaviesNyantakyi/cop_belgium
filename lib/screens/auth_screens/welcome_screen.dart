@@ -1,5 +1,4 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,24 +21,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(kBodyPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                const BuildCopLogo(),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.10),
-                _buildSocialButtons(),
-                const SizedBox(height: kContentSpacing32),
-                _buildDivderText(),
-                const SizedBox(height: kContentSpacing32),
-                _buildLogInButton(),
-              ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(kBodyPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const BuildCopLogo(),
+                  const SizedBox(height: 44),
+                  _buildSocialButtons(),
+                  const SizedBox(height: kContentSpacing12),
+                  _buildLogInButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -71,68 +69,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildSocialButtons() {
-    return Column(
-      children: [
-        Buttons.buildSocialButton(
-          context: context,
-          icon: const Icon(
-            Icons.email_outlined,
-            color: kBlack,
-          ),
-          label: const Text(
-            'Continue with Email',
-            style: kSFBtnStyleBold,
-          ),
-          onPressed: () {
-            final signUpProvider =
-                Provider.of<SignUpProvider>(context, listen: false);
-            final imageSelector =
-                Provider.of<ImagePickerProvider>(context, listen: false);
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<SignUpProvider>.value(
-                      value: signUpProvider,
-                    ),
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imageSelector,
-                    )
-                  ],
-                  child: const SignUpScreen(),
+    return Buttons.buildSocialButton(
+      context: context,
+      icon: const Icon(
+        Icons.email_outlined,
+        color: kBlack,
+      ),
+      label: const Text(
+        'Continue with Email',
+        style: kSFBtnStyleBold,
+      ),
+      onPressed: () {
+        final signUpProvider =
+            Provider.of<SignUpProvider>(context, listen: false);
+        final imageSelector =
+            Provider.of<ImagePickerProvider>(context, listen: false);
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider<SignUpProvider>.value(
+                  value: signUpProvider,
                 ),
-              ),
-            );
-          },
-        ),
-        const SizedBox(height: kContentSpacing12),
-        const BuildSocialSignupButtons()
-      ],
-    );
-  }
-
-  Widget _buildDivderText() {
-    double dividerWidth = 100;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: dividerWidth,
-          child: const Divider(color: kBlack),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(
-            'OR',
-            style: kSFBodyBold.copyWith(color: kBlack),
+                ChangeNotifierProvider<ImagePickerProvider>.value(
+                  value: imageSelector,
+                )
+              ],
+              child: const SignUpScreen(),
+            ),
           ),
-        ),
-        SizedBox(
-          width: dividerWidth,
-          child: const Divider(color: kBlack),
-        ),
-      ],
+        );
+      },
     );
   }
 }

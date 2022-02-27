@@ -6,13 +6,13 @@ class ChurchTile extends StatelessWidget {
     Key? key,
     required this.thumbnail,
     required this.title,
-    required this.user,
+    required this.address,
     required this.onTap,
   }) : super(key: key);
 
   final Widget thumbnail;
   final String title;
-  final String user;
+  final String address;
   final VoidCallback onTap;
 
   @override
@@ -39,7 +39,7 @@ class ChurchTile extends StatelessWidget {
                   ),
                   const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
                   Text(
-                    user,
+                    address,
                     style: kSFCaption,
                   ),
                 ],

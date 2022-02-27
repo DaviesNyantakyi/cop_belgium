@@ -1,5 +1,4 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/screens/auth_screens/widgets/social_signup_buttons.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -92,10 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 _buildForm(),
                 const SizedBox(height: kContentSpacing32),
                 _buildLogInBtn(),
-                const SizedBox(height: kContentSpacing32),
-                _buildDivderText(),
-                const SizedBox(height: kContentSpacing32),
-                const BuildSocialSignupButtons()
               ],
             ),
           ),
@@ -192,29 +187,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       );
     });
-  }
-
-  Widget _buildDivderText() {
-    double dividerWidth = 100;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: dividerWidth,
-          child: const Divider(color: kBlack),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Text(
-            'OR',
-            style: kSFBodyBold.copyWith(color: kBlack),
-          ),
-        ),
-        SizedBox(
-          width: dividerWidth,
-          child: const Divider(color: kBlack),
-        ),
-      ],
-    );
   }
 }
