@@ -12,7 +12,8 @@ class SignUpProvider extends ChangeNotifier {
   final TextEditingController _lastNameCntlr = TextEditingController();
   final TextEditingController _emailCntlr = TextEditingController();
   final TextEditingController _passwordCntlr = TextEditingController();
-  final TextEditingController _genderCntlr = TextEditingController();
+  String _gender = '';
+  String _church = '';
 
   File? _selectedImage;
   DateTime? _dateOfBirth;
@@ -28,11 +29,12 @@ class SignUpProvider extends ChangeNotifier {
 
   TextEditingController get firstNameCntlr => _firstNameCntlr;
   TextEditingController get lastNameCntlr => _lastNameCntlr;
-  TextEditingController get genderCntlr => _genderCntlr;
+  String get gender => _gender;
   TextEditingController get emailCntlr => _emailCntlr;
   TextEditingController get passwordCntlr => _passwordCntlr;
   DateTime? get dateOfBirth => _dateOfBirth;
   File? get selectedImage => _selectedImage;
+  String get selectedChurch => _church;
 
   GlobalKey<FormState> get firstNameKey => _firstNameKey;
   GlobalKey<FormState> get lastNameKey => _lastNameKey;
@@ -56,7 +58,7 @@ class SignUpProvider extends ChangeNotifier {
   }
 
   void setGender({String? gender}) {
-    _genderCntlr.text = gender ?? '';
+    _gender = gender ?? '';
     notifyListeners();
   }
 
@@ -72,11 +74,17 @@ class SignUpProvider extends ChangeNotifier {
 
   void setSelectedImage({File? image}) {
     _selectedImage = image;
+
     notifyListeners();
   }
 
   void setLoading() {
     _isLoading = !_isLoading;
+    notifyListeners();
+  }
+
+  void setChurch({required String church}) {
+    _church = church;
     notifyListeners();
   }
 
@@ -92,7 +100,8 @@ class SignUpProvider extends ChangeNotifier {
       lastName: _lastNameCntlr.text,
       birthDate: _dateOfBirth!,
       email: _emailCntlr.text.trim(),
-      gender: _genderCntlr.text,
+      gender: _gender,
+      church: _church,
     );
 
     final user = await _fireAuth.signUpEmailPassword(
@@ -108,10 +117,12 @@ class SignUpProvider extends ChangeNotifier {
     _firstNameCntlr.text = '';
     _lastNameCntlr.text = '';
     _passwordCntlr.text = '';
-    _genderCntlr.text = '';
+    _gender = '';
+    _church = '';
     _dateOfBirth = null;
     _viewPassword = false;
     _viewPassword2 = false;
+    _selectedImage = null;
 
     _firstNameKey.currentState?.reset();
     _lastNameKey.currentState?.reset();

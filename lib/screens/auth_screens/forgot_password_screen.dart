@@ -38,7 +38,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       await EasyLoading.dismiss();
       kshowSnackbar(
         context: context,
-        errorType: 'error',
+        type: 'error',
         text: e.message!,
       );
       debugPrint(e.toString());

@@ -43,19 +43,15 @@ class Validators {
     return null;
   }
 
-  Widget showValidationWidget({dynamic object, String? errorText}) {
-    if (object.runtimeType == String && object.toString().isNotEmpty) {
-      // Check only object of the type string.
-      return Container();
-    }
-    if (object != null) {
+  Widget showValidationWidget({String? errorText}) {
+    if (errorText == null) {
       return Container();
     }
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        errorText!,
+        errorText,
         style: kSFBody2.copyWith(color: kRed),
       ),
     );

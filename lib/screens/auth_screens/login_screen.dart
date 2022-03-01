@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await EasyLoading.dismiss();
       kshowSnackbar(
         context: context,
-        errorType: 'error',
+        type: 'error',
         text: e.message!,
       );
       debugPrint(e.toString());

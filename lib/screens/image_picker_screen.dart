@@ -1,15 +1,12 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/church_selection.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 
 class ImagePickerScreen extends StatefulWidget {
@@ -20,48 +17,29 @@ class ImagePickerScreen extends StatefulWidget {
 }
 
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
-  late final ImagePickerProvider imageSelector;
-
   Future<void> submit() async {
     try {
-      await EaslyLoadingIndicator.dismissLoading();
+      bool hasConnection = await ConnectionChecker().checkConnection();
+      if (hasConnection) {
+        await EaslyLoadingIndicator.dismissLoading();
 
-      final signUpProvider =
-          Provider.of<SignUpProvider>(context, listen: false);
-
-      await Navigator.push(
-        context,
-        CupertinoPageRoute(
-          builder: (context) => ChangeNotifierProvider.value(
-            value: signUpProvider,
-            child: const ChurchSelectionScreen(),
-          ),
-        ),
-      );
+        await Provider.of<PageController>(context, listen: false).nextPage(
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
+        );
+      } else {
+        throw ConnectionChecker.connectionException;
+      }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       kshowSnackbar(
-        errorType: 'error',
+        type: 'error',
         context: context,
         text: e.message!,
       );
     } catch (e) {
       debugPrint(e.toString());
-    } finally {
-      EasyLoading.dismiss();
     }
-  }
-
-  @override
-  void dispose() {
-    imageSelector.close();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    imageSelector = Provider.of<ImagePickerProvider>(context, listen: false);
-    super.initState();
   }
 
   @override
@@ -118,7 +96,9 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     );
   }
 
-  Widget _buildImage({required ImagePickerProvider imagePickerProvider}) {
+  Widget _buildImage({
+    required ImagePickerProvider imagePickerProvider,
+  }) {
     if (imagePickerProvider.selectedImage?.path != null) {
       return CircleAvatar(
         radius: 90,

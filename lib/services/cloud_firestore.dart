@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
@@ -76,6 +77,23 @@ class CloudFireStore {
       } else {
         throw ConnectionChecker.connectionException;
       }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Church> getChurchInfo({required churchId}) async {
+    try {
+      // delete likers collection first otherwise the doc will still remain
+      final docSnzp =
+          await _firestore.collection('churches').doc(churchId).get();
+
+      final church = Church.fromMap(map: docSnzp.data()!);
+      return church;
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

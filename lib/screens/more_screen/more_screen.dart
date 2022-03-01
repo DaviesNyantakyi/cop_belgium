@@ -141,21 +141,10 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildAccountInfo() {
-    final user = FirebaseAuth.instance.currentUser;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          user?.displayName ?? '',
-          style: kSFHeadLine3,
-        ),
-        Text(
-          user?.email ?? '',
-          style: kSFBody,
-        ),
-      ],
+    final userName = FirebaseAuth.instance.currentUser?.displayName;
+    return Text(
+      userName ?? ' ',
+      style: kSFHeadLine3,
     );
   }
 

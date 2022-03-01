@@ -32,7 +32,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,
-        errorType: 'error',
+        type: 'error',
         text: e.message.toString(),
       );
     } catch (e) {
@@ -140,7 +140,9 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
           ),
         ),
         onPressed: () {
-          Navigator.of(context)..pop()..pop();
+          Navigator.of(context)
+            ..pop()
+            ..pop();
         },
         style: kTextButtonStyle,
       ),

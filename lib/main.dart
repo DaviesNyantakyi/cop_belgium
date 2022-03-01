@@ -3,7 +3,6 @@ import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_selector_provider.dart';
-import 'package:cop_belgium/widgets/church_selection.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

@@ -189,7 +189,7 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,
-        errorType: 'error',
+        type: 'error',
         text: e.message.toString(),
       );
     } catch (e) {

@@ -1,10 +1,12 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,21 +26,32 @@ class _DateGenderViewState extends State<DateGenderView> {
   DatePicker datePicker = DatePicker();
 
   Future<void> onSubmit() async {
-    final signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    genderErrorText = Validators.genderValidator(
-      gender: signUpProvider.genderCntlr.text,
-    );
+    final bool hasConnection = await ConnectionChecker().checkConnection();
 
-    dateOfBirthErrorText =
-        Validators.birthdayValidator(date: signUpProvider.dateOfBirth);
+    if (hasConnection) {
+      final signUpProvider =
+          Provider.of<SignUpProvider>(context, listen: false);
 
-    setState(() {});
+      setState(() {
+        genderErrorText = Validators.genderValidator(
+          gender: signUpProvider.gender,
+        );
 
-    if (signUpProvider.dateOfBirth != null &&
-        signUpProvider.genderCntlr.text.isNotEmpty) {
-      await Provider.of<PageController>(context, listen: false).nextPage(
-        duration: kPagViewDuration,
-        curve: kPagViewCurve,
+        dateOfBirthErrorText =
+            Validators.birthdayValidator(date: signUpProvider.dateOfBirth);
+      });
+      if (signUpProvider.dateOfBirth != null &&
+          signUpProvider.gender.isNotEmpty) {
+        await Provider.of<PageController>(context, listen: false).nextPage(
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
+        );
+      }
+    } else {
+      kshowSnackbar(
+        context: context,
+        type: 'error',
+        text: ConnectionChecker.connectionException.message!,
       );
     }
   }
@@ -123,48 +136,34 @@ class _DateGenderViewState extends State<DateGenderView> {
               MyCheckBox(
                 label: 'Male',
                 value: 'male',
-                groupsValue: signUpProvider.genderCntlr.text,
+                groupsValue: signUpProvider.gender,
                 onChanged: (value) {
                   signUpProvider.setGender(gender: value);
+                  genderErrorText = Validators.genderValidator(
+                    gender: signUpProvider.gender,
+                  );
+                  setState(() {});
                 },
               ),
               const SizedBox(width: 10),
               MyCheckBox(
                 label: 'Female',
                 value: 'female',
-                groupsValue: signUpProvider.genderCntlr.text,
+                groupsValue: signUpProvider.gender,
                 onChanged: (value) {
                   signUpProvider.setGender(gender: value);
+                  genderErrorText = Validators.genderValidator(
+                    gender: signUpProvider.gender,
+                  );
+                  setState(() {});
                 },
               ),
             ],
           ),
-          _buildGenderValidator(signUpProvider: signUpProvider),
+          Validators().showValidationWidget(errorText: genderErrorText)
         ],
       );
     });
-  }
-
-  Widget _buildGenderValidator({required SignUpProvider signUpProvider}) {
-    if (genderErrorText == null) {
-      return Container();
-    }
-    return Validators().showValidationWidget(
-      object: signUpProvider.genderCntlr.text.isEmpty
-          ? null
-          : signUpProvider.genderCntlr.text,
-      errorText: genderErrorText,
-    );
-  }
-
-  Widget _buildBirthValidator({required SignUpProvider signUpProvider}) {
-    if (dateOfBirthErrorText == null) {
-      return Container();
-    }
-    return Validators().showValidationWidget(
-      object: signUpProvider.dateOfBirth,
-      errorText: dateOfBirthErrorText,
-    );
   }
 
   Widget _buildBirthdayPicker() {
@@ -200,6 +199,10 @@ class _DateGenderViewState extends State<DateGenderView> {
                   context: context,
                   onChanged: (date) {
                     signUpProvider.setDateOfBirth(date: date);
+                    dateOfBirthErrorText = Validators.birthdayValidator(
+                      date: signUpProvider.dateOfBirth,
+                    );
+                    setState(() {});
                   },
                 );
               },
@@ -235,7 +238,7 @@ class _DateGenderViewState extends State<DateGenderView> {
               ),
             ),
           ),
-          _buildBirthValidator(signUpProvider: signUpProvider),
+          Validators().showValidationWidget(errorText: dateOfBirthErrorText)
         ],
       );
     });

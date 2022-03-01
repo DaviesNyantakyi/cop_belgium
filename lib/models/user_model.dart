@@ -7,6 +7,7 @@ class CopUser {
   String lastName;
   String email;
   String gender;
+  String? church;
   DateTime birthDate;
   bool isAdmin;
 
@@ -18,6 +19,7 @@ class CopUser {
     required this.lastName,
     required this.birthDate,
     required this.email,
+    this.church,
     required this.gender,
   });
 
@@ -30,6 +32,7 @@ class CopUser {
       firstName: map['firstName'],
       lastName: map['lastName'],
       email: map['email'],
+      church: map['church'],
       gender: map['gender'],
       isAdmin: map['isAdmin'],
     );
@@ -45,6 +48,12 @@ class CopUser {
       'birthDate': birthDate,
       'email': email,
       'gender': gender,
+      'church': church
     };
+  }
+
+  @override
+  String toString() {
+    return 'Church(id: $id, photoUrl:$photoUrl, churchName: $firstName, phoneNumber: $lastName, email: $email, isAdmin: $isAdmin, birthDate: $birthDate, gender: $gender, church: $church)';
   }
 }

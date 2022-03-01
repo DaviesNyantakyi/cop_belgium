@@ -67,18 +67,22 @@ class _PodcastScreenState extends State<PodcastScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add_outlined),
-        onPressed: () {
-          _addPodcastDialog();
-        },
-      ),
+      floatingActionButton: _buildFloatingActionButton(),
       body: const SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(kBodyPadding),
           child: _Body(),
         ),
       ),
+    );
+  }
+
+  Widget _buildFloatingActionButton() {
+    return FloatingActionButton(
+      child: const Icon(Icons.add_outlined),
+      onPressed: () {
+        _addPodcastDialog();
+      },
     );
   }
 
@@ -139,7 +143,6 @@ class _Body extends StatelessWidget {
   }
 
   Widget _buildGreeting() {
-    final userName = FirebaseAuth.instance.currentUser?.displayName;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -148,7 +151,7 @@ class _Body extends StatelessWidget {
           style: kSFHeadLine3.copyWith(color: kBlue),
         ),
         Text(
-          userName ?? '',
+          FirebaseAuth.instance.currentUser?.displayName ?? '',
           style: kSFBody,
         ),
       ],

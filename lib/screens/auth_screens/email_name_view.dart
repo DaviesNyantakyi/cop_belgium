@@ -1,7 +1,9 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,27 +18,38 @@ class EmailNamePasswordView extends StatefulWidget {
 class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
   Future<void> onSubmit() async {
     FocusScope.of(context).unfocus();
-    final signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
-    final bool? validEmail = signUpProvider.emailKey.currentState?.validate();
-    final bool? validFirstName =
-        signUpProvider.firstNameKey.currentState?.validate();
-    final bool? validLastName =
-        signUpProvider.lastNameKey.currentState?.validate();
-    final bool? validPasswordField =
-        signUpProvider.passwordKey.currentState?.validate();
 
-    if (validEmail == true &&
-        validFirstName == true &&
-        validLastName == true &&
-        validPasswordField == true) {
-      if (signUpProvider.viewPassword == true &&
-          signUpProvider.viewPassword == true) {
-        // Hiding the password befor navigating to the next page
-        signUpProvider.togglePasswordView();
+    bool hasConnection = await ConnectionChecker().checkConnection();
+    if (hasConnection) {
+      final signUpProvider =
+          Provider.of<SignUpProvider>(context, listen: false);
+      final bool? validEmail = signUpProvider.emailKey.currentState?.validate();
+      final bool? validFirstName =
+          signUpProvider.firstNameKey.currentState?.validate();
+      final bool? validLastName =
+          signUpProvider.lastNameKey.currentState?.validate();
+      final bool? validPasswordField =
+          signUpProvider.passwordKey.currentState?.validate();
+
+      if (validEmail == true &&
+          validFirstName == true &&
+          validLastName == true &&
+          validPasswordField == true) {
+        if (signUpProvider.viewPassword == true &&
+            signUpProvider.viewPassword == true) {
+          // Hiding the password befor navigating to the next page
+          signUpProvider.togglePasswordView();
+        }
+        await Provider.of<PageController>(context, listen: false).nextPage(
+          duration: kPagViewDuration,
+          curve: kPagViewCurve,
+        );
       }
-      await Provider.of<PageController>(context, listen: false).nextPage(
-        duration: kPagViewDuration,
-        curve: kPagViewCurve,
+    } else {
+      kshowSnackbar(
+        context: context,
+        type: 'error',
+        text: ConnectionChecker.connectionException.message!,
       );
     }
   }
@@ -99,6 +112,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           controller: signUpProvider.emailCntlr,
           hintText: 'Email',
           textInputAction: TextInputAction.next,
+          maxLines: 1,
           validator: Validators.emailValidator,
           onChanged: (value) {
             signUpProvider.emailKey.currentState?.validate();
@@ -117,6 +131,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           hintText: 'Last Name',
           textInputAction: TextInputAction.next,
           validator: Validators.nameValidator,
+          maxLines: 1,
           onChanged: (value) {
             signUpProvider.lastNameKey.currentState?.validate();
           },
@@ -133,6 +148,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           controller: signUpProvider.firstNameCntlr,
           hintText: 'First Name',
           textInputAction: TextInputAction.next,
+          maxLines: 1,
           validator: Validators.nameValidator,
           onChanged: (value) {
             signUpProvider.firstNameKey.currentState?.validate();

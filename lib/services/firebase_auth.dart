@@ -26,13 +26,12 @@ class FireAuth {
         await _auth.currentUser?.updateDisplayName(displayName);
         user.id = _auth.currentUser?.uid;
         await _fireStore.createUserDoc(user: user);
-
         return _auth.currentUser;
       } else {
         return null;
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.hashCode.toString());
+      debugPrint(e.toString());
 
       rethrow;
     }

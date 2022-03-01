@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       await FlutterEmailSender.send(email);
     } catch (e) {
       kshowSnackbar(
-        errorType: 'normal',
+        type: 'normal',
         context: context,
         text: e.toString(),
       );

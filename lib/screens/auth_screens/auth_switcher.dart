@@ -22,7 +22,9 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
       stream: auth.authStateChanges(),
       builder: (context, snaphot) {
         if (snaphot.connectionState == ConnectionState.active) {
-          if (snaphot.hasData && snaphot.data?.uid != null) {
+          if (snaphot.hasData &&
+              snaphot.data?.uid != null &&
+              snaphot.data != null) {
             return const BottomNavSelectorPage();
           }
 

@@ -47,7 +47,7 @@ class Church {
     };
   }
 
-  factory Church.fromMap(Map<String, dynamic> map) {
+  factory Church.fromMap({required Map<String, dynamic> map}) {
     return Church(
       id: map['id'] ?? '',
       churchName: map['churchName'] ?? '',

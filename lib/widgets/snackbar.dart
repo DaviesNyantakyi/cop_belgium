@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 
 dynamic kshowSnackbar({
   required BuildContext context,
-  required String errorType,
+  required String type,
   required String text,
 }) {
   Color? backgroundColor;
   Color textColor;
-  switch (errorType) {
+  switch (type) {
     case 'error':
       backgroundColor = kRed;
       textColor = Colors.white;
