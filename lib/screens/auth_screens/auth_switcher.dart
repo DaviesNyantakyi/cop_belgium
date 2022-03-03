@@ -32,7 +32,7 @@ class _AuthSwitcherState extends State<AuthSwitcher> {
         } else {
           return const Scaffold(
             body: Center(
-              child: kProgressIndicator,
+              child: kCircularProgressIndicator,
             ),
           );
         }

@@ -164,6 +164,7 @@ const double kButtonWidth = 100;
 
 const double kCopLogoSize = 120;
 
+const double kContentSpacing8 = 8;
 const double kContentSpacing12 = 12;
 const double kContentSpacing32 = 32;
 
@@ -180,7 +181,7 @@ BoxShadow kBoxShadow = BoxShadow(
   color: Colors.black.withOpacity(0.2),
 );
 
-const kProgressIndicator = CircularProgressIndicator(
+const kCircularProgressIndicator = CircularProgressIndicator(
   strokeWidth: 5,
   color: kBlack,
 );

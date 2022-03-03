@@ -46,7 +46,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
             const SizedBox(height: kContentSpacing32),
             const Text('Episodes', style: kSFHeadLine3),
             const SizedBox(height: 16),
-            const _BuildPodcastsList(),
+            const _BuildEpisodesList(),
           ],
         ),
       ),
@@ -173,8 +173,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 }
 
-class _BuildPodcastsList extends StatelessWidget {
-  const _BuildPodcastsList({Key? key}) : super(key: key);
+class _BuildEpisodesList extends StatelessWidget {
+  const _BuildEpisodesList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -185,10 +185,13 @@ class _BuildPodcastsList extends StatelessWidget {
         title: 'Deception',
         author: 'Church of Pentecos Belgium',
         description: '''What is going on in the end times.''',
-        audio:
+        audioUrl:
             'https://stream.redcircle.com/episodes/58ea3c7d-2079-4ed3-bc0d-19e507486d3d/stream.mp3',
         duration: const Duration(seconds: 1404),
         date: DateTime.now(),
+        podcastName: 'Deep Thruths',
+        podcastUrl:
+            'https://feeds.redcircle.com/ef5caef7-c00e-4dcf-9bac-90b60a2db406',
       ),
     ];
     return Consumer<AudioProvider>(

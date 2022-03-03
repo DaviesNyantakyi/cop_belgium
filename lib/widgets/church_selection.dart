@@ -65,7 +65,7 @@ class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
                 builder: (context, snapshot) {
                   final data = snapshot.data;
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: kProgressIndicator);
+                    return const Center(child: kCircularProgressIndicator);
                   }
 
                   List<Church>? churches = data?.docs.map((map) {

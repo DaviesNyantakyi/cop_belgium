@@ -57,6 +57,7 @@ dependencies:
   cached_network_image: ^3.2.0
   image_picker: ^0.8.4+4
   path: ^1.8.0 # get base name from selected file path
+  path_provider: ^2.0.9  # read and write to device and app storage
   package_info_plus: ^1.3.0 # get app package info
   device_info: ^2.0.3 # get device info
   image_cropper: ^1.4.1 # cropping image
@@ -66,9 +67,8 @@ dependencies:
   syncfusion_flutter_sliders: ^19.4.48 #Slider with dividers
   permission_handler: ^9.1.0
   app_settings: ^4.1.1
-  flutter_dotenv: ^5.0.2
-  flutter_google_places: ^0.3.0
-  google_geocoding: ^0.2.0
+  
+
 
 
 flutter_native_splash:

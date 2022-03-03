@@ -39,7 +39,7 @@ Future<void> init() async {
     ..loadingStyle = EasyLoadingStyle.light
     ..indicatorSize = 45.0
     ..radius = 5
-    ..indicatorWidget = kProgressIndicator
+    ..indicatorWidget = kCircularProgressIndicator
     ..maskType = EasyLoadingMaskType.black
     ..dismissOnTap = false;
 
@@ -161,5 +161,29 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
         offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+class Test extends StatelessWidget {
+  const Test({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () async {},
+              child: Text(
+                'Download',
+                style: kSFBody.copyWith(color: Colors.white),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
