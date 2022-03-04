@@ -46,7 +46,7 @@ Future<void> init() async {
   _audioHandler = await AudioService.init<AudioProvider>(
     builder: () => AudioProvider(),
     config: AudioServiceConfig(
-      androidNotificationChannelId: 'com.apkeroo.cop_belgium.channel.audio',
+      androidNotificationChannelId: 'com.apkeroo.copBelgium.channel.audio',
       androidNotificationChannelName: 'Cop Belgium',
       androidNotificationOngoing: true,
       androidStopForegroundOnPause: true,

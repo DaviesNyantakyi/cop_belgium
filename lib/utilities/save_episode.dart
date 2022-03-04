@@ -11,6 +11,7 @@ class MyPathProvider {
 // Create and return the Cop Belgium Path.
   Future<String> _getCopPath() async {
     try {
+      // Get the storage directory
       Directory? directory = await path_provider.getExternalStorageDirectory();
 
       List<String> foldersNames = directory!.path.split('/');
