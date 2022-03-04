@@ -33,7 +33,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       kshowSnackbar(
-        type: 'error',
+        type: SnackBarType.error,
         context: context,
         text: e.message!,
       );

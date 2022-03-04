@@ -13,12 +13,9 @@ import 'package:cop_belgium/screens/all_screens.dart';
 
 import 'package:provider/provider.dart';
 
-//TODO: -Ios setup
-//-iOS Firebase Project Setup
+//TODO: -Firebase Project setup IOS
 
-//TODO:  -Image picker
-//    - image picker setup ios
-// Ask for perimmsion
+//TODO:  -Image picker IOS
 
 late AudioProvider _audioHandler;
 
@@ -53,6 +50,7 @@ Future<void> init() async {
       androidNotificationChannelName: 'Cop Belgium',
       androidNotificationOngoing: true,
       androidStopForegroundOnPause: true,
+      androidResumeOnClick: true,
       fastForwardInterval: _skipDuration,
       rewindInterval: _skipDuration,
     ),
@@ -175,11 +173,11 @@ class Test extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () async {},
               child: Text(
                 'Download',
                 style: kSFBody.copyWith(color: Colors.white),
               ),
+              onPressed: () async {},
             )
           ],
         ),

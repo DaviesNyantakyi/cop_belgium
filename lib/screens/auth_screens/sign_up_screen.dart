@@ -106,7 +106,7 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,
-        type: 'error',
+        type: SnackBarType.error,
         text: e.message!,
       );
 

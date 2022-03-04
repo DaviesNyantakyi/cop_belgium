@@ -104,7 +104,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       EasyLoading.dismiss();
       kshowSnackbar(
         context: context,
-        type: 'error',
+        type: SnackBarType.error,
         text: e.message!,
       );
       debugPrint(e.toString());
@@ -173,7 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await EasyLoading.dismiss();
       kshowSnackbar(
         context: context,
-        type: 'error',
+        type: SnackBarType.error,
         text: e.message!,
       );
       debugPrint(e.toString());
@@ -224,7 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         Navigator.pop(context);
         kshowSnackbar(
           context: context,
-          type: 'error',
+          type: SnackBarType.error,
           text: e.message!,
         );
       } catch (e) {

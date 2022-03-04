@@ -2,13 +2,16 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 
+// just_audio:
+// playerStateStream: the state of the audio, if it's loading, paused, ready..
+
 class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   final _justAudio = AudioPlayer();
 
   bool _isPlaying = false;
   double _playbackSpeed = 1.0;
 
-  // State of the player
+  // State of the notifcation player
   ProcessingState? _playState;
 
   Duration _totalDuration = Duration.zero;
@@ -23,42 +26,66 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   ProcessingState? get playState => _playState;
   double get playbackSpeed => _playbackSpeed;
 
-  Future<void> init(String url) async {
-    playbackState.add(PlaybackState(
-      controls: [
-        MediaControl.rewind,
-        MediaControl.play,
-        MediaControl.fastForward,
-      ],
-      processingState: AudioProcessingState.idle,
-      systemActions: {
-        MediaAction.seek,
-      },
-    ));
+  Future<void> init({required String url, required MediaItem item}) async {
+    try {
+      // Show notification audio is loading.
+      playbackState.add(PlaybackState(
+        processingState: AudioProcessingState.loading,
+        systemActions: {
+          MediaAction.seek,
+        },
+      ));
 
-    await setAudio(url);
-    _audioState();
-    _getAudioCurrentPosition();
+      await _setMedia(url: url, item: item);
 
-    playbackState.add(PlaybackState(
-      processingState: AudioProcessingState.ready,
-      systemActions: {
-        MediaAction.seek,
-      },
-    ));
+      _getAudioCurrentPosition();
+      _audioState();
+
+      await play();
+
+      //Show notifcation audio is ready.
+      playbackState.add(PlaybackState(
+        playing: false,
+        controls: [
+          MediaControl.rewind,
+          MediaControl.play,
+          MediaControl.fastForward
+        ],
+        processingState: AudioProcessingState.ready,
+        systemActions: {
+          MediaAction.seek,
+        },
+      ));
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
 
     notifyListeners();
   }
 
-  // Set the audio source and set the totalDuration.
-  Future<void> setAudio(String url) async {
-    _totalDuration = (await _justAudio.setUrl(url))!;
+  // Set the audio url, duration and add the epsiode details to the notication.
+  Future<void> _setMedia({required String url, required MediaItem item}) async {
+    try {
+      _totalDuration = (await _justAudio.setUrl(url))!;
+
+      // add the episode details to the notifcation
+      mediaItem.add(item);
+    } catch (e) {
+      debugPrint(e.toString());
+
+      rethrow;
+    }
     notifyListeners();
   }
 
   // Stop the audio.
   @override
   Future<void> stop() async {
+    // playbackState.add(PlaybackState(
+    //   playing: true,
+    //   processingState: AudioProcessingState.idle,
+    // ));
     await _justAudio.stop();
     await super.stop();
   }
@@ -68,6 +95,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   Future<void> play() async {
     playbackState.add(PlaybackState(
       playing: true,
+      processingState: AudioProcessingState.ready,
       controls: [
         MediaControl.rewind,
         MediaControl.pause,
@@ -94,6 +122,7 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
   Future<void> pause() async {
     playbackState.add(PlaybackState(
       playing: false,
+      processingState: AudioProcessingState.ready,
       controls: [
         MediaControl.rewind,
         MediaControl.play,
@@ -103,8 +132,8 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
         MediaAction.seek,
       },
     ));
-    await _justAudio.pause();
-    await super.pause();
+    await _justAudio.pause(); // Pause just audio
+    await super.pause(); // Pause notication
   }
 
   // Seek a particular part of the audio.Eg used for a slider.
@@ -157,18 +186,29 @@ class AudioProvider extends BaseAudioHandler with ChangeNotifier {
     }
   }
 
-  // Listen if the audio state is playing or paused.
-  // Detects the state of the notification and updates the ui accordingly.
+  //Listen to the just_audio player stream and update the Ui and notication.
   void _audioState() {
     _justAudio.playerStateStream.listen((state) {
-      _isPlaying = state.playing;
-      _playState = state.processingState;
+      // playerStateStream listens to the current state of the button and the audio.
 
-      if (_playState == ProcessingState.completed) {
+      // Listen to the state of the button when pressed.
+      // This can be true or false when the button is pressed.
+
+      // Also listen to the current state of the audio (ProcessingState).
+      // This can be idle, loading, buffering, ready, completed.
+
+      _isPlaying = state.playing; // Change the play and pause icon.
+      _playState = state.processingState; // Change the processing state.
+
+      // When the audio is complete.
+      if (state.processingState == ProcessingState.completed) {
+        // Change the icon to pause when the audio is complete.
         _isPlaying = false;
 
+        // Upate the notifcation that the audi is complete.
         playbackState.add(PlaybackState(
           playing: false,
+          processingState: AudioProcessingState.ready,
           controls: [
             MediaControl.rewind,
             MediaControl.play,

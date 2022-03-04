@@ -34,7 +34,7 @@ class EpisodeCard extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(episode.image!),
+                  image: NetworkImage(episode.image),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: const BorderRadius.only(

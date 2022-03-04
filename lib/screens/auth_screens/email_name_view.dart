@@ -48,7 +48,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
     } else {
       kshowSnackbar(
         context: context,
-        type: 'error',
+        type: SnackBarType.error,
         text: ConnectionChecker.connectionException.message!,
       );
     }

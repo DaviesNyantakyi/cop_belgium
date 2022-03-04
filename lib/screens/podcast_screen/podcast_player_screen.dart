@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 
+import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
+import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/save_episode.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/snackbar.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:just_audio/just_audio.dart';
@@ -26,15 +31,37 @@ class PodcastPlayerScreen extends StatefulWidget {
 class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   @override
   void initState() {
-    init();
+    initEpisode();
     super.initState();
   }
 
-  Future<void> init() async {
-    final episode = Provider.of<Episode>(context, listen: false);
-
-    await Provider.of<AudioProvider>(context, listen: false)
-        .init(episode.audioUrl);
+  Future<void> initEpisode() async {
+    try {
+      bool hasConnection = await ConnectionChecker().checkConnection();
+      if (hasConnection) {
+        final episode = Provider.of<Episode>(context, listen: false);
+        MediaItem item = MediaItem(
+          id: episode.audioUrl,
+          displayDescription: episode.description,
+          artUri: Uri.parse(episode.image),
+          title: episode.title,
+          duration: episode.duration,
+          artist: episode.author,
+        );
+        await Provider.of<AudioProvider>(context, listen: false)
+            .init(url: episode.audioUrl, item: item);
+      } else {
+        throw ConnectionChecker.connectionException;
+      }
+    } on FirebaseException catch (e) {
+      kshowSnackbar(
+        context: context,
+        type: SnackBarType.error,
+        text: e.message!,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override
@@ -93,30 +120,29 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   Future<void> _showAboutBottomSheet({
     required BuildContext context,
   }) {
+    Episode episode = Provider.of<Episode>(context, listen: false);
     return showNormalBottomSheet(
       context: context,
-      child: Consumer<Episode>(builder: (context, episode, _) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                episode.title,
-                style: kSFHeadLine2,
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              episode.title,
+              style: kSFHeadLine2,
             ),
-            const SizedBox(height: 16),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                episode.description,
-                style: kSFBody,
-              ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              episode.description,
+              style: kSFBody,
             ),
-          ],
-        );
-      }),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -136,7 +162,7 @@ class _BuildImage extends StatelessWidget {
         color: kGrey,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: CachedNetworkImageProvider(image!),
+          image: CachedNetworkImageProvider(image),
         ),
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
@@ -192,29 +218,31 @@ class _BuildAudioControls extends StatefulWidget {
 }
 
 class _BuildAudioControlsState extends State<_BuildAudioControls> {
+  MyPathProvider myPathProvider = MyPathProvider();
   double playBackSpeed = 1.0;
   double containerSize = 100;
   bool isLoading = false;
+  bool isSaved = false;
 
   @override
   void initState() {
     playBackSpeed =
         Provider.of<AudioProvider>(context, listen: false).playbackSpeed;
-    test();
+    checkDownload();
     super.initState();
   }
 
-  Future<void> test() async {
+  Future<void> checkDownload() async {
     final episode = Provider.of<Episode>(context, listen: false);
 
-    // final x = getEpisodePath(
-    //     path: '$podcastPath/${episode.podcastName}/${episode.title}.mp3');
-
-    // if (await x.exists()) {
-    //   print('oke');
-    // } else {
-    //   print('false');
-    // }
+    File? file = await myPathProvider.getFile(
+        path: 'Podcasts/${episode.podcastName}/${episode.title}.mp3');
+    if (file != null && await file.exists()) {
+      isSaved = true;
+    } else {
+      isSaved = false;
+    }
+    setState(() {});
   }
 
   @override
@@ -489,23 +517,54 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
         width: containerSize,
         child: TextButton(
           style: kTextButtonStyle,
-          child: const Icon(
-            Icons.file_download_outlined,
+          child: Icon(
+            isSaved
+                ? Icons.download_done_outlined
+                : Icons.file_download_outlined,
             size: 35,
             color: kBlack,
           ),
           onPressed: () async {
-            isLoading = true;
-            setState(() {});
-            final x = await savePodcastEpisode(
-              fileName: episode.title,
-              direcotryFolder: 'Podcasts/${episode.podcastName}',
-              url: episode.audioUrl,
-              fileExtension: '.mp3',
-            );
+            try {
+              // donwload if the episode has not been downloaded.
+              if (!isSaved) {
+                isLoading = true;
+                setState(() {});
 
-            setState(() {});
-            isLoading = false;
+                // return true if the download has succieded
+                final succes = await myPathProvider.savePodcastEpisode(
+                  fileName: episode.title,
+                  direcotryFolder: 'Podcasts/${episode.podcastName}',
+                  url: episode.audioUrl,
+                  fileExtension: '.mp3',
+                );
+                succes ? isSaved = true : isSaved = false;
+
+                setState(() {});
+                isLoading = false;
+                kshowSnackbar(
+                  context: context,
+                  type: SnackBarType.normal,
+                  text: 'Episode \'${episode.title}\' downloaded.',
+                );
+              } else {
+                kshowSnackbar(
+                  context: context,
+                  type: SnackBarType.normal,
+                  text: 'Episode \'${episode.title}\' is already downloaded.',
+                );
+              }
+            } on FirebaseException catch (e) {
+              kshowSnackbar(
+                context: context,
+                type: SnackBarType.error,
+                text: e.message!,
+              );
+              debugPrint(e.toString());
+            } finally {
+              isLoading = false;
+              setState(() {});
+            }
           },
         ),
       ),

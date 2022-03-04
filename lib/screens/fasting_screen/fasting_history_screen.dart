@@ -32,7 +32,7 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
     } on FirebaseException catch (e) {
       kshowSnackbar(
         context: context,
-        type: 'error',
+        type: SnackBarType.error,
         text: e.message.toString(),
       );
     } catch (e) {

@@ -1,5 +1,5 @@
 class Episode {
-  final String? image;
+  final String image;
   final String title;
   final String description;
   final String audioUrl;

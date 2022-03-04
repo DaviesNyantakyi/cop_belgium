@@ -1,19 +1,20 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
+enum SnackBarType { success, error, normal }
 dynamic kshowSnackbar({
   required BuildContext context,
-  required String type,
+  required SnackBarType type,
   required String text,
 }) {
   Color? backgroundColor;
   Color textColor;
   switch (type) {
-    case 'error':
+    case SnackBarType.error:
       backgroundColor = kRed;
       textColor = Colors.white;
       break;
-    case 'succes':
+    case SnackBarType.success:
       backgroundColor = kGreen;
       textColor = Colors.white;
       break;
@@ -33,7 +34,7 @@ dynamic kshowSnackbar({
       duration: const Duration(seconds: 5),
       content: Text(
         text,
-        style: kSFBodyBold.copyWith(color: textColor),
+        style: kSFBody.copyWith(color: textColor),
       ),
     ),
   );
