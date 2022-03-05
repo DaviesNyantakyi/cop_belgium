@@ -9,7 +9,7 @@ import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/utilities/save_episode.dart';
+import 'package:cop_belgium/utilities/storage_provider.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -218,7 +218,7 @@ class _BuildAudioControls extends StatefulWidget {
 }
 
 class _BuildAudioControlsState extends State<_BuildAudioControls> {
-  MyPathProvider myPathProvider = MyPathProvider();
+  StorageProvider myPathProvider = StorageProvider();
   double playBackSpeed = 1.0;
   double containerSize = 100;
   bool isLoading = false;
@@ -228,11 +228,11 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   void initState() {
     playBackSpeed =
         Provider.of<AudioProvider>(context, listen: false).playbackSpeed;
-    checkDownload();
+    getAudioFile();
     super.initState();
   }
 
-  Future<void> checkDownload() async {
+  Future<void> getAudioFile() async {
     final episode = Provider.of<Episode>(context, listen: false);
 
     File? file = await myPathProvider.getFile(
@@ -532,21 +532,20 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
                 setState(() {});
 
                 // return true if the download has succieded
-                final succes = await myPathProvider.savePodcastEpisode(
+                final success = await myPathProvider.savePodcastEpisode(
                   fileName: episode.title,
-                  direcotryFolder: 'Podcasts/${episode.podcastName}',
+                  newDir: 'Podcasts/${episode.podcastName}',
                   url: episode.audioUrl,
                   fileExtension: '.mp3',
                 );
-                succes ? isSaved = true : isSaved = false;
-
-                setState(() {});
-                isLoading = false;
-                kshowSnackbar(
-                  context: context,
-                  type: SnackBarType.normal,
-                  text: 'Episode \'${episode.title}\' downloaded.',
-                );
+                success ? isSaved = true : isSaved = false;
+                if (success) {
+                  kshowSnackbar(
+                    context: context,
+                    type: SnackBarType.normal,
+                    text: 'Episode \'${episode.title}\' downloaded.',
+                  );
+                }
               } else {
                 kshowSnackbar(
                   context: context,

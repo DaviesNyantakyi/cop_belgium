@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
+import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
@@ -78,15 +80,36 @@ class _PodcastScreenState extends State<PodcastScreen> {
   }
 
   Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      child: const Icon(Icons.add_outlined),
-      onPressed: () {
-        _addPodcastDialog();
+    final String id = FirebaseAuth.instance.currentUser!.uid;
+
+    // Show add podcasts
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream:
+          FirebaseFirestore.instance.collection('users').doc(id).snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container();
+        }
+        if (snapshot.hasError) {
+          return Container();
+        }
+        if (snapshot.hasData && snapshot.data?.data() != null) {
+          final copUser = CopUser.fromMap(map: snapshot.data!.data()!);
+          if (copUser.isAdmin) {
+            return FloatingActionButton(
+              child: const Icon(Icons.add_outlined),
+              onPressed: () async {
+                await _showAddPodcastDialog();
+              },
+            );
+          }
+        }
+        return Container();
       },
     );
   }
 
-  Future<String?> _addPodcastDialog() async {
+  Future<String?> _showAddPodcastDialog() async {
     const String _deleteConformationText = 'Copy and paste the RSS feed here.';
     return await showDialog<String?>(
       barrierDismissible: true,
