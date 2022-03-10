@@ -79,7 +79,7 @@ class _DateGenderViewState extends State<DateGenderView> {
                 _buildHeaderText(),
                 const SizedBox(height: kContentSpacing32),
                 _buildGenderSelector(),
-                const SizedBox(height: kContentSpacing32),
+                const SizedBox(height: kContentSpacing12),
                 _buildBirthdayPicker(),
                 const SizedBox(height: kContentSpacing32),
                 _buildContinueButton(),

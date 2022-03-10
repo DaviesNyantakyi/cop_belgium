@@ -98,20 +98,15 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
         style: kTextButtonStyle,
       ),
       actions: [
-        Container(
-          width: 55,
-          padding: const EdgeInsets.only(right: kAppbarPadding),
-          child: TextButton(
-            style: kTextButtonStyle,
-            child: const Icon(
-              Icons.info_outline_rounded,
-              size: 30,
-              color: kBlack,
-            ),
-            onPressed: () {
-              _showAboutBottomSheet(context: context);
-            },
+        TextButton(
+          child: const Icon(
+            Icons.info_outline_rounded,
+            size: 30,
+            color: kBlack,
           ),
+          onPressed: () {
+            _showAboutBottomSheet(context: context);
+          },
         ),
       ],
     );

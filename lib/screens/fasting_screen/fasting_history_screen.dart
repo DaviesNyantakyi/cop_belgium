@@ -131,13 +131,10 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
         style: kSFHeadLine3,
       ),
       leading: TextButton(
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: kAppbarPadding),
-          child: Icon(
-            Icons.chevron_left_outlined,
-            color: kBlack,
-            size: 35,
-          ),
+        child: const Icon(
+          Icons.chevron_left_outlined,
+          color: kBlack,
+          size: 35,
         ),
         onPressed: () {
           Navigator.of(context)

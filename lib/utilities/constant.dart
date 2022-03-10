@@ -150,14 +150,12 @@ List<LinearGradient> kGradients = [
   kPurpleGradient,
   kBlueDarkGradient,
 ];
-//Stay
 
 const double kCardRadius = 10;
 const double kButtonRadius = 5;
 
 const double kCardContentPadding = 16;
 const double kBodyPadding = 16.0;
-const double kAppbarPadding = 20.0;
 
 const double kButtonHeight = 50;
 const double kButtonWidth = 100;

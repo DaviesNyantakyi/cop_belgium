@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/cloud_fire.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +18,7 @@ class FireStorage {
             .putFile(image);
         final url = await getPhotoUrl(fileRef: ref.ref.fullPath);
         await _user?.updatePhotoURL(url);
-        await CloudFireStore().updatePhotoUrl(photoUrl: url);
+        await CloudFire().updatePhotoUrl(photoUrl: url);
       }
     } on FirebaseStorage catch (e) {
       debugPrint(e.toString());

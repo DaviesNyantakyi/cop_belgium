@@ -1,5 +1,5 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -33,7 +34,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: [
                   const BuildCopLogo(),
                   const SizedBox(height: 44),
-                  _buildSocialButtons(),
+                  _buildEmailButton(),
+                  const SizedBox(height: kContentSpacing12),
+                  _buildGoogleButton(),
                   const SizedBox(height: kContentSpacing12),
                   _buildLogInButton(),
                 ],
@@ -68,15 +71,51 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-  Widget _buildSocialButtons() {
+  Widget _buildEmailButton() {
     return Buttons.buildSocialButton(
       context: context,
       icon: const Icon(
-        Icons.email_outlined,
+        FontAwesomeIcons.envelope,
         color: kBlack,
       ),
       label: const Text(
         'Continue with Email',
+        style: kSFBtnStyleBold,
+      ),
+      onPressed: () {
+        final signUpProvider =
+            Provider.of<SignUpProvider>(context, listen: false);
+        final imageSelector =
+            Provider.of<ImagePickerProvider>(context, listen: false);
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider<SignUpProvider>.value(
+                  value: signUpProvider,
+                ),
+                ChangeNotifierProvider<ImagePickerProvider>.value(
+                  value: imageSelector,
+                )
+              ],
+              child: const SignUpScreen(),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildGoogleButton() {
+    return Buttons.buildSocialButton(
+      context: context,
+      icon: const Icon(
+        FontAwesomeIcons.google,
+        color: kBlack,
+      ),
+      label: const Text(
+        'Continue with Google',
         style: kSFBtnStyleBold,
       ),
       onPressed: () {

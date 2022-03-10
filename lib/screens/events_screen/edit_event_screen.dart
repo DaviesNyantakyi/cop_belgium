@@ -512,7 +512,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
           style: kTextButtonStyle,
           child: Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
             child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
           ),
           onPressed: () async {},
@@ -521,7 +521,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
           style: kTextButtonStyle,
           child: Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+            // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
             child: const Text('Create', style: kSFBody),
           ),
           onPressed: () async {},

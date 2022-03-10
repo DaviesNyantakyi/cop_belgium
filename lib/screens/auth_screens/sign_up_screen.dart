@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/church_model.dart';
-import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/date_gender_view.dart';
 import 'package:cop_belgium/screens/auth_screens/email_name_view.dart';

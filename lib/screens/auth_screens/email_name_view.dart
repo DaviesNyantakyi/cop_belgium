@@ -69,11 +69,11 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
               _buildHeaderText(),
               const SizedBox(height: kContentSpacing32),
               _buildFirstName(),
-              const SizedBox(height: kContentSpacing12),
+              const SizedBox(height: kContentSpacing8),
               _buildLastName(),
-              const SizedBox(height: kContentSpacing12),
+              const SizedBox(height: kContentSpacing8),
               _buildEmail(),
-              const SizedBox(height: kContentSpacing12),
+              const SizedBox(height: kContentSpacing8),
               _buildPasswordField(),
               const SizedBox(height: kContentSpacing32),
               _buildContinueButton()
@@ -112,6 +112,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           controller: signUpProvider.emailCntlr,
           hintText: 'Email',
           textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
           maxLines: 1,
           validator: Validators.emailValidator,
           onChanged: (value) {

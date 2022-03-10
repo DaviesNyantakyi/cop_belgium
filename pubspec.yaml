@@ -69,6 +69,9 @@ dependencies:
   app_settings: ^4.1.1
   change_app_package_name: ^1.0.0
 
+  font_awesome_flutter: ^9.2.0
+
+
 
   
 

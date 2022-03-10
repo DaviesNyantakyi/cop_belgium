@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/textfiel.dart';
-import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -84,14 +84,22 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(kBodyPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildForm(),
-                const SizedBox(height: kContentSpacing32),
-                _buildLogInBtn(),
-              ],
+            child: Consumer<SignUpProvider>(
+              builder: (context, signUpProvider, _) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildEmailForm(signUpProvider: signUpProvider),
+                    const SizedBox(height: kContentSpacing8),
+                    _buildPasswordForm(signUpProvider: signUpProvider),
+                    const SizedBox(height: kContentSpacing8),
+                    _buildForgotButton(signUpProvider: signUpProvider),
+                    const SizedBox(height: kContentSpacing32),
+                    _buildLogInBtn(),
+                  ],
+                );
+              },
             ),
           ),
         ),
@@ -112,80 +120,77 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Widget _buildForm() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Form(
-            key: signUpProvider.emailKey,
-            child: MyTextFormField(
-              controller: signUpProvider.emailCntlr,
-              hintText: 'Email',
-              maxLines: 1,
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              validator: Validators.emailValidator,
-              onChanged: (value) {
-                signUpProvider.emailKey.currentState?.validate();
-              },
-            ),
-          ),
-          const SizedBox(height: kContentSpacing12),
-          Form(
-            key: signUpProvider.passwordKey,
-            child: MyTextFormField(
-              controller: signUpProvider.passwordCntlr,
-              hintText: 'Password',
-              maxLines: 1,
-              obscureText: signUpProvider.viewPassword ? false : true,
-              textInputAction: TextInputAction.done,
-              validator: Validators.passwordValidator,
-              suffixIcon: GestureDetector(
-                child: Icon(
-                  signUpProvider.viewPassword
-                      ? Icons.visibility
-                      : Icons.visibility_off,
-                  color: kBlack,
-                ),
-                onTap: () {
-                  signUpProvider.togglePasswordView();
-                },
+  Widget _buildEmailForm({required SignUpProvider signUpProvider}) {
+    return Form(
+      key: signUpProvider.emailKey,
+      child: MyTextFormField(
+        controller: signUpProvider.emailCntlr,
+        hintText: 'Email',
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        validator: Validators.emailValidator,
+        onChanged: (value) {
+          signUpProvider.emailKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _buildForgotButton({required SignUpProvider signUpProvider}) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: TextButton(
+        style: kTextButtonStyle,
+        child: const Text(
+          'Forgot Password?',
+          style: kSFBody,
+        ),
+        onPressed: () {
+          signUpProvider.close();
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) =>
+                  ChangeNotifierProvider<SignUpProvider>.value(
+                value: signUpProvider,
+                child: const ForgotPasswordScreen(),
               ),
-              onChanged: (value) {
-                signUpProvider.passwordKey.currentState?.validate();
-              },
-              onSubmitted: (value) async {
-                await loginEmail();
-              },
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPasswordForm({required SignUpProvider signUpProvider}) {
+    return Form(
+      key: signUpProvider.passwordKey,
+      child: MyTextFormField(
+        controller: signUpProvider.passwordCntlr,
+        hintText: 'Password',
+        maxLines: 1,
+        obscureText: signUpProvider.viewPassword ? false : true,
+        textInputAction: TextInputAction.done,
+        validator: Validators.passwordValidator,
+        suffixIcon: GestureDetector(
+          child: Icon(
+            signUpProvider.viewPassword
+                ? Icons.visibility
+                : Icons.visibility_off,
+            color: kBlack,
           ),
-          const SizedBox(height: kContentSpacing12),
-          Container(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              style: kTextButtonStyle,
-              child: const Text(
-                'Forgot Password?',
-                style: kSFBody,
-              ),
-              onPressed: () {
-                signUpProvider.close();
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) =>
-                        ChangeNotifierProvider<SignUpProvider>.value(
-                      value: signUpProvider,
-                      child: const ForgotPasswordScreen(),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      );
-    });
+          onTap: () {
+            signUpProvider.togglePasswordView();
+          },
+        ),
+        onChanged: (value) {
+          signUpProvider.passwordKey.currentState?.validate();
+        },
+        onSubmitted: (value) async {
+          await loginEmail();
+        },
+      ),
+    );
   }
 }

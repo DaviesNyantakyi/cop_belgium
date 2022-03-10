@@ -481,12 +481,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
 
   Widget _buildCreateButton({required BuildContext context}) {
     return TextButton(
-      style: kTextButtonStyle,
-      child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-        child: const Text('Create', style: kSFBodyBold),
-      ),
+      child: const Text('Create', style: kSFBodyBold),
       onPressed: () async {},
     );
   }

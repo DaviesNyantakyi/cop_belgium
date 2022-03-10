@@ -1,6 +1,6 @@
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/easy_loading.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';

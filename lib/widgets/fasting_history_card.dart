@@ -1,5 +1,5 @@
 import 'package:cop_belgium/models/fasting_model.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/cloud_fire.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
             color: Colors.transparent,
             child: InkWell(
               onTap: () async {
-                CloudFireStore().deleteFastHistory(fInfo: widget.fastingInfo);
+                CloudFire().deleteFastHistory(fInfo: widget.fastingInfo);
               },
             ),
           ),

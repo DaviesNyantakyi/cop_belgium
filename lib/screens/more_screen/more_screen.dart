@@ -5,7 +5,7 @@ import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
 import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -126,16 +126,16 @@ class _MoreScreenState extends State<MoreScreen> {
     if (user.photoURL != null) {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(user.photoURL!),
-        radius: 30,
-        backgroundColor: kBlack,
+        radius: 40,
+        backgroundColor: kBlueLight,
       );
     }
     return const CircleAvatar(
-      radius: 30,
-      backgroundColor: kBlack,
+      radius: 40,
+      backgroundColor: kBlueLight,
       child: Icon(
         Icons.person_outline_outlined,
-        color: Colors.white,
+        color: kBlack,
       ),
     );
   }

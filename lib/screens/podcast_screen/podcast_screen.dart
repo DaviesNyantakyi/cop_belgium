@@ -46,26 +46,20 @@ class _PodcastScreenState extends State<PodcastScreen> {
         ),
         leadingWidth: 100,
         actions: [
-          Container(
-            width: 45,
-            height: 45,
-            margin: const EdgeInsets.only(right: 5),
-            child: TextButton(
-              style: kTextButtonStyle,
-              child: const Icon(
-                Icons.notifications_outlined,
-                color: kBlack,
-                size: kIconSize,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => const AnnouncementsScreen(),
-                  ),
-                );
-              },
+          TextButton(
+            child: const Icon(
+              Icons.notifications_outlined,
+              color: kBlack,
+              size: kIconSize,
             ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => const AnnouncementsScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),

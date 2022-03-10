@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/services/fire_storage.dart';
-import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignUpProvider extends ChangeNotifier {
@@ -104,7 +104,7 @@ class SignUpProvider extends ChangeNotifier {
       church: _church,
     );
 
-    final user = await _fireAuth.signUpEmailPassword(
+    final user = await _fireAuth.createUserEmailPassword(
       user: copUser,
       password: _passwordCntlr.text,
     );

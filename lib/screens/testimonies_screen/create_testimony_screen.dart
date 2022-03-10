@@ -98,7 +98,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             style: kTextButtonStyle,
             child: Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+              // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
               child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
             ),
             onPressed: () async {},
@@ -107,7 +107,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
             style: kTextButtonStyle,
             child: Container(
               alignment: Alignment.center,
-              margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+              // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
               child: const Text('Save', style: kSFBody),
             ),
             onPressed: () async {},
@@ -119,7 +119,7 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
         style: kTextButtonStyle,
         child: Container(
           alignment: Alignment.center,
-          margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
+          // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
           child: const Text('Create', style: kSFBodyBold),
         ),
         onPressed: () async {},

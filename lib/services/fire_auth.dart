@@ -1,5 +1,5 @@
 import 'package:cop_belgium/models/user_model.dart';
-import 'package:cop_belgium/services/cloud_firestore.dart';
+import 'package:cop_belgium/services/cloud_fire.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,9 +7,9 @@ import 'package:flutter/widgets.dart';
 
 class FireAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CloudFireStore _fireStore = CloudFireStore();
+  final CloudFire _fireStore = CloudFire();
 
-  Future<User?> signUpEmailPassword(
+  Future<User?> createUserEmailPassword(
       {required CopUser user, String? password}) async {
     try {
       if (user.firstName.isNotEmpty &&
@@ -90,7 +90,7 @@ class FireAuth {
       if (hasConnection) {
         await login(email: _auth.currentUser!.email, password: password);
 
-        await CloudFireStore().deleteUserInfo();
+        await CloudFire().deleteUserInfo();
         await _auth.currentUser!.delete();
       } else {
         throw ConnectionChecker.connectionException;

@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/providers/image_selector_provider.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 
 import 'package:cop_belgium/widgets/snackbar.dart';
@@ -255,9 +255,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 _buildAvatar(),
                 const SizedBox(height: kContentSpacing32),
                 _buildForm(),
-                const SizedBox(height: kContentSpacing12),
+                const SizedBox(height: kContentSpacing8),
                 _buildBirthdayPicker(),
-                const SizedBox(height: kContentSpacing32),
+                const SizedBox(height: kContentSpacing8),
                 _buildGenderSelector(),
                 const SizedBox(height: 24),
                 _buildDeleteReset()
@@ -330,8 +330,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: TextButton(
             style: kTextButtonStyle,
             child: const Icon(
-              Icons.photo_camera_outlined,
+              Icons.person_outline_outlined,
               color: kBlack,
+              size: 35,
             ),
             onPressed: () async {
               await Provider.of<ImagePickerProvider>(context, listen: false)
@@ -448,7 +449,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           textInputAction: TextInputAction.next,
           onChanged: (value) {},
         ),
-        const SizedBox(height: kContentSpacing12),
+        const SizedBox(height: kContentSpacing8),
         MyTextFormField(
           controller: lastNameCntlr,
           hintText: 'Last Name',
@@ -460,7 +461,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
         _buildNameErrorText(),
-        const SizedBox(height: kContentSpacing12),
+        const SizedBox(height: kContentSpacing8),
         MyTextFormField(
           controller: emailCntlr,
           hintText: 'Email',
@@ -677,13 +678,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       leading: kBackButton(context: context),
       actions: [
         TextButton(
-          child: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Save',
-              style: kSFBodyBold,
-            ),
-          ),
+          child: const Text('Save', style: kSFBodyBold),
           onPressed: isLoading ? null : updateAccount,
         ),
       ],

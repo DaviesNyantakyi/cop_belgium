@@ -1,5 +1,5 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/services/firebase_auth.dart';
+import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
