@@ -55,6 +55,7 @@ class PodcastCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: kContentSpacing8),
                     Text(
                       podcast.description,
                       style: kSFBody2.copyWith(

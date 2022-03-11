@@ -13,7 +13,7 @@ class DatePicker {
   }) async {
     FocusScope.of(context).requestFocus(FocusNode());
 
-    await showNormalBottomSheet(
+    await showMyBottomSheet(
       isDismissible: false,
       context: context,
       enableDrag: false,

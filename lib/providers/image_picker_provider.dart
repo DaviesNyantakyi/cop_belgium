@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -128,66 +129,62 @@ class ImagePickerProvider extends ChangeNotifier {
     return croppedImage;
   }
 
-  Future<String?> _showPermanltyDeniedDialog(
-      {required BuildContext context,
-      required String instructions,
-      required Widget headerWidget}) async {
-    return await showDialog<String?>(
+  Future<String?> _showPermanltyDeniedDialog({
+    required BuildContext context,
+    required String instructions,
+    required Widget headerWidget,
+  }) async {
+    return showMyDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
+      title: Container(
+        height: 100,
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          color: kBlue,
           borderRadius: BorderRadius.all(
             Radius.circular(kCardRadius),
           ),
         ),
-        title: Container(
-          height: 100,
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: kBlue,
-            borderRadius: BorderRadius.all(
-              Radius.circular(kCardRadius),
-            ),
+        child: headerWidget,
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'Allow Cop Belgium access to your device\'s photo\'s, media and files.',
+            style: kSFBody,
           ),
-          child: headerWidget,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Allow Cop Belgium access to your device\'s photo\'s, media and files.',
-              style: kSFBody,
-            ),
-            Text(
-              instructions,
-              style: kSFBody,
-            )
-          ],
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('NOT NOW', style: kSFBody2Bold),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              await AppSettings.openAppSettings();
-            },
-            child: const Text('SETTINGS', style: kSFBody2Bold),
-          ),
+          Text(
+            instructions,
+            style: kSFBody,
+          )
         ],
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text('Not now', style: kSFBody2Bold),
+        ),
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context);
+            await AppSettings.openAppSettings();
+          },
+          child: const Text('Settings', style: kSFBody2Bold),
+        ),
+      ],
     );
   }
 
   // Choose a image source and delete selected Image.
   Future<void> showBottomSheet({required BuildContext context}) async {
-    await showSmallBottomSheet(
+    await showMyBottomSheet(
       height: null,
+      padding: EdgeInsets.zero,
+      fullScreenHeight: null,
       context: context,
       child: Material(
         child: SizedBox(

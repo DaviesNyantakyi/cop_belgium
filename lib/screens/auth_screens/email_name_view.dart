@@ -97,7 +97,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           style: kSFHeadLine2,
         ),
         Text(
-          'Create an account by singing up with your email address.',
+          'Create an account by signing up with your email address.',
           style: kSFBody,
         ),
       ],

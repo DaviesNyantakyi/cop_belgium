@@ -7,13 +7,11 @@ import 'package:timeago/timeago.dart' as timeago;
 class TestimonyCard extends StatelessWidget {
   final TestimonyInfo testimony;
   final VoidCallback onPressed;
-  final VoidCallback onLongPressed;
   final VoidCallback onPressedLike;
   const TestimonyCard({
     Key? key,
     required this.testimony,
     required this.onPressed,
-    required this.onLongPressed,
     required this.onPressedLike,
   }) : super(key: key);
 
@@ -46,7 +44,6 @@ class TestimonyCard extends StatelessWidget {
       ),
       child: TextButton(
         onPressed: onPressed,
-        onLongPress: onLongPressed,
         style: kTextButtonStyle,
         child: Padding(
           padding: const EdgeInsets.all(kCardContentPadding),

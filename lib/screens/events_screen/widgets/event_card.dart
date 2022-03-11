@@ -6,20 +6,17 @@ import 'package:flutter/material.dart';
 class EventCard extends StatelessWidget {
   final Event event;
   final VoidCallback onPressed;
-  final VoidCallback onLongPressed;
 
   const EventCard({
     Key? key,
     required this.event,
     required this.onPressed,
-    required this.onLongPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onPressed,
-      onLongPress: onLongPressed,
       style: kTextButtonStyle,
       child: Stack(
         children: [
@@ -117,18 +114,9 @@ class EventCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            Text(
-              FormalDates.formatEDmyyyy(date: event.startDate),
-              style: kSFCaption.copyWith(color: Colors.white),
-            ),
-            const SizedBox(width: kContentSpacing12),
-            Text(
-              '${FormalDates.formatHm(date: event.startDate)} - ${FormalDates.formatHm(date: event.endDate)}',
-              style: kSFCaption.copyWith(color: Colors.white),
-            ),
-          ],
+        Text(
+          FormalDates.formatEDmyyyyHm(date: event.startDate),
+          style: kSFCaption.copyWith(color: Colors.white),
         ),
         Text(
           event.title,

@@ -77,7 +77,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
                 const _BuildImage(),
                 const SizedBox(height: kContentSpacing32),
                 const _BuildTitle(),
-                Expanded(child: Container(height: 70)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                 const _BuildAudioControls(),
               ],
             ),
@@ -116,7 +116,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     required BuildContext context,
   }) {
     Episode episode = Provider.of<Episode>(context, listen: false);
-    return showNormalBottomSheet(
+    return showMyBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -279,9 +279,11 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
     });
   }
 
-  Future<void> _showPlayBackBottomSheet(
-      {required BuildContext context, required AudioProvider audioProvider}) {
-    return showSmallBottomSheet(
+  Future<void> _showPlayBackBottomSheet({
+    required BuildContext context,
+    required AudioProvider audioProvider,
+  }) {
+    return showMyBottomSheet(
       context: context,
       child: Center(
         child: SingleChildScrollView(

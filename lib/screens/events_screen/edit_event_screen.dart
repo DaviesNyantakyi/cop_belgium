@@ -1,24 +1,21 @@
-import 'dart:io';
-
 import 'package:cop_belgium/models/event_model.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
+import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
+import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
+import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+
+import 'package:provider/provider.dart';
 
 class EditEventScreen extends StatefulWidget {
-  final String eventType;
-  final Event event;
-
   const EditEventScreen({
     Key? key,
-    required this.eventType,
-    required this.event,
+    required String eventType,
+    required Event event,
   }) : super(key: key);
 
   @override
@@ -26,67 +23,33 @@ class EditEventScreen extends StatefulWidget {
 }
 
 class _EditEventScreenState extends State<EditEventScreen> {
-  final ImagePicker _picker = ImagePicker();
-
-  String? eventType;
-
-  Event? event;
-
-  File? image;
-  bool isLoading = false;
-
+  late ImagePickerProvider imagePickerProvider;
   DatePicker datePicker = DatePicker();
 
-  Future<void> pickImage({required String type}) async {
-    final source = type == 'camera' ? ImageSource.camera : ImageSource.gallery;
-    try {
-      final pickedImage = await _picker.pickImage(source: source);
+  EventType? eventType = EventType.normal;
 
-      if (pickedImage != null) {
-        image = File(pickedImage.path);
+  TextEditingController titleCntlr = TextEditingController();
+  TextEditingController aboutCntlr = TextEditingController();
+  TextEditingController linkCntlr = TextEditingController();
+  TextEditingController addressCntlr = TextEditingController();
+  DateTime startDate = DateTime.now();
 
-        File? croppedImage = await ImageCropper.cropImage(
-          sourcePath: image!.path,
-          aspectRatioPresets: [
-            CropAspectRatioPreset.square,
-            CropAspectRatioPreset.ratio3x2,
-            CropAspectRatioPreset.original,
-            CropAspectRatioPreset.ratio4x3,
-            CropAspectRatioPreset.ratio16x9
-          ],
-          androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: kBlack,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false,
-          ),
-          iosUiSettings: const IOSUiSettings(
-            minimumAspectRatio: 1.0,
-          ),
-        );
+  DateTime endDate = DateTime.now();
 
-        if (mounted) {
-          setState(() {
-            image = croppedImage;
-          });
-        }
-      }
-
-      Navigator.pop(context);
-    } on PlatformException catch (e) {
-      debugPrint(e.toString());
-    }
-  }
+  bool isLoading = false;
+  bool singleEvent = true;
 
   @override
   void initState() {
-    event = widget.event;
-    eventType = event?.type;
-    if (mounted) {
-      setState(() {});
-    }
+    imagePickerProvider =
+        Provider.of<ImagePickerProvider>(context, listen: false);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    imagePickerProvider.close();
+    super.dispose();
   }
 
   @override
@@ -95,18 +58,26 @@ class _EditEventScreenState extends State<EditEventScreen> {
       appBar: _buildAppbar(context: context),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(kBodyPadding),
           child: Column(
             children: [
               _buildImage(),
-              const SizedBox(height: 20),
-              _buildTitleDescription(),
-              const Divider(),
-              _buildTypeSelection(),
-              const Divider(),
-              _buildAddEventTypeDetails(),
-              const Divider(),
-              _buildStartEndDate(),
+              Padding(
+                padding: const EdgeInsets.all(kBodyPadding),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildTitleDescription(),
+                    const Divider(),
+                    _buildTypeSelection(),
+                    const Divider(),
+                    _buildAddEventTypeDetails(),
+                    const Divider(),
+                    _buildEventToggle(),
+                    const Divider(),
+                    _buildStartEndDate(),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -114,36 +85,57 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
+  Widget _buildEventToggle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'One-day event',
+          style: kSFBody,
+        ),
+        CupertinoSwitch(
+          activeColor: kBlue,
+          value: singleEvent,
+          onChanged: (value) {
+            setState(() {
+              singleEvent = value;
+            });
+          },
+        )
+      ],
+    );
+  }
+
   Widget _buildAddEventTypeDetails() {
-    if (eventType == 'online') {
-      return _buildTF(
-        initialValue: event?.link,
+    if (eventType == EventType.online) {
+      return _buildTextFormField(
+        controller: linkCntlr,
         hintText: 'Add link',
         style: kSFBody,
         icon: const Icon(
           Icons.link_outlined,
           color: Colors.black,
         ),
-        onChanged: (value) {
-          event?.link = value;
-        },
       );
     }
-    return ListTile(
-      contentPadding: const EdgeInsets.all(0),
-      leading: const Icon(
+    return _buildTextFormField(
+      controller: addressCntlr,
+      hintText: 'Address',
+      style: kSFBody,
+      icon: const Icon(
         Icons.location_on_outlined,
-        color: kBlack,
+        color: Colors.black,
       ),
-      title: const Text(
-        'Add Location',
-        style: kSFBody,
-      ),
-      onTap: () async {},
     );
   }
 
   Widget _buildTypeSelection() {
+    // ignore: unused_local_variable
+    IconData icon = Icons.place_outlined;
+
+    if (eventType == EventType.normal) {
+      icon = Icons.link_outlined;
+    }
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
       title: const Text(
@@ -154,105 +146,135 @@ class _EditEventScreenState extends State<EditEventScreen> {
         FocusScope.of(context).unfocus();
         await _showCreateDialog();
       },
-      trailing: Text(eventType ?? ' '),
+      trailing: Text(enumToString(object: eventType)),
     );
   }
 
   Future<String?> _showCreateDialog() async {
-    return await showDialog<String?>(
-      barrierDismissible: false,
+    return await showMyDialog(
       context: context,
-      builder: (BuildContext context) => SizedBox(
-        child: AlertDialog(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(kButtonRadius),
-            ),
-          ),
-          title: const Text(
-            'Create event',
-            style: kSFBodyBold,
-          ),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  RadioListTile<String>(
-                    contentPadding: EdgeInsets.zero,
-                    activeColor: kBlue,
-                    value: 'normal',
-                    groupValue: eventType,
-                    title: const Text('Normal', style: kSFBody),
-                    onChanged: (value) {
-                      eventType = value!;
-                      setState(() {});
-                      if (mounted) {
-                        this.setState(() {});
-                      }
-                    },
-                  ),
-                  RadioListTile<String>(
-                    contentPadding: EdgeInsets.zero,
-                    activeColor: kBlue,
-                    value: 'online',
-                    groupValue: eventType,
-                    title: const Text('Online', style: kSFBody),
-                    onChanged: (value) {
-                      eventType = value!;
-                      setState(() {});
-                      if (mounted) {
-                        this.setState(() {});
-                      }
-                    },
-                  ),
-                ],
-              );
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Cancel',
-                style: kSFBody2Bold,
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Continue', style: kSFBody2Bold),
-            ),
-          ],
-        ),
+      title: const Text(
+        'Create event',
+        style: kSFHeadLine3,
       ),
+      content: StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RadioListTile<EventType>(
+                contentPadding: EdgeInsets.zero,
+                activeColor: kBlue,
+                value: EventType.normal,
+                groupValue: eventType,
+                title: const Text('Normal', style: kSFBody),
+                onChanged: (value) {
+                  eventType = value!;
+                  setState(() {});
+                  if (mounted) {
+                    this.setState(() {});
+                  }
+                },
+              ),
+              RadioListTile<EventType>(
+                contentPadding: EdgeInsets.zero,
+                activeColor: kBlue,
+                value: EventType.online,
+                groupValue: eventType,
+                title: const Text('Online', style: kSFBody),
+                onChanged: (value) {
+                  eventType = value!;
+                  setState(() {});
+                  if (mounted) {
+                    this.setState(() {});
+                  }
+                },
+              ),
+            ],
+          );
+        },
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text(
+            'Cancel',
+            style: kSFBody2Bold,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            if (eventType == EventType.normal) {
+              linkCntlr.clear();
+            } else {
+              addressCntlr.clear();
+            }
+            Navigator.pop(context);
+          },
+          child: const Text('OK', style: kSFBody2Bold),
+        ),
+      ],
     );
   }
 
   Widget _buildTitleDescription() {
     return Column(
       children: [
-        _buildTF(
-          initialValue: event?.title,
+        _buildTextFormField(
+          controller: titleCntlr,
           hintText: 'Title',
           style: kSFHeadLine3,
-          onChanged: (value) {
-            event?.title = value;
-          },
         ),
         const Divider(),
-        _buildTF(
-          initialValue: event?.description,
+        _buildTextFormField(
+          controller: aboutCntlr,
           style: kSFBody,
           hintText: 'About event',
-          onChanged: (value) {
-            event?.description = value;
-          },
         ),
       ],
     );
   }
 
   Widget _buildStartEndDate() {
+    if (singleEvent) {
+      return ListTile(
+        contentPadding: const EdgeInsets.all(0),
+        leading: const Icon(
+          Icons.calendar_today,
+          color: kBlack,
+        ),
+        title: Text(
+          FormalDates.formatEDmyyyy(date: startDate),
+          style: kSFBody2,
+        ),
+        trailing: Text(FormalDates.formatHm(date: startDate)),
+        onTap: () async {
+          await datePicker.showDatePicker(
+            mode: CupertinoDatePickerMode.date,
+            initialDate: startDate,
+            context: context,
+            onChanged: (date) {
+              startDate = date;
+              setState(() {});
+            },
+          );
+
+          if (mounted) {
+            setState(() {});
+          }
+          await datePicker.showDatePicker(
+            mode: CupertinoDatePickerMode.time,
+            initialDate: startDate,
+            context: context,
+            onChanged: (date) {
+              startDate = date;
+              setState(() {});
+            },
+          );
+        },
+      );
+    }
+
     return Column(
       children: [
         ListTile(
@@ -261,33 +283,32 @@ class _EditEventScreenState extends State<EditEventScreen> {
             Icons.calendar_today,
             color: kBlack,
           ),
-          title: event?.startDate != null
-              ? Text(
-                  FormalDates.formatEDmyyyy(date: event!.startDate),
-                  style: kSFBody2,
-                )
-              : Text(
-                  FormalDates.formatEDmyyyy(date: DateTime.now()),
-                  style: kSFBody2,
-                ),
-          trailing: event?.startDate != null
-              ? Text(FormalDates.formatHm(date: event!.startDate))
-              : Text(FormalDates.formatHm(date: DateTime.now())),
+          title: Text(
+            FormalDates.formatEDmyyyy(date: startDate),
+            style: kSFBody2,
+          ),
+          trailing: Text(FormalDates.formatHm(date: startDate)),
           onTap: () async {
             await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              initialDate: event?.startDate ?? DateTime.now(),
+              initialDate: startDate,
               context: context,
               onChanged: (date) {
-                event?.startDate = date;
+                startDate = date;
+                setState(() {});
               },
             );
+
+            if (mounted) {
+              setState(() {});
+            }
             await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              initialDate: event!.startDate,
+              initialDate: startDate,
               context: context,
               onChanged: (date) {
-                event?.startDate = date;
+                startDate = date;
+                setState(() {});
               },
             );
           },
@@ -298,37 +319,31 @@ class _EditEventScreenState extends State<EditEventScreen> {
             Icons.calendar_today,
             color: kBlack,
           ),
-          title: event?.endDate != null
-              ? Text(
-                  FormalDates.formatEDmyyyy(date: event!.endDate),
-                  style: kSFBody2,
-                )
-              : Text(
-                  FormalDates.formatEDmyyyy(date: DateTime.now()),
-                  style: kSFBody2,
-                ),
-          trailing: event?.endDate != null
-              ? Text(FormalDates.formatHm(date: event!.endDate))
-              : Text(FormalDates.formatHm(
-                  date: DateTime.now().add(
-                    const Duration(minutes: 30),
-                  ),
-                )),
+          title: Text(
+            FormalDates.formatEDmyyyy(date: endDate),
+            style: kSFBody2,
+          ),
+          trailing: Text(FormalDates.formatHm(date: endDate)),
           onTap: () async {
             await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.date,
-              initialDate: event?.endDate ?? DateTime.now(),
+              initialDate: endDate,
               context: context,
               onChanged: (date) {
-                event?.endDate = date;
+                endDate = date;
+                setState(() {});
               },
             );
+            if (mounted) {
+              setState(() {});
+            }
             await datePicker.showDatePicker(
               mode: CupertinoDatePickerMode.time,
-              initialDate: event!.endDate,
+              initialDate: endDate,
               context: context,
               onChanged: (date) {
-                event?.endDate = date;
+                endDate = date;
+                setState(() {});
               },
             );
           },
@@ -337,15 +352,17 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
-  Widget _buildTF({
+  Widget _buildTextFormField({
     String? initialValue,
     String? hintText,
     TextStyle? style,
     Widget? icon,
+    TextEditingController? controller,
     Function(String)? onChanged,
   }) {
     return TextFormField(
       initialValue: initialValue,
+      controller: controller,
       style: style,
       minLines: 1,
       cursorWidth: 3,
@@ -362,34 +379,10 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   Widget _buildImage() {
-    if (event?.image != null) {
-      return Container(
-        height: 260,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(event!.image),
-          ),
-          color: kGrey,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(kCardRadius),
-          ),
-        ),
-        child: TextButton(
-          onPressed: showBottomSheet,
-          style: kTextButtonStyle,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(kButtonRadius),
-            ),
-            child: Container(),
-          ),
-        ),
-      );
-    }
+    final image = Provider.of<ImagePickerProvider>(context).selectedImage;
     if (image?.path != null) {
       return Container(
-        height: 260,
+        height: MediaQuery.of(context).size.height * 0.30,
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
@@ -398,12 +391,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
             ).image,
           ),
           color: kGrey,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(kCardRadius),
-          ),
         ),
         child: TextButton(
-          onPressed: showBottomSheet,
+          onPressed: () async {
+            await Provider.of<ImagePickerProvider>(context, listen: false)
+                .showBottomSheet(context: context);
+          },
           style: kTextButtonStyle,
           child: ClipRRect(
             borderRadius: const BorderRadius.all(
@@ -424,7 +417,12 @@ class _EditEventScreenState extends State<EditEventScreen> {
         ),
       ),
       child: TextButton(
-        onPressed: showBottomSheet,
+        onPressed: () async {
+          await Provider.of<ImagePickerProvider>(context, listen: false)
+              .showBottomSheet(
+            context: context,
+          );
+        },
         style: kTextButtonStyle,
         child: const Center(
           child: Icon(
@@ -436,97 +434,21 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
-  Future<void> showBottomSheet() async {
-    await showSmallBottomSheet(
-      height: 170,
-      context: context,
-      child: Material(
-        child: SizedBox(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'camera');
-                  },
-                  leading: const Icon(
-                    Icons.camera_alt_outlined,
-                    color: kBlack,
-                  ),
-                  title: const Text(
-                    'Camera',
-                    style: kSFBody,
-                  ),
-                ),
-                ListTile(
-                  onTap: () async {
-                    await pickImage(type: 'gallery');
-                  },
-                  leading: const Icon(
-                    Icons.collections_outlined,
-                    color: kBlack,
-                  ),
-                  title: const Text(
-                    'Gallery',
-                    style: kSFBody,
-                  ),
-                ),
-                image != null
-                    ? ListTile(
-                        onTap: () async {
-                          image = null;
-                          setState(() {});
-                          Navigator.pop(context);
-                        },
-                        leading: const Icon(
-                          Icons.delete_outline_outlined,
-                          color: kRed,
-                        ),
-                        title: Text(
-                          'Delete',
-                          style: kSFBody.copyWith(color: kRed),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-        ),
-      ),
+  dynamic _buildAppbar({required BuildContext context}) {
+    return AppBar(
+      leading: kBackButton(context: context),
+      actions: [
+        _buildCreateButton(context: context),
+      ],
     );
   }
 
-  dynamic _buildAppbar({required BuildContext context}) {
-    return AppBar(
-      title: const Text('Edit', style: kSFHeadLine3),
-      leading: TextButton(
-        child: kBackButton(context: context),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: kTextButtonStyle,
-      ),
-      actions: [
-        TextButton(
-          style: kTextButtonStyle,
-          child: Container(
-            alignment: Alignment.center,
-            // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-            child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
-          ),
-          onPressed: () async {},
-        ),
-        TextButton(
-          style: kTextButtonStyle,
-          child: Container(
-            alignment: Alignment.center,
-            // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-            child: const Text('Create', style: kSFBody),
-          ),
-          onPressed: () async {},
-        ),
-      ],
+  Widget _buildCreateButton({required BuildContext context}) {
+    return TextButton(
+      child: const Text('SAVE', style: kSFBodyBold),
+      onPressed: () async {
+        Navigator.pop(context);
+      },
     );
   }
 }

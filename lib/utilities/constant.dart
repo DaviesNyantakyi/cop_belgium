@@ -104,7 +104,7 @@ const Color kBlack = Color(0xFF000000);
 
 const Color kBlue = Color(0xFF4F6BFE);
 
-const Color kBlueLight = Color(0xFFF1F6F9);
+const Color kBlueLight = Color(0xFFF6FBFF);
 
 const Color kBlueDark2 = Color(0xFF384859);
 
@@ -164,6 +164,8 @@ const double kCopLogoSize = 120;
 
 const double kContentSpacing8 = 8;
 const double kContentSpacing12 = 12;
+const double kContentSpacing16 = 16;
+const double kContentSpacing20 = 20;
 const double kContentSpacing32 = 32;
 
 const double kAppbarElevation = 1;

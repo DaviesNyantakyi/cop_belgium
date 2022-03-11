@@ -70,7 +70,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
     required BuildContext context,
     required Announcement announcement,
   }) {
-    return showNormalBottomSheet(
+    return showMyBottomSheet(
       context: context,
       child: SingleChildScrollView(
         child: Column(
@@ -112,13 +112,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
         'Announcements',
         style: kSFHeadLine3,
       ),
-      leading: TextButton(
-        child: kBackButton(context: context),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        style: kTextButtonStyle,
-      ),
+      leading: kBackButton(context: context),
     );
   }
 }

@@ -1,12 +1,13 @@
 import 'package:cop_belgium/models/event_model.dart';
+import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
-import 'package:cop_belgium/screens/events_screen/edit_event_screen.dart';
-import 'package:cop_belgium/screens/events_screen/view_event_screen.dart';
+import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -28,8 +29,8 @@ class _EventsScreenState extends State<EventsScreen> {
     Event(
       title: 'Revival Equipped to accomplish a great commission',
       startDate: DateTime(2022, 1, 26, 7),
-      endDate: DateTime(2022, 1, 28, 21),
-      type: 'online',
+      endDate: DateTime(2023, 1, 28, 21),
+      type: enumToString(object: EventType.online),
       description: 'National Proposed Officer Training Program Selection',
       image:
           'https://images.unsplash.com/photo-1614598632236-70bcd1c2f833?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
@@ -39,31 +40,9 @@ class _EventsScreenState extends State<EventsScreen> {
     Event(
       title: 'National Proposed Officer Training Program',
       startDate: DateTime(2022, 01, 08, 19),
-      endDate: DateTime(2022, 01, 08, 19),
-      location: {
-        'street': 'Van der Keilenstraat',
-        'podstcode': '2000',
-        'city': 'Antwerp',
-        'lat': '51.216896921177835',
-        'long': '4.400080602355622'
-      },
-      type: 'normal',
-      description: 'National Proposed Officer Training Program',
-      image:
-          'https://images.unsplash.com/photo-1643993574860-c1d7fe258ff3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=327&q=80',
-    ),
-    Event(
-      title: 'National Proposed Officer Training Program',
-      startDate: DateTime(2022, 01, 08, 19),
-      endDate: DateTime(2022, 01, 08, 19),
-      location: {
-        'street': 'Van der Keilenstraat',
-        'podstcode': '2000',
-        'city': 'Antwerp',
-        'lat': '51.216896921177835',
-        'long': '4.400080602355622'
-      },
-      type: 'normal',
+      endDate: DateTime(2022, 01, 09, 17),
+      address: 'Patriotenstraat 31, 2300 Turnhout, Belgium',
+      type: enumToString(object: EventType.normal),
       description: 'National Proposed Officer Training Program',
       image:
           'https://images.unsplash.com/photo-1643906652169-a750f3f70848?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
@@ -89,11 +68,20 @@ class _EventsScreenState extends State<EventsScreen> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_outlined),
         onPressed: () async {
+          final imagePickerProvider =
+              Provider.of<ImagePickerProvider>(context, listen: false);
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) {
-                return const CreateEventScreen();
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
+                      value: imagePickerProvider,
+                    ),
+                  ],
+                  child: const CreateEventScreen(),
+                );
               },
             ),
           );
@@ -104,46 +92,46 @@ class _EventsScreenState extends State<EventsScreen> {
           children: [
             _buildCalendar(),
             const SizedBox(height: 35),
-            ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-              separatorBuilder: (context, _) => const SizedBox(
-                height: kContentSpacing12,
-              ),
-              shrinkWrap: true,
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventCard(
-                  event: events[index],
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => ViewEventScreen(
-                          eventType: events[index].type,
-                          event: events[index],
-                        ),
-                      ),
-                    );
-                  },
-                  onLongPressed: () {
-                    HapticFeedback.selectionClick();
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (context) => EditEventScreen(
-                          eventType: events[index].type,
-                          event: events[index],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            )
+            _buildListOfEvents(),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildListOfEvents() {
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+      separatorBuilder: (context, _) => const SizedBox(
+        height: kContentSpacing12,
+      ),
+      shrinkWrap: true,
+      itemCount: events.length,
+      itemBuilder: (context, index) {
+        return EventCard(
+          event: events[index],
+          onPressed: () {
+            final imagePickerProvider =
+                Provider.of<ImagePickerProvider>(context, listen: false);
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
+                      value: imagePickerProvider,
+                    )
+                  ],
+                  child: EventDetailScreen(
+                    event: events[index],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

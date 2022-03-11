@@ -153,7 +153,7 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
       child: Scaffold(
         appBar: AppBar(
           leading: _backButton(context: context),
-          title: const Text('Choose a church', style: kSFHeadLine3),
+          title: const Text('Select your church', style: kSFHeadLine3),
         ),
         body: ChurchSelectionScreen(onTap: (church) {
           if (church != null) {

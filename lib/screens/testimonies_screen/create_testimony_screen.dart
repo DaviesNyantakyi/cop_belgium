@@ -6,15 +6,12 @@ import 'package:cop_belgium/widgets/textfiel.dart';
 import 'package:flutter/material.dart';
 
 class CreateTestimonyScreen extends StatefulWidget {
-  static String createTestimonyScreen = 'editTestimonyScreen';
-
   // enabled edit mode
-  final bool? editable;
+
   final TestimonyInfo? testimonyInfo;
 
   const CreateTestimonyScreen({
     Key? key,
-    this.editable = false,
     this.testimonyInfo,
   }) : super(key: key);
 
@@ -24,51 +21,36 @@ class CreateTestimonyScreen extends StatefulWidget {
 
 class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
   TextEditingController titleCntlr = TextEditingController();
-  TextEditingController descriptionCntlr = TextEditingController();
-
-  @override
-  void initState() {
-    if (widget.editable!) {
-      titleCntlr.text = widget.testimonyInfo!.title!;
-      descriptionCntlr.text = widget.testimonyInfo!.description!;
-    }
-    super.initState();
-  }
+  TextEditingController descriptionCntrl = TextEditingController();
 
   @override
   void dispose() {
     titleCntlr.dispose();
-    descriptionCntlr.dispose();
+    descriptionCntrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppbar(editable: widget.editable!),
+      appBar: _buildAppbar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: kBodyPadding,
-              vertical: kBodyPadding,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTF(
-                  hintText: 'Title',
-                  style: kSFHeadLine3,
-                  controller: titleCntlr,
-                ),
-                const SizedBox(height: 16),
-                _buildTF(
-                  style: kSFBody,
-                  hintText: 'Your testimony',
-                  controller: descriptionCntlr,
-                ),
-              ],
-            ),
+          padding: const EdgeInsets.all(kBodyPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildTF(
+                hintText: 'Title',
+                style: kSFHeadLine3,
+                controller: titleCntlr,
+              ),
+              _buildTF(
+                style: kSFBody,
+                hintText: 'Your testimony',
+                controller: descriptionCntrl,
+              ),
+            ],
           ),
         ),
       ),
@@ -90,56 +72,21 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     );
   }
 
-  Widget _buildPopupMenu({required BuildContext context}) {
-    if (widget.editable == true) {
-      return Row(
-        children: [
-          TextButton(
-            style: kTextButtonStyle,
-            child: Container(
-              alignment: Alignment.center,
-              // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-              child: Text('Delete', style: kSFBody.copyWith(color: kRed)),
-            ),
-            onPressed: () async {},
-          ),
-          TextButton(
-            style: kTextButtonStyle,
-            child: Container(
-              alignment: Alignment.center,
-              // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-              child: const Text('Save', style: kSFBody),
-            ),
-            onPressed: () async {},
-          ),
-        ],
-      );
-    } else {
-      return TextButton(
-        style: kTextButtonStyle,
-        child: Container(
-          alignment: Alignment.center,
-          // margin: const EdgeInsets.only(left: 10, right: kAppbarPadding),
-          child: const Text('Create', style: kSFBodyBold),
-        ),
-        onPressed: () async {},
-      );
-    }
+  Widget _buildCreateButton({required BuildContext context}) {
+    return TextButton(
+      child: const Text('Create', style: kSFBodyBold),
+      onPressed: () async {},
+    );
   }
 
-  Widget _buildTitle() {
-    if (widget.editable!) {
-      return const Text('Edit', style: kSFHeadLine3);
-    }
-    return const Text('');
-  }
-
-  dynamic _buildAppbar({required bool editable}) {
+  dynamic _buildAppbar() {
     return AppBar(
       elevation: 1,
       leading: kBackButton(context: context),
-      title: _buildTitle(),
-      actions: [_buildPopupMenu(context: context)],
+      title: const Text('Create', style: kSFHeadLine3),
+      actions: [
+        _buildCreateButton(context: context),
+      ],
     );
   }
 }

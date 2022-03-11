@@ -134,7 +134,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           },
           style: kTextButtonStyle,
           child: const Center(
-            child: Icon(Icons.photo_camera_outlined, color: kBlack),
+            child: Icon(Icons.collections_outlined, color: kBlack),
           ),
         ),
       ),

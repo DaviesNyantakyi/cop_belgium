@@ -4,6 +4,7 @@ import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/dialog.dart';
 
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -429,8 +430,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildBirthDateText() {
     return Text(
       birthDate == null
-          ? FormalDates.formatDmyyyy(date: DateTime.now())
-          : FormalDates.formatDmyyyy(date: birthDate),
+          ? FormalDates.formatEDmyyyy(date: DateTime.now())
+          : FormalDates.formatEDmyyyy(date: birthDate),
       style: kSFTextFieldStyle.copyWith(
         fontWeight: birthDate == null ? FontWeight.normal : FontWeight.bold,
       ),
@@ -535,65 +536,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Future<String?> _showMailConformationAlert() async {
-    return await showDialog<String?>(
+    return await showMyDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(
-          'Check your mail',
-          style: kSFBodyBold,
-        ),
-        content: const Text(
-            'We have sent password recovery instructions to your email.',
-            style: kSFBody),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK', style: kSFCaptionBold),
-          ),
-        ],
+      title: const Text('Check your mail', style: kSFHeadLine3),
+      content: const Text(
+        'We have sent password recovery instructions to your email.',
+        style: kSFBody,
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK', style: kSFCaptionBold),
+        ),
+      ],
     );
   }
 
   Future<String?> _showDeleteAlert() async {
     const String _deleteConformationText =
         'Confirm that you want to delete this account by entering the password.';
-    return await showDialog<String?>(
+    return await showMyDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(_deleteConformationText, style: kSFBodyBold),
-        content: MyTextFormField(
-          hintText: 'Password',
-          obscureText: true,
-          onChanged: (value) {
-            passwordCntlr.text = value;
-          },
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: kSFBody),
-          ),
-          const SizedBox(height: kContentSpacing32),
-          TextButton(
-            onPressed: () => deleteAccount,
-            child: Text('Delete account', style: kSFBody.copyWith(color: kRed)),
-          ),
-          const SizedBox(height: kContentSpacing12)
-        ],
+      title: const Text(_deleteConformationText, style: kSFHeadLine3),
+      content: MyTextFormField(
+        hintText: 'Password',
+        obscureText: true,
+        onChanged: (value) {
+          passwordCntlr.text = value;
+        },
       ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel', style: kSFBody),
+        ),
+        const SizedBox(height: kContentSpacing32),
+        TextButton(
+          onPressed: () => deleteAccount,
+          child: Text('Delete account', style: kSFBody.copyWith(color: kRed)),
+        ),
+        const SizedBox(height: kContentSpacing12)
+      ],
     );
   }
 

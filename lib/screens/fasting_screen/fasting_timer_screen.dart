@@ -34,7 +34,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   FastingInfo? fastingInfo;
 
   String getStartDate() {
-    return FormalDates.formatDmyy(date: fastingInfo!.startDate);
+    return FormalDates.formatEDmyyyy(date: fastingInfo!.startDate);
   }
 
   String getEndDate() {
@@ -302,7 +302,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
     required String chapter,
     required String verse,
   }) {
-    return showNormalBottomSheet(
+    return showMyBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,

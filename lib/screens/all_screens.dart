@@ -26,6 +26,5 @@ export 'package:cop_belgium/screens/settings_screen/about_church_screen.dart';
 export 'package:cop_belgium/screens/settings_screen/settings_screen.dart';
 
 //Testimonies Screens
-export 'package:cop_belgium/screens/testimonies_screen/all_testimonies_tab_view.dart';
 export 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 export 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';

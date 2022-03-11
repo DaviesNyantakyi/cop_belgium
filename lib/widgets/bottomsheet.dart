@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showNormalBottomSheet({
+Future<void> showMyBottomSheet({
   required BuildContext context,
   Widget? child,
   bool? isDismissible = true,
   bool isScrollControlled = true,
   bool enableDrag = true,
   double? height = kBottomSheetHeight,
+  double? fullScreenHeight = 0.9,
+  EdgeInsetsGeometry padding = const EdgeInsets.all(kBodyPadding),
 }) async {
   return await showModalBottomSheet<void>(
     isScrollControlled: isScrollControlled,
@@ -32,45 +34,19 @@ Future<void> showNormalBottomSheet({
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(25),
-          child: child,
-        ),
-      );
-    },
-  );
-}
-
-Future<void> showSmallBottomSheet({
-  required BuildContext context,
-  Widget? child,
-  double? height = 300,
-}) async {
-  return await showModalBottomSheet<void>(
-    isScrollControlled: true,
-    context: context,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.all(
-        Radius.circular(10),
-      ),
-    ),
-    builder: (BuildContext context) {
-      return Container(
-        height: height,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+          padding: padding,
+          child: FractionallySizedBox(
+            heightFactor: fullScreenHeight,
+            child: child,
           ),
         ),
-        child: child,
       );
     },
   );
 }
 
 void loadMdFile({required BuildContext context, required String mdFile}) {
-  showNormalBottomSheet(
+  showMyBottomSheet(
     context: context,
     child: SingleChildScrollView(
       child: FutureBuilder(

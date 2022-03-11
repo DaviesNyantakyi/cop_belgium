@@ -39,8 +39,8 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            const SizedBox(height: kContentSpacing32),
-            _buildSubButton(),
+            const SizedBox(height: kContentSpacing20),
+            _buildSubscribeButton(),
             const SizedBox(height: kContentSpacing32),
             _buildDescription(),
             const SizedBox(height: kContentSpacing32),
@@ -58,48 +58,56 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Container(
-            height: 190,
-            width: 170,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(kCardRadius),
-              ),
-              color: kBlue,
-              boxShadow: [kBoxShadow],
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: CachedNetworkImageProvider(podcast!.imageUrl),
-              ),
-            ),
-          ),
-        ),
+        _buildImage(),
         const SizedBox(width: kContentSpacing12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                podcast?.title ?? ' ',
-                style: podcast!.title.length > 40 ? kSFBodyBold : kSFHeadLine2,
-              ),
-              const SizedBox(height: 5),
-              Text(
-                podcast?.author ?? '',
-                style: podcast!.title.length > 40 ? kSFBody2 : kSFBody,
-              ),
-            ],
-          ),
-        ),
+        _buildTitle(),
+        const SizedBox(width: kContentSpacing12),
       ],
     );
   }
 
-  Widget _buildSubButton() {
+  Widget _buildTitle() {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            podcast?.title ?? ' ',
+            style: podcast!.title.length > 40 ? kSFBodyBold : kSFHeadLine2,
+          ),
+          const SizedBox(height: 5),
+          Text(
+            podcast?.author ?? '',
+            style: podcast!.title.length > 40 ? kSFBody2 : kSFBody,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImage() {
     return Container(
-      alignment: Alignment.centerLeft,
+      height: 150,
+      width: 150,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(kCardRadius),
+        ),
+        color: kBlue,
+        boxShadow: [kBoxShadow],
+        image: DecorationImage(
+          fit: BoxFit.cover,
+          image: CachedNetworkImageProvider(podcast!.imageUrl),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubscribeButton() {
+    return SizedBox(
       child: Buttons.buildOutlinedButton(
+        width: 140,
+        height: 40,
         context: context,
         child: Text(
           'Subscribe',
@@ -147,7 +155,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
 
   Future<void> _showBottomSheet(
       {required BuildContext context, required Podcast? podcast}) {
-    return showNormalBottomSheet(
+    return showMyBottomSheet(
       context: context,
       child: Column(
         mainAxisSize: MainAxisSize.min,

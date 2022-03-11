@@ -2,6 +2,7 @@ import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -130,29 +131,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<String?> _showMailConformationAlert() async {
-    return await showDialog<String?>(
+    return await showMyDialog(
       barrierDismissible: true,
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(kButtonRadius),
-          ),
-        ),
-        title: const Text(
-          'Check your mail',
-          style: kSFBodyBold,
-        ),
-        content: const Text(
-            'We have sent password recovery instructions to your email.',
-            style: kSFBody),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK', style: kSFBody2Bold),
-          ),
-        ],
+      title: const Text(
+        'Check your mail',
+        style: kSFHeadLine3,
       ),
+      content: const Text(
+          'We have sent password recovery instructions to your email.',
+          style: kSFBody),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK', style: kSFBody2Bold),
+        ),
+      ],
     );
   }
 }

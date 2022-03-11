@@ -1,3 +1,8 @@
+//TODO: For now the can add the address.
+// Don't forget to add lat/long, street, number, postcode,...
+// The full address wil be stored in a property.
+// E.g: Event(address: , street: , number: , city: ,  latLong:, )
+
 class Event {
   DateTime startDate;
   DateTime endDate;
@@ -6,7 +11,7 @@ class Event {
   String type;
   String image;
   String? link;
-  Map<String, dynamic>? location;
+  String? address;
 
   Event({
     required this.startDate,
@@ -16,7 +21,7 @@ class Event {
     required this.type,
     required this.image,
     this.link,
-    this.location,
+    this.address,
   });
 
   Map<String, dynamic> toMap() {
@@ -28,6 +33,7 @@ class Event {
       'type': type,
       'image': image,
       'zoomLink': link,
+      'address': address,
     };
   }
 
@@ -40,6 +46,12 @@ class Event {
       type: map['type'] ?? '',
       image: map['image'] ?? '',
       link: map['zoomLink'] ?? '',
+      address: map['address'] ?? '',
     );
+  }
+
+  @override
+  String toString() {
+    return 'Event(startDate: $startDate, endDate: $endDate, title: $title, description: $description, type: $type, image: $image, link: $link, address: $address)';
   }
 }

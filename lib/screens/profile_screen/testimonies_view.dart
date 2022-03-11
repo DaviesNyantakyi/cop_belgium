@@ -1,5 +1,4 @@
 import 'package:cop_belgium/models/testimony_model.dart';
-import 'package:cop_belgium/screens/testimonies_screen/create_testimony_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
@@ -53,26 +52,6 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
               ),
             );
           },
-          onLongPressed: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => CreateTestimonyScreen(
-                  editable: true,
-                  testimonyInfo: TestimonyInfo(
-                    title:
-                        'Enim mollit non ipsum ipsum qui aliqua est Lorem adipisicing qui labore.',
-                    description:
-                        'Laboris officia eu duis eu pariatur nulla cupidatat labore incididunt id amet et eiusmod irure. Ut laboris est et labore officia cupidatat veniam excepteur magna adipisicing. Qui magna nostrud labore officia duis Lorem.Adipisicing ullamco duis incididunt duis esse fugiat eiusmod dolor dolore ipsum magna sit et. Nulla dolor esse duis elit reprehenderit laborum eu cupidatat est labore. Aliqua ea ut ullamco enim adipisicing cillum amet officia velit id id ipsum. Enim cupidatat culpa ut dolor veniam Lorem mollit. Minim occaecat elit amet ad. Aliquip proident voluptate enim et voluptate. Sunt qui do elit occaecat reprehenderit sunt veniam qui velit proident.',
-                    date: DateTime.now(),
-                    userId: 'Davies',
-                    userName: 'Davies Nyantakyi',
-                    likes: 200,
-                  ),
-                ),
-              ),
-            );
-          },
         );
       },
     );
@@ -95,7 +74,7 @@ class _UserTestimoniesViewState extends State<UserTestimoniesView> {
       );
     }
 
-    return showNormalBottomSheet(
+    return showMyBottomSheet(
       context: context,
       child: SingleChildScrollView(
         child: Column(

@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/screens/all_screens.dart';
 
-class AuthSwitcher extends StatefulWidget {
+class AuthWrapper extends StatefulWidget {
   static String authScreenSwitcher = 'authScreenSwitcher';
-  const AuthSwitcher({Key? key}) : super(key: key);
+  const AuthWrapper({Key? key}) : super(key: key);
 
   @override
-  _AuthSwitcherState createState() => _AuthSwitcherState();
+  _AuthWrapperState createState() => _AuthWrapperState();
 }
 
-class _AuthSwitcherState extends State<AuthSwitcher> {
+class _AuthWrapperState extends State<AuthWrapper> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override

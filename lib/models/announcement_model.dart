@@ -1,3 +1,6 @@
+//TODO: think about type of announcements.
+// You can have global and a announcement specific to a church (subscription type).
+
 class Announcement {
   final String title;
   final String description;

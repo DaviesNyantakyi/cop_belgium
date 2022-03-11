@@ -17,36 +17,39 @@ class ChurchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: thumbnail,
-          ),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    title,
-                    style: kSFBodyBold,
-                  ),
-                  const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-                  Text(
-                    address,
-                    style: kSFCaption,
-                  ),
-                ],
+    return SizedBox(
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              height: 120,
+              width: 140,
+              child: thumbnail,
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(5.0, 0.0, 0.0, 0.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      style: kSFBodyBold,
+                    ),
+                    const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
+                    Text(
+                      address,
+                      style: kSFBody2,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -13,8 +13,6 @@ import 'package:cop_belgium/screens/all_screens.dart';
 
 import 'package:provider/provider.dart';
 
-//test
-
 //TODO: -Firebase Project setup IOS
 
 //TODO:  -Image picker IOS
@@ -78,39 +76,13 @@ class MyApp extends StatelessWidget {
             create: (context) => ImagePickerProvider(),
           ),
         ],
-        child: const AuthSwitcher(),
+        child: const AuthWrapper(),
       ),
       theme: _theme,
-      routes: _routes,
       builder: EasyLoading.init(),
     );
   }
 }
-
-Map<String, WidgetBuilder> _routes = {
-  LoginScreen.loginScreen: (context) => const LoginScreen(),
-  SignUpScreen.signUpScreen: (context) => const SignUpScreen(),
-  AuthSwitcher.authScreenSwitcher: (context) => const AuthSwitcher(),
-  ForgotPasswordScreen.forgotPasswordScreen: (context) =>
-      const ForgotPasswordScreen(),
-  BottomNavSelectorPage.bottomNavSelectorPage: (context) =>
-      const BottomNavSelectorPage(),
-  PodcastScreen.podcastScreen: (context) => const PodcastScreen(),
-  PodcastPlayerScreen.podcastPlayerScreen: (context) =>
-      const PodcastPlayerScreen(),
-  PodcastDetailScreen.podcastDetailScreen: (context) =>
-      const PodcastDetailScreen(),
-  SavedPodcastView.userSavedPodcastView: (context) => const SavedPodcastView(),
-  ProfileScreens.profileScreens: (context) => const ProfileScreens(),
-  EditProfileScreen.editProfileScreen: (context) => const EditProfileScreen(),
-  SettingsScreen.settingsScreen: (context) => const SettingsScreen(),
-  AboutChruchScreen.aboutChruchScreen: (context) => const AboutChruchScreen(),
-  CreateTestimonyScreen.createTestimonyScreen: (context) =>
-      const CreateTestimonyScreen(),
-  TestimoniesScreen.testimoniesScreen: (context) => const TestimoniesScreen(),
-  UserTestimoniesView.userTestimoniesView: (context) =>
-      const UserTestimoniesView(),
-};
 
 ThemeData _theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
