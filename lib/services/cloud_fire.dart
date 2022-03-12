@@ -22,15 +22,10 @@ class CloudFire {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
-        if (testimony.userId.isNotEmpty &&
-            testimony.title != null &&
-            testimony.description != null &&
-            testimony.date != null) {
-          final docRef = await _firestore
-              .collection('testimonies')
-              .add(TestimonyInfo.toMap(map: testimony));
-          docRef.update({'id': docRef.id});
-        }
+        final docRef = await _firestore
+            .collection('testimonies')
+            .add(TestimonyInfo.toMap(map: testimony));
+        docRef.update({'id': docRef.id});
       } else {
         throw ConnectionChecker.connectionException;
       }

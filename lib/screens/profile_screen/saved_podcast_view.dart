@@ -68,9 +68,9 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
     return Consumer<AudioProvider>(
       builder: (context, audioProvider, _) {
         return ListView.separated(
-          padding: const EdgeInsets.symmetric(
-                  horizontal: kBodyPadding, vertical: kBodyPadding)
-              .copyWith(top: 20),
+          padding: const EdgeInsets.all(kBodyPadding).copyWith(
+            top: kBodyPadding,
+          ),
           separatorBuilder: (context, index) => const SizedBox(
             height: kContentSpacing12,
           ),

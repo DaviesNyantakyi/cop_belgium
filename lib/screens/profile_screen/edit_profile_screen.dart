@@ -16,7 +16,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {

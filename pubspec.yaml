@@ -31,55 +31,64 @@ dependencies:
     sdk: flutter
 
 
-
+  
+  #Flutter
   cupertino_icons: ^1.0.2
 
-
-  numberpicker: ^2.1.1 # fasting duration picker 
-  dart_date: ^1.1.0 # formating dates to formal
-  circular_countdown_timer: ^0.2.0 #  asting timer
+  #Firebase & Auth
   firebase_core: ^1.10.6 # initialize firebase functionalities
   firebase_auth: ^3.3.4 # authentication
   firebase_storage: ^10.2.4
   cloud_firestore: ^3.1.5 # storing info to firestore
-  regexpattern: ^2.0.1 # email passsword validator
-  flutter_easyloading: ^3.0.3 # loading indicator
-  flutter_markdown: ^0.6.9 # loading long text in app. eg about screen
-  flutter_email_sender: ^5.0.2 # open email app. eg contact me
-  internet_connection_checker: ^0.0.1+3  # check for actual internet coonection.
+
+  #State management
   provider: ^6.0.1 # makes passing object arround easer
-  flutter_native_splash: ^1.3.2 #plash screen
+
+  #Audio 
   just_audio: ^0.9.18 # just plays audio 
-  audio_service: ^0.18.3 # for more audio controls eg lockscreen
-  webfeed: ^0.7.0 # for parsing rss 
-  http: ^0.13.4 #making http request
-  html: ^0.15.0 #r emoves p tag from podcast description
-  cached_network_image: ^3.2.0
-  image_picker: ^0.8.4+4
-  path: ^1.8.0 # get base name from selected file path
+  audio_service: ^0.18.3 # audio controls lockscreen/notifcation
+
+  #Device utilities
+  app_settings: ^4.1.1
   path_provider: ^2.0.9  # read and write to device and app storage
   package_info_plus: ^1.3.0 # get app package info
   device_info: ^2.0.3 # get device info
-  image_cropper: ^1.4.1 # cropping image
+  permission_handler: ^9.1.0 # Ask for camera/folder.. permission
+  flutter_native_splash: ^2.1.0 #plash screen
+
+  #Other utilities
+  path: ^1.8.0 # get base name from selected file path
+  flutter_markdown: ^0.6.9 # loading long text in app. eg about screen
+  regexpattern: ^2.0.1 # email passsword validator
+  timeago: ^3.1.0 # eg: 2 day ago
+  dart_date: ^1.1.0 # formating dates to formal
+
+  #Network
+  internet_connection_checker: ^0.0.1+3  # check for actual internet coonection.
+  webfeed: ^0.7.0 # for parsing rss 
+  http: ^0.13.4 #making http request
+  html: ^0.15.0 #r emoves p tag from podcast description
+  
+  #Widgets
+  flutter_easyloading: ^3.0.3 # loading indicator
+  circular_countdown_timer: ^0.2.0 #  asting timer
+  cached_network_image: ^3.2.0
+  image_picker: ^0.8.4+4
+  numberpicker: ^2.1.1 # fasting duration picker 
+  image_cropper: ^1.5.0 # cropping image
+  font_awesome_flutter: ^9.2.0
   table_calendar: ^3.0.3 # events
   date_time_picker: ^2.1.0 # to pick date or time
-  timeago: ^3.1.0 # eg: 2 day ago
   syncfusion_flutter_sliders: ^19.4.48 #Slider with dividers
-  permission_handler: ^9.1.0
-  app_settings: ^4.1.1
-  change_app_package_name: ^1.0.0
-
-  font_awesome_flutter: ^9.2.0
+  flutter_email_sender: ^5.0.2 # open email app. eg contact me
 
 
-
-  
 
 
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/logos/splash_logo.png
+  image: assets/images/logos/cop_logo_trans.png
   fullscreen: true
   android: true
   ios: true
@@ -89,11 +98,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^1.0.0
 
 

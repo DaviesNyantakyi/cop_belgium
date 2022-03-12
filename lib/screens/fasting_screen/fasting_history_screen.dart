@@ -66,11 +66,11 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(
-                        'assets/images/no_fast_added.png',
+                        'assets/images/illustrations/no_fasting_history.png',
                         height: 220,
                         width: 220,
                       ),
-                      const SizedBox(height: 40),
+                      const SizedBox(height: kContentSpacing32),
                       const Text(
                         'No fasting history',
                         style: kSFBody,

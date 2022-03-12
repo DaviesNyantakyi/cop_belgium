@@ -171,6 +171,7 @@ const double kContentSpacing32 = 32;
 const double kAppbarElevation = 1;
 
 const double kIconSize = 24;
+const double kDividerThickness = 1;
 
 Duration kPagViewDuration = const Duration(milliseconds: 800);
 Curve kPagViewCurve = Curves.easeOutExpo;

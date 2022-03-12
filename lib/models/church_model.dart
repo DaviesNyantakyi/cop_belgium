@@ -4,13 +4,13 @@ class Church {
   final String phoneNumber;
   final String email;
   final String leader;
-  final dynamic serviceTime;
+  final dynamic serviceTime; //TODO: change type notation
   final String street;
   final String streetNumber;
   final String city;
   final String postCode;
   final Map<String, dynamic> latLong;
-  final String image;
+  final String image; // TODO: Change to imageUrl
   final String province;
 
   Church({

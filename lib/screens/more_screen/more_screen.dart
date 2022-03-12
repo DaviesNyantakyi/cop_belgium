@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:cop_belgium/screens/churches/churches_screen.dart';
 import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
-import 'package:cop_belgium/screens/fasting_screen/create_fasting_screen.dart';
+import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
+import 'package:cop_belgium/screens/quiz_screen/quiz_screen.dart';
 import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_picker_provider.dart';
@@ -24,6 +26,17 @@ class _MoreScreenState extends State<MoreScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('More', style: kSFHeadLine3),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+            },
+            child: const Text(
+              'LOGOUT',
+              style: kSFBody,
+            ),
+          )
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
@@ -45,17 +58,6 @@ class _MoreScreenState extends State<MoreScreen> {
     return Column(
       children: [
         _buildTile(
-          title: 'Fasting',
-          onTap: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => const FastingScreen(),
-              ),
-            );
-          },
-        ),
-        _buildTile(
           title: 'Donate',
           onTap: () {
             Navigator.push(
@@ -67,7 +69,49 @@ class _MoreScreenState extends State<MoreScreen> {
           },
         ),
         _buildTile(
-          title: 'Request baptism',
+          title: 'Quiz',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const QuizScreen(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Fasting',
+          onTap: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => const FastingScreen(),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Churches',
+          onTap: () {
+            final imagePickerProvider =
+                Provider.of<ImagePickerProvider>(context, listen: false);
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider<ImagePickerProvider>.value(
+                      value: imagePickerProvider,
+                    )
+                  ],
+                  child: const ChurchesScreen(),
+                ),
+              ),
+            );
+          },
+        ),
+        _buildTile(
+          title: 'Request Baptism',
           onTap: () {
             Navigator.push(
               context,
@@ -77,6 +121,7 @@ class _MoreScreenState extends State<MoreScreen> {
             );
           },
         ),
+        const Divider(),
         _buildTile(
           title: 'About Church',
           onTap: () {
@@ -97,12 +142,6 @@ class _MoreScreenState extends State<MoreScreen> {
                 builder: (context) => const SettingsScreen(),
               ),
             );
-          },
-        ),
-        _buildTile(
-          title: 'Logout',
-          onTap: () async {
-            await FirebaseAuth.instance.signOut();
           },
         ),
       ],
@@ -140,11 +179,18 @@ class _MoreScreenState extends State<MoreScreen> {
     );
   }
 
-  Widget _buildAccountInfo() {
+  Widget _buildUserInfo() {
     final userName = FirebaseAuth.instance.currentUser?.displayName;
-    return Text(
-      userName ?? ' ',
-      style: kSFHeadLine3,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          userName ?? ' ',
+          style: kSFHeadLine3,
+        ),
+        const Text('Piwc Turnhout', style: kSFBody),
+      ],
     );
   }
 
@@ -178,8 +224,8 @@ class _MoreScreenState extends State<MoreScreen> {
             child: Row(
               children: [
                 _buildAvatar(),
-                const SizedBox(width: 15),
-                _buildAccountInfo(),
+                const SizedBox(width: kContentSpacing8),
+                _buildUserInfo(),
               ],
             ),
           ),

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/screens/all_screens.dart';

@@ -1,15 +1,15 @@
 class TestimonyInfo {
   String? id;
   final String userId;
-  String? title;
+  String title;
   final String? userName;
-  String? description;
+  String description;
   int? likes;
   final DateTime? date;
 
   TestimonyInfo({
-    this.id,
-    this.userName,
+    required this.id,
+    required this.userName,
     required this.userId,
     required this.title,
     required this.description,

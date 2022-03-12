@@ -7,7 +7,7 @@ import 'package:cop_belgium/screens/announcements_screen/announcements_screen.da
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/cupertino.dart';

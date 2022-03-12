@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
@@ -22,6 +24,7 @@ late AudioProvider _audioHandler;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   await init();
   runApp(const MyApp());
 }
@@ -88,6 +91,7 @@ ThemeData _theme = ThemeData(
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     backgroundColor: kBlue,
   ),
+  dividerTheme: const DividerThemeData(thickness: 1),
   iconTheme: const IconThemeData(
     color: kBlack,
     size: kIconSize,
@@ -136,9 +140,17 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
-class Test extends StatelessWidget {
+class Test extends StatefulWidget {
   const Test({Key? key}) : super(key: key);
 
+  @override
+  State<Test> createState() => _TestState();
+}
+
+class _TestState extends State<Test> {
+  ImagePickerProvider imagePickerProvider = ImagePickerProvider();
+  File? leaderImage1;
+  File? leaderImage2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,14 +158,82 @@ class Test extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              child: Text(
-                'Download',
-                style: kSFBody.copyWith(color: Colors.white),
-              ),
-              onPressed: () async {},
-            )
+            _buildAvatar1(),
+            const SizedBox(height: 10),
+            _buildAvatar2(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar1() {
+    if (leaderImage1 != null) {
+      return CircleAvatar(
+        backgroundImage: Image.file(leaderImage1!).image,
+        radius: 30,
+        backgroundColor: kBlueLight,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(100),
+          ),
+          child: TextButton(
+            child: Container(),
+            onPressed: () async {
+              imagePickerProvider.showBottomSheet(context: context);
+            },
+          ),
+        ),
+      );
+    }
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: kBlueLight,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(100),
+        ),
+        child: TextButton(
+          onPressed: () async {},
+          style: kTextButtonStyle,
+          child: const Center(
+            child: Icon(Icons.person_outline_outlined, color: kBlack),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar2() {
+    if (leaderImage2 != null) {
+      return CircleAvatar(
+        backgroundImage: Image.file(leaderImage2!).image,
+        radius: 30,
+        backgroundColor: kBlueLight,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(100),
+          ),
+          child: TextButton(
+            child: Container(),
+            onPressed: () async {},
+          ),
+        ),
+      );
+    }
+    return CircleAvatar(
+      radius: 30,
+      backgroundColor: kBlueLight,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(100),
+        ),
+        child: TextButton(
+          onPressed: () async {},
+          style: kTextButtonStyle,
+          child: const Center(
+            child: Icon(Icons.person_outline_outlined, color: kBlack),
+          ),
         ),
       ),
     );

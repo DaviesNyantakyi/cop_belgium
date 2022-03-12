@@ -24,19 +24,11 @@ class DonateScreen extends StatelessWidget {
                 // Use IntrinsicHeight  to size the expandible widget to a more reasonable height.
                 child: Column(mainAxisSize: MainAxisSize.max, children: [
                   const SizedBox(height: 50),
-                  Image.asset('assets/images/donate.png', height: 150),
+                  _buildHeaderImage(),
                   const SizedBox(height: 50),
-                  _buildText(),
+                  _buildInfoText(),
                   Expanded(child: Container(height: 90)),
-                  Padding(
-                    padding: const EdgeInsets.all(kBodyPadding),
-                    child: Buttons.buildButton(
-                      width: double.infinity,
-                      context: context,
-                      btnText: 'Continue',
-                      onPressed: () {},
-                    ),
-                  )
+                  _buildContinueButton(context: context)
                 ]),
               ),
             ),
@@ -46,7 +38,26 @@ class DonateScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildText() {
+  Widget _buildHeaderImage() {
+    return Image.asset(
+      'assets/images/illustrations/donate.png',
+      height: 150,
+    );
+  }
+
+  Widget _buildContinueButton({required BuildContext context}) {
+    return Padding(
+      padding: const EdgeInsets.all(kBodyPadding),
+      child: Buttons.buildButton(
+        width: double.infinity,
+        context: context,
+        btnText: 'Continue',
+        onPressed: () {},
+      ),
+    );
+  }
+
+  Widget _buildInfoText() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

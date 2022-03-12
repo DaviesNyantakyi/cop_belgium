@@ -17,33 +17,36 @@ class DatePicker {
       isDismissible: false,
       context: context,
       enableDrag: false,
+      fullScreenHeight: null,
       height: 300,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 200,
-            child: CupertinoDatePicker(
-              mode: mode,
-              initialDateTime: initialDate,
-              maximumDate: maxDate ?? kMaxDate,
-              maximumYear: maxDate?.year ?? kMaxDate.year,
-              minimumDate: kMinDate,
-              minimumYear: kMinDate.year,
-              onDateTimeChanged: onChanged,
-              use24hFormat: true,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 200,
+              child: CupertinoDatePicker(
+                mode: mode,
+                initialDateTime: initialDate,
+                maximumDate: maxDate ?? kMaxDate,
+                maximumYear: maxDate?.year ?? kMaxDate.year,
+                minimumDate: kMinDate,
+                minimumYear: kMinDate.year,
+                onDateTimeChanged: onChanged,
+                use24hFormat: true,
+              ),
             ),
-          ),
-          Buttons.buildButton(
-            context: context,
-            btnText: 'Done',
-            height: kButtonHeight,
-            width: double.infinity,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
+            Buttons.buildButton(
+              context: context,
+              btnText: 'Done',
+              height: kButtonHeight,
+              width: double.infinity,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

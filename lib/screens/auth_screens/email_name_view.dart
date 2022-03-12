@@ -4,7 +4,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -97,7 +97,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
           style: kSFHeadLine2,
         ),
         Text(
-          'Create an account by signing up with your email address.',
+          'Enter your Name, Email, and Password for sign up',
           style: kSFBody,
         ),
       ],

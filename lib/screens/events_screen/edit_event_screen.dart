@@ -6,17 +6,15 @@ import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
 class EditEventScreen extends StatefulWidget {
-  const EditEventScreen({
-    Key? key,
-    required String eventType,
-    required Event event,
-  }) : super(key: key);
+  final Event event;
+  const EditEventScreen({Key? key, required this.event}) : super(key: key);
 
   @override
   _EditEventScreenState createState() => _EditEventScreenState();
@@ -108,21 +106,26 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   Widget _buildAddEventTypeDetails() {
     if (eventType == EventType.online) {
-      return _buildTextFormField(
+      return MyTextFormField(
+        fillColor: Colors.transparent,
         controller: linkCntlr,
         hintText: 'Add link',
         style: kSFBody,
-        icon: const Icon(
+        maxLines: null,
+        textInputAction: TextInputAction.next,
+        prefixIcon: const Icon(
           Icons.link_outlined,
           color: Colors.black,
         ),
       );
     }
-    return _buildTextFormField(
+    return MyTextFormField(
+      fillColor: Colors.transparent,
       controller: addressCntlr,
       hintText: 'Address',
+      maxLines: 1,
       style: kSFBody,
-      icon: const Icon(
+      prefixIcon: const Icon(
         Icons.location_on_outlined,
         color: Colors.black,
       ),
@@ -220,13 +223,16 @@ class _EditEventScreenState extends State<EditEventScreen> {
   Widget _buildTitleDescription() {
     return Column(
       children: [
-        _buildTextFormField(
+        MyTextFormField(
+          fillColor: Colors.transparent,
           controller: titleCntlr,
           hintText: 'Title',
           style: kSFHeadLine3,
+          maxLines: null,
         ),
         const Divider(),
-        _buildTextFormField(
+        MyTextFormField(
+          fillColor: Colors.transparent,
           controller: aboutCntlr,
           style: kSFBody,
           hintText: 'About event',
@@ -352,32 +358,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
     );
   }
 
-  Widget _buildTextFormField({
-    String? initialValue,
-    String? hintText,
-    TextStyle? style,
-    Widget? icon,
-    TextEditingController? controller,
-    Function(String)? onChanged,
-  }) {
-    return TextFormField(
-      initialValue: initialValue,
-      controller: controller,
-      style: style,
-      minLines: 1,
-      cursorWidth: 3,
-      cursorColor: kBlack,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      decoration: InputDecoration(
-        prefixIcon: icon,
-        hintText: hintText,
-        border: InputBorder.none,
-      ),
-      onChanged: onChanged,
-    );
-  }
-
   Widget _buildImage() {
     final image = Provider.of<ImagePickerProvider>(context).selectedImage;
     if (image?.path != null) {
@@ -436,19 +416,18 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
+      title: const Text('Edit', style: kSFHeadLine3),
       leading: kBackButton(context: context),
       actions: [
-        _buildCreateButton(context: context),
+        TextButton(
+          child: const Text('SAVE', style: kSFBody),
+          onPressed: () async {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+          },
+        )
       ],
-    );
-  }
-
-  Widget _buildCreateButton({required BuildContext context}) {
-    return TextButton(
-      child: const Text('SAVE', style: kSFBodyBold),
-      onPressed: () async {
-        Navigator.pop(context);
-      },
     );
   }
 }

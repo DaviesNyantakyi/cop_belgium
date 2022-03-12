@@ -1,6 +1,6 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 class RequestBatismScreen extends StatelessWidget {

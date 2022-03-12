@@ -3,7 +3,7 @@ import 'package:cop_belgium/models/church_model.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/church_tile.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 class ChurchSelectionScreen extends StatefulWidget {

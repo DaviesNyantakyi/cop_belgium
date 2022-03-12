@@ -1,7 +1,7 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 class FastingDetailsScreen extends StatefulWidget {
@@ -17,17 +17,18 @@ class _FastingDetailsScreenState extends State<FastingDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 70,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: kBodyPadding),
-          child: TextButton(
-            style: kTextButtonStyle,
-            child: Text(
-              'Delete',
-              style: kSFBody.copyWith(color: kRed),
-            ),
-            onPressed: () {},
+        leadingWidth: 100,
+        leading: TextButton(
+          style: kTextButtonStyle,
+          child: Text(
+            'DELETE',
+            style: kSFBody.copyWith(color: kRed),
           ),
+          onPressed: () {
+            Navigator.of(context)
+              ..pop()
+              ..pop();
+          },
         ),
       ),
       body: LayoutBuilder(
@@ -67,7 +68,11 @@ class _FastingDetailsScreenState extends State<FastingDetailsScreen> {
         btnText: 'Save',
         color: kGreen,
         width: double.infinity,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context)
+            ..pop()
+            ..pop();
+        },
       ),
     );
   }

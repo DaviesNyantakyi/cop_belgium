@@ -1,7 +1,7 @@
 import 'package:cop_belgium/models/testimony_model.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/widgets/textfiel.dart';
+import 'package:cop_belgium/widgets/textfield.dart';
 
 import 'package:flutter/material.dart';
 
@@ -72,20 +72,18 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     );
   }
 
-  Widget _buildCreateButton({required BuildContext context}) {
-    return TextButton(
-      child: const Text('Create', style: kSFBodyBold),
-      onPressed: () async {},
-    );
-  }
-
   dynamic _buildAppbar() {
     return AppBar(
       elevation: 1,
       leading: kBackButton(context: context),
       title: const Text('Create', style: kSFHeadLine3),
       actions: [
-        _buildCreateButton(context: context),
+        TextButton(
+          child: const Text('CREATE', style: kSFBody),
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+        )
       ],
     );
   }

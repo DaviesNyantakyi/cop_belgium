@@ -17,7 +17,7 @@ class TestimonyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _buildDate() {
+    Widget _buildDate() {
       String time = timeago.format(testimony.date!);
 
       if (time.contains('years ago') || time.contains('about a year ago')) {
@@ -27,6 +27,59 @@ class TestimonyCard extends StatelessWidget {
       return Text(
         time,
         style: kSFCaption,
+      );
+    }
+
+    Widget _buildTitleAndInfo() {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            testimony.title,
+            style: kSFBodyBold,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Text(
+                testimony.userName ?? ' ',
+                style: kSFCaption,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(
+                width: 7,
+              ),
+              _buildDate(),
+            ],
+          )
+        ],
+      );
+    }
+
+    Widget _buildDescription() {
+      return Text(
+        testimony.description,
+        style: kSFBody,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+      );
+    }
+
+    Widget _buildLikeButton() {
+      return TextButton(
+        style: kTextButtonStyle,
+        onPressed: onPressedLike,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.favorite, color: kRed),
+            const SizedBox(width: 7),
+            Text(testimony.likes.toString(), style: kSFBody2)
+          ],
+        ),
       );
     }
 
@@ -50,47 +103,13 @@ class TestimonyCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                testimony.title ?? ' ',
-                style: kSFBodyBold,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              _buildTitleAndInfo(),
               const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text(
-                    testimony.userName ?? ' ',
-                    style: kSFCaption,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  _buildDate(),
-                ],
+              Expanded(
+                flex: 2,
+                child: _buildDescription(),
               ),
-              const SizedBox(height: 10),
-              Text(
-                testimony.description ?? ' ',
-                style: kSFBody,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                style: kTextButtonStyle,
-                onPressed: onPressedLike,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.favorite, color: kRed),
-                    const SizedBox(width: 7),
-                    Text(testimony.likes.toString(), style: kSFBody2)
-                  ],
-                ),
-              )
+              _buildLikeButton(),
             ],
           ),
         ),

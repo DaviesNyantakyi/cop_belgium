@@ -225,7 +225,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   Widget _buildEditButton() {
     return TextButton(
-      child: const Text('EDIT', style: kSFBodyBold),
+      child: const Text('EDIT', style: kSFBody),
       onPressed: () {
         final imagePickerProvider =
             Provider.of<ImagePickerProvider>(context, listen: false);
@@ -238,10 +238,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   value: imagePickerProvider,
                 ),
               ],
-              child: EditEventScreen(
-                eventType: widget.event.type,
-                event: widget.event,
-              ),
+              child: EditEventScreen(event: widget.event),
             ),
           ),
         );
@@ -251,7 +248,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   Widget _buildDeleteButton() {
     return TextButton(
-      child: Text('DELETE', style: kSFBodyBold.copyWith(color: kRed)),
+      child: Text('DELETE', style: kSFBody.copyWith(color: kRed)),
       onPressed: () {
         _showDeleteDialog();
       },
@@ -261,7 +258,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   Future<String?> _showDeleteDialog() {
     return showMyDialog(
       context: context,
-      title: const Text('Delete this event?', style: kSFHeadLine3),
+      title: const Text('Delete this Event?', style: kSFHeadLine3),
       actions: <Widget>[
         TextButton(
           onPressed: () {

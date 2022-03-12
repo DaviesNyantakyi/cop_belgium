@@ -106,7 +106,7 @@ class ImagePickerProvider extends ChangeNotifier {
 
   // Cropp the image using the file path
   Future<File?> _imageCropper({File? file}) async {
-    File? croppedImage = await ImageCropper.cropImage(
+    File? croppedImage = await ImageCropper().cropImage(
       sourcePath: file!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,

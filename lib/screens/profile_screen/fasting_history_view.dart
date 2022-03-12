@@ -16,25 +16,23 @@ class UserFastingHistoryView extends StatefulWidget {
 class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: kBodyPadding),
-        separatorBuilder: (BuildContext context, int index) =>
-            const SizedBox(height: kContentSpacing12),
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return FastingHistoryCard(
-            fastingInfo: FastingInfo(
-              duration: const Duration(hours: 20),
-              type: 'custom',
-              startDate: DateTime.now(),
-              endDate: DateTime.now(),
-              goalDate: DateTime.now(),
-              note: 'hzkfjzk',
-            ),
-          );
-        },
-      ),
+    return ListView.separated(
+      padding: const EdgeInsets.all(kBodyPadding).copyWith(top: kBodyPadding),
+      separatorBuilder: (BuildContext context, int index) =>
+          const SizedBox(height: kContentSpacing12),
+      itemCount: 5,
+      itemBuilder: (context, index) {
+        return FastingHistoryCard(
+          fastingInfo: FastingInfo(
+            duration: const Duration(hours: 20),
+            type: 'custom',
+            startDate: DateTime.now(),
+            endDate: DateTime.now(),
+            goalDate: DateTime.now(),
+            note: 'hzkfjzk',
+          ),
+        );
+      },
     );
   }
 }
