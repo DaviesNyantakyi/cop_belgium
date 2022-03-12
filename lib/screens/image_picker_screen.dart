@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_picker_provider.dart';
@@ -17,6 +19,8 @@ class ImagePickerScreen extends StatefulWidget {
 }
 
 class _ImagePickerScreenState extends State<ImagePickerScreen> {
+  File? image;
+  final MyImagePicker myImagePicker = MyImagePicker();
   Future<void> submit() async {
     try {
       bool hasConnection = await ConnectionChecker().checkConnection();
@@ -52,27 +56,24 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         );
         return false;
       },
-      child: Consumer<ImagePickerProvider>(
-          builder: (context, imagePickerProvider, _) {
-        return Scaffold(
-          appBar: _backButton(context: context),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: kBodyPadding, vertical: kBodyPadding),
-              child: Column(
-                children: [
-                  const Text('Add profile image', style: kSFHeadLine2),
-                  const SizedBox(height: 32),
-                  _buildImage(imagePickerProvider: imagePickerProvider),
-                  const SizedBox(height: kContentSpacing32),
-                  _buildContinueButton(),
-                ],
-              ),
+      child: Scaffold(
+        appBar: _backButton(context: context),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+                horizontal: kBodyPadding, vertical: kBodyPadding),
+            child: Column(
+              children: [
+                const Text('Add profile image', style: kSFHeadLine2),
+                const SizedBox(height: 32),
+                _buildImage(),
+                const SizedBox(height: kContentSpacing32),
+                _buildContinueButton(),
+              ],
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
   }
 
@@ -96,14 +97,12 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
     );
   }
 
-  Widget _buildImage({
-    required ImagePickerProvider imagePickerProvider,
-  }) {
-    if (imagePickerProvider.selectedImage?.path != null) {
+  Widget _buildImage() {
+    if (image?.path != null) {
       return CircleAvatar(
         radius: 90,
         backgroundImage: Image.file(
-          imagePickerProvider.selectedImage!,
+          image!,
           fit: BoxFit.cover,
         ).image,
         backgroundColor: kBlueLight,
@@ -113,7 +112,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
           ),
           child: TextButton(
             onPressed: () async {
-              await imagePickerProvider.showBottomSheet(context: context);
+              image = await myImagePicker.showBottomSheet(
+                context: context,
+                file: image,
+              ) as File?;
+              setState(() {});
             },
             style: kTextButtonStyle,
             child: Container(),
@@ -130,7 +133,11 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
         ),
         child: TextButton(
           onPressed: () async {
-            await imagePickerProvider.showBottomSheet(context: context);
+            image = await myImagePicker.showBottomSheet(
+              context: context,
+              file: image,
+            ) as File?;
+            setState(() {});
           },
           style: kTextButtonStyle,
           child: const Center(

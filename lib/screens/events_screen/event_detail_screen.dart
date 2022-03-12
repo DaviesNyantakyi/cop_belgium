@@ -1,5 +1,4 @@
 import 'package:cop_belgium/models/event_model.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/screens/events_screen/edit_event_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/enum_to_string.dart';
@@ -7,7 +6,6 @@ import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 const double _cardSize = 59.0;
 enum EventType { normal, online }
@@ -227,19 +225,10 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return TextButton(
       child: const Text('EDIT', style: kSFBody),
       onPressed: () {
-        final imagePickerProvider =
-            Provider.of<ImagePickerProvider>(context, listen: false);
         Navigator.push(
           context,
           CupertinoPageRoute(
-            builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider<ImagePickerProvider>.value(
-                  value: imagePickerProvider,
-                ),
-              ],
-              child: EditEventScreen(event: widget.event),
-            ),
+            builder: (context) => EditEventScreen(event: widget.event),
           ),
         );
       },

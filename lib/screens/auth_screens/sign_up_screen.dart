@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/church_model.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/date_gender_view.dart';
 import 'package:cop_belgium/screens/auth_screens/email_name_view.dart';
@@ -80,8 +79,6 @@ class _ChurchSelection extends StatefulWidget {
 }
 
 class _ChurchSelectionState extends State<_ChurchSelection> {
-  late final ImagePickerProvider imagePickerProvider;
-
   Future<void> onSubmit({required Church church}) async {
     FocusScope.of(context).unfocus();
     try {
@@ -94,9 +91,11 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
         EasyLoading.show();
         signUpProvider.setChurch(church: church.id);
 
-        signUpProvider.setSelectedImage(
-          image: imagePickerProvider.selectedImage,
-        );
+        //TODO: set selected image before sign up
+
+        // signUpProvider.setSelectedImage(
+        //   image: imagePickerProvider.selectedImage,
+        // );
         await signUpProvider.signUp();
 
         Navigator.pop(context);
@@ -125,19 +124,6 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
     } finally {
       EasyLoading.dismiss();
     }
-  }
-
-  @override
-  void initState() {
-    imagePickerProvider =
-        Provider.of<ImagePickerProvider>(context, listen: false);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    imagePickerProvider.close();
-    super.dispose();
   }
 
   @override

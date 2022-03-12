@@ -3,10 +3,8 @@ import 'package:cop_belgium/screens/profile_screen/fasting_history_view.dart';
 import 'package:cop_belgium/screens/profile_screen/saved_podcast_view.dart';
 import 'package:cop_belgium/screens/profile_screen/testimonies_view.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreens extends StatefulWidget {
   static String profileScreens = 'profileScreens';
@@ -82,25 +80,14 @@ class _ProfileScreensState extends State<ProfileScreens>
   }
 
   Widget _buildActions({required BuildContext context}) {
-    return Consumer<ImagePickerProvider>(
-      builder: (context, imageProvider, _) {
-        return TextButton(
-          child: const Text('Edit profile', style: kSFBody),
-          onPressed: () async {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imageProvider,
-                    ),
-                  ],
-                  child: const EditProfileScreen(),
-                ),
-              ),
-            );
-          },
+    return TextButton(
+      child: const Text('Edit profile', style: kSFBody),
+      onPressed: () async {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const EditProfileScreen(),
+          ),
         );
       },
     );

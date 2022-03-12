@@ -1,5 +1,4 @@
 import 'package:cop_belgium/models/event_model.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
 import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
@@ -7,7 +6,6 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -68,20 +66,11 @@ class _EventsScreenState extends State<EventsScreen> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add_outlined),
         onPressed: () async {
-          final imagePickerProvider =
-              Provider.of<ImagePickerProvider>(context, listen: false);
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) {
-                return MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imagePickerProvider,
-                    ),
-                  ],
-                  child: const CreateEventScreen(),
-                );
+                return const CreateEventScreen();
               },
             ),
           );
@@ -112,20 +101,11 @@ class _EventsScreenState extends State<EventsScreen> {
         return EventCard(
           event: events[index],
           onPressed: () {
-            final imagePickerProvider =
-                Provider.of<ImagePickerProvider>(context, listen: false);
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imagePickerProvider,
-                    )
-                  ],
-                  child: EventDetailScreen(
-                    event: events[index],
-                  ),
+                builder: (context) => EventDetailScreen(
+                  event: events[index],
                 ),
               ),
             );

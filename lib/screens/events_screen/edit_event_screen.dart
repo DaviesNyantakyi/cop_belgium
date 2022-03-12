@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
@@ -10,8 +12,6 @@ import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
-
 class EditEventScreen extends StatefulWidget {
   final Event event;
   const EditEventScreen({Key? key, required this.event}) : super(key: key);
@@ -21,7 +21,8 @@ class EditEventScreen extends StatefulWidget {
 }
 
 class _EditEventScreenState extends State<EditEventScreen> {
-  late ImagePickerProvider imagePickerProvider;
+  File? image;
+  late MyImagePicker myImagePicker = MyImagePicker();
   DatePicker datePicker = DatePicker();
 
   EventType? eventType = EventType.normal;
@@ -36,19 +37,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   bool isLoading = false;
   bool singleEvent = true;
-
-  @override
-  void initState() {
-    imagePickerProvider =
-        Provider.of<ImagePickerProvider>(context, listen: false);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    imagePickerProvider.close();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -359,7 +347,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   Widget _buildImage() {
-    final image = Provider.of<ImagePickerProvider>(context).selectedImage;
     if (image?.path != null) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.30,
@@ -374,8 +361,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
         ),
         child: TextButton(
           onPressed: () async {
-            await Provider.of<ImagePickerProvider>(context, listen: false)
-                .showBottomSheet(context: context);
+            image = await myImagePicker.showBottomSheet(
+              context: context,
+              file: image,
+            ) as File?;
+            setState(() {});
           },
           style: kTextButtonStyle,
           child: ClipRRect(
@@ -398,10 +388,11 @@ class _EditEventScreenState extends State<EditEventScreen> {
       ),
       child: TextButton(
         onPressed: () async {
-          await Provider.of<ImagePickerProvider>(context, listen: false)
-              .showBottomSheet(
+          image = await myImagePicker.showBottomSheet(
             context: context,
-          );
+            file: image,
+          ) as File?;
+          setState(() {});
         },
         style: kTextButtonStyle,
         child: const Center(

@@ -83,22 +83,18 @@ dependencies:
   flutter_email_sender: ^5.0.2 # open email app. eg contact me
 
 
-
-
-
-flutter_native_splash:
-  color: "#ffffff"
-  image: assets/images/logos/cop_logo_trans.png
-  fullscreen: true
-  android: true
-  ios: true
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^1.0.0
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/logos/cop_logo_trans.png
+  android: true
+  ios: true
+
 
 
 # For information on the generic Dart part of this file, see the

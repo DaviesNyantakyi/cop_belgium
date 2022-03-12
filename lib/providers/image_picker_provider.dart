@@ -10,28 +10,103 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class ImagePickerProvider extends ChangeNotifier {
+class MyImagePicker {
   final ImagePicker _picker = ImagePicker();
-  File? _image;
-  ImageSource? _selectedSource;
 
-  File? get selectedImage => _image;
+  Future<dynamic> showBottomSheet({
+    required BuildContext context,
+    File? file,
+  }) async {
+    return await showMyBottomSheet(
+      height: null,
+      padding: EdgeInsets.zero,
+      fullScreenHeight: null,
+      context: context,
+      child: Material(
+        child: SizedBox(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _selectionTile(
+                  context: context,
+                  icon: Icons.photo_camera_outlined,
+                  text: 'Camera',
+                  onPressed: () async {
+                    File? file;
+                    const source = ImageSource.camera;
+                    final pickedFile =
+                        await pickImage(context: context, source: source);
+                    if (pickedFile?.path != null) {
+                      file = await imageCropper(file: File(pickedFile!.path));
+                    }
+                    Navigator.pop(context, file);
+                  },
+                ),
+                _selectionTile(
+                  context: context,
+                  icon: Icons.collections_outlined,
+                  text: 'Gallery',
+                  onPressed: () async {
+                    File? file;
+                    const source = ImageSource.gallery;
+                    final pickedFile =
+                        await pickImage(context: context, source: source);
+                    if (pickedFile?.path != null) {
+                      file = await imageCropper(file: File(pickedFile!.path));
+                    }
+                    Navigator.pop(context, file);
+                  },
+                ),
+                file != null
+                    ? _selectionTile(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        context: context,
+                        icon: Icons.delete_outline_outlined,
+                        text: 'Delete',
+                        color: kRed,
+                      )
+                    : Container(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
-  // pick image from gallery or camera.
-  // The source is selected from the bottomsheet. The default source is gallery
-  Future<void> pickImage({required BuildContext context}) async {
+  Widget _selectionTile(
+      {required VoidCallback onPressed,
+      required BuildContext context,
+      required IconData icon,
+      required String text,
+      Color? color}) {
+    return ListTile(
+      onTap: onPressed,
+      leading: Icon(
+        icon,
+        color: color,
+        size: kIconSize,
+      ),
+      title: Text(text, style: kSFBody.copyWith(color: color)),
+    );
+  }
+
+  Future<XFile?> pickImage({
+    required BuildContext context,
+    required ImageSource source,
+  }) async {
     try {
-      // Remove bottomSheet
-      Navigator.pop(context);
-
       XFile? selectedImage;
 
-      if (_selectedSource == ImageSource.gallery) {
+      if (source == ImageSource.gallery) {
         // pick image from storage if permission granted.
         var status = await Permission.storage.request();
         if (status == PermissionStatus.granted) {
           selectedImage = await _picker.pickImage(
-            source: _selectedSource ?? ImageSource.gallery,
+            source: source,
           );
         }
         // If the permission permanlty denied showdialog
@@ -46,10 +121,11 @@ class ImagePickerProvider extends ChangeNotifier {
             instructions: 'Tap Settings > Permissions, and turn on Storage',
           );
         }
+        return selectedImage;
       }
 
       // pick image from storage and camera if permission granted.
-      if (_selectedSource == ImageSource.camera) {
+      if (source == ImageSource.camera) {
         //Request camera and storage permission.
         var statusCamera = await Permission.camera.request();
         var statusStorage = await Permission.storage.request();
@@ -58,7 +134,7 @@ class ImagePickerProvider extends ChangeNotifier {
         if (statusStorage == PermissionStatus.granted &&
             statusCamera == PermissionStatus.granted) {
           selectedImage = await _picker.pickImage(
-            source: _selectedSource ?? ImageSource.gallery,
+            source: source,
           );
         }
 
@@ -91,22 +167,18 @@ class ImagePickerProvider extends ChangeNotifier {
                 'Tap Settings > Permissions, and turn on Camera and Storage',
           );
         }
+        return selectedImage;
       }
-
-      // Cropp the selected image.
-      if (selectedImage != null) {
-        _image = await _imageCropper(file: File(selectedImage.path));
-      }
-
-      notifyListeners();
+      return null;
     } on PlatformException catch (e) {
       debugPrint(e.toString());
+      rethrow;
     }
   }
 
   // Cropp the image using the file path
-  Future<File?> _imageCropper({File? file}) async {
-    File? croppedImage = await ImageCropper().cropImage(
+  Future<File?> imageCropper({File? file}) async {
+    return await ImageCropper().cropImage(
       sourcePath: file!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
@@ -126,7 +198,6 @@ class ImagePickerProvider extends ChangeNotifier {
         minimumAspectRatio: 1.0,
       ),
     );
-    return croppedImage;
   }
 
   Future<String?> _showPermanltyDeniedDialog({
@@ -177,82 +248,5 @@ class ImagePickerProvider extends ChangeNotifier {
         ),
       ],
     );
-  }
-
-  // Choose a image source and delete selected Image.
-  Future<void> showBottomSheet({required BuildContext context}) async {
-    await showMyBottomSheet(
-      height: null,
-      padding: EdgeInsets.zero,
-      fullScreenHeight: null,
-      context: context,
-      child: Material(
-        child: SizedBox(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _selectionTile(
-                  onPressed: () async {
-                    _selectedSource = ImageSource.camera;
-                    await pickImage(context: context);
-                    notifyListeners();
-                  },
-                  context: context,
-                  icon: Icons.photo_camera_outlined,
-                  text: 'Camera',
-                ),
-                _selectionTile(
-                  onPressed: () async {
-                    _selectedSource = ImageSource.gallery;
-                    await pickImage(context: context);
-                    notifyListeners();
-                  },
-                  context: context,
-                  icon: Icons.collections_outlined,
-                  text: 'Gallery',
-                ),
-                _image != null
-                    ? _selectionTile(
-                        onPressed: () {
-                          _image = null;
-                          Navigator.pop(context);
-                          notifyListeners();
-                        },
-                        context: context,
-                        icon: Icons.delete_outline_outlined,
-                        text: 'Delete',
-                        color: kRed,
-                      )
-                    : Container(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _selectionTile(
-      {required VoidCallback onPressed,
-      required BuildContext context,
-      required IconData icon,
-      required String text,
-      Color? color}) {
-    return ListTile(
-      onTap: onPressed,
-      leading: Icon(
-        icon,
-        color: color,
-        size: kIconSize,
-      ),
-      title: Text(text, style: kSFBody.copyWith(color: color)),
-    );
-  }
-
-  // reset the selected image.
-  void close() {
-    _image = null;
-    _selectedSource = null;
   }
 }

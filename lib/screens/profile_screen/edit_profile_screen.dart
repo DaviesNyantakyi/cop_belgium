@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
@@ -17,7 +19,6 @@ import 'package:cop_belgium/models/user_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
-import 'package:provider/provider.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final CopUser? user;
@@ -52,23 +53,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController passwordCntlr = TextEditingController();
   TextEditingController genderCntlr = TextEditingController();
 
-  late final ImagePickerProvider imageSelector;
+  final MyImagePicker myImagePicker = MyImagePicker();
+  File? image;
 
   DatePicker datePicker = DatePicker();
 
   @override
   void initState() {
-    imageSelector = Provider.of<ImagePickerProvider>(context, listen: false);
-
     initUserInfo();
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    imageSelector.close();
-    super.dispose();
   }
 
   Future<void> initUserInfo() async {
@@ -271,11 +265,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildAvatar() {
-    final image =
-        Provider.of<ImagePickerProvider>(context, listen: true).selectedImage;
     if (image != null) {
       return CircleAvatar(
-        backgroundImage: Image.file(image).image,
+        backgroundImage: Image.file(image!).image,
         radius: 60,
         backgroundColor: kBlueLight,
         child: TextButton(
@@ -290,8 +282,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await Provider.of<ImagePickerProvider>(context, listen: false)
-                .showBottomSheet(context: context);
+            image = await myImagePicker.showBottomSheet(
+              context: context,
+              file: image,
+            ) as File?;
+            setState(() {});
           },
         ),
       );
@@ -313,8 +308,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           child: Container(),
           onPressed: () async {
-            await Provider.of<ImagePickerProvider>(context, listen: false)
-                .showBottomSheet(context: context);
+            image = await myImagePicker.showBottomSheet(
+              context: context,
+              file: image,
+            ) as File?;
+            setState(() {});
           },
         ),
       );
@@ -336,8 +334,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               size: 35,
             ),
             onPressed: () async {
-              await Provider.of<ImagePickerProvider>(context, listen: false)
-                  .showBottomSheet(context: context);
+              image = await myImagePicker.showBottomSheet(
+                context: context,
+                file: image,
+              ) as File?;
+              setState(() {});
             },
           ),
         ),

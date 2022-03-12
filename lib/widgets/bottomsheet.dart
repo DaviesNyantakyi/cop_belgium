@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-Future<void> showMyBottomSheet({
+Future<dynamic> showMyBottomSheet({
   required BuildContext context,
   Widget? child,
   bool? isDismissible = true,
@@ -13,7 +13,7 @@ Future<void> showMyBottomSheet({
   double? fullScreenHeight = 0.9,
   EdgeInsetsGeometry padding = const EdgeInsets.all(kBodyPadding),
 }) async {
-  return await showModalBottomSheet<void>(
+  return await showModalBottomSheet<dynamic>(
     isScrollControlled: isScrollControlled,
     isDismissible: isDismissible!,
     enableDrag: enableDrag,

@@ -13,7 +13,7 @@ class CreateChurchScreen extends StatefulWidget {
 }
 
 class _CreateChurchScreenState extends State<CreateChurchScreen> {
-  late ImagePickerProvider imagePickerProvider = ImagePickerProvider();
+  late MyImagePicker myImagePicker = MyImagePicker();
   final TextEditingController churchNameCntlr = TextEditingController();
   final TextEditingController streetCntlr = TextEditingController();
   final TextEditingController streetNumberCntlr = TextEditingController();
@@ -61,7 +61,6 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     phoneNumberKey.currentState?.dispose();
     emailKey.currentState?.dispose();
 
-    imagePickerProvider.close();
     super.dispose();
   }
 
@@ -133,7 +132,13 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
           color: kGrey,
         ),
         child: TextButton(
-          onPressed: () async {},
+          onPressed: () async {
+            churchImage = await myImagePicker.showBottomSheet(
+              context: context,
+              file: churchImage,
+            ) as File?;
+            setState(() {});
+          },
           style: kTextButtonStyle,
           child: ClipRRect(
             borderRadius: const BorderRadius.all(
@@ -154,7 +159,13 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
         ),
       ),
       child: TextButton(
-        onPressed: () async {},
+        onPressed: () async {
+          churchImage = await myImagePicker.showBottomSheet(
+            context: context,
+            file: churchImage,
+          ) as File?;
+          setState(() {});
+        },
         style: kTextButtonStyle,
         child: const Center(
           child: Icon(
@@ -220,7 +231,11 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
         ),
         child: TextButton(
           onPressed: () async {
-            await imagePickerProvider.showBottomSheet(context: context);
+            churchImage = await myImagePicker.showBottomSheet(
+              context: context,
+              file: churchImage,
+            ) as File?;
+            setState(() {});
           },
           style: kTextButtonStyle,
           child: const Center(

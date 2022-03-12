@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/churches/create_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,8 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:flutter/material.dart';
-
-import 'package:cop_belgium/screens/all_screens.dart';
 
 import 'package:provider/provider.dart';
 
@@ -75,11 +74,8 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<SignUpProvider>(
             create: (context) => SignUpProvider(),
           ),
-          ChangeNotifierProvider<ImagePickerProvider>(
-            create: (context) => ImagePickerProvider(),
-          ),
         ],
-        child: const AuthWrapper(),
+        child: const CreateChurchScreen(),
       ),
       theme: _theme,
       builder: EasyLoading.init(),
@@ -148,9 +144,10 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  ImagePickerProvider imagePickerProvider = ImagePickerProvider();
+  MyImagePicker myImagePicker = MyImagePicker();
   File? leaderImage1;
   File? leaderImage2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +177,11 @@ class _TestState extends State<Test> {
           child: TextButton(
             child: Container(),
             onPressed: () async {
-              imagePickerProvider.showBottomSheet(context: context);
+              leaderImage1 = await myImagePicker.showBottomSheet(
+                context: context,
+                file: leaderImage1,
+              ) as File?;
+              setState(() {});
             },
           ),
         ),
@@ -194,7 +195,13 @@ class _TestState extends State<Test> {
           Radius.circular(100),
         ),
         child: TextButton(
-          onPressed: () async {},
+          onPressed: () async {
+            leaderImage1 = await myImagePicker.showBottomSheet(
+              context: context,
+              file: leaderImage1,
+            ) as File?;
+            setState(() {});
+          },
           style: kTextButtonStyle,
           child: const Center(
             child: Icon(Icons.person_outline_outlined, color: kBlack),
@@ -216,7 +223,13 @@ class _TestState extends State<Test> {
           ),
           child: TextButton(
             child: Container(),
-            onPressed: () async {},
+            onPressed: () async {
+              leaderImage1 = await myImagePicker.showBottomSheet(
+                context: context,
+                file: leaderImage1,
+              ) as File?;
+              setState(() {});
+            },
           ),
         ),
       );
@@ -229,11 +242,17 @@ class _TestState extends State<Test> {
           Radius.circular(100),
         ),
         child: TextButton(
-          onPressed: () async {},
           style: kTextButtonStyle,
           child: const Center(
             child: Icon(Icons.person_outline_outlined, color: kBlack),
           ),
+          onPressed: () async {
+            leaderImage2 = await myImagePicker.showBottomSheet(
+              context: context,
+              file: leaderImage2,
+            ) as File?;
+            setState(() {});
+          },
         ),
       ),
     );

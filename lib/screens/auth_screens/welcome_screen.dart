@@ -1,14 +1,13 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
-import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
+import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/all_screens.dart';
+import 'package:cop_belgium/utilities/constant.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
+import 'package:cop_belgium/widgets/church_logo.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String welcomeScreen = 'welcomeScreen';
@@ -85,8 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onPressed: () {
         final signUpProvider =
             Provider.of<SignUpProvider>(context, listen: false);
-        final imageSelector =
-            Provider.of<ImagePickerProvider>(context, listen: false);
+
         Navigator.push(
           context,
           CupertinoPageRoute(
@@ -95,9 +93,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ChangeNotifierProvider<SignUpProvider>.value(
                   value: signUpProvider,
                 ),
-                ChangeNotifierProvider<ImagePickerProvider>.value(
-                  value: imageSelector,
-                )
               ],
               child: const SignUpScreen(),
             ),
@@ -121,8 +116,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       onPressed: () {
         final signUpProvider =
             Provider.of<SignUpProvider>(context, listen: false);
-        final imageSelector =
-            Provider.of<ImagePickerProvider>(context, listen: false);
+
         Navigator.push(
           context,
           CupertinoPageRoute(
@@ -131,9 +125,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ChangeNotifierProvider<SignUpProvider>.value(
                   value: signUpProvider,
                 ),
-                ChangeNotifierProvider<ImagePickerProvider>.value(
-                  value: imageSelector,
-                )
               ],
               child: const SignUpScreen(),
             ),

@@ -7,7 +7,6 @@ import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
 import 'package:cop_belgium/screens/quiz_screen/quiz_screen.dart';
 import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,19 +92,10 @@ class _MoreScreenState extends State<MoreScreen> {
         _buildTile(
           title: 'Churches',
           onTap: () {
-            final imagePickerProvider =
-                Provider.of<ImagePickerProvider>(context, listen: false);
             Navigator.push(
               context,
               CupertinoPageRoute(
-                builder: (context) => MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imagePickerProvider,
-                    )
-                  ],
-                  child: const ChurchesScreen(),
-                ),
+                builder: (context) => const ChurchesScreen(),
               ),
             );
           },
@@ -195,8 +185,8 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildProfileTile() {
-    return Consumer2<AudioProvider, ImagePickerProvider>(
-      builder: (context, audioProvider, imageSelector, _) {
+    return Consumer<AudioProvider>(
+      builder: (context, audioProvider, _) {
         return TextButton(
           style: kTextButtonStyle.copyWith(
             overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
@@ -209,9 +199,6 @@ class _MoreScreenState extends State<MoreScreen> {
                   providers: [
                     ChangeNotifierProvider<AudioProvider>.value(
                       value: audioProvider,
-                    ),
-                    ChangeNotifierProvider<ImagePickerProvider>.value(
-                      value: imageSelector,
                     ),
                   ],
                   child: const ProfileScreens(),
