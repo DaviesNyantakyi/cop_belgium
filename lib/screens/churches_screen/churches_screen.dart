@@ -16,7 +16,7 @@ class ChurchesScreen extends StatelessWidget {
           Navigator.push(
             context,
             CupertinoPageRoute(
-              builder: (context) => const CreateChurchScreen(),
+              builder: (context) => CreateChurchScreen(),
             ),
           );
         },

@@ -2,6 +2,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
+import 'package:cop_belgium/screens/churches_screen/create_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
