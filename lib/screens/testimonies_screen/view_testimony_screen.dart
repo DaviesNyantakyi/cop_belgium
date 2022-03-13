@@ -1,5 +1,4 @@
 import 'package:cop_belgium/models/testimony_model.dart';
-import 'package:cop_belgium/screens/testimonies_screen/edit_testimony_screen.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
@@ -7,6 +6,8 @@ import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+
+import 'edit_testimony_screen.dart';
 
 class ViewTestimonyScreen extends StatefulWidget {
   // enabled edit mode

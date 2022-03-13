@@ -1,16 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cop_belgium/providers/audio_provider.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
-import 'package:cop_belgium/screens/churches/churches_screen.dart';
-import 'package:cop_belgium/screens/donate_screen/donate_screen.dart';
-import 'package:cop_belgium/screens/fasting_screen/fasting_screen.dart';
-import 'package:cop_belgium/screens/quiz_screen/quiz_screen.dart';
-import 'package:cop_belgium/screens/request_baptism/request_baptism.dart';
+import 'package:cop_belgium/screens/churches_screen/churches_screen.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../donate_screen/donate_screen.dart';
+import '../fasting_screen/fasting_screen.dart';
+import '../profile_screen/profile_screen.dart';
+import '../quiz_screen/quiz_screen.dart';
+import '../request_baptism_screen/request_baptism.dart';
+import '../settings_screen/about_church_screen.dart';
+import '../settings_screen/settings_screen.dart';
 
 class MoreScreen extends StatefulWidget {
   const MoreScreen({Key? key}) : super(key: key);
@@ -185,39 +187,28 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildProfileTile() {
-    return Consumer<AudioProvider>(
-      builder: (context, audioProvider, _) {
-        return TextButton(
-          style: kTextButtonStyle.copyWith(
-            overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
-          ),
-          onPressed: () async {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(
-                builder: (context) => MultiProvider(
-                  providers: [
-                    ChangeNotifierProvider<AudioProvider>.value(
-                      value: audioProvider,
-                    ),
-                  ],
-                  child: const ProfileScreens(),
-                ),
-              ),
-            );
-          },
-          child: SizedBox(
-            height: 100,
-            child: Row(
-              children: [
-                _buildAvatar(),
-                const SizedBox(width: kContentSpacing8),
-                _buildUserInfo(),
-              ],
-            ),
+    return TextButton(
+      style: kTextButtonStyle.copyWith(
+        overlayColor: MaterialStateProperty.all(Colors.grey.shade200),
+      ),
+      onPressed: () async {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const ProfileScreens(),
           ),
         );
       },
+      child: SizedBox(
+        height: 100,
+        child: Row(
+          children: [
+            _buildAvatar(),
+            const SizedBox(width: kContentSpacing8),
+            _buildUserInfo(),
+          ],
+        ),
+      ),
     );
   }
 }

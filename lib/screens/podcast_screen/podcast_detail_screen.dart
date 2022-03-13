@@ -1,15 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_episode_card.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
+import 'package:cop_belgium/screens/podcast_screen/podcast_player_screen.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'widgets/podcast_episode_card.dart';
 
 class PodcastDetailScreen extends StatefulWidget {
   static String podcastDetailScreen = 'podcastDetailScreen';
@@ -109,10 +111,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
         width: 140,
         height: 40,
         context: context,
-        child: Text(
-          'Subscribe',
-          style: kSFTextFieldStyle,
-        ),
+        child: const Text('Subscribe', style: kSFBody),
         onPressed: () {},
       ),
     );

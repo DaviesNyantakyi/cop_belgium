@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:cop_belgium/models/user_model.dart';
-import 'package:cop_belgium/services/fire_storage.dart';
-import 'package:cop_belgium/services/fire_auth.dart';
+
 import 'package:flutter/material.dart';
+
+import '../services/fire_auth.dart';
+import '../services/fire_storage.dart';
 
 class SignUpProvider extends ChangeNotifier {
   final FireAuth _fireAuth = FireAuth();
@@ -33,7 +35,7 @@ class SignUpProvider extends ChangeNotifier {
   TextEditingController get emailCntlr => _emailCntlr;
   TextEditingController get passwordCntlr => _passwordCntlr;
   DateTime? get dateOfBirth => _dateOfBirth;
-  File? get selectedImage => _selectedImage;
+  File? get image => _selectedImage;
   String get selectedChurch => _church;
 
   GlobalKey<FormState> get firstNameKey => _firstNameKey;
@@ -72,7 +74,7 @@ class SignUpProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedImage({File? image}) {
+  void setProfileImage({File? image}) {
     _selectedImage = image;
 
     notifyListeners();

@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:audio_service/audio_service.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/screens/churches/create_church_screen.dart';
+import 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -75,7 +72,7 @@ class MyApp extends StatelessWidget {
             create: (context) => SignUpProvider(),
           ),
         ],
-        child: const CreateChurchScreen(),
+        child: const AuthWrapper(),
       ),
       theme: _theme,
       builder: EasyLoading.init(),
@@ -133,128 +130,5 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
         offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
-  }
-}
-
-class Test extends StatefulWidget {
-  const Test({Key? key}) : super(key: key);
-
-  @override
-  State<Test> createState() => _TestState();
-}
-
-class _TestState extends State<Test> {
-  MyImagePicker myImagePicker = MyImagePicker();
-  File? leaderImage1;
-  File? leaderImage2;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildAvatar1(),
-            const SizedBox(height: 10),
-            _buildAvatar2(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAvatar1() {
-    if (leaderImage1 != null) {
-      return CircleAvatar(
-        backgroundImage: Image.file(leaderImage1!).image,
-        radius: 30,
-        backgroundColor: kBlueLight,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(100),
-          ),
-          child: TextButton(
-            child: Container(),
-            onPressed: () async {
-              leaderImage1 = await myImagePicker.showBottomSheet(
-                context: context,
-                file: leaderImage1,
-              ) as File?;
-              setState(() {});
-            },
-          ),
-        ),
-      );
-    }
-    return CircleAvatar(
-      radius: 30,
-      backgroundColor: kBlueLight,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(100),
-        ),
-        child: TextButton(
-          onPressed: () async {
-            leaderImage1 = await myImagePicker.showBottomSheet(
-              context: context,
-              file: leaderImage1,
-            ) as File?;
-            setState(() {});
-          },
-          style: kTextButtonStyle,
-          child: const Center(
-            child: Icon(Icons.person_outline_outlined, color: kBlack),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAvatar2() {
-    if (leaderImage2 != null) {
-      return CircleAvatar(
-        backgroundImage: Image.file(leaderImage2!).image,
-        radius: 30,
-        backgroundColor: kBlueLight,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(100),
-          ),
-          child: TextButton(
-            child: Container(),
-            onPressed: () async {
-              leaderImage1 = await myImagePicker.showBottomSheet(
-                context: context,
-                file: leaderImage1,
-              ) as File?;
-              setState(() {});
-            },
-          ),
-        ),
-      );
-    }
-    return CircleAvatar(
-      radius: 30,
-      backgroundColor: kBlueLight,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(100),
-        ),
-        child: TextButton(
-          style: kTextButtonStyle,
-          child: const Center(
-            child: Icon(Icons.person_outline_outlined, color: kBlack),
-          ),
-          onPressed: () async {
-            leaderImage2 = await myImagePicker.showBottomSheet(
-              context: context,
-              file: leaderImage2,
-            ) as File?;
-            setState(() {});
-          },
-        ),
-      ),
-    );
   }
 }

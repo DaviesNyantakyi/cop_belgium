@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 //Fonts
 const String _sfDisplayFont = 'SFDisplay';
 
-//
 const kSFCaption = TextStyle(
   fontWeight: FontWeight.w400,
   color: kBlack,
@@ -41,23 +40,6 @@ const kSFBody2 = TextStyle(
 );
 const kSFBody2Bold = TextStyle(
   fontWeight: FontWeight.bold,
-  color: kBlack,
-  fontSize: 14,
-  height: 1.4,
-  fontFamily: _sfDisplayFont,
-);
-
-TextStyle kSFTextFieldStyle = const TextStyle(
-  fontWeight: FontWeight.bold,
-  color: kBlack,
-  fontSize: 16,
-  height: 1.4,
-  fontFamily: _sfDisplayFont,
-);
-
-// used for buttons
-const kSFBtnStyle = TextStyle(
-  fontWeight: FontWeight.w400,
   color: kBlack,
   fontSize: 14,
   height: 1.4,

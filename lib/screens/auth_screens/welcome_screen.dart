@@ -1,13 +1,13 @@
+import 'package:cop_belgium/screens/auth_screens/login_screen.dart';
+import 'package:cop_belgium/screens/auth_screens/sign_up_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cop_belgium/providers/signup_provider.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
-import 'package:cop_belgium/widgets/church_logo.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String welcomeScreen = 'welcomeScreen';
@@ -31,7 +31,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const BuildCopLogo(),
+                  _buildLogo(),
                   const SizedBox(height: 44),
                   _buildEmailButton(),
                   const SizedBox(height: kContentSpacing12),
@@ -44,6 +44,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      'assets/images/logos/cop_logo.png',
+      width: kCopLogoSize,
     );
   }
 

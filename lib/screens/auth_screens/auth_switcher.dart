@@ -1,9 +1,8 @@
+import 'package:cop_belgium/bottom_nav_selector.dart';
 import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:cop_belgium/screens/all_screens.dart';
 
 class AuthWrapper extends StatefulWidget {
   static String authScreenSwitcher = 'authScreenSwitcher';

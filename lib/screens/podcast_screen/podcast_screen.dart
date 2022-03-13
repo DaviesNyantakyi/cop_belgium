@@ -1,11 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/models/user_model.dart';
-import 'package:cop_belgium/screens/announcements_screen/announcements_screen.dart';
 import 'package:cop_belgium/providers/audio_provider.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
+
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,9 +11,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 
 import 'package:provider/provider.dart';
+
+import '../announcements_screen/announcements_screen.dart';
+
+import 'podcast_detail_screen.dart';
+import 'podcast_player_screen.dart';
+import 'widgets/podcast_card.dart';
 
 const imagePlayHolder =
     'https://images.unsplash.com/photo-1614102073832-030967418971?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1169&q=80';
@@ -76,31 +79,11 @@ class _PodcastScreenState extends State<PodcastScreen> {
   }
 
   Widget _buildFloatingActionButton() {
-    final String id = FirebaseAuth.instance.currentUser!.uid;
-
     // Show add podcasts
-    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      stream:
-          FirebaseFirestore.instance.collection('users').doc(id).snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container();
-        }
-        if (snapshot.hasError) {
-          return Container();
-        }
-        if (snapshot.hasData && snapshot.data?.data() != null) {
-          final copUser = CopUser.fromMap(map: snapshot.data!.data()!);
-          if (copUser.isAdmin) {
-            return FloatingActionButton(
-              child: const Icon(Icons.add_outlined),
-              onPressed: () async {
-                await _showAddPodcastDialog();
-              },
-            );
-          }
-        }
-        return Container();
+    return FloatingActionButton(
+      child: const Icon(Icons.add_outlined),
+      onPressed: () async {
+        await _showAddPodcastDialog();
       },
     );
   }

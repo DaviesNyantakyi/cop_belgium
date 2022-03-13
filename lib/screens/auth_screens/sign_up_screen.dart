@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/providers/signup_provider.dart';
 import 'package:cop_belgium/screens/auth_screens/date_gender_view.dart';
 import 'package:cop_belgium/screens/auth_screens/email_name_view.dart';
-import 'package:cop_belgium/screens/image_picker_screen.dart';
+
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/church_selection.dart';
@@ -11,6 +12,8 @@ import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+
+import 'image_picker_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   static String signUpScreen = 'signUpScreen';
@@ -91,11 +94,8 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
         EasyLoading.show();
         signUpProvider.setChurch(church: church.id);
 
-        //TODO: set selected image before sign up
+        // TODO: set selected image before sign up
 
-        // signUpProvider.setSelectedImage(
-        //   image: imagePickerProvider.selectedImage,
-        // );
         await signUpProvider.signUp();
 
         Navigator.pop(context);

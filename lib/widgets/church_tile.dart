@@ -1,6 +1,8 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
+import '../utilities/constant.dart';
+
 class ChurchTile extends StatelessWidget {
   const ChurchTile({
     Key? key,

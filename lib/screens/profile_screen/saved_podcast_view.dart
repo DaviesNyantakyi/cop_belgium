@@ -1,13 +1,14 @@
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/providers/audio_provider.dart';
-import 'package:cop_belgium/screens/podcast_screen/podcast_detail_screen.dart';
-import 'package:cop_belgium/screens/podcast_screen/widgets/podcast_card.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
+
+import '../podcast_screen/podcast_detail_screen.dart';
+import '../podcast_screen/widgets/podcast_card.dart';
 
 class SavedPodcastView extends StatefulWidget {
   static String userSavedPodcastView = 'userSavedPodcastView';
@@ -65,39 +66,32 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AudioProvider>(
-      builder: (context, audioProvider, _) {
-        return ListView.separated(
-          padding: const EdgeInsets.all(kBodyPadding).copyWith(
-            top: kBodyPadding,
-          ),
-          separatorBuilder: (context, index) => const SizedBox(
-            height: kContentSpacing12,
-          ),
-          itemCount: podcast.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return PodcastCard(
-              podcast: podcast[index],
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => MultiProvider(
-                      providers: [
-                        Provider<Podcast>.value(
-                          value: podcast[index],
-                        ),
-                        ChangeNotifierProvider<AudioProvider>.value(
-                          value: audioProvider,
-                        ),
-                      ],
-                      child: const PodcastDetailScreen(),
+    return ListView.separated(
+      padding: const EdgeInsets.all(kBodyPadding).copyWith(
+        top: kBodyPadding,
+      ),
+      separatorBuilder: (context, index) => const SizedBox(
+        height: kContentSpacing12,
+      ),
+      itemCount: podcast.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return PodcastCard(
+          podcast: podcast[index],
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => MultiProvider(
+                  providers: [
+                    Provider<Podcast>.value(
+                      value: podcast[index],
                     ),
-                  ),
-                );
-              },
+                  ],
+                  child: const PodcastDetailScreen(),
+                ),
+              ),
             );
           },
         );

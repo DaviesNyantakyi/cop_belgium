@@ -1,6 +1,5 @@
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/bottomsheet.dart';
-import 'package:cop_belgium/widgets/church_logo.dart';
 import 'package:flutter/material.dart';
 
 TextStyle _textStyle = kSFBodyBold;
@@ -18,7 +17,7 @@ class AboutChruchScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: kBodyPadding),
           child: Column(
             children: [
-              const BuildCopLogo(),
+              _buildLogo(),
               const SizedBox(height: 39),
               ListTile(
                 title: Text(
@@ -72,6 +71,13 @@ class AboutChruchScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildLogo() {
+    return Image.asset(
+      'assets/images/logos/cop_logo.png',
+      width: kCopLogoSize,
     );
   }
 

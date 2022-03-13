@@ -49,7 +49,7 @@ class MyTextFormField extends StatelessWidget {
       validator: validator,
       initialValue: initialValue,
       readOnly: readOnly,
-      style: style ?? kSFTextFieldStyle,
+      style: style ?? kSFBodyBold,
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
@@ -59,7 +59,7 @@ class MyTextFormField extends StatelessWidget {
         errorMaxLines: 2,
         hintText: hintText,
         hintStyle: style?.copyWith(color: Colors.black54) ??
-            kSFTextFieldStyle.copyWith(color: Colors.black54),
+            kSFBodyBold.copyWith(color: Colors.black54),
         fillColor: fillColor ?? kBlueLight,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,

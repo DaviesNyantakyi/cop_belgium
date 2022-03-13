@@ -1,12 +1,13 @@
 import 'dart:io';
 
 import 'package:cop_belgium/models/event_model.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
 import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
+import 'package:cop_belgium/utilities/image_picker.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,6 +38,14 @@ class _EditEventScreenState extends State<EditEventScreen> {
 
   bool isLoading = false;
   bool singleEvent = true;
+
+  Future<void> pickImage() async {
+    await myImagePicker.showBottomSheet(
+      context: context,
+    ) as File?;
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -360,13 +369,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
           color: kGrey,
         ),
         child: TextButton(
-          onPressed: () async {
-            image = await myImagePicker.showBottomSheet(
-              context: context,
-              file: image,
-            ) as File?;
-            setState(() {});
-          },
+          onPressed: () async {},
           style: kTextButtonStyle,
           child: ClipRRect(
             borderRadius: const BorderRadius.all(
@@ -387,13 +390,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
         ),
       ),
       child: TextButton(
-        onPressed: () async {
-          image = await myImagePicker.showBottomSheet(
-            context: context,
-            file: image,
-          ) as File?;
-          setState(() {});
-        },
+        onPressed: pickImage,
         style: kTextButtonStyle,
         child: const Center(
           child: Icon(

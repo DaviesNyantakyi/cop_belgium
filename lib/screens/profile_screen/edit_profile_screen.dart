@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/providers/image_picker_provider.dart';
+import 'package:cop_belgium/utilities/image_picker.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 
@@ -63,6 +63,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     initUserInfo();
 
     super.initState();
+  }
+
+  Future<void> pickImage() async {
+    await myImagePicker.showBottomSheet(
+      context: context,
+    ) as File?;
+
+    setState(() {});
   }
 
   Future<void> initUserInfo() async {
@@ -281,13 +289,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           child: Container(),
-          onPressed: () async {
-            image = await myImagePicker.showBottomSheet(
-              context: context,
-              file: image,
-            ) as File?;
-            setState(() {});
-          },
+          onPressed: pickImage,
         ),
       );
     }
@@ -307,13 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
           child: Container(),
-          onPressed: () async {
-            image = await myImagePicker.showBottomSheet(
-              context: context,
-              file: image,
-            ) as File?;
-            setState(() {});
-          },
+          onPressed: pickImage,
         ),
       );
     }
@@ -333,13 +329,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: kBlack,
               size: 35,
             ),
-            onPressed: () async {
-              image = await myImagePicker.showBottomSheet(
-                context: context,
-                file: image,
-              ) as File?;
-              setState(() {});
-            },
+            onPressed: pickImage,
           ),
         ),
       ),
@@ -433,7 +423,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       birthDate == null
           ? FormalDates.formatEDmyyyy(date: DateTime.now())
           : FormalDates.formatEDmyyyy(date: birthDate),
-      style: kSFTextFieldStyle.copyWith(
+      style: kSFBody.copyWith(
         fontWeight: birthDate == null ? FontWeight.normal : FontWeight.bold,
       ),
     );

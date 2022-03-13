@@ -1,7 +1,8 @@
-import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
+import '../utilities/constant.dart';
 
 Future<dynamic> showMyBottomSheet({
   required BuildContext context,

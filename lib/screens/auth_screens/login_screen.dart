@@ -1,4 +1,5 @@
 import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/screens/auth_screens/forgot_password_screen.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
-import 'package:cop_belgium/screens/all_screens.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:provider/provider.dart';
 

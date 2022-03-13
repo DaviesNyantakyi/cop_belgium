@@ -2,6 +2,7 @@ import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/screens/events_screen/create_event_screen.dart';
 import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
+
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';

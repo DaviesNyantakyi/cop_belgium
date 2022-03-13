@@ -2,9 +2,10 @@ import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_history_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/fasting_timer_screen.dart';
 import 'package:cop_belgium/screens/fasting_screen/widgets/fasting_card.dart';
-import 'package:cop_belgium/utilities/constant.dart';
 
+import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/remove_scroll_glow.dart';
+
 import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

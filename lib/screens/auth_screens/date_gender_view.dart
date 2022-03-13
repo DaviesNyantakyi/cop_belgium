@@ -225,11 +225,9 @@ class _DateGenderViewState extends State<DateGenderView> {
                               ? FormalDates.formatDmyyyy(date: DateTime.now())
                               : FormalDates.formatDmyyyy(
                                   date: signUpProvider.dateOfBirth),
-                          style: kSFTextFieldStyle.copyWith(
-                            fontWeight: signUpProvider.dateOfBirth == null
-                                ? FontWeight.normal
-                                : FontWeight.bold,
-                          ),
+                          style: signUpProvider.dateOfBirth == null
+                              ? kSFBody
+                              : kSFBodyBold,
                         ),
                       ],
                     ),
