@@ -92,7 +92,7 @@ class _ChurchSelectionState extends State<_ChurchSelection> {
             Provider.of<SignUpProvider>(context, listen: false);
 
         EasyLoading.show();
-        signUpProvider.setChurch(church: church.id);
+        signUpProvider.setChurch(church: church.id!);
 
         // TODO: set selected image before sign up
 

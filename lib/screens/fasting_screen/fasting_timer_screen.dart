@@ -346,7 +346,6 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
 
   dynamic _buildAppbar() {
     return AppBar(
-      elevation: kAppbarElevation,
       leading: kBackButton(context: context),
     );
   }

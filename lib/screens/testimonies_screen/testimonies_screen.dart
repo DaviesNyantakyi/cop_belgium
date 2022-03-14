@@ -106,7 +106,6 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
 
   dynamic _buildAppbar() {
     return AppBar(
-      elevation: kAppbarElevation,
       title: const Text('Testimonies', style: kSFHeadLine3),
     );
   }

@@ -1,7 +1,5 @@
 import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/formal_date_format.dart';
-import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,14 +29,6 @@ class ChurchDetailScreen extends StatelessWidget {
                     const Divider(),
                     const Text('Service time', style: kSFBody),
                     const SizedBox(height: kContentSpacing8),
-                    ServiceTimeWidget(
-                      day: 'Sunday',
-                      time: DateTime.now(),
-                      info: '''Zoom Prayer session
-
-Meeting id: 738 161 3048 
-password: piwc202''',
-                    ),
                     const SizedBox(height: kContentSpacing32),
                     const Text('Leader', style: kSFBodyBold),
                     _buildProfileTile()
@@ -159,54 +149,12 @@ password: piwc202''',
       height: MediaQuery.of(context).size.height * 0.30,
       decoration: BoxDecoration(
         color: kBlueLight,
-        image: DecorationImage(
-          fit: BoxFit.cover,
-          image: NetworkImage(church.image),
-        ),
-      ),
-    );
-  }
-}
-
-class ServiceTimeWidget extends StatelessWidget {
-  final String day;
-  final DateTime time;
-  final String info;
-  const ServiceTimeWidget({
-    Key? key,
-    required this.day,
-    required this.time,
-    required this.info,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        color: kBlueLight,
-        borderRadius: BorderRadius.all(
-          Radius.circular(kButtonRadius),
-        ),
-      ),
-      child: TextButton(
-        style: kTextButtonStyle,
-        child: Padding(
-          padding: const EdgeInsets.all(kCardContentPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(day, style: kSFBody),
-              Text(FormalDates.formatHm(date: time), style: kSFBody),
-            ],
-          ),
-        ),
-        onPressed: () {
-          showMyBottomSheet(
-            context: context,
-            child: Text(info),
-          );
-        },
+        image: church.image != null
+            ? DecorationImage(
+                fit: BoxFit.cover,
+                image: NetworkImage(church.image!),
+              )
+            : null,
       ),
     );
   }

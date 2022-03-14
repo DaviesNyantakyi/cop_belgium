@@ -9,12 +9,13 @@ class DatePicker {
     required DateTime initialDate, // handy for time selection after date.
     required BuildContext context,
     required Function(DateTime) onChanged,
+    bool? isDismissible = false,
     DateTime? maxDate,
   }) async {
     FocusScope.of(context).requestFocus(FocusNode());
 
     await showMyBottomSheet(
-      isDismissible: false,
+      isDismissible: isDismissible,
       context: context,
       enableDrag: false,
       fullScreenHeight: null,

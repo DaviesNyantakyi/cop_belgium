@@ -221,10 +221,9 @@ class _DateGenderViewState extends State<DateGenderView> {
                         ),
                         const SizedBox(width: 10),
                         Text(
-                          signUpProvider.dateOfBirth == null
-                              ? FormalDates.formatDmyyyy(date: DateTime.now())
-                              : FormalDates.formatDmyyyy(
-                                  date: signUpProvider.dateOfBirth),
+                          FormalDates.formatDmyyyy(
+                            date: signUpProvider.dateOfBirth ?? DateTime.now(),
+                          ),
                           style: signUpProvider.dateOfBirth == null
                               ? kSFBody
                               : kSFBodyBold,

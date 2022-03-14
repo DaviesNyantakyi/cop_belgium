@@ -53,6 +53,13 @@ dependencies:
   change_app_package_name: ^1.0.0
   table_calendar: ^3.0.3 # events
   circular_countdown_timer: ^0.2.0 #  asting timer
+  flutter_linkify: ^5.0.2 # Get url in text
+  url_launcher: ^6.0.20 # launch url
+  uuid: ^3.0.6 # Generate unique id
+
+
+
+
 
 
 

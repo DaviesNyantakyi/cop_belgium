@@ -4,7 +4,6 @@ import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/screens/events_screen/widgets/event_card.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -29,7 +28,6 @@ class _EventsScreenState extends State<EventsScreen> {
       title: 'Revival Equipped to accomplish a great commission',
       startDate: DateTime(2022, 1, 26, 7),
       endDate: DateTime(2023, 1, 28, 21),
-      type: enumToString(object: EventType.online),
       description: 'National Proposed Officer Training Program Selection',
       image:
           'https://images.unsplash.com/photo-1614598632236-70bcd1c2f833?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',
@@ -41,7 +39,6 @@ class _EventsScreenState extends State<EventsScreen> {
       startDate: DateTime(2022, 01, 08, 19),
       endDate: DateTime(2022, 01, 09, 17),
       address: 'Patriotenstraat 31, 2300 Turnhout, Belgium',
-      type: enumToString(object: EventType.normal),
       description: 'National Proposed Officer Training Program',
       image:
           'https://images.unsplash.com/photo-1643906652169-a750f3f70848?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80',

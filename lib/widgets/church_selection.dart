@@ -83,10 +83,13 @@ class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
                         thumbnail: Container(
                           height: 100,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(churches[index].image),
-                            ),
+                            color: kBlueLight,
+                            image: churches[index].image != null
+                                ? DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(churches[index].image!),
+                                  )
+                                : null,
                           ),
                         ),
                         title: churches[index].churchName,

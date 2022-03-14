@@ -1,14 +1,12 @@
 import 'package:cop_belgium/models/event_model.dart';
 import 'package:cop_belgium/screens/events_screen/edit_event_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 const double _cardSize = 59.0;
-enum EventType { normal, online }
 
 class EventDetailScreen extends StatefulWidget {
   final Event event;
@@ -102,7 +100,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 
   Widget _buildEventLocation() {
-    if (widget.event.type == enumToString(object: EventType.online)) {
+    if (widget.event.link != null) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         children: [

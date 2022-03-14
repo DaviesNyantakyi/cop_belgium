@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
-import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/image_picker.dart';
-import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,26 +17,27 @@ class CreateEventScreen extends StatefulWidget {
 
 class _CreateEventScreenState extends State<CreateEventScreen> {
   TextEditingController titleCntlr = TextEditingController();
-  TextEditingController aboutCntlr = TextEditingController();
+  TextEditingController descriptionCntlr = TextEditingController();
   TextEditingController linkCntlr = TextEditingController();
   TextEditingController addressCntlr = TextEditingController();
 
   DatePicker datePicker = DatePicker();
   late MyImagePicker myImagePicker = MyImagePicker();
 
-  EventType? eventType = EventType.normal;
   File? image;
 
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
 
   bool isLoading = false;
-  bool singleEvent = true;
+  bool allDayEvent = false;
 
   Future<void> pickImage() async {
     await myImagePicker.showBottomSheet(
       context: context,
     ) as File?;
+
+    image = myImagePicker.image;
 
     setState(() {});
   }
@@ -59,8 +57,6 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   children: [
                     const SizedBox(height: 20),
                     _buildTitleDescription(),
-                    const Divider(),
-                    _buildTypeSelection(),
                     const Divider(),
                     _buildAddEventTypeDetails(),
                     const Divider(),
@@ -82,15 +78,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const Text(
-          'One-day event',
+          'All-day',
           style: kSFBody,
         ),
         CupertinoSwitch(
           activeColor: kBlue,
-          value: singleEvent,
+          value: allDayEvent,
           onChanged: (value) {
             setState(() {
-              singleEvent = value;
+              allDayEvent = value;
             });
           },
         )
@@ -99,116 +95,23 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget _buildAddEventTypeDetails() {
-    if (eventType == EventType.online) {
-      return MyTextFormField(
-        fillColor: Colors.transparent,
-        controller: linkCntlr,
-        hintText: 'Add link',
-        style: kSFBody,
-        maxLines: null,
-        textInputAction: TextInputAction.next,
-        prefixIcon: const Icon(
-          Icons.link_outlined,
-          color: Colors.black,
+    return Column(
+      children: [
+        MyTextFormField(
+          fillColor: Colors.transparent,
+          controller: addressCntlr,
+          hintText: 'Address',
+          maxLines: 1,
+          style: kSFBody,
         ),
-      );
-    }
-    return MyTextFormField(
-      fillColor: Colors.transparent,
-      controller: addressCntlr,
-      hintText: 'Address',
-      maxLines: 1,
-      style: kSFBody,
-      prefixIcon: const Icon(
-        Icons.location_on_outlined,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildTypeSelection() {
-    // ignore: unused_local_variable
-    IconData icon = Icons.place_outlined;
-
-    if (eventType == EventType.normal) {
-      icon = Icons.link_outlined;
-    }
-    return ListTile(
-      contentPadding: const EdgeInsets.all(0),
-      title: const Text(
-        'Type of event',
-        style: kSFBody,
-      ),
-      onTap: () async {
-        FocusScope.of(context).unfocus();
-        await _showCreateDialog();
-      },
-      trailing: Text(enumToString(object: eventType)),
-    );
-  }
-
-  Future<String?> _showCreateDialog() async {
-    return await showMyDialog(
-      context: context,
-      title: const Text(
-        'Create event',
-        style: kSFHeadLine3,
-      ),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RadioListTile<EventType>(
-                contentPadding: EdgeInsets.zero,
-                activeColor: kBlue,
-                value: EventType.normal,
-                groupValue: eventType,
-                title: const Text('Normal', style: kSFBody),
-                onChanged: (value) {
-                  eventType = value!;
-                  setState(() {});
-                  if (mounted) {
-                    this.setState(() {});
-                  }
-                },
-              ),
-              RadioListTile<EventType>(
-                contentPadding: EdgeInsets.zero,
-                activeColor: kBlue,
-                value: EventType.online,
-                groupValue: eventType,
-                title: const Text('Online', style: kSFBody),
-                onChanged: (value) {
-                  eventType = value!;
-                  setState(() {});
-                  if (mounted) {
-                    this.setState(() {});
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text(
-            'Cancel',
-            style: kSFBody2Bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            if (eventType == EventType.normal) {
-              linkCntlr.clear();
-            } else {
-              addressCntlr.clear();
-            }
-            Navigator.pop(context);
-          },
-          child: const Text('OK', style: kSFBody2Bold),
+        const Divider(),
+        MyTextFormField(
+          fillColor: Colors.transparent,
+          controller: linkCntlr,
+          hintText: 'URL',
+          style: kSFBody,
+          maxLines: null,
+          textInputAction: TextInputAction.next,
         ),
       ],
     );
@@ -221,28 +124,25 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           fillColor: Colors.transparent,
           controller: titleCntlr,
           hintText: 'Title',
-          style: kSFHeadLine3,
+          style: kSFHeadLine3.copyWith(fontWeight: FontWeight.normal),
           maxLines: null,
         ),
         const Divider(),
         MyTextFormField(
           fillColor: Colors.transparent,
-          controller: aboutCntlr,
+          controller: descriptionCntlr,
           style: kSFBody,
-          hintText: 'About event',
+          hintText: 'Description',
         ),
       ],
     );
   }
 
   Widget _buildStartEndDate() {
-    if (singleEvent) {
+    if (allDayEvent) {
       return ListTile(
         contentPadding: const EdgeInsets.all(0),
-        leading: const Icon(
-          Icons.calendar_today,
-          color: kBlack,
-        ),
+        leading: const Text('Start', style: kSFBody),
         title: Text(
           FormalDates.formatEDmyyyy(date: startDate),
           style: kSFBody2,
@@ -268,6 +168,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
             context: context,
             onChanged: (date) {
               startDate = date;
+
               setState(() {});
             },
           );
@@ -279,10 +180,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       children: [
         ListTile(
           contentPadding: const EdgeInsets.all(0),
-          leading: const Icon(
-            Icons.calendar_today,
-            color: kBlack,
-          ),
+          leading: const Text('Start', style: kSFBody),
           title: Text(
             FormalDates.formatEDmyyyy(date: startDate),
             style: kSFBody2,
@@ -315,10 +213,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
         ),
         ListTile(
           contentPadding: const EdgeInsets.all(0),
-          leading: const Icon(
-            Icons.calendar_today,
-            color: kBlack,
-          ),
+          leading: const Text('End', style: kSFBody),
           title: Text(
             FormalDates.formatEDmyyyy(date: endDate),
             style: kSFBody2,
@@ -353,7 +248,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
   }
 
   Widget _buildImage() {
-    if (image?.path != null) {
+    if (image?.path != null && image != null) {
       return Container(
         height: MediaQuery.of(context).size.height * 0.30,
         decoration: BoxDecoration(
@@ -366,7 +261,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
           color: kGrey,
         ),
         child: TextButton(
-          onPressed: () async {},
+          onPressed: pickImage,
           style: kTextButtonStyle,
           child: ClipRRect(
             borderRadius: const BorderRadius.all(

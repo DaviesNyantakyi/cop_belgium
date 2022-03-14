@@ -87,7 +87,7 @@ class EventCard extends StatelessWidget {
   Widget _buildLogoType() {
     IconData? icon = Icons.place_outlined;
 
-    if (event.type == 'online') {
+    if (event.link != null) {
       icon = Icons.language_outlined;
     }
 

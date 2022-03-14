@@ -8,7 +8,6 @@ class Event {
   DateTime endDate;
   String title;
   String description;
-  String type;
   String image;
   String? link;
   String? address;
@@ -18,7 +17,6 @@ class Event {
     required this.endDate,
     required this.title,
     required this.description,
-    required this.type,
     required this.image,
     this.link,
     this.address,
@@ -30,9 +28,8 @@ class Event {
       'endDate': endDate.millisecondsSinceEpoch,
       'title': title,
       'description': description,
-      'type': type,
       'image': image,
-      'zoomLink': link,
+      'link': link,
       'address': address,
     };
   }
@@ -43,15 +40,14 @@ class Event {
       endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate']),
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      type: map['type'] ?? '',
       image: map['image'] ?? '',
-      link: map['zoomLink'] ?? '',
+      link: map['link'] ?? '',
       address: map['address'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Event(startDate: $startDate, endDate: $endDate, title: $title, description: $description, type: $type, image: $image, link: $link, address: $address)';
+    return 'Event(startDate: $startDate, endDate: $endDate, title: $title, description: $description, image: $image, link: $link, address: $address)';
   }
 }

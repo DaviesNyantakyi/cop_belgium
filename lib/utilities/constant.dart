@@ -133,6 +133,8 @@ List<LinearGradient> kGradients = [
   kBlueDarkGradient,
 ];
 
+const double kAppbarElevation = 1;
+
 const double kCardRadius = 10;
 const double kButtonRadius = 5;
 
@@ -149,8 +151,6 @@ const double kContentSpacing12 = 12;
 const double kContentSpacing16 = 16;
 const double kContentSpacing20 = 20;
 const double kContentSpacing32 = 32;
-
-const double kAppbarElevation = 1;
 
 const double kIconSize = 24;
 const double kDividerThickness = 1;

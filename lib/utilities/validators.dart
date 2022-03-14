@@ -3,9 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
+  static String noServiceTimeErrorMessage = 'Add one or more service times';
+  static String? textValidator(String? text) {
+    if (text == null || text.isEmpty) {
+      return 'Field required';
+    }
+    return null;
+  }
+
   static String? nameValidator(String? firstName) {
     if (firstName == null || firstName.isEmpty) {
-      return 'Enter your name.';
+      return 'Enter your name';
     }
     return null;
   }
@@ -15,7 +23,7 @@ class Validators {
         email.isEmpty ||
         !email.contains('@') ||
         !email.contains('.')) {
-      return 'Enter a valid email address.';
+      return 'Enter a valid email address';
     }
 
     return null;
@@ -23,21 +31,28 @@ class Validators {
 
   static String? passwordValidator(String? password) {
     if (!password!.isPasswordEasy() || password.isEmpty) {
-      return 'Password must contain at least 8 characters.';
+      return 'Password must contain at least 8 characters';
+    }
+    return null;
+  }
+
+  static String? phoneNumberValidator(String? phoneNumber) {
+    if (!phoneNumber!.isPhone() || phoneNumber.isEmpty) {
+      return 'Enter a valid phone number';
     }
     return null;
   }
 
   static String? genderValidator({String? gender}) {
     if (gender != null && gender.isEmpty) {
-      return 'Please select your gender.';
+      return 'Select your gender';
     }
     return null;
   }
 
   static String? birthdayValidator({DateTime? date}) {
     if (date == null) {
-      return 'Please select your date of birth.';
+      return 'Select your date of birth';
     }
 
     return null;

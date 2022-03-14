@@ -107,7 +107,6 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
 
   dynamic _buildAppbar({required BuildContext context}) {
     return AppBar(
-      elevation: kAppbarElevation,
       title: const Text(
         'Announcements',
         style: kSFHeadLine3,

@@ -11,9 +11,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MyImagePicker {
-  File? _file;
+  File? image;
 
-  File? get image => _file;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> showBottomSheet({
@@ -39,7 +38,7 @@ class MyImagePicker {
                     final pickedFile =
                         await _pickImage(context: context, source: source);
                     if (pickedFile?.path != null) {
-                      _file = await _imageCropper(file: File(pickedFile!.path));
+                      image = await _imageCropper(file: File(pickedFile!.path));
                     }
                     Navigator.pop(context);
                   },
@@ -53,15 +52,15 @@ class MyImagePicker {
                     final pickedFile =
                         await _pickImage(context: context, source: source);
                     if (pickedFile?.path != null) {
-                      _file = await _imageCropper(file: File(pickedFile!.path));
+                      image = await _imageCropper(file: File(pickedFile!.path));
                     }
                     Navigator.pop(context);
                   },
                 ),
-                _file != null
+                image != null
                     ? _selectionTile(
                         onPressed: () {
-                          _file = null;
+                          image = null;
                           Navigator.pop(context);
                         },
                         context: context,

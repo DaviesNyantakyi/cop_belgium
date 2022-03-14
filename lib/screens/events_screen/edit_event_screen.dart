@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:cop_belgium/models/event_model.dart';
-import 'package:cop_belgium/screens/events_screen/event_detail_screen.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
-import 'package:cop_belgium/utilities/enum_to_string.dart';
 import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:cop_belgium/utilities/image_picker.dart';
-import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +22,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
   File? image;
   late MyImagePicker myImagePicker = MyImagePicker();
   DatePicker datePicker = DatePicker();
-
-  EventType? eventType = EventType.normal;
 
   TextEditingController titleCntlr = TextEditingController();
   TextEditingController aboutCntlr = TextEditingController();
@@ -62,8 +57,6 @@ class _EditEventScreenState extends State<EditEventScreen> {
                   children: [
                     const SizedBox(height: 20),
                     _buildTitleDescription(),
-                    const Divider(),
-                    _buildTypeSelection(),
                     const Divider(),
                     _buildAddEventTypeDetails(),
                     const Divider(),
@@ -102,116 +95,23 @@ class _EditEventScreenState extends State<EditEventScreen> {
   }
 
   Widget _buildAddEventTypeDetails() {
-    if (eventType == EventType.online) {
-      return MyTextFormField(
-        fillColor: Colors.transparent,
-        controller: linkCntlr,
-        hintText: 'Add link',
-        style: kSFBody,
-        maxLines: null,
-        textInputAction: TextInputAction.next,
-        prefixIcon: const Icon(
-          Icons.link_outlined,
-          color: Colors.black,
+    return Column(
+      children: [
+        MyTextFormField(
+          fillColor: Colors.transparent,
+          controller: addressCntlr,
+          hintText: 'Address',
+          maxLines: 1,
+          style: kSFBody,
         ),
-      );
-    }
-    return MyTextFormField(
-      fillColor: Colors.transparent,
-      controller: addressCntlr,
-      hintText: 'Address',
-      maxLines: 1,
-      style: kSFBody,
-      prefixIcon: const Icon(
-        Icons.location_on_outlined,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildTypeSelection() {
-    // ignore: unused_local_variable
-    IconData icon = Icons.place_outlined;
-
-    if (eventType == EventType.normal) {
-      icon = Icons.link_outlined;
-    }
-    return ListTile(
-      contentPadding: const EdgeInsets.all(0),
-      title: const Text(
-        'Type of event',
-        style: kSFBody,
-      ),
-      onTap: () async {
-        FocusScope.of(context).unfocus();
-        await _showCreateDialog();
-      },
-      trailing: Text(enumToString(object: eventType)),
-    );
-  }
-
-  Future<String?> _showCreateDialog() async {
-    return await showMyDialog(
-      context: context,
-      title: const Text(
-        'Create event',
-        style: kSFHeadLine3,
-      ),
-      content: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RadioListTile<EventType>(
-                contentPadding: EdgeInsets.zero,
-                activeColor: kBlue,
-                value: EventType.normal,
-                groupValue: eventType,
-                title: const Text('Normal', style: kSFBody),
-                onChanged: (value) {
-                  eventType = value!;
-                  setState(() {});
-                  if (mounted) {
-                    this.setState(() {});
-                  }
-                },
-              ),
-              RadioListTile<EventType>(
-                contentPadding: EdgeInsets.zero,
-                activeColor: kBlue,
-                value: EventType.online,
-                groupValue: eventType,
-                title: const Text('Online', style: kSFBody),
-                onChanged: (value) {
-                  eventType = value!;
-                  setState(() {});
-                  if (mounted) {
-                    this.setState(() {});
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text(
-            'Cancel',
-            style: kSFBody2Bold,
-          ),
-        ),
-        TextButton(
-          onPressed: () {
-            if (eventType == EventType.normal) {
-              linkCntlr.clear();
-            } else {
-              addressCntlr.clear();
-            }
-            Navigator.pop(context);
-          },
-          child: const Text('OK', style: kSFBody2Bold),
+        const Divider(),
+        MyTextFormField(
+          fillColor: Colors.transparent,
+          controller: linkCntlr,
+          hintText: 'Link',
+          style: kSFBody,
+          maxLines: null,
+          textInputAction: TextInputAction.next,
         ),
       ],
     );
