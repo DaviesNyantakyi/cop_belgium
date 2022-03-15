@@ -1,11 +1,11 @@
 //TODO: think about type of announcements.
 // You can have global and a announcement specific to a church (subscription type).
 
-class Announcement {
+class AnnouncementModel {
   final String title;
   final String description;
   final DateTime dateTime;
-  Announcement({
+  AnnouncementModel({
     required this.title,
     required this.description,
     required this.dateTime,
@@ -19,8 +19,8 @@ class Announcement {
     };
   }
 
-  factory Announcement.fromMap(Map<String, dynamic> map) {
-    return Announcement(
+  factory AnnouncementModel.fromMap(Map<String, dynamic> map) {
+    return AnnouncementModel(
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       dateTime: DateTime.fromMillisecondsSinceEpoch(map['dateTime']),

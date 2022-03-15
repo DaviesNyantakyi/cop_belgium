@@ -154,8 +154,8 @@ class _Body extends StatelessWidget {
   }
 
   Widget _buildPodcastsList({required BuildContext context}) {
-    List<Podcast> podcast = [
-      Podcast(
+    List<PodcastModel> podcast = [
+      PodcastModel(
         title: 'Deep Truths',
         author: 'Church of Pentecost Belgium',
         imageUrl:
@@ -166,7 +166,7 @@ class _Body extends StatelessWidget {
         episodes: [],
       ),
     ];
-    return Consumer<AudioProvider>(
+    return Consumer<AudioPlayerNotifier>(
       builder: (context, audioProvider, _) {
         return ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(
@@ -184,10 +184,10 @@ class _Body extends StatelessWidget {
                   CupertinoPageRoute(
                     builder: (context) => MultiProvider(
                       providers: [
-                        Provider<Podcast>.value(
+                        Provider<PodcastModel>.value(
                           value: podcast[index],
                         ),
-                        ChangeNotifierProvider<AudioProvider>.value(
+                        ChangeNotifierProvider<AudioPlayerNotifier>.value(
                           value: audioProvider,
                         ),
                       ],
@@ -221,18 +221,18 @@ class _Body extends StatelessWidget {
       child: TextButton(
         style: kTextButtonStyle,
         onPressed: () {
-          final episode = Provider.of<Episode>(context, listen: false);
+          final episode = Provider.of<EpisodeModel>(context, listen: false);
           final audioProvider =
-              Provider.of<AudioProvider>(context, listen: false);
+              Provider.of<AudioPlayerNotifier>(context, listen: false);
           Navigator.push(
             context,
             CupertinoPageRoute(
               builder: (context) => MultiProvider(
                 providers: [
-                  Provider<Episode>.value(
+                  Provider<EpisodeModel>.value(
                     value: episode,
                   ),
-                  ChangeNotifierProvider<AudioProvider>.value(
+                  ChangeNotifierProvider<AudioPlayerNotifier>.value(
                     value: audioProvider,
                   )
                 ],

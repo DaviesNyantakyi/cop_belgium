@@ -21,7 +21,7 @@ import 'package:cop_belgium/widgets/checkbox.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  final CopUser? user;
+  final UserModel? user;
   static String editProfileScreen = 'editProfileScreen';
   const EditProfileScreen({Key? key, this.user}) : super(key: key);
 

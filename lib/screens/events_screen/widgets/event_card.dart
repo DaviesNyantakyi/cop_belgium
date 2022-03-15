@@ -4,7 +4,7 @@ import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  final Event event;
+  final EventModel event;
   final VoidCallback onPressed;
 
   const EventCard({

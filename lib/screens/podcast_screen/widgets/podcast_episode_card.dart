@@ -4,7 +4,7 @@ import 'package:cop_belgium/utilities/formal_date_format.dart';
 import 'package:flutter/material.dart';
 
 class EpisodeCard extends StatelessWidget {
-  final Episode episode;
+  final EpisodeModel episode;
   final Function()? onPressed;
   const EpisodeCard({
     Key? key,

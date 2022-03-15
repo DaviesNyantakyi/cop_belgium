@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class AnnouncementsCard extends StatelessWidget {
-  final Announcement announcement;
+  final AnnouncementModel announcement;
   final VoidCallback onPressed;
   const AnnouncementsCard({
     Key? key,

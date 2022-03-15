@@ -17,7 +17,7 @@ String _text =
 
 class FastingTimerScreen extends StatefulWidget {
   static String fastingTimerScreen = 'fastingTimerScreen';
-  final FastingInfo? fastingInfo;
+  final FastingInfoModel? fastingInfo;
   const FastingTimerScreen({Key? key, this.fastingInfo}) : super(key: key);
 
   @override
@@ -33,7 +33,7 @@ class _FastingTimerScreenState extends State<FastingTimerScreen> {
   DateTime? endDate;
   String? note;
 
-  FastingInfo? fastingInfo;
+  FastingInfoModel? fastingInfo;
 
   String getStartDate() {
     return FormalDates.formatEDmyyyy(date: fastingInfo!.startDate);

@@ -1,4 +1,4 @@
-class TestimonyInfo {
+class TestimonyModel {
   String? id;
   final String userId;
   String title;
@@ -7,7 +7,7 @@ class TestimonyInfo {
   int? likes;
   final DateTime? date;
 
-  TestimonyInfo({
+  TestimonyModel({
     required this.id,
     required this.userName,
     required this.userId,
@@ -17,7 +17,7 @@ class TestimonyInfo {
     required this.date,
   });
 
-  static Map<String, dynamic> toMap({required TestimonyInfo map}) {
+  static Map<String, dynamic> toMap({required TestimonyModel map}) {
     return {
       'id': map.id,
       'userName': map.userName,
@@ -29,8 +29,8 @@ class TestimonyInfo {
     };
   }
 
-  static TestimonyInfo fromMap({required Map<String, dynamic> map}) {
-    return TestimonyInfo(
+  static TestimonyModel fromMap({required Map<String, dynamic> map}) {
+    return TestimonyModel(
       id: map['id'],
       userName: map['userName'],
       userId: map['userId'],

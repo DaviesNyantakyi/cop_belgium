@@ -19,12 +19,12 @@ class _EventsScreenState extends State<EventsScreen> {
   CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  Map<DateTime, List<Event>>? _selectedEvents;
+  Map<DateTime, List<EventModel>>? _selectedEvents;
 
   // String _chosenEventType = 'normal';
 
-  List<Event> events = [
-    Event(
+  List<EventModel> events = [
+    EventModel(
       title: 'Revival Equipped to accomplish a great commission',
       startDate: DateTime(2022, 1, 26, 7),
       endDate: DateTime(2023, 1, 28, 21),
@@ -34,7 +34,7 @@ class _EventsScreenState extends State<EventsScreen> {
       link:
           'https://zoom.us/j/96941681261?pwd=MmZhS1hpajFpN3E4Nldhd1RzRmdvUT09#success',
     ),
-    Event(
+    EventModel(
       title: 'National Proposed Officer Training Program',
       startDate: DateTime(2022, 01, 08, 19),
       endDate: DateTime(2022, 01, 09, 17),
@@ -50,7 +50,7 @@ class _EventsScreenState extends State<EventsScreen> {
     super.initState();
   }
 
-  List<Event> _getEventFromDay(DateTime day) {
+  List<EventModel> _getEventFromDay(DateTime day) {
     return _selectedEvents?[day] ?? [];
   }
 

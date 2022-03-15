@@ -40,7 +40,7 @@ class FormalDates {
   }
 
   static String getFastGoalDate({
-    required FastingInfo? fastingInfo,
+    required FastingInfoModel? fastingInfo,
   }) {
     return fastingInfo!.startDate!
         .add(Duration(seconds: fastingInfo.duration.inSeconds))

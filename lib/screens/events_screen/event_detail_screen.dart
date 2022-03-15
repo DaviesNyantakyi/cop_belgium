@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 const double _cardSize = 59.0;
 
 class EventDetailScreen extends StatefulWidget {
-  final Event event;
+  final EventModel event;
   const EventDetailScreen({
     Key? key,
     required this.event,

@@ -1,21 +1,19 @@
+import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
 import '../utilities/constant.dart';
 
+//  '${churches[index].street} ${churches[index].streetNumber} - ${churches[index].postCode}, ${churches[index].city}',
 class ChurchTile extends StatelessWidget {
+  final VoidCallback onTap;
+  final ChurchModel church;
+
   const ChurchTile({
     Key? key,
-    required this.thumbnail,
-    required this.title,
-    required this.address,
+    required this.church,
     required this.onTap,
   }) : super(key: key);
-
-  final Widget thumbnail;
-  final String title;
-  final String address;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +26,18 @@ class ChurchTile extends StatelessWidget {
             SizedBox(
               height: 120,
               width: 140,
-              child: thumbnail,
+              child: Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  color: kBlueLight,
+                  image: church.image != null
+                      ? DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(church.image!),
+                        )
+                      : null,
+                ),
+              ),
             ),
             Expanded(
               flex: 3,
@@ -38,12 +47,12 @@ class ChurchTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      title,
+                      church.churchName,
                       style: kSFBodyBold,
                     ),
                     const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
                     Text(
-                      address,
+                      '${church.street} ${church.streetNumber} - ${church.postCode}, ${church.city}',
                       style: kSFBody2,
                     ),
                   ],

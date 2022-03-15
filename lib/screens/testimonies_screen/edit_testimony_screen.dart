@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class EditTestimonyScreen extends StatefulWidget {
   // enabled edit mode
 
-  final TestimonyInfo? testimonyInfo;
+  final TestimonyModel? testimonyInfo;
 
   const EditTestimonyScreen({
     Key? key,

@@ -3,7 +3,7 @@ import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
 class PodcastCard extends StatelessWidget {
-  final Podcast podcast;
+  final PodcastModel podcast;
   final Function()? onPressed;
   const PodcastCard({
     Key? key,

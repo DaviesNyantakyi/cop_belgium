@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-class ServiceTime {
+class ServiceTimeModel {
   String? day;
   String description;
   DateTime time;
 
-  ServiceTime({
+  ServiceTimeModel({
     required this.day,
     required this.time,
     required this.description,
@@ -19,8 +19,8 @@ class ServiceTime {
     };
   }
 
-  factory ServiceTime.fromMap(Map<String, dynamic> map) {
-    return ServiceTime(
+  factory ServiceTimeModel.fromMap(Map<String, dynamic> map) {
+    return ServiceTimeModel(
       day: map['day'],
       description: map['description'],
       time: DateTime.fromMillisecondsSinceEpoch(map['time'] as int),

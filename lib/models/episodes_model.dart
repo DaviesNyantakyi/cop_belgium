@@ -1,4 +1,4 @@
-class Episode {
+class EpisodeModel {
   final String image;
   final String title;
   final String description;
@@ -8,7 +8,7 @@ class Episode {
   final Duration duration;
   final DateTime date;
   final String podcastUrl;
-  Episode({
+  EpisodeModel({
     required this.image,
     required this.title,
     required this.author,
@@ -20,7 +20,7 @@ class Episode {
     required this.date,
   });
 
-  Map<String, dynamic> toMap({required Episode episode}) {
+  Map<String, dynamic> toMap({required EpisodeModel episode}) {
     return {
       'audioUrl': episode.audioUrl,
       'image': episode.image,
@@ -34,8 +34,8 @@ class Episode {
     };
   }
 
-  factory Episode.fromMap(Map<String, dynamic> map) {
-    return Episode(
+  factory EpisodeModel.fromMap(Map<String, dynamic> map) {
+    return EpisodeModel(
       audioUrl: map['audioUrl'],
       image: map['image'],
       author: map['author'],

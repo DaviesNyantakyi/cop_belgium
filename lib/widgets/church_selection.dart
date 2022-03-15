@@ -7,7 +7,7 @@ import 'package:cop_belgium/widgets/textfield.dart';
 import 'package:flutter/material.dart';
 
 class ChurchSelectionScreen extends StatefulWidget {
-  final Function(Church?)? onTap;
+  final Function(ChurchModel?)? onTap;
   const ChurchSelectionScreen({Key? key, this.onTap}) : super(key: key);
 
   @override
@@ -15,7 +15,7 @@ class ChurchSelectionScreen extends StatefulWidget {
 }
 
 class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
-  Church? selectedChurch;
+  ChurchModel? selectedChurch;
 
   TextEditingController searchContlr = TextEditingController();
 
@@ -55,10 +55,10 @@ class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: searchContlr.text.isEmpty
                     ? FirebaseFirestore.instance
-                        .collection('churches')
+                        .collection('churchess')
                         .snapshots()
                     : FirebaseFirestore.instance
-                        .collection('churches')
+                        .collection('churchess')
                         .where('searchIndex',
                             arrayContains: searchContlr.text.toLowerCase())
                         .snapshots(),
@@ -68,33 +68,20 @@ class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
                     return const Center(child: kCircularProgressIndicator);
                   }
 
-                  List<Church>? churches = data?.docs.map((map) {
-                    return Church.fromMap(map: map.data());
+                  List<ChurchModel>? churches = data?.docs.map((map) {
+                    return ChurchModel.fromMap(map: map.data());
                   }).toList();
 
                   if (churches!.isEmpty) {
                     return const Text('No result found', style: kSFBody);
                   }
+
                   return ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return ChurchTile(
-                        thumbnail: Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: kBlueLight,
-                            image: churches[index].image != null
-                                ? DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(churches[index].image!),
-                                  )
-                                : null,
-                          ),
-                        ),
-                        title: churches[index].churchName,
-                        address:
-                            '${churches[index].street} ${churches[index].streetNumber} - ${churches[index].postCode}, ${churches[index].city}',
+                        church: churches[index],
                         onTap: () async {
                           selectedChurch = churches[index];
 

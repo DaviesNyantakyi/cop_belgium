@@ -27,8 +27,8 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
     super.initState();
   }
 
-  List<Podcast> podcast = [
-    Podcast(
+  List<PodcastModel> podcast = [
+    PodcastModel(
       title: 'Deep Truths',
       author: 'Church of Pentecost Belgium',
       imageUrl:
@@ -85,7 +85,7 @@ class _SavedPodcastViewState extends State<SavedPodcastView> {
               CupertinoPageRoute(
                 builder: (context) => MultiProvider(
                   providers: [
-                    Provider<Podcast>.value(
+                    Provider<PodcastModel>.value(
                       value: podcast[index],
                     ),
                   ],

@@ -10,8 +10,8 @@ class AnnouncementsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Announcement> announcements = [
-      Announcement(
+    List<AnnouncementModel> announcements = [
+      AnnouncementModel(
           title:
               '"Pano" ontdekt salmonella in kippenworst: hoe verwerkt vlees de regels omzeilt en Belgische boeren bedreigt',
           dateTime: DateTime.now(),
@@ -19,7 +19,7 @@ class AnnouncementsScreen extends StatelessWidget {
               '''Hoe groot is de kans nu om een stukje gevogeltevlees te kopen dat besmet is? Voor een "Pano"-reportage over de pluimveesector die vanavond te zien is, deden we de test. De redactie nam contact op met twee labo's, en liet er in totaal 27 stalen onderzoeken. Het gaat om een breed assortiment: diepvriesvlees, gewone kipfilets en verwerkt vlees. Sommige van die producten waren eerder al eens werden teruggeroepen door het voedselagentschap FAVV. 
 
 Wat blijkt? Een kippenworst uit het diepvriesassortiment van Aldi, bevat een salmonella-bacterie van het type Enteritidis, dat erg ziekmakend is voor de mens. In Europese voedselwetgeving is dat type bekend als een "te bestrijden type" salmonella. Het product werd eerder al eens teruggeroepen in 2020 en in 2021, maar ook al gaat dit om een nieuwe lading (een nieuw "lot") kippen, blijkbaar is de kippenworst nog steeds niet in orde. De worst bevat kippenvlees dat gekweekt en geslacht is in Polen, en verwerkt werd in België. '''),
-      Announcement(
+      AnnouncementModel(
           title:
               'Regel van vier verdwijnt, enkel besmette en zieke kinderen moeten thuisblijven: deze nieuwe regels gelden op school',
           dateTime: DateTime.now().subtract(const Duration(days: 365)),
@@ -27,7 +27,7 @@ Wat blijkt? Een kippenworst uit het diepvriesassortiment van Aldi, bevat een sal
               '''De afgelopen dagen trok het onderwijsveld steeds luider aan de alarmbel. Meer en meer meer klassen en scholen moesten namelijk de deuren sluiten, waardoor ook veel niet-positieve leerlingen gedwongen thuis kwamen te zitten. Vlaams minister van Onderwijs Ben Weyts (N-VA) bevestigde dit in het Vlaams Parlement met de meest recente cijfers: er zijn momenteel 102 scholen in Vlaanderen gesloten door corona - 35 in het basisonderwijs, 67 in het secundair onderwijs. Vorige week waren er in totaal nog 19. 
 
 En dus verzamelden de verschillende ministers van Onderwijs en Volksgezondheid van ons land opnieuw op een Interministeriële Conferentie Volksgezondheid (IMC). Het overleg werd ’s middags even onderbroken, maar uiteindelijk werd dan toch een akkoord bereikt.'''),
-      Announcement(
+      AnnouncementModel(
           title:
               'Omikron heeft familie: wat weten we al over de nieuwe coronatelg BA.2?',
           dateTime: DateTime.now().subtract(const Duration(days: 7000)),
@@ -68,7 +68,7 @@ Het Britse gezondheidsagentschap UKHSA heeft BA.2 al geklasseerd als een variant
 
   Future<void> _showBottomSheet({
     required BuildContext context,
-    required Announcement announcement,
+    required AnnouncementModel announcement,
   }) {
     return showMyBottomSheet(
       context: context,

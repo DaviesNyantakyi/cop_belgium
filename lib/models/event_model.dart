@@ -3,7 +3,7 @@
 // The full address wil be stored in a property.
 // E.g: Event(address: , street: , number: , city: ,  latLong:, )
 
-class Event {
+class EventModel {
   DateTime startDate;
   DateTime endDate;
   String title;
@@ -12,7 +12,7 @@ class Event {
   String? link;
   String? address;
 
-  Event({
+  EventModel({
     required this.startDate,
     required this.endDate,
     required this.title,
@@ -34,8 +34,8 @@ class Event {
     };
   }
 
-  factory Event.fromMap(Map<String, dynamic> map) {
-    return Event(
+  factory EventModel.fromMap(Map<String, dynamic> map) {
+    return EventModel(
       startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate']),
       endDate: DateTime.fromMillisecondsSinceEpoch(map['endDate']),
       title: map['title'] ?? '',

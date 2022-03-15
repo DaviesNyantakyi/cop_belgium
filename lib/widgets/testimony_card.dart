@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class TestimonyCard extends StatelessWidget {
-  final TestimonyInfo testimony;
+  final TestimonyModel testimony;
   final VoidCallback onPressed;
   final VoidCallback onPressedLike;
   const TestimonyCard({

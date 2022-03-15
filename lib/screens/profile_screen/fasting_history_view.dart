@@ -23,7 +23,7 @@ class _UserFastingHistoryViewState extends State<UserFastingHistoryView> {
       itemCount: 5,
       itemBuilder: (context, index) {
         return FastingHistoryCard(
-          fastingInfo: FastingInfo(
+          fastingInfo: FastingInfoModel(
             duration: const Duration(hours: 20),
             type: 'custom',
             startDate: DateTime.now(),

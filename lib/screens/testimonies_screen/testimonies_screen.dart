@@ -21,8 +21,8 @@ class TestimoniesScreen extends StatefulWidget {
 
 class _TestimoniesScreenState extends State<TestimoniesScreen>
     with TickerProviderStateMixin {
-  List<TestimonyInfo> testimonies = [
-    TestimonyInfo(
+  List<TestimonyModel> testimonies = [
+    TestimonyModel(
       id: '1',
       title:
           'Enim mollit non ipsum ipsum qui aliqua est Lorem adipisicing qui labore.',
@@ -33,7 +33,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
       userName: 'Davies Nyantakyi',
       likes: 200,
     ),
-    TestimonyInfo(
+    TestimonyModel(
       id: '2',
       title: ' test 2',
       description:
@@ -112,7 +112,7 @@ class _TestimoniesScreenState extends State<TestimoniesScreen>
 
   Future<void> _showBottomSheet({
     required BuildContext context,
-    required TestimonyInfo testimony,
+    required TestimonyModel testimony,
   }) {
     _buildDate() {
       String time = timeago.format(testimony.date!);

@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChurchDetailScreen extends StatelessWidget {
-  final Church church;
+  final ChurchModel church;
   const ChurchDetailScreen({Key? key, required this.church}) : super(key: key);
 
   @override
@@ -136,7 +136,7 @@ class ChurchDetailScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          church.leader,
+          church.leaderInfo['leader'],
           style: kSFHeadLine3,
         ),
         Text(church.churchName, style: kSFBody),

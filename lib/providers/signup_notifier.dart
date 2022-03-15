@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../services/fire_auth.dart';
 import '../services/fire_storage.dart';
 
-class SignUpProvider extends ChangeNotifier {
+class SignUpNotifier extends ChangeNotifier {
   final FireAuth _fireAuth = FireAuth();
   final FireStorage _fireStorage = FireStorage();
   final TextEditingController _firstNameCntlr = TextEditingController();
@@ -96,7 +96,7 @@ class SignUpProvider extends ChangeNotifier {
   }
 
   Future<void> signUp() async {
-    final copUser = CopUser(
+    final copUser = UserModel(
       isAdmin: false,
       firstName: _firstNameCntlr.text,
       lastName: _lastNameCntlr.text,

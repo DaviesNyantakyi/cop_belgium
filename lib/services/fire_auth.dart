@@ -10,7 +10,7 @@ class FireAuth {
   final CloudFire _fireStore = CloudFire();
 
   Future<User?> createUserEmailPassword(
-      {required CopUser user, String? password}) async {
+      {required UserModel user, String? password}) async {
     try {
       if (user.firstName.isNotEmpty &&
           user.lastName.isNotEmpty &&

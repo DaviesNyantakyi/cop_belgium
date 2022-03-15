@@ -21,7 +21,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 
 //TODO:  -Image picker IOS
 
-late AudioProvider _audioHandler;
+late AudioPlayerNotifier _audioHandler;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,16 +46,15 @@ Future<void> init() async {
     ..dismissOnTap = false;
 
   // Initialize the notifications and expose the AudioProvider class
-  Duration _skipDuration = AudioProvider().skipDuration;
+  Duration _skipDuration = AudioPlayerNotifier().skipDuration;
 
-  _audioHandler = await AudioService.init<AudioProvider>(
-    builder: () => AudioProvider(),
+  _audioHandler = await AudioService.init<AudioPlayerNotifier>(
+    builder: () => AudioPlayerNotifier(),
     config: AudioServiceConfig(
-      androidNotificationChannelId: 'com.apkeroo.copBelgium.channel.audio',
       androidNotificationChannelName: 'Cop Belgium',
-      androidNotificationOngoing: true,
+      androidNotificationChannelId: 'com.apkeroo.copBelgium.channel.audio',
+      androidNotificationIcon: 'drawable/notifcation_icon',
       androidStopForegroundOnPause: true,
-      androidResumeOnClick: true,
       fastForwardInterval: _skipDuration,
       rewindInterval: _skipDuration,
     ),
@@ -71,11 +70,11 @@ class MyApp extends StatelessWidget {
       title: 'Cop Belgium',
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider<AudioProvider>.value(
+          ChangeNotifierProvider<AudioPlayerNotifier>.value(
             value: _audioHandler,
           ),
-          ChangeNotifierProvider<SignUpProvider>(
-            create: (context) => SignUpProvider(),
+          ChangeNotifierProvider<SignUpNotifier>(
+            create: (context) => SignUpNotifier(),
           ),
         ],
         child: const AuthWrapper(),

@@ -26,13 +26,13 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   PageController pageController = PageController(initialPage: 0);
 
-  late final SignUpProvider signUpProvider;
+  late final SignUpNotifier signUpProvider;
 
   @override
   void initState() {
-    signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    signUpProvider = Provider.of<SignUpNotifier>(context, listen: false);
 
-    Provider.of<SignUpProvider>(context, listen: false).close();
+    Provider.of<SignUpNotifier>(context, listen: false).close();
     super.initState();
   }
 
@@ -45,7 +45,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Scaffold(
         body: SafeArea(
           child: MultiProvider(
@@ -53,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ChangeNotifierProvider<PageController>.value(
                 value: pageController,
               ),
-              ChangeNotifierProvider<SignUpProvider>.value(
+              ChangeNotifierProvider<SignUpNotifier>.value(
                 value: signUpProvider,
               ),
             ],
@@ -82,14 +82,14 @@ class _ChurchSelection extends StatefulWidget {
 }
 
 class _ChurchSelectionState extends State<_ChurchSelection> {
-  Future<void> onSubmit({required Church church}) async {
+  Future<void> onSubmit({required ChurchModel church}) async {
     FocusScope.of(context).unfocus();
     try {
       final hasConnection = await ConnectionChecker().checkConnection();
 
       if (hasConnection) {
         final signUpProvider =
-            Provider.of<SignUpProvider>(context, listen: false);
+            Provider.of<SignUpNotifier>(context, listen: false);
 
         EasyLoading.show();
         signUpProvider.setChurch(church: church.id!);

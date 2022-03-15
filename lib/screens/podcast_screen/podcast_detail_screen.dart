@@ -24,12 +24,12 @@ class PodcastDetailScreen extends StatefulWidget {
 class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   bool bookMark = false;
   bool isLiked = false;
-  Podcast? podcast;
+  PodcastModel? podcast;
 
   @override
   Widget build(BuildContext context) {
     setState(() {
-      podcast = Provider.of<Podcast>(context, listen: false);
+      podcast = Provider.of<PodcastModel>(context, listen: false);
     });
 
     return Scaffold(
@@ -153,7 +153,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
   }
 
   Future<void> _showBottomSheet(
-      {required BuildContext context, required Podcast? podcast}) {
+      {required BuildContext context, required PodcastModel? podcast}) {
     return showMyBottomSheet(
       context: context,
       child: Column(
@@ -185,8 +185,8 @@ class _BuildEpisodesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Episode> episodes = [
-      Episode(
+    List<EpisodeModel> episodes = [
+      EpisodeModel(
         image:
             'https://media.redcircle.com/images/2022/1/25/14/e6063a80-bb4f-444f-88bc-74d6363f7fad_09d7c-d7f5-48f4-af61-802673f35db0_pp_1400x1400.jpg',
         title: 'Deception',
@@ -201,7 +201,7 @@ class _BuildEpisodesList extends StatelessWidget {
             'https://feeds.redcircle.com/ef5caef7-c00e-4dcf-9bac-90b60a2db406',
       ),
     ];
-    return Consumer<AudioProvider>(
+    return Consumer<AudioPlayerNotifier>(
       builder: (context, audioProvider, _) {
         return ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(
@@ -219,10 +219,10 @@ class _BuildEpisodesList extends StatelessWidget {
                   CupertinoPageRoute(
                     builder: (context) => MultiProvider(
                       providers: [
-                        Provider<Episode>.value(
+                        Provider<EpisodeModel>.value(
                           value: episodes[index],
                         ),
-                        ChangeNotifierProvider<AudioProvider>.value(
+                        ChangeNotifierProvider<AudioPlayerNotifier>.value(
                           value: audioProvider,
                         ),
                       ],

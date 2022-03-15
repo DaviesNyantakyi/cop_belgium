@@ -39,7 +39,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
     try {
       bool hasConnection = await ConnectionChecker().checkConnection();
       if (hasConnection) {
-        final episode = Provider.of<Episode>(context, listen: false);
+        final episode = Provider.of<EpisodeModel>(context, listen: false);
         MediaItem item = MediaItem(
           id: episode.audioUrl,
           displayDescription: episode.description,
@@ -48,7 +48,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
           duration: episode.duration,
           artist: episode.author,
         );
-        await Provider.of<AudioProvider>(context, listen: false)
+        await Provider.of<AudioPlayerNotifier>(context, listen: false)
             .init(url: episode.audioUrl, item: item);
       } else {
         throw ConnectionChecker.connectionException;
@@ -115,7 +115,7 @@ class _PodcastPlayerScreenState extends State<PodcastPlayerScreen> {
   Future<void> _showAboutBottomSheet({
     required BuildContext context,
   }) {
-    Episode episode = Provider.of<Episode>(context, listen: false);
+    EpisodeModel episode = Provider.of<EpisodeModel>(context, listen: false);
     return showMyBottomSheet(
       context: context,
       child: Column(
@@ -147,7 +147,7 @@ class _BuildImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final image = Provider.of<Episode>(context, listen: false).image;
+    final image = Provider.of<EpisodeModel>(context, listen: false).image;
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.79,
@@ -170,8 +170,9 @@ class _BuildTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final episode = Provider.of<Episode>(context, listen: false);
-    ProcessingState? state = Provider.of<AudioProvider>(context).playState;
+    final episode = Provider.of<EpisodeModel>(context, listen: false);
+    ProcessingState? state =
+        Provider.of<AudioPlayerNotifier>(context).playState;
 
     Widget _buildBufferingText() {
       Widget widget = Text(
@@ -222,13 +223,13 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   @override
   void initState() {
     playBackSpeed =
-        Provider.of<AudioProvider>(context, listen: false).playbackSpeed;
+        Provider.of<AudioPlayerNotifier>(context, listen: false).playbackSpeed;
     getAudioFile();
     super.initState();
   }
 
   Future<void> getAudioFile() async {
-    final episode = Provider.of<Episode>(context, listen: false);
+    final episode = Provider.of<EpisodeModel>(context, listen: false);
 
     File? file = await myPathProvider.getFile(
         path: 'Podcasts/${episode.podcastName}/${episode.title}.mp3');
@@ -256,7 +257,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   }
 
   Widget _buildPlaybackSpeed() {
-    return Consumer<AudioProvider>(builder: (context, audioProvider, _) {
+    return Consumer<AudioPlayerNotifier>(builder: (context, audioProvider, _) {
       return Expanded(
         child: SizedBox(
           width: containerSize,
@@ -281,7 +282,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
 
   Future<void> _showPlayBackBottomSheet({
     required BuildContext context,
-    required AudioProvider audioProvider,
+    required AudioPlayerNotifier audioProvider,
   }) {
     return showMyBottomSheet(
       context: context,
@@ -340,7 +341,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   }
 
   Widget _buildAudioControls() {
-    return Consumer<Episode>(builder: (context, episode, _) {
+    return Consumer<EpisodeModel>(builder: (context, episode, _) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -359,22 +360,22 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
   Widget _buildSlider() {
     return Slider(
       min: 0.0,
-      max: Provider.of<AudioProvider>(context)
+      max: Provider.of<AudioPlayerNotifier>(context)
           .totalDuration
           .inMilliseconds
           .toDouble(),
       value: min(
-          Provider.of<AudioProvider>(context)
+          Provider.of<AudioPlayerNotifier>(context)
               .currentPosition
               .inMilliseconds
               .toDouble(),
-          Provider.of<AudioProvider>(context)
+          Provider.of<AudioPlayerNotifier>(context)
               .totalDuration
               .inMilliseconds
               .toDouble()),
       onChanged: (value) {
         final position = Duration(milliseconds: value.toInt());
-        Provider.of<AudioProvider>(
+        Provider.of<AudioPlayerNotifier>(
           context,
           listen: false,
         ).seek(position);
@@ -388,12 +389,12 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
       children: [
         Text(
           FormalDates.getEpisodeDuration(
-            duration: Provider.of<AudioProvider>(context).currentPosition,
+            duration: Provider.of<AudioPlayerNotifier>(context).currentPosition,
           ),
         ),
         Text(
           FormalDates.getEpisodeDuration(
-            duration: Provider.of<AudioProvider>(context).totalDuration,
+            duration: Provider.of<AudioPlayerNotifier>(context).totalDuration,
           ),
         )
       ],
@@ -412,7 +413,8 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
             color: kBlack,
           ),
           onPressed: () {
-            Provider.of<AudioProvider>(context, listen: false).fastForward();
+            Provider.of<AudioPlayerNotifier>(context, listen: false)
+                .fastForward();
           },
         ),
       ),
@@ -431,7 +433,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
             color: kBlack,
           ),
           onPressed: () {
-            Provider.of<AudioProvider>(context, listen: false).rewind();
+            Provider.of<AudioPlayerNotifier>(context, listen: false).rewind();
           },
         ),
       ),
@@ -440,8 +442,9 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
 
   Widget _buildPlayPauseIcon() {
     IconData icon = Icons.play_arrow_outlined;
-    bool isPlaying = Provider.of<AudioProvider>(context).isPlaying;
-    ProcessingState? state = Provider.of<AudioProvider>(context).playState;
+    bool isPlaying = Provider.of<AudioPlayerNotifier>(context).isPlaying;
+    ProcessingState? state =
+        Provider.of<AudioPlayerNotifier>(context).playState;
 
     if (state == ProcessingState.loading) {
       return Expanded(
@@ -480,13 +483,14 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
           ),
           onPressed: () {
             if (isPlaying) {
-              Provider.of<AudioProvider>(context, listen: false).pause();
+              Provider.of<AudioPlayerNotifier>(context, listen: false).pause();
             } else {
-              Provider.of<AudioProvider>(context, listen: false).play();
+              Provider.of<AudioPlayerNotifier>(context, listen: false).play();
             }
 
             if (state == ProcessingState.completed && isPlaying == false) {
-              Provider.of<AudioProvider>(context, listen: false).restart();
+              Provider.of<AudioPlayerNotifier>(context, listen: false)
+                  .restart();
             }
           },
         ),
@@ -494,7 +498,7 @@ class _BuildAudioControlsState extends State<_BuildAudioControls> {
     );
   }
 
-  Widget _buildDownloadButton({required Episode episode}) {
+  Widget _buildDownloadButton({required EpisodeModel episode}) {
     if (isLoading) {
       return Expanded(
         child: SizedBox(

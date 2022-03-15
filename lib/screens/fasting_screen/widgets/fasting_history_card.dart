@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 const double _cardHeight = 100;
 
 class FastingHistoryCard extends StatefulWidget {
-  final FastingInfo fastingInfo;
+  final FastingInfoModel fastingInfo;
 
   const FastingHistoryCard({
     Key? key,
@@ -47,7 +47,7 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
     );
   }
 
-  Widget _buildGoalDuration({required FastingInfo fastingInfo}) {
+  Widget _buildGoalDuration({required FastingInfoModel fastingInfo}) {
     return Container(
       width: 60,
       height: _cardHeight,
@@ -78,7 +78,7 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
     );
   }
 
-  Widget _buildTotalDuration({required FastingInfo fastingInfo}) {
+  Widget _buildTotalDuration({required FastingInfoModel fastingInfo}) {
     int totalFastDuration =
         fastingInfo.endDate!.hour - fastingInfo.startDate!.hour;
 
@@ -112,7 +112,7 @@ class _FastingHistoryCardState extends State<FastingHistoryCard> {
     );
   }
 
-  Widget _buildEstimatedTimes({required FastingInfo fastingInfo}) {
+  Widget _buildEstimatedTimes({required FastingInfoModel fastingInfo}) {
     String startedDate = FormalDates.formatEDmyyyy(date: fastingInfo.startDate);
     String startedTime = FormalDates.formatHm(date: fastingInfo.startDate);
     String endDate = FormalDates.formatEDmyyyy(date: fastingInfo.endDate);

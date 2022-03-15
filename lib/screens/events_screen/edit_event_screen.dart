@@ -11,7 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EditEventScreen extends StatefulWidget {
-  final Event event;
+  final EventModel event;
   const EditEventScreen({Key? key, required this.event}) : super(key: key);
 
   @override

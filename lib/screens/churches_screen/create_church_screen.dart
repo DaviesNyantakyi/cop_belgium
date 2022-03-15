@@ -13,8 +13,7 @@ import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -91,8 +90,9 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     setState(() {});
   }
 
-  List<ServiceTime> serviceTimes = [
-    ServiceTime(
+  List<ServiceTimeModel> serviceTimes = [
+    // Default service time
+    ServiceTimeModel(
       day: 'Sunday',
       time: DateTime(2000, 01, 09, 9, 00),
       description: '',
@@ -132,7 +132,7 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
             validPhoneNumber == true &&
             validEmail == true &&
             validLeader == true) {
-          final church = Churchss(
+          final church = ChurchModel(
             churchName: churchNameCntlr.text,
             phoneNumber: phoneNumberCntlr.text,
             email: emailCntrl.text,
@@ -172,6 +172,8 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
               'imageUrl': leaderImagUrl,
             },
           });
+
+          Navigator.pop(context);
         }
       } else {
         throw ConnectionChecker.connectionException;
@@ -269,8 +271,9 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
       context: context,
       btnText: 'Add service time',
       onPressed: () {
+        FocusScope.of(context).unfocus();
         serviceTimes.add(
-          ServiceTime(
+          ServiceTimeModel(
             day: 'Sunday',
             time: DateTime.now(),
             description: '',
@@ -579,7 +582,7 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
 }
 
 class CreateServiceTime extends StatefulWidget {
-  final ServiceTime serviceTime;
+  final ServiceTimeModel serviceTime;
   final Function(String?) dayOnChanged;
   final Function(DateTime) timeOnChanged;
   final Function(String) descriptionOnChanged;

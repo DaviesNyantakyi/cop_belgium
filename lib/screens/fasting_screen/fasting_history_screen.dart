@@ -91,12 +91,12 @@ class _FastingHistoryScreenState extends State<FastingHistoryScreen> {
                 onPressed: isLoading ? null : tryAgain,
               );
             }
-            List<FastingInfo> allFastingInfo = [];
+            List<FastingInfoModel> allFastingInfo = [];
 
             final fastingDoc = snapshot.data!.docs;
 
             for (var doc in fastingDoc) {
-              final fastingInfo = FastingInfo.fromMap(map: doc.data());
+              final fastingInfo = FastingInfoModel.fromMap(map: doc.data());
 
               if (fastingInfo.userId ==
                   FirebaseAuth.instance.currentUser!.uid) {

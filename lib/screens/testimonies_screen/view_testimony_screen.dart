@@ -12,7 +12,7 @@ import 'edit_testimony_screen.dart';
 class ViewTestimonyScreen extends StatefulWidget {
   // enabled edit mode
 
-  final TestimonyInfo testimonyInfo;
+  final TestimonyModel testimonyInfo;
 
   const ViewTestimonyScreen({
     Key? key,

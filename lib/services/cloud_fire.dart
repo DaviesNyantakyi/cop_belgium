@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/models/fasting_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
 import 'package:cop_belgium/models/testimony_model.dart';
@@ -17,14 +16,15 @@ class CloudFire {
 
   final _connectionChecker = ConnectionChecker();
 
-  Future<void> createTestimony({required TestimonyInfo testimony}) async {
+  // Testimonies
+  Future<void> createTestimony({required TestimonyModel testimony}) async {
     try {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
         final docRef = await _firestore
             .collection('testimonies')
-            .add(TestimonyInfo.toMap(map: testimony));
+            .add(TestimonyModel.toMap(map: testimony));
         docRef.update({'id': docRef.id});
       } else {
         throw ConnectionChecker.connectionException;
@@ -35,13 +35,13 @@ class CloudFire {
     }
   }
 
-  Future<void> updateTestimonyInfo({required TestimonyInfo tInfo}) async {
+  Future<void> updateTestimonyInfo({required TestimonyModel tInfo}) async {
     try {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
         await _firestore.collection('testimonies').doc(tInfo.id).update(
-              TestimonyInfo.toMap(map: tInfo),
+              TestimonyModel.toMap(map: tInfo),
             );
       } else {
         throw ConnectionChecker.connectionException;
@@ -52,7 +52,7 @@ class CloudFire {
     }
   }
 
-  Future<void> deleteTestimony({required TestimonyInfo? testimony}) async {
+  Future<void> deleteTestimony({required TestimonyModel? testimony}) async {
     try {
       bool hasConnection = await _connectionChecker.checkConnection();
 
@@ -81,57 +81,7 @@ class CloudFire {
     }
   }
 
-  Future<Church> getChurchInfo({required churchId}) async {
-    try {
-      // delete likers collection first otherwise the doc will still remain
-      final docSnzp =
-          await _firestore.collection('churches').doc(churchId).get();
-
-      final church = Church.fromMap(map: docSnzp.data()!);
-      return church;
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    } catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> createFastHistory({required FastingInfo fInfo}) async {
-    try {
-      if (fInfo.userId != null &&
-          fInfo.startDate != null &&
-          fInfo.endDate != null &&
-          fInfo.goalDate != null) {
-        final docRef = await _firestore
-            .collection('users')
-            .doc(_user!.uid)
-            .collection('fastingHistory')
-            .add(FastingInfo.toMap(map: fInfo));
-        await docRef.update({'id': docRef.id});
-      }
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> deleteFastHistory({required FastingInfo fInfo}) async {
-    try {
-      await _firestore
-          .collection('users')
-          .doc(_user!.uid)
-          .collection('fastingHistory')
-          .doc(fInfo.id)
-          .delete();
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> likeDislikeTestimony({required TestimonyInfo tInfo}) async {
+  Future<void> likeDislikeTestimony({required TestimonyModel tInfo}) async {
     try {
       bool hasConnection = await _connectionChecker.checkConnection();
       if (hasConnection) {
@@ -166,21 +116,24 @@ class CloudFire {
     }
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> _getTestimonyLikeDoc({
-    required TestimonyInfo tInfo,
-    required String docRef,
-  }) async {
-    // This gets the document with the uniek ref in the likes collection.
-    return await FirebaseFirestore.instance
-        .collection('testimonies')
-        .doc(tInfo.id)
-        .collection('likers')
-        .doc(docRef)
-        .get();
+  Future<void> deleteTestimonyLikeDoc(
+      {required TestimonyModel tInfo, required String docRef}) async {
+    try {
+      // delete the doc with the liker info in the likers collection.
+      await FirebaseFirestore.instance
+          .collection('testimonies')
+          .doc(tInfo.id)
+          .collection('likers')
+          .doc(docRef)
+          .delete();
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 
   Future<void> createTestimonyLikeDoc({
-    required TestimonyInfo tInfo,
+    required TestimonyModel tInfo,
     required String docRef,
   }) async {
     final currenDate = DateTime.now();
@@ -206,8 +159,54 @@ class CloudFire {
     }
   }
 
-  //PODCASTS
+  Future<DocumentSnapshot<Map<String, dynamic>>> _getTestimonyLikeDoc({
+    required TestimonyModel tInfo,
+    required String docRef,
+  }) async {
+    // This gets the document with the uniek ref in the likes collection.
+    return await FirebaseFirestore.instance
+        .collection('testimonies')
+        .doc(tInfo.id)
+        .collection('likers')
+        .doc(docRef)
+        .get();
+  }
 
+  // Fasting
+  Future<void> createFastHistory({required FastingInfoModel fInfo}) async {
+    try {
+      if (fInfo.userId != null &&
+          fInfo.startDate != null &&
+          fInfo.endDate != null &&
+          fInfo.goalDate != null) {
+        final docRef = await _firestore
+            .collection('users')
+            .doc(_user!.uid)
+            .collection('fastingHistory')
+            .add(FastingInfoModel.toMap(map: fInfo));
+        await docRef.update({'id': docRef.id});
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFastHistory({required FastingInfoModel fInfo}) async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(_user!.uid)
+          .collection('fastingHistory')
+          .doc(fInfo.id)
+          .delete();
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  // Podcasts
   Future<List<PodcastRssInfo?>> getPodcastRssInfoFireStore() async {
     // get the podcast rss link and page link from firestore.
     try {
@@ -228,23 +227,8 @@ class CloudFire {
     }
   }
 
-  Future<void> deleteTestimonyLikeDoc(
-      {required TestimonyInfo tInfo, required String docRef}) async {
-    try {
-      // delete the doc with the liker info in the likers collection.
-      await FirebaseFirestore.instance
-          .collection('testimonies')
-          .doc(tInfo.id)
-          .collection('likers')
-          .doc(docRef)
-          .delete();
-    } on FirebaseException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<void> createUserDoc({required CopUser user}) async {
+  // User
+  Future<void> createUserDoc({required UserModel user}) async {
     try {
       if (user.id != null &&
           user.lastName.isNotEmpty &&
@@ -348,7 +332,7 @@ class CloudFire {
     }
   }
 
-  Future<CopUser?> getUserFirstore() async {
+  Future<UserModel?> getUserFirstore() async {
     try {
       final docSnap =
           await _firestore.collection('users').doc(_user!.uid).get();
@@ -358,7 +342,7 @@ class CloudFire {
         return null;
       }
 
-      return CopUser.fromMap(map: data);
+      return UserModel.fromMap(map: data);
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

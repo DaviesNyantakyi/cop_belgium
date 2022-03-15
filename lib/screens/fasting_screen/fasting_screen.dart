@@ -24,18 +24,18 @@ class _FastingScreenState extends State<FastingScreen> {
   User? auth = FirebaseAuth.instance.currentUser;
   int peopleFasting = 0;
 
-  List<FastingInfo> fastingPresets = [
+  List<FastingInfoModel> fastingPresets = [
     //When the user presses the card the startDate and endDate are set.
     // If set in object the time can differ from the acctual time the user presses the button.
-    FastingInfo(
+    FastingInfoModel(
       type: 'Custom',
       duration: const Duration(seconds: 14),
     ),
-    FastingInfo(
+    FastingInfoModel(
       type: 'Custom',
       duration: const Duration(hours: 16),
     ),
-    FastingInfo(
+    FastingInfoModel(
       type: 'Custom',
       duration: const Duration(hours: 18),
     ),
@@ -269,7 +269,7 @@ class _FastingPickerState extends State<FastingPicker> {
               await Navigator.push(context, CupertinoPageRoute(
                 builder: (context) {
                   return FastingTimerScreen(
-                    fastingInfo: FastingInfo(
+                    fastingInfo: FastingInfoModel(
                       userId: FirebaseAuth.instance.currentUser!.uid,
                       type: 'Custom',
                       duration: chosenDuration!,

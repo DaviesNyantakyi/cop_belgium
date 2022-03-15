@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CopUser {
+class UserModel {
   String? id;
   String? photoUrl;
   String firstName;
@@ -11,7 +11,7 @@ class CopUser {
   DateTime birthDate;
   bool isAdmin;
 
-  CopUser({
+  UserModel({
     this.id,
     this.photoUrl,
     required this.isAdmin,
@@ -23,9 +23,9 @@ class CopUser {
     required this.gender,
   });
 
-  static CopUser fromMap({required Map<String, dynamic> map}) {
+  static UserModel fromMap({required Map<String, dynamic> map}) {
     final birthDate = (map['birthDate'] as Timestamp).millisecondsSinceEpoch;
-    return CopUser(
+    return UserModel(
       id: map['id'],
       photoUrl: map['photoUrl'],
       birthDate: DateTime.fromMillisecondsSinceEpoch(birthDate),

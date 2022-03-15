@@ -1,4 +1,4 @@
-class FastingInfo {
+class FastingInfoModel {
   String? id;
   String? userId;
   Duration duration;
@@ -8,7 +8,7 @@ class FastingInfo {
   DateTime? goalDate;
   String? note;
 
-  FastingInfo({
+  FastingInfoModel({
     this.id,
     this.userId,
     required this.duration,
@@ -19,7 +19,7 @@ class FastingInfo {
     this.note,
   });
 
-  static Map<String, dynamic> toMap({required FastingInfo map}) {
+  static Map<String, dynamic> toMap({required FastingInfoModel map}) {
     return {
       'id': map.id,
       'userId': map.userId,
@@ -32,8 +32,8 @@ class FastingInfo {
     };
   }
 
-  static FastingInfo fromMap({required Map<String, dynamic> map}) {
-    return FastingInfo(
+  static FastingInfoModel fromMap({required Map<String, dynamic> map}) {
+    return FastingInfoModel(
       id: map['id'],
       userId: map['userId'],
       duration: Duration(seconds: int.parse(map['duration'].toString())),

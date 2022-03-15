@@ -1,14 +1,14 @@
 import 'package:cop_belgium/models/episodes_model.dart';
 
-class Podcast {
+class PodcastModel {
   final String imageUrl;
   final String title;
   final String description;
   final String author;
   final String pageLink;
-  final List<Episode>? episodes;
+  final List<EpisodeModel>? episodes;
 
-  Podcast({
+  PodcastModel({
     required this.imageUrl,
     required this.title,
     required this.description,
@@ -28,8 +28,8 @@ class Podcast {
     };
   }
 
-  factory Podcast.fromMap(Map<String, dynamic> map) {
-    return Podcast(
+  factory PodcastModel.fromMap(Map<String, dynamic> map) {
+    return PodcastModel(
       imageUrl: map['imageUrl'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',

@@ -5,7 +5,7 @@ import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:just_audio/just_audio.dart';
 
-class AudioProvider extends BaseAudioHandler with ChangeNotifier {
+class AudioPlayerNotifier extends BaseAudioHandler with ChangeNotifier {
   final _justAudio = AudioPlayer();
 
   bool _isPlaying = false;
