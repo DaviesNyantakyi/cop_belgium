@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:audio_service/audio_service.dart';
-import 'package:cop_belgium/providers/audio_provider.dart';
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/audio_notifier.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
 
 import 'package:cop_belgium/utilities/constant.dart';

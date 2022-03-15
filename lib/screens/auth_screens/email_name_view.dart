@@ -1,4 +1,4 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/validators.dart';
@@ -22,7 +22,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
     bool hasConnection = await ConnectionChecker().checkConnection();
     if (hasConnection) {
       final signUpProvider =
-          Provider.of<SignUpProvider>(context, listen: false);
+          Provider.of<SignUpNotifier>(context, listen: false);
       final bool? validEmail = signUpProvider.emailKey.currentState?.validate();
       final bool? validFirstName =
           signUpProvider.firstNameKey.currentState?.validate();
@@ -105,7 +105,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
   }
 
   Widget _buildEmail() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
         key: signUpProvider.emailKey,
         child: MyTextFormField(
@@ -124,7 +124,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
   }
 
   Widget _buildLastName() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
         key: signUpProvider.lastNameKey,
         child: MyTextFormField(
@@ -142,7 +142,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
   }
 
   Widget _buildFirstName() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
         key: signUpProvider.firstNameKey,
         child: MyTextFormField(
@@ -160,7 +160,7 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
   }
 
   Widget _buildPasswordField() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       bool viewPassword = signUpProvider.viewPassword ? false : true;
 
       return Form(

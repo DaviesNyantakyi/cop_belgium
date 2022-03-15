@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cop_belgium/models/episodes_model.dart';
 import 'package:cop_belgium/models/podcast_model.dart';
-import 'package:cop_belgium/providers/audio_provider.dart';
+import 'package:cop_belgium/providers/audio_notifier.dart';
 import 'package:cop_belgium/utilities/greeting.dart';
 
 import 'package:cop_belgium/widgets/dialog.dart';

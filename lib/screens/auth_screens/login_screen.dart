@@ -1,4 +1,4 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/screens/auth_screens/forgot_password_screen.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,18 +22,18 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final SignUpProvider _signUpProvider;
+  late final SignUpNotifier _signUpProvider;
 
   @override
   void initState() {
-    _signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    _signUpProvider = Provider.of<SignUpNotifier>(context, listen: false);
     super.initState();
   }
 
   Future<void> loginEmail() async {
     FocusScope.of(context).unfocus();
 
-    final signUpProvider = Provider.of<SignUpProvider>(context, listen: false);
+    final signUpProvider = Provider.of<SignUpNotifier>(context, listen: false);
 
     bool? validEmail = signUpProvider.emailKey.currentState?.validate();
     bool? validPassword = signUpProvider.passwordKey.currentState?.validate();
@@ -84,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(kBodyPadding),
-            child: Consumer<SignUpProvider>(
+            child: Consumer<SignUpNotifier>(
               builder: (context, signUpProvider, _) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildLogInBtn() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Buttons.buildButton(
         context: context,
         color: signUpProvider.isLoading ? kDisabledColor : kBlue,
@@ -120,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  Widget _buildEmailForm({required SignUpProvider signUpProvider}) {
+  Widget _buildEmailForm({required SignUpNotifier signUpProvider}) {
     return Form(
       key: signUpProvider.emailKey,
       child: MyTextFormField(
@@ -137,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildForgotButton({required SignUpProvider signUpProvider}) {
+  Widget _buildForgotButton({required SignUpNotifier signUpProvider}) {
     return Container(
       alignment: Alignment.centerRight,
       child: TextButton(
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
             context,
             CupertinoPageRoute(
               builder: (context) =>
-                  ChangeNotifierProvider<SignUpProvider>.value(
+                  ChangeNotifierProvider<SignUpNotifier>.value(
                 value: signUpProvider,
                 child: const ForgotPasswordScreen(),
               ),
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildPasswordForm({required SignUpProvider signUpProvider}) {
+  Widget _buildPasswordForm({required SignUpNotifier signUpProvider}) {
     return Form(
       key: signUpProvider.passwordKey,
       child: MyTextFormField(

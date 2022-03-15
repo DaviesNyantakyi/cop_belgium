@@ -1,4 +1,4 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/date_picker.dart';
@@ -30,7 +30,7 @@ class _DateGenderViewState extends State<DateGenderView> {
 
     if (hasConnection) {
       final signUpProvider =
-          Provider.of<SignUpProvider>(context, listen: false);
+          Provider.of<SignUpNotifier>(context, listen: false);
 
       setState(() {
         genderErrorText = Validators.genderValidator(
@@ -118,7 +118,7 @@ class _DateGenderViewState extends State<DateGenderView> {
   }
 
   Widget _buildGenderSelector() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -167,7 +167,7 @@ class _DateGenderViewState extends State<DateGenderView> {
   }
 
   Widget _buildBirthdayPicker() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

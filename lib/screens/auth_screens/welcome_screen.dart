@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 
@@ -55,7 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildLogInButton() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Buttons.buildButton(
         context: context,
         btnText: 'Log in',
@@ -64,7 +64,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             context,
             CupertinoPageRoute(
               builder: (context) =>
-                  ChangeNotifierProvider<SignUpProvider>.value(
+                  ChangeNotifierProvider<SignUpNotifier>.value(
                 value: signUpProvider,
                 child: const LoginScreen(),
               ),
@@ -90,14 +90,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       onPressed: () {
         final signUpProvider =
-            Provider.of<SignUpProvider>(context, listen: false);
+            Provider.of<SignUpNotifier>(context, listen: false);
 
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (context) => MultiProvider(
               providers: [
-                ChangeNotifierProvider<SignUpProvider>.value(
+                ChangeNotifierProvider<SignUpNotifier>.value(
                   value: signUpProvider,
                 ),
               ],
@@ -122,14 +122,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       onPressed: () {
         final signUpProvider =
-            Provider.of<SignUpProvider>(context, listen: false);
+            Provider.of<SignUpNotifier>(context, listen: false);
 
         Navigator.push(
           context,
           CupertinoPageRoute(
             builder: (context) => MultiProvider(
               providers: [
-                ChangeNotifierProvider<SignUpProvider>.value(
+                ChangeNotifierProvider<SignUpNotifier>.value(
                   value: signUpProvider,
                 ),
               ],

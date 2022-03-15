@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/image_picker.dart';
@@ -23,7 +23,7 @@ class _ImagePickerScreenState extends State<ImagePickerScreen> {
   final MyImagePicker myImagePicker = MyImagePicker();
   Future<void> submit() async {
     try {
-      Provider.of<SignUpProvider>(context, listen: false).setProfileImage(
+      Provider.of<SignUpNotifier>(context, listen: false).setProfileImage(
         image: myImagePicker.image,
       );
 

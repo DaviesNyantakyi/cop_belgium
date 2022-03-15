@@ -1,4 +1,4 @@
-import 'package:cop_belgium/providers/signup_provider.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/services/fire_auth.dart';
 import 'package:cop_belgium/utilities/validators.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
@@ -28,7 +28,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     try {
       bool? isValid = emailKey.currentState?.validate();
 
-      Provider.of<SignUpProvider>(context, listen: false).setLoading();
+      Provider.of<SignUpNotifier>(context, listen: false).setLoading();
 
       if (isValid == true) {
         EasyLoading.show();
@@ -46,7 +46,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     } catch (e) {
       debugPrint(e.toString());
     } finally {
-      Provider.of<SignUpProvider>(context, listen: false).setLoading();
+      Provider.of<SignUpNotifier>(context, listen: false).setLoading();
 
       EasyLoading.dismiss();
     }
@@ -84,7 +84,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildEmailForm() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,7 +118,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Widget _buildSendButton() {
-    return Consumer<SignUpProvider>(builder: (context, signUpProvider, _) {
+    return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Buttons.buildButton(
         context: context,
         color: signUpProvider.isLoading ? kDisabledColor : kBlue,
