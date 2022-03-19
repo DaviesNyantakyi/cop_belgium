@@ -30,10 +30,10 @@ class ChurchTile extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   color: kBlueLight,
-                  image: church.image != null
+                  image: church.imageURL != null
                       ? DecorationImage(
                           fit: BoxFit.cover,
-                          image: NetworkImage(church.image!),
+                          image: NetworkImage(church.imageURL!),
                         )
                       : null,
                 ),

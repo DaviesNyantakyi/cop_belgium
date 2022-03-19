@@ -1,5 +1,4 @@
 import 'package:cop_belgium/bottom_nav_selector.dart';
-import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,19 +14,21 @@ class AuthWrapper extends StatefulWidget {
 class _AuthWrapperState extends State<AuthWrapper> {
   FirebaseAuth auth = FirebaseAuth.instance;
 
+  final authChanges = FirebaseAuth.instance.authStateChanges();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
-      stream: auth.authStateChanges(),
+      stream: authChanges,
       builder: (context, snaphot) {
         if (snaphot.connectionState == ConnectionState.active) {
           if (snaphot.hasData &&
               snaphot.data?.uid != null &&
               snaphot.data != null) {
-            return const BottomNavSelectorPage();
+            return const BottomNavScreen();
           }
 
-          return const WelcomeScreen();
+          return const BottomNavScreen();
         } else {
           return const Scaffold(
             body: Center(

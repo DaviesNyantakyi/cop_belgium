@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class CloudFire {
-  final _firestore = FirebaseFirestore.instance;
+  final _cloudFire = FirebaseFirestore.instance;
   final _user = FirebaseAuth.instance.currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -22,7 +22,7 @@ class CloudFire {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
-        final docRef = await _firestore
+        final docRef = await _cloudFire
             .collection('testimonies')
             .add(TestimonyModel.toMap(map: testimony));
         docRef.update({'id': docRef.id});
@@ -40,7 +40,7 @@ class CloudFire {
       bool hasConnection = await _connectionChecker.checkConnection();
 
       if (hasConnection) {
-        await _firestore.collection('testimonies').doc(tInfo.id).update(
+        await _cloudFire.collection('testimonies').doc(tInfo.id).update(
               TestimonyModel.toMap(map: tInfo),
             );
       } else {
@@ -58,7 +58,7 @@ class CloudFire {
 
       if (hasConnection) {
         // delete likers collection first otherwise the doc will still remain
-        final collection = _firestore
+        final collection = _cloudFire
             .collection('testimonies')
             .doc(testimony!.id)
             .collection('likers');
@@ -68,7 +68,7 @@ class CloudFire {
         }
 
         // delete doc
-        await _firestore.collection('testimonies').doc(testimony.id).delete();
+        await _cloudFire.collection('testimonies').doc(testimony.id).delete();
       } else {
         throw ConnectionChecker.connectionException;
       }
@@ -140,7 +140,7 @@ class CloudFire {
     try {
       // This method allows us to soo who liked the post.
       // Upload a document with a unqiek id to the specific testimony doc likers collection.
-      await _firestore
+      await _cloudFire
           .collection('testimonies')
           .doc(tInfo.id)
           .collection('likers')
@@ -179,7 +179,7 @@ class CloudFire {
           fInfo.startDate != null &&
           fInfo.endDate != null &&
           fInfo.goalDate != null) {
-        final docRef = await _firestore
+        final docRef = await _cloudFire
             .collection('users')
             .doc(_user!.uid)
             .collection('fastingHistory')
@@ -194,7 +194,7 @@ class CloudFire {
 
   Future<void> deleteFastHistory({required FastingInfoModel fInfo}) async {
     try {
-      await _firestore
+      await _cloudFire
           .collection('users')
           .doc(_user!.uid)
           .collection('fastingHistory')
@@ -234,7 +234,7 @@ class CloudFire {
           user.lastName.isNotEmpty &&
           user.firstName.isNotEmpty &&
           user.email.isNotEmpty) {
-        await _firestore.collection('users').doc(user.id).set(user.toMap());
+        await _cloudFire.collection('users').doc(user.id).set(user.toMap());
       }
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
@@ -242,13 +242,12 @@ class CloudFire {
     }
   }
 
-  Future<void> updatePhotoUrl({required String photoUrl}) async {
+  Future<void> updatePhotoURL({required String? url}) async {
     try {
-      await _firestore
-          .collection('users')
-          .doc(_user!.uid)
-          .update({'photoUrl': photoUrl});
-      await _user!.updatePhotoURL(photoUrl);
+      await _cloudFire.collection('users').doc(_user?.uid).update({
+        'photoURL': url,
+      });
+      await _user!.updatePhotoURL(url);
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -261,7 +260,7 @@ class CloudFire {
   Future<void> updateUsername(
       {required String firstName, required String lastName}) async {
     try {
-      await _firestore
+      await _cloudFire
           .collection('users')
           .doc(_user!.uid)
           .update({'firstName': firstName, 'lastName': lastName});
@@ -276,7 +275,7 @@ class CloudFire {
 
   Future<void> updateUserEmail({required String email}) async {
     try {
-      await _firestore
+      await _cloudFire
           .collection('users')
           .doc(_user!.uid)
           .update({'email': email});
@@ -291,7 +290,7 @@ class CloudFire {
 
   Future<void> updateUserGender({required String gender}) async {
     try {
-      await _firestore
+      await _cloudFire
           .collection('users')
           .doc(_user!.uid)
           .update({'gender': gender});
@@ -335,7 +334,7 @@ class CloudFire {
   Future<UserModel?> getUserFirstore() async {
     try {
       final docSnap =
-          await _firestore.collection('users').doc(_user!.uid).get();
+          await _cloudFire.collection('users').doc(_user!.uid).get();
       final data = docSnap.data();
 
       if (data == null) {
@@ -362,8 +361,8 @@ class CloudFire {
       for (var doc in snapshots.docs) {
         await doc.reference.delete();
       }
-      await _firestore.collection('users').doc(_user!.uid).delete();
-      await FireStorage().deleteUserStorageInfo();
+      await _cloudFire.collection('users').doc(_user!.uid).delete();
+      await FireStorage().deleteUser();
     } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;

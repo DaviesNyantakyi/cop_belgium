@@ -97,9 +97,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.done,
               validator: Validators.emailValidator,
-              onChanged: (value) {
-                emailKey.currentState?.validate();
-              },
+              autovalidateMode: AutovalidateMode.onUserInteraction,
               onSubmitted: (value) async {
                 await resetPassword();
               },

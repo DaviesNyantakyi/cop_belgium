@@ -40,16 +40,8 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTF(
-                hintText: 'Title',
-                style: kSFHeadLine3,
-                controller: titleCntlr,
-              ),
-              _buildTF(
-                style: kSFBody,
-                hintText: 'Your testimony',
-                controller: descriptionCntrl,
-              ),
+              _buildTileField(),
+              _buildDescriptionField(),
             ],
           ),
         ),
@@ -57,18 +49,23 @@ class _CreateTestimonyScreenState extends State<CreateTestimonyScreen> {
     );
   }
 
-  Widget _buildTF({
-    String? hintText,
-    TextStyle? style,
-    TextEditingController? controller,
-  }) {
+  Widget _buildTileField() {
     return MyTextFormField(
-      controller: controller,
-      hintText: hintText,
+      controller: titleCntlr,
+      hintText: 'Title',
       maxLines: null,
       keyboardType: TextInputType.multiline,
       fillColor: Colors.transparent,
-      style: style,
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return MyTextFormField(
+      controller: descriptionCntrl,
+      hintText: 'Your testimony',
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      fillColor: Colors.transparent,
     );
   }
 

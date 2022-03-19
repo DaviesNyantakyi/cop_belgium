@@ -20,6 +20,7 @@ class MyTextFormField extends StatelessWidget {
   final InputBorder? focusedBorder;
   final TextStyle? style;
   final TextEditingController? controller;
+  final AutovalidateMode? autovalidateMode;
 
   const MyTextFormField({
     Key? key,
@@ -35,11 +36,12 @@ class MyTextFormField extends StatelessWidget {
     this.fillColor,
     this.prefixIcon,
     this.onChanged,
-    this.obscureText = false,
     this.validator,
     this.textInputAction,
     this.suffixIcon,
+    this.obscureText = false,
     this.readOnly = false,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   }) : super(key: key);
 
   @override
@@ -49,18 +51,18 @@ class MyTextFormField extends StatelessWidget {
       validator: validator,
       initialValue: initialValue,
       readOnly: readOnly,
-      style: style ?? kSFBodyBold,
+      style: style ?? kSFBody,
       keyboardType: keyboardType,
       obscureText: obscureText!,
       textInputAction: textInputAction,
       maxLines: maxLines,
+      autovalidateMode: autovalidateMode,
       decoration: InputDecoration(
         filled: true,
         errorMaxLines: 2,
         hintText: hintText,
-        hintStyle: style?.copyWith(color: Colors.black54) ??
-            kSFBodyBold.copyWith(color: Colors.black54),
-        fillColor: fillColor ?? kBlueLight,
+        hintStyle: kSFBody.copyWith(color: kDisabledColor),
+        fillColor: fillColor ?? kGreyLight,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         border: OutlineInputBorder(

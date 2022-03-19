@@ -57,18 +57,6 @@ class MyImagePicker {
                     Navigator.pop(context);
                   },
                 ),
-                image != null
-                    ? _selectionTile(
-                        onPressed: () {
-                          image = null;
-                          Navigator.pop(context);
-                        },
-                        context: context,
-                        icon: Icons.delete_outline_outlined,
-                        text: 'Delete',
-                        color: kRed,
-                      )
-                    : Container(),
               ],
             ),
           ),
@@ -182,10 +170,6 @@ class MyImagePicker {
       sourcePath: file!.path,
       aspectRatioPresets: [
         CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
       ],
       androidUiSettings: const AndroidUiSettings(
         toolbarTitle: 'Cropper',
@@ -214,7 +198,7 @@ class MyImagePicker {
         decoration: const BoxDecoration(
           color: kBlue,
           borderRadius: BorderRadius.all(
-            Radius.circular(kCardRadius),
+            Radius.circular(kRadius),
           ),
         ),
         child: headerWidget,

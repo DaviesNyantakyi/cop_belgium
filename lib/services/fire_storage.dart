@@ -5,22 +5,48 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
-const churchImagePath = 'churches/church_image/';
 const userProfilePath = 'images/profile_images';
 
 class FireStorage {
   final _user = FirebaseAuth.instance.currentUser;
   final _fireStore = FirebaseStorage.instance;
+  final _cloudFire = CloudFire();
 
-  Future<void> uploadProfileImage(
-      {required File? image, required User? user}) async {
+  // User
+
+  Future<void> updateProfileImage({
+    required File? image,
+    required bool delete,
+  }) async {
     try {
-      if (image != null && user != null) {
-        final ref =
-            await _fireStore.ref('$userProfilePath/${user.uid}').putFile(image);
+      // Delete profile image if the user has not seletecd a image and delete is true.
+      if (image == null && delete) {
+        await deleteProfileImage();
+        await _cloudFire.updatePhotoURL(url: null);
+        await _user?.updatePhotoURL(null);
+        return;
+      }
+
+      if (image != null && _user?.uid != null) {
+        final ref = await _fireStore
+            .ref()
+            .child('users/${_user?.uid}/images/${_user?.uid}')
+            .putFile(image);
         final url = await getPhotoUrl(fileRef: ref.ref.fullPath);
         await _user?.updatePhotoURL(url);
-        await CloudFire().updatePhotoUrl(photoUrl: url);
+        await _cloudFire.updatePhotoURL(url: url);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> deleteProfileImage() async {
+    try {
+      final userId = _user?.uid;
+      if (userId != null) {
+        await _fireStore.ref('users/$userId/images/$userId').delete();
       }
     } on FirebaseStorage catch (e) {
       debugPrint(e.toString());
@@ -29,16 +55,19 @@ class FireStorage {
   }
 
   Future<String> getPhotoUrl({required String fileRef}) async {
-    return await _fireStore.ref(fileRef).getDownloadURL();
+    try {
+      return await _fireStore.ref(fileRef).getDownloadURL();
+    } catch (e) {
+      rethrow;
+    }
   }
 
-  Future<void> deleteUserStorageInfo() async {
+  Future<void> deleteUser() async {
     try {
-      final userId = _user?.uid;
-      if (userId != null) {
-        await _fireStore.ref('images/profile_images/$userId').delete();
+      if (_user?.uid != null) {
+        await _fireStore.ref('users/${_user!.uid}').delete();
       }
-    } on FirebaseStorage catch (e) {
+    } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
@@ -54,7 +83,7 @@ class FireStorage {
         final ref = await _fireStore.ref('$storagePath/$id').putFile(file);
         return await getPhotoUrl(fileRef: ref.ref.fullPath);
       }
-    } on FirebaseStorage catch (e) {
+    } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }

@@ -1,4 +1,6 @@
 import 'package:cop_belgium/models/church_model.dart';
+import 'package:cop_belgium/models/service_time_model.dart';
+import 'package:cop_belgium/screens/churches_screen/create_church_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/widgets/dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,23 +20,7 @@ class ChurchDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildImage(context: context),
-              Padding(
-                padding: const EdgeInsets.all(kBodyPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: kContentSpacing8),
-                    _buildChurchInfo(),
-                    const SizedBox(height: kContentSpacing8),
-                    const Divider(),
-                    const Text('Service time', style: kSFBody),
-                    const SizedBox(height: kContentSpacing8),
-                    const SizedBox(height: kContentSpacing32),
-                    const Text('Leader', style: kSFBodyBold),
-                    _buildProfileTile()
-                  ],
-                ),
-              ),
+              _buildChurchDetails(),
             ],
           ),
         ),
@@ -57,6 +43,52 @@ class ChurchDetailScreen extends StatelessWidget {
           onPressed: () {},
         )
       ],
+    );
+  }
+
+  Widget _buildChurchDetails() {
+    return Padding(
+      padding: const EdgeInsets.all(kBodyPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: kContentSpacing8),
+          _buildChurchInfo(),
+          const SizedBox(height: kContentSpacing8),
+          const Divider(),
+          const Text('Service times', style: kSFBody),
+          const SizedBox(height: kContentSpacing8),
+          _buildServiceTimes(),
+          const SizedBox(height: kContentSpacing32),
+          const Text('Leader', style: kSFBodyBold),
+          _buildProfileTile()
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceTimes() {
+    return ListView.separated(
+      separatorBuilder: (context, index) {
+        return Container(
+          height: kContentSpacing16,
+        );
+      },
+      shrinkWrap: true,
+      itemCount: church.serviceTime.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return ServiceTimeCard(
+          key: ObjectKey(church.serviceTime[index]),
+          serviceTime: ServiceTimeModel(
+            day: church.serviceTime[index].day,
+            description: church.serviceTime[index].description,
+            time: church.serviceTime[index].time,
+          ),
+          edit: () async {},
+          delete: () {},
+        );
+      },
     );
   }
 
@@ -89,7 +121,7 @@ class ChurchDetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(church.churchName, style: kSFHeadLine3),
+        Text(church.churchName, style: kSFHeadLine2),
         Text(church.city, style: kSFBody),
         const SizedBox(height: kContentSpacing8),
         Text(church.phoneNumber, style: kSFCaption),
@@ -111,9 +143,9 @@ class ChurchDetailScreen extends StatelessWidget {
   }
 
   Widget _buildAvatar() {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser;
 
-    if (user.photoURL != null) {
+    if (user?.photoURL != null) {
       return const CircleAvatar(
         // backgroundImage: CachedNetworkImageProvider(user.photoURL!),
         radius: 30,
@@ -149,10 +181,10 @@ class ChurchDetailScreen extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.30,
       decoration: BoxDecoration(
         color: kBlueLight,
-        image: church.image != null
+        image: church.imageURL != null
             ? DecorationImage(
                 fit: BoxFit.cover,
-                image: NetworkImage(church.image!),
+                image: NetworkImage(church.imageURL!),
               )
             : null,
       ),

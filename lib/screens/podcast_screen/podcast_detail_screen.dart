@@ -93,7 +93,7 @@ class _PodcastDetailScreenState extends State<PodcastDetailScreen> {
       width: 150,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
-          Radius.circular(kCardRadius),
+          Radius.circular(kRadius),
         ),
         color: kBlue,
         boxShadow: [kBoxShadow],

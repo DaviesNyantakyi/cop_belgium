@@ -96,22 +96,26 @@ class SignUpNotifier extends ChangeNotifier {
   }
 
   Future<void> signUp() async {
-    final copUser = UserModel(
+    final user = UserModel(
       isAdmin: false,
       firstName: _firstNameCntlr.text,
       lastName: _lastNameCntlr.text,
+      displayName: '${_firstNameCntlr.text} ${_lastNameCntlr.text}',
       birthDate: _dateOfBirth!,
       email: _emailCntlr.text.trim(),
       gender: _gender,
       church: _church,
     );
 
-    final user = await _fireAuth.createUserEmailPassword(
-      user: copUser,
+    await _fireAuth.createUserEmailPassword(
+      user: user,
       password: _passwordCntlr.text,
     );
 
-    await _fireStorage.uploadProfileImage(image: _selectedImage, user: user!);
+    await _fireStorage.updateProfileImage(
+      image: _selectedImage,
+      delete: false,
+    );
   }
 
   void close() {

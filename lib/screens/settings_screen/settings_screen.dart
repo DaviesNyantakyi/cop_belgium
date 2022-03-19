@@ -177,6 +177,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context: context,
               mdFile: 'assets/privacy/privacy_policy.md',
             );
+            loadMdFile(
+              context: context,
+              mdFile: 'assets/privacy/terms_of_service.md',
+            );
           },
         ),
         ListTile(

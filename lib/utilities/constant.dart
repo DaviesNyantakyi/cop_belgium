@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 //Fonts
+
 const String _sfDisplayFont = 'SFDisplay';
 
 const kSFCaption = TextStyle(
@@ -76,14 +77,15 @@ const kSFHeadLine3 = TextStyle(
 );
 
 //Colors
+
 //White
 const Color kWhite = Color(0xFFFFFFFF);
 
 //Black
 const Color kBlack = Color(0xFF000000);
+const kDisabledColor = Colors.black45;
 
 //Blues
-
 const Color kBlue = Color(0xFF4F6BFE);
 
 const Color kBlueLight = Color(0xFFF6FBFF);
@@ -98,8 +100,9 @@ const Color kGreen = Color(0xFF00B488);
 
 //Grey
 const Color kGrey = Color(0xFFF8F9FA);
-Color kDisabledColor = Colors.grey.shade800;
+Color kGreyLight = Colors.grey.shade200;
 
+//Gradients
 const LinearGradient kRedGradient = LinearGradient(
   colors: [
     Color(0xFFF78CA0),
@@ -135,7 +138,7 @@ List<LinearGradient> kGradients = [
 
 const double kAppbarElevation = 1;
 
-const double kCardRadius = 10;
+const double kRadius = 10;
 const double kButtonRadius = 5;
 
 const double kCardContentPadding = 16;

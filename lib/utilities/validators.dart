@@ -3,16 +3,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class Validators {
-  static String noServiceTimeErrorMessage = 'Add one or more service times';
-  static String? textValidator(String? text) {
-    if (text == null || text.isEmpty) {
+  static String noServiceTime = 'Service time required';
+  static String? textValidator(String? vaue) {
+    if (vaue == null || vaue.isEmpty) {
       return 'Field required';
     }
     return null;
   }
 
-  static String? nameValidator(String? firstName) {
-    if (firstName == null || firstName.isEmpty) {
+  static String? nameValidator(String? name) {
+    if (name == null || name.isEmpty) {
       return 'Enter your name';
     }
     return null;
@@ -23,7 +23,7 @@ class Validators {
         email.isEmpty ||
         !email.contains('@') ||
         !email.contains('.')) {
-      return 'Enter a valid email address';
+      return 'Email not valid';
     }
 
     return null;
@@ -38,14 +38,14 @@ class Validators {
 
   static String? phoneNumberValidator(String? phoneNumber) {
     if (!phoneNumber!.isPhone() || phoneNumber.isEmpty) {
-      return 'Enter a valid phone number';
+      return 'Phone number must start with 0 or +';
     }
     return null;
   }
 
   static String? genderValidator({String? gender}) {
     if (gender != null && gender.isEmpty) {
-      return 'Select your gender';
+      return 'Gender required';
     }
     return null;
   }

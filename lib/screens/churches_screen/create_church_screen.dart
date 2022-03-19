@@ -1,8 +1,14 @@
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cop_belgium/models/church_model.dart';
 import 'package:cop_belgium/models/service_time_model.dart';
+import 'package:cop_belgium/screens/churches_screen/create_service_time_screen.dart';
+import 'package:cop_belgium/screens/churches_screen/edit_service_time_screen.dart';
+import 'package:cop_belgium/screens/churches_screen/widgets/build_tile.dart';
+import 'package:cop_belgium/screens/events_screen/edit_event_screen.dart';
 import 'package:cop_belgium/services/fire_storage.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
@@ -48,11 +54,8 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
   MyImagePicker churchImagePicker = MyImagePicker();
   MyImagePicker leaderImagePicker = MyImagePicker();
 
-  File? churchImage;
-  File? leaderImage;
-
   String dropdownValue = 'Monday';
-
+  String province = 'Antwerpen';
   List<String> provinces = [
     'Antwerpen',
     'Henegouwen',
@@ -66,15 +69,13 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     'West-Vlaanderen'
   ];
 
-  String province = 'Antwerpen';
+  List<ServiceTimeModel> serviceTimes = [];
 
   Future<void> pickChurchImage() async {
     FocusScope.of(context).unfocus();
     await churchImagePicker.showBottomSheet(
       context: context,
     ) as File?;
-
-    churchImage = churchImagePicker.image;
 
     setState(() {});
   }
@@ -85,19 +86,8 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
       context: context,
     ) as File?;
 
-    leaderImage = leaderImagePicker.image;
-
     setState(() {});
   }
-
-  List<ServiceTimeModel> serviceTimes = [
-    // Default service time
-    ServiceTimeModel(
-      day: 'Sunday',
-      time: DateTime(2000, 01, 09, 9, 00),
-      description: '',
-    ),
-  ];
 
   Future<void> createChurch() async {
     try {
@@ -118,7 +108,21 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
           kshowSnackbar(
             context: context,
             type: SnackBarType.error,
-            text: Validators.noServiceTimeErrorMessage,
+            text: Validators.noServiceTime,
+          );
+        }
+        if (churchImagePicker.image == null) {
+          kshowSnackbar(
+            context: context,
+            type: SnackBarType.error,
+            text: 'Church image required',
+          );
+        }
+        if (leaderImagePicker.image == null) {
+          kshowSnackbar(
+            context: context,
+            type: SnackBarType.error,
+            text: 'Leader image required',
           );
         }
 
@@ -131,7 +135,9 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
             validPostCode == true &&
             validPhoneNumber == true &&
             validEmail == true &&
-            validLeader == true) {
+            validLeader == true &&
+            leaderImagePicker.image != null &&
+            churchImagePicker.image != null) {
           final church = ChurchModel(
             churchName: churchNameCntlr.text,
             phoneNumber: phoneNumberCntlr.text,
@@ -139,9 +145,7 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
             leaderInfo: {
               'leader': leaderCntrl.text,
             },
-            serviceTime: serviceTimes.map((serviceTime) {
-              return serviceTime.toMap();
-            }).toList(),
+            serviceTime: serviceTimes,
             street: streetCntlr.text,
             streetNumber: streetNumberCntlr.text,
             city: cityCntlr.text,
@@ -149,24 +153,28 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
             province: province,
           );
 
+          print(church.toMap());
           EasyLoading.show();
+
           final doc = await FirebaseFirestore.instance
-              .collection('churchess')
+              .collection('churches')
               .add(church.toMap());
-          final churchImgaeUrl = await FireStorage().uploadFile(
+          String churchImagePath = 'churches/${doc.id}/images/';
+
+          final churchImageURL = await FireStorage().uploadFile(
             storagePath: churchImagePath,
-            file: churchImage,
+            file: churchImagePicker.image,
             id: doc.id,
           );
           final leaderImagUrl = await FireStorage().uploadFile(
             storagePath: churchImagePath,
-            file: leaderImage,
+            file: leaderImagePicker.image,
             id: const Uuid().v4(),
           );
 
           await doc.update({
             'id': doc.id,
-            'image': churchImgaeUrl,
+            'imageURL': churchImageURL,
             'leaderInfo': {
               'leader': leaderCntrl.text,
               'imageUrl': leaderImagUrl,
@@ -218,16 +226,10 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create', style: kSFHeadLine3),
+        title: const Text('Church'),
         leading: kBackButton(context: context),
         actions: [
-          TextButton(
-            child: const Text(
-              'CREATE',
-              style: kSFBody,
-            ),
-            onPressed: createChurch,
-          )
+          _buildCreateButton(),
         ],
       ),
       body: SafeArea(
@@ -241,14 +243,14 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    _buildChurchTextField(),
-                    _buildStreetTextField(),
-                    _buildStreetNumberTextField(),
+                    _buildChurchNameField(),
+                    _buildStreetField(),
+                    _buildStreetNumberField(),
                     _buildCityTextField(),
-                    _buildPostcodeTextField(),
-                    _buildProvinceSelection(),
-                    _buildPhoneNumberTextField(),
-                    _buildEmailTextField(),
+                    _buildPostcodeField(),
+                    _buildProvinceDropDown(),
+                    _buildEmailField(),
+                    _buildPhoneNumberField(),
                     const SizedBox(height: kContentSpacing12),
                     _buildLeaderTile(),
                     const Divider(),
@@ -265,109 +267,46 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     );
   }
 
-  Widget _buildAddServiceButton() {
-    return Buttons.buildButton(
-      width: double.infinity,
-      context: context,
-      btnText: 'Add service time',
-      onPressed: () {
-        FocusScope.of(context).unfocus();
-        serviceTimes.add(
-          ServiceTimeModel(
-            day: 'Sunday',
-            time: DateTime.now(),
-            description: '',
-          ),
-        );
-        setState(() {});
-      },
-    );
-  }
-
-  Widget _buildServiceTimes() {
-    return ListView.separated(
-      separatorBuilder: (context, index) {
-        return Container(
-          height: kContentSpacing16,
-        );
-      },
-      shrinkWrap: true,
-      itemCount: serviceTimes.length,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return CreateServiceTime(
-          delete: () {
-            print(index);
-            serviceTimes.removeAt(index);
-            setState(() {});
-          },
-          serviceTime: serviceTimes[index],
-          dayOnChanged: (value) {
-            serviceTimes[index].day = value;
-            setState(() {});
-          },
-          descriptionOnChanged: (value) {
-            serviceTimes[index].description = value;
-            setState(() {});
-          },
-          timeOnChanged: (time) {
-            serviceTimes[index].time = time;
-
-            setState(() {});
-          },
-        );
-      },
+  Widget _buildCreateButton() {
+    return TextButton(
+      child: const Text(
+        'CREATE',
+        style: kSFBody,
+      ),
+      onPressed: createChurch,
     );
   }
 
   Widget _buildChurchImage() {
-    if (churchImage != null && churchImage?.path != null) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.30,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: Image.file(
-              churchImage!,
-            ).image,
-          ),
-          color: kGrey,
-        ),
-        child: TextButton(
-          onPressed: pickChurchImage,
-          style: kTextButtonStyle,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.all(
-              Radius.circular(kButtonRadius),
-            ),
-            child: Container(),
-          ),
-        ),
-      );
+    ImageProvider? image;
+
+    Widget child = const Icon(Icons.collections_outlined, color: kBlack);
+
+    if (churchImagePicker.image != null &&
+        churchImagePicker.image?.path != null) {
+      image = Image.file(churchImagePicker.image!).image;
+      child = Container();
     }
 
     return Container(
       height: 260,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
+        image: image != null
+            ? DecorationImage(image: image, fit: BoxFit.cover)
+            : null,
         color: kGrey,
-        borderRadius: BorderRadius.all(
-          Radius.circular(kCardRadius),
-        ),
       ),
       child: TextButton(
         onPressed: pickChurchImage,
         style: kTextButtonStyle,
-        child: const Center(
-          child: Icon(
-            Icons.collections_outlined,
-            color: kBlack,
-          ),
+        child: Center(
+          child: child,
         ),
       ),
     );
   }
 
-  Widget _buildChurchTextField() {
+  Widget _buildChurchNameField() {
     return Form(
       key: churchNameKey,
       child: MyTextFormField(
@@ -384,7 +323,77 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     );
   }
 
-  Widget _buildProvinceSelection() {
+  Widget _buildStreetField() {
+    return Form(
+      key: streetKey,
+      child: MyTextFormField(
+        controller: streetCntlr,
+        maxLines: 1,
+        fillColor: Colors.transparent,
+        hintText: 'Street',
+        textInputAction: TextInputAction.next,
+        validator: Validators.textValidator,
+        onChanged: (value) {
+          streetKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _buildStreetNumberField() {
+    return Form(
+      key: streetNumberKey,
+      child: MyTextFormField(
+        controller: streetNumberCntlr,
+        maxLines: 1,
+        fillColor: Colors.transparent,
+        hintText: 'Street number',
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.next,
+        validator: Validators.textValidator,
+        onChanged: (value) {
+          streetNumberKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _buildCityTextField() {
+    return Form(
+      key: cityKey,
+      child: MyTextFormField(
+        controller: cityCntlr,
+        maxLines: 1,
+        fillColor: Colors.transparent,
+        hintText: 'City',
+        textInputAction: TextInputAction.next,
+        validator: Validators.textValidator,
+        onChanged: (value) {
+          cityKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _buildPostcodeField() {
+    return Form(
+      key: postcodeKey,
+      child: MyTextFormField(
+        controller: postcodeCntlr,
+        maxLines: 1,
+        fillColor: Colors.transparent,
+        hintText: 'Post code',
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.number,
+        validator: Validators.textValidator,
+        onChanged: (value) {
+          postcodeKey.currentState?.validate();
+        },
+      ),
+    );
+  }
+
+  Widget _buildProvinceDropDown() {
     return Container(
       padding: const EdgeInsets.all(kCardContentPadding),
       child: DropdownButton<String>(
@@ -410,7 +419,7 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     );
   }
 
-  Widget _buildEmailTextField() {
+  Widget _buildEmailField() {
     return Form(
       key: emailKey,
       child: MyTextFormField(
@@ -428,7 +437,7 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     );
   }
 
-  Widget _buildPhoneNumberTextField() {
+  Widget _buildPhoneNumberField() {
     return Form(
       key: phoneNumberKey,
       child: MyTextFormField(
@@ -446,125 +455,33 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
     );
   }
 
-  Widget _buildStreetTextField() {
-    return Form(
-      key: streetKey,
-      child: MyTextFormField(
-        controller: streetCntlr,
-        maxLines: 1,
-        fillColor: Colors.transparent,
-        hintText: 'Street',
-        textInputAction: TextInputAction.next,
-        validator: Validators.textValidator,
-        onChanged: (value) {
-          streetKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-  Widget _buildStreetNumberTextField() {
-    return Form(
-      key: streetNumberKey,
-      child: MyTextFormField(
-        controller: streetNumberCntlr,
-        maxLines: 1,
-        fillColor: Colors.transparent,
-        hintText: 'Street number',
-        keyboardType: TextInputType.number,
-        textInputAction: TextInputAction.next,
-        validator: Validators.textValidator,
-        onChanged: (value) {
-          streetNumberKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-  Widget _buildPostcodeTextField() {
-    return Form(
-      key: postcodeKey,
-      child: MyTextFormField(
-        controller: postcodeCntlr,
-        maxLines: 1,
-        fillColor: Colors.transparent,
-        hintText: 'Post code',
-        textInputAction: TextInputAction.next,
-        keyboardType: TextInputType.number,
-        validator: Validators.textValidator,
-        onChanged: (value) {
-          postcodeKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
-  Widget _buildCityTextField() {
-    return Form(
-      key: cityKey,
-      child: MyTextFormField(
-        controller: cityCntlr,
-        maxLines: 1,
-        fillColor: Colors.transparent,
-        hintText: 'City',
-        textInputAction: TextInputAction.next,
-        validator: Validators.textValidator,
-        onChanged: (value) {
-          cityKey.currentState?.validate();
-        },
-      ),
-    );
-  }
-
   Widget _buildLeaderTile() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: kBodyPadding),
+    return SizedBox(
       height: 100,
       child: Row(
         children: [
           _buildAvatar(),
           const SizedBox(width: kContentSpacing8),
-          Expanded(
-            child: Form(
-              key: leaderKey,
-              child: MyTextFormField(
-                controller: leaderCntrl,
-                fillColor: Colors.transparent,
-                hintText: 'Leader',
-                maxLines: 1,
-                textInputAction: TextInputAction.done,
-                validator: Validators.textValidator,
-                onChanged: (value) {
-                  leaderKey.currentState?.validate();
-                },
-              ),
-            ),
-          )
+          _buildLeaderField(),
         ],
       ),
     );
   }
 
   Widget _buildAvatar() {
-    if (leaderImage != null && leaderImage?.path != null) {
-      return CircleAvatar(
-        backgroundImage: Image.file(leaderImage!).image,
-        radius: 30,
-        backgroundColor: kBlueLight,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(100),
-          ),
-          child: TextButton(
-            child: Container(),
-            onPressed: pickLeaderImage,
-          ),
-        ),
-      );
+    ImageProvider? backgroundImage;
+
+    Widget child = const Icon(Icons.person_outline_outlined, color: kBlack);
+
+    if (leaderImagePicker.image != null &&
+        leaderImagePicker.image?.path != null) {
+      backgroundImage = Image.file(leaderImagePicker.image!).image;
+      child = Container();
     }
     return CircleAvatar(
-      radius: 30,
+      radius: 40,
       backgroundColor: kBlueLight,
+      backgroundImage: backgroundImage,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(
           Radius.circular(100),
@@ -572,138 +489,177 @@ class _CreateChurchScreenState extends State<CreateChurchScreen> {
         child: TextButton(
           onPressed: pickLeaderImage,
           style: kTextButtonStyle,
-          child: const Center(
-            child: Icon(Icons.person_outline_outlined, color: kBlack),
+          child: Center(
+            child: child,
           ),
         ),
       ),
     );
   }
+
+  Widget _buildLeaderField() {
+    return Expanded(
+      child: Form(
+        key: leaderKey,
+        child: MyTextFormField(
+          controller: leaderCntrl,
+          fillColor: Colors.transparent,
+          hintText: 'Leader',
+          maxLines: 1,
+          textInputAction: TextInputAction.done,
+          validator: Validators.textValidator,
+          onChanged: (value) {
+            leaderKey.currentState?.validate();
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildServiceTimes() {
+    return ListView.separated(
+      separatorBuilder: (context, index) {
+        return Container(
+          height: kContentSpacing16,
+        );
+      },
+      shrinkWrap: true,
+      itemCount: serviceTimes.length,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        return ServiceTimeCard(
+          key: ObjectKey(serviceTimes[index]),
+          serviceTime: serviceTimes[index],
+          edit: () async {
+            ServiceTimeModel serviceTime = await Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => EditServiceTimeScreen(
+                  serviceTime: serviceTimes[index],
+                ),
+              ),
+            );
+            serviceTimes.removeAt(index);
+            serviceTimes.insert(index, serviceTime);
+            setState(() {});
+          },
+          delete: () {
+            serviceTimes.removeAt(index);
+            setState(() {});
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildAddServiceButton() {
+    return Buttons.buildButton(
+      width: double.infinity,
+      context: context,
+      btnText: 'Add service time',
+      onPressed: () async {
+        FocusScope.of(context).unfocus();
+        ServiceTimeModel? serviceTime = await Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => AddServiceTimeScreen(
+              serviceTimeModel: ServiceTimeModel(
+                day: 'Sunday',
+                time: DateTime.now(),
+                description: null,
+              ),
+            ),
+          ),
+        );
+        if (serviceTime != null) {
+          serviceTimes.add(serviceTime);
+        }
+        setState(() {});
+      },
+    );
+  }
 }
 
-class CreateServiceTime extends StatefulWidget {
+class ServiceTimeCard extends StatelessWidget {
   final ServiceTimeModel serviceTime;
-  final Function(String?) dayOnChanged;
-  final Function(DateTime) timeOnChanged;
-  final Function(String) descriptionOnChanged;
   final VoidCallback delete;
+  final VoidCallback edit;
 
-  const CreateServiceTime({
+  const ServiceTimeCard({
     Key? key,
     required this.serviceTime,
-    required this.descriptionOnChanged,
-    required this.timeOnChanged,
-    required this.dayOnChanged,
     required this.delete,
+    required this.edit,
   }) : super(key: key);
 
   @override
-  State<CreateServiceTime> createState() => _CreateServiceTimeState();
-}
-
-class _CreateServiceTimeState extends State<CreateServiceTime> {
-  DatePicker datePicker = DatePicker();
-
-  List<String> days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday'
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    Widget _buildHeaderText() {
+      return Container(
+        alignment: Alignment.centerLeft,
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text('Service Time', style: kSFBody),
-            TextButton(
-              child: const Icon(
-                Icons.delete_outline_outlined,
-                color: kBlack,
-              ),
-              onPressed: widget.delete,
+            Row(
+              children: [
+                TextButton(
+                  child: const Icon(
+                    Icons.delete_outline_outlined,
+                    color: kBlack,
+                  ),
+                  onPressed: delete,
+                ),
+                TextButton(
+                  child: const Icon(
+                    Icons.edit_outlined,
+                    color: kBlack,
+                  ),
+                  onPressed: edit,
+                ),
+              ],
             )
           ],
         ),
-        const SizedBox(height: kContentSpacing8),
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: kBlueLight,
-            borderRadius: BorderRadius.all(
-              Radius.circular(kButtonRadius),
+      );
+    }
+
+    Widget _buildDayAndTime() {
+      return ServiceTimeTile(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              serviceTime.day ?? '',
+              style: kSFBody,
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(kCardContentPadding),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: DropdownButton<String>(
-                    value: widget.serviceTime.day,
-                    isExpanded: true,
-                    underline: Container(),
-                    icon: const Icon(
-                      Icons.expand_more_outlined,
-                      color: kBlack,
-                    ),
-                    style: kSFBody,
-                    onChanged: (String? value) {
-                      widget.dayOnChanged(value);
-                      setState(() {});
-                    },
-                    items: days.map((day) {
-                      return DropdownMenuItem<String>(
-                        value: day,
-                        child: Text(
-                          day,
-                          style: kSFBody,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-                SizedBox(
-                  width: 80,
-                  child: TextButton(
-                    child: Text(
-                      FormalDates.formatHm(
-                        date: widget.serviceTime.time,
-                      ),
-                      style: kSFBody,
-                    ),
-                    onPressed: () async {
-                      await datePicker.showDatePicker(
-                        initialDate: widget.serviceTime.time,
-                        maxDate: kMaxDate,
-                        mode: CupertinoDatePickerMode.time,
-                        context: context,
-                        onChanged: (date) {
-                          widget.timeOnChanged(date);
-                          setState(() {});
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ],
+            Text(
+              FormalDates.formatHm(date: serviceTime.time),
+              style: kSFBody,
             ),
-          ),
+          ],
         ),
+        onPressed: null,
+      );
+    }
+
+    Widget _buildDescriptionField() {
+      return MyTextFormField(
+        initialValue: serviceTime.description,
+        hintText: 'Description (optional)',
+        maxLines: null,
+        readOnly: true,
+      );
+    }
+
+    return Column(
+      children: [
         const SizedBox(height: kContentSpacing8),
-        MyTextFormField(
-          hintText: 'Description (optional)',
-          onChanged: widget.descriptionOnChanged,
-        ),
+        _buildHeaderText(),
+        const SizedBox(height: kContentSpacing8),
+        _buildDayAndTime(),
+        const SizedBox(height: kContentSpacing8),
+        _buildDescriptionField(),
       ],
     );
   }

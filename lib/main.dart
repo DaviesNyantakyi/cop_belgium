@@ -1,21 +1,16 @@
-import 'dart:io';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:audio_service/audio_service.dart';
-import 'package:cop_belgium/providers/audio_notifier.dart';
-import 'package:cop_belgium/providers/signup_notifier.dart';
-import 'package:cop_belgium/screens/auth_screens/auth_switcher.dart';
-
-import 'package:cop_belgium/utilities/constant.dart';
-import 'package:cop_belgium/utilities/image_picker.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_linkify/flutter_linkify.dart';
-
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart' as url_launcher;
+
+import 'package:cop_belgium/providers/audio_notifier.dart';
+import 'package:cop_belgium/providers/signup_notifier.dart';
+import 'package:cop_belgium/screens/auth_screens/auth_wrapper.dart';
+import 'package:cop_belgium/utilities/constant.dart';
 
 //TODO: -Firebase Project setup IOS
 
@@ -101,6 +96,7 @@ ThemeData _theme = ThemeData(
       color: kBlack,
     ),
     backgroundColor: Colors.white,
+    titleTextStyle: kSFHeadLine3,
   ),
   scaffoldBackgroundColor: Colors.white,
   textSelectionTheme: const TextSelectionThemeData(
@@ -138,6 +134,13 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
+class TestModel {
+  String? text;
+  TestModel({
+    this.text,
+  });
+}
+
 class Test extends StatefulWidget {
   const Test({Key? key}) : super(key: key);
 
@@ -146,96 +149,79 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-  MyImagePicker myImagePicker1 = MyImagePicker();
-  MyImagePicker myImagePicker2 = MyImagePicker();
-
-  File? image1;
-  File? image2;
-
-  Future<void> pickImage1() async {
-    await myImagePicker1.showBottomSheet(
-      context: context,
-    ) as File?;
-
-    image1 = myImagePicker1.image;
-
-    setState(() {});
-  }
-
-  Future<void> pickImage2() async {
-    await myImagePicker2.showBottomSheet(
-      context: context,
-    ) as File?;
-
-    image2 = myImagePicker2.image;
-
-    setState(() {});
-  }
-
-  String url =
-      'Zoom link: https://zoom.us/j/94548805427?pwd=TFZNRlFwN242dkJQeXliWWJPdEovQT09#success';
-
+  List<TestModel> tests = List<TestModel>.filled(5, TestModel());
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildImage(
-          file: image1,
-          onPressed: pickImage1,
-        ),
-        _buildImage(
-          file: image2,
-          onPressed: pickImage2,
-        ),
-        Linkify(
-          text: url,
-          style: kSFBody,
-          onOpen: (link) async {
-            if (await url_launcher.canLaunch(link.url)) {
-              await url_launcher.launch(link.url);
-            } else {
-              throw 'Could not launch $link';
-            }
-          },
-        )
-      ],
-    );
-  }
-
-  Widget _buildImage({required File? file, required VoidCallback onPressed}) {
-    if (file?.path != null && file != null) {
-      return CircleAvatar(
-        radius: 90,
-        backgroundImage: Image.file(
-          file,
-          fit: BoxFit.cover,
-        ).image,
-        backgroundColor: kBlueLight,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(100),
-          ),
-          child: TextButton(
-            onPressed: onPressed,
-            style: kTextButtonStyle,
-            child: Container(),
-          ),
-        ),
-      );
-    }
-    return CircleAvatar(
-      radius: 90,
-      backgroundColor: kBlueLight,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(100),
-        ),
-        child: TextButton(
-          onPressed: onPressed,
-          style: kTextButtonStyle,
-          child: const Center(
-            child: Icon(Icons.collections_outlined, color: kBlack),
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      itemCount: tests.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                Colors.yellow,
+                              ),
+                              padding: MaterialStateProperty.all(
+                                EdgeInsets.all(10),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(tests[index].text ?? ''),
+                                TextFormField(
+                                  onChanged: (value) {
+                                    tests[index].text = value;
+                                    setState(() {});
+                                  },
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              tests.removeAt(index);
+                              FocusScope.of(context).unfocus();
+                              setState(() {});
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                    ElevatedButton(
+                      child: Text('Add'),
+                      onPressed: () {
+                        tests.add(TestModel(text: 'hallo ${tests.length + 1}'));
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: tests.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        Text(tests[index].text ?? ''),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -35,8 +35,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   const SizedBox(height: 44),
                   _buildEmailButton(),
                   const SizedBox(height: kContentSpacing12),
-                  _buildGoogleButton(),
-                  const SizedBox(height: kContentSpacing12),
                   _buildLogInButton(),
                 ],
               ),

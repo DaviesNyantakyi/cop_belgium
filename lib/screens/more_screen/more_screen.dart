@@ -152,9 +152,9 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildAvatar() {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = FirebaseAuth.instance.currentUser;
 
-    if (user.photoURL != null) {
+    if (user != null && user.photoURL != null) {
       return CircleAvatar(
         backgroundImage: CachedNetworkImageProvider(user.photoURL!),
         radius: 40,

@@ -4,6 +4,7 @@ class UserModel {
   String? id;
   String? photoUrl;
   String firstName;
+  String displayName;
   String lastName;
   String email;
   String gender;
@@ -17,6 +18,7 @@ class UserModel {
     required this.isAdmin,
     required this.firstName,
     required this.lastName,
+    required this.displayName,
     required this.birthDate,
     required this.email,
     this.church,
@@ -31,6 +33,7 @@ class UserModel {
       birthDate: DateTime.fromMillisecondsSinceEpoch(birthDate),
       firstName: map['firstName'],
       lastName: map['lastName'],
+      displayName: map['displayName'],
       email: map['email'],
       church: map['church'],
       gender: map['gender'],
@@ -44,6 +47,7 @@ class UserModel {
       'photoUrl': photoUrl,
       'firstName': firstName,
       'lastName': lastName,
+      'displayName': displayName,
       'isAdmin': isAdmin,
       'birthDate': birthDate,
       'email': email,
@@ -54,6 +58,6 @@ class UserModel {
 
   @override
   String toString() {
-    return 'Church(id: $id, photoUrl:$photoUrl, churchName: $firstName, phoneNumber: $lastName, email: $email, isAdmin: $isAdmin, birthDate: $birthDate, gender: $gender, church: $church)';
+    return 'Church(id: $id, photoUrl:$photoUrl, churchName: $firstName, phoneNumber: $lastName, displayName: $displayName email: $email, isAdmin: $isAdmin, birthDate: $birthDate, gender: $gender, church: $church)';
   }
 }

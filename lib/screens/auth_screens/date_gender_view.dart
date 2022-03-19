@@ -181,9 +181,9 @@ class _DateGenderViewState extends State<DateGenderView> {
           const SizedBox(height: kContentSpacing12),
           Container(
             height: 64,
-            decoration: const BoxDecoration(
-              color: kBlueLight,
-              borderRadius: BorderRadius.all(
+            decoration: BoxDecoration(
+              color: kGreyLight,
+              borderRadius: const BorderRadius.all(
                 Radius.circular(
                   kButtonRadius,
                 ),

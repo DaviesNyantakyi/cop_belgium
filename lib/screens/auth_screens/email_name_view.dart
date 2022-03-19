@@ -2,6 +2,7 @@ import 'package:cop_belgium/providers/signup_notifier.dart';
 import 'package:cop_belgium/utilities/connection_checker.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:cop_belgium/utilities/validators.dart';
+import 'package:cop_belgium/widgets/bottomsheet.dart';
 import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:cop_belgium/widgets/snackbar.dart';
 import 'package:cop_belgium/widgets/textfield.dart';
@@ -61,25 +62,32 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
         leading: kBackButton(context: context),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(kBodyPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeaderText(),
-              const SizedBox(height: kContentSpacing32),
-              _buildFirstName(),
-              const SizedBox(height: kContentSpacing8),
-              _buildLastName(),
-              const SizedBox(height: kContentSpacing8),
-              _buildEmail(),
-              const SizedBox(height: kContentSpacing8),
-              _buildPasswordField(),
-              const SizedBox(height: kContentSpacing32),
-              _buildContinueButton()
-            ],
-          ),
-        ),
+        child: LayoutBuilder(builder: (context, constraints) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(kBodyPadding),
+            child: IntrinsicHeight(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildHeaderText(),
+                  const SizedBox(height: kContentSpacing32),
+                  _buildFirstNameField(),
+                  const SizedBox(height: kContentSpacing8),
+                  _buildLastNameField(),
+                  const SizedBox(height: kContentSpacing8),
+                  _buildEmailField(),
+                  const SizedBox(height: kContentSpacing8),
+                  _buildPasswordField(),
+                  const SizedBox(height: kContentSpacing32),
+                  _buildContinueButton(),
+                  const SizedBox(height: kContentSpacing32),
+                  _buildPolicyText()
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -104,26 +112,25 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
     );
   }
 
-  Widget _buildEmail() {
+  Widget _buildFirstNameField() {
     return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
-        key: signUpProvider.emailKey,
+        key: signUpProvider.firstNameKey,
         child: MyTextFormField(
-          controller: signUpProvider.emailCntlr,
-          hintText: 'Email',
+          controller: signUpProvider.firstNameCntlr,
+          hintText: 'First Name',
           textInputAction: TextInputAction.next,
-          keyboardType: TextInputType.emailAddress,
           maxLines: 1,
-          validator: Validators.emailValidator,
+          validator: Validators.nameValidator,
           onChanged: (value) {
-            signUpProvider.emailKey.currentState?.validate();
+            signUpProvider.firstNameKey.currentState?.validate();
           },
         ),
       );
     });
   }
 
-  Widget _buildLastName() {
+  Widget _buildLastNameField() {
     return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
         key: signUpProvider.lastNameKey,
@@ -141,18 +148,19 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
     });
   }
 
-  Widget _buildFirstName() {
+  Widget _buildEmailField() {
     return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Form(
-        key: signUpProvider.firstNameKey,
+        key: signUpProvider.emailKey,
         child: MyTextFormField(
-          controller: signUpProvider.firstNameCntlr,
-          hintText: 'First Name',
+          controller: signUpProvider.emailCntlr,
+          hintText: 'Email',
           textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.emailAddress,
           maxLines: 1,
-          validator: Validators.nameValidator,
+          validator: Validators.emailValidator,
           onChanged: (value) {
-            signUpProvider.firstNameKey.currentState?.validate();
+            signUpProvider.emailKey.currentState?.validate();
           },
         ),
       );
@@ -200,6 +208,48 @@ class _EmailNamePasswordViewState extends State<EmailNamePasswordView> {
       btnText: 'Continue',
       width: double.infinity,
       onPressed: onSubmit,
+    );
+  }
+
+  Widget _buildPolicyText() {
+    return Column(
+      children: [
+        const Text(
+          'By creating an account, you agree to the ',
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            InkWell(
+              child: const Text(
+                'Privacy Policy',
+                style: TextStyle(fontWeight: FontWeight.bold, color: kBlue),
+              ),
+              onTap: () {
+                loadMdFile(
+                  context: context,
+                  mdFile: 'assets/privacy/privacy_policy.md',
+                );
+              },
+            ),
+            const Text(
+              ' and',
+            ),
+            InkWell(
+              child: const Text(
+                ' Terms of Conditions',
+                style: TextStyle(fontWeight: FontWeight.bold, color: kBlue),
+              ),
+              onTap: () {
+                loadMdFile(
+                  context: context,
+                  mdFile: 'assets/privacy/terms_of_service.md',
+                );
+              },
+            ),
+          ],
+        )
+      ],
     );
   }
 }

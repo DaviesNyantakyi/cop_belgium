@@ -1,3 +1,6 @@
+import 'package:cop_belgium/models/service_time_model.dart';
+import 'package:cop_belgium/screens/churches_screen/create_church_screen.dart';
+
 class ChurchModel {
   String? id;
   final String churchName;
@@ -10,7 +13,7 @@ class ChurchModel {
   final String city;
   final String postCode;
   final Map<String, dynamic>? latLong;
-  String? image; // TODO: Change to imageUrl
+  String? imageURL; // TODO: Change to imageUrl
   final String province;
 
   ChurchModel({
@@ -25,7 +28,7 @@ class ChurchModel {
     required this.city,
     required this.postCode,
     this.latLong,
-    this.image,
+    this.imageURL,
     required this.province,
   });
 
@@ -42,7 +45,7 @@ class ChurchModel {
       'city': city,
       'postCode': postCode,
       'latLong': latLong,
-      'image': image,
+      'imageURL': imageURL,
       'province': province,
     };
   }
@@ -60,13 +63,13 @@ class ChurchModel {
       city: map['city'] ?? '',
       postCode: map['postCode'] ?? '',
       latLong: map['latLong'],
-      image: map['image'] ?? '',
+      imageURL: map['imageURL'] ?? '',
       province: map['province'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'Church(id: $id, churchName: $churchName, phoneNumber: $phoneNumber, email: $email, leaderInfo: $leaderInfo, serviceTime: $serviceTime, street: $street, streetNumber: $streetNumber, city: $city, postCode: $postCode, latLong: $latLong, image: $image, province: $province)';
+    return 'Church(id: $id, churchName: $churchName, phoneNumber: $phoneNumber, email: $email, leaderInfo: $leaderInfo, serviceTime: $serviceTime, street: $street, streetNumber: $streetNumber, city: $city, postCode: $postCode, latLong: $latLong, imageURL: $imageURL, province: $province)';
   }
 }

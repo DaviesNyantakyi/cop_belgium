@@ -286,7 +286,7 @@ class _EditEventScreenState extends State<EditEventScreen> {
       decoration: const BoxDecoration(
         color: kGrey,
         borderRadius: BorderRadius.all(
-          Radius.circular(kCardRadius),
+          Radius.circular(kRadius),
         ),
       ),
       child: TextButton(

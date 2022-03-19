@@ -278,7 +278,7 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       decoration: const BoxDecoration(
         color: kGrey,
         borderRadius: BorderRadius.all(
-          Radius.circular(kCardRadius),
+          Radius.circular(kRadius),
         ),
       ),
       child: TextButton(

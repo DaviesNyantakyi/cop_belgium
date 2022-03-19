@@ -5,16 +5,16 @@ import 'package:cop_belgium/screens/testimonies_screen/testimonies_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:flutter/material.dart';
 
-class BottomNavSelectorPage extends StatefulWidget {
+class BottomNavScreen extends StatefulWidget {
   static String bottomNavSelectorPage = 'bottomNavSelectorPage';
-  const BottomNavSelectorPage({Key? key}) : super(key: key);
+  const BottomNavScreen({Key? key}) : super(key: key);
 
   @override
-  _BottomNavSelectorPageState createState() => _BottomNavSelectorPageState();
+  _BottomNavScreenState createState() => _BottomNavScreenState();
 }
 
-class _BottomNavSelectorPageState extends State<BottomNavSelectorPage> {
-  int _selectedIndex = 0;
+class _BottomNavScreenState extends State<BottomNavScreen> {
+  int _selectedIndex = 3;
 
   final List<Widget> _screens = const [
     PodcastScreen(),

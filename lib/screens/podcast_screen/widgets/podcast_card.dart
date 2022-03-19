@@ -22,7 +22,7 @@ class PodcastCard extends StatelessWidget {
         ],
         gradient: kPurpleGradient,
         borderRadius: const BorderRadius.all(
-          Radius.circular(kCardRadius),
+          Radius.circular(kRadius),
         ),
       ),
       child: TextButton(
@@ -37,8 +37,8 @@ class PodcastCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(kCardRadius),
-                  bottomLeft: Radius.circular(kCardRadius),
+                  topLeft: Radius.circular(kRadius),
+                  bottomLeft: Radius.circular(kRadius),
                 ),
               ),
               width: 120,

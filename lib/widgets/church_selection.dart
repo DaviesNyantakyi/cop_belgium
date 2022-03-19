@@ -55,10 +55,10 @@ class _ChurchSelectionScreenState extends State<ChurchSelectionScreen> {
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: searchContlr.text.isEmpty
                     ? FirebaseFirestore.instance
-                        .collection('churchess')
+                        .collection('churches')
                         .snapshots()
                     : FirebaseFirestore.instance
-                        .collection('churchess')
+                        .collection('churches')
                         .where('searchIndex',
                             arrayContains: searchContlr.text.toLowerCase())
                         .snapshots(),

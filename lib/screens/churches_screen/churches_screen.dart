@@ -31,14 +31,16 @@ class ChurchesScreen extends StatelessWidget {
       ),
       body: ChurchSelectionScreen(
         onTap: (church) {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(
-              builder: (context) => ChurchDetailScreen(
-                church: church!,
+          if (church != null) {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(
+                builder: (context) => ChurchDetailScreen(
+                  church: church,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
       ),
     );

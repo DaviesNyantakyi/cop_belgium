@@ -17,7 +17,12 @@ class FireAuth {
           user.gender.isNotEmpty &&
           user.email.isNotEmpty &&
           password != null) {
-        String? displayName = '${user.firstName} ${user.lastName}';
+        String displayName = '${user.firstName} ${user.lastName}';
+
+        // Delete anon user if he desides to signup.
+        if (_auth.currentUser?.isAnonymous == true) {
+          await _auth.currentUser?.delete();
+        }
 
         await _auth.createUserWithEmailAndPassword(
           email: user.email,
@@ -26,6 +31,8 @@ class FireAuth {
         await _auth.currentUser?.updateDisplayName(displayName);
         user.id = _auth.currentUser?.uid;
         await _fireStore.createUserDoc(user: user);
+
+        await _auth.currentUser?.reload();
         return _auth.currentUser;
       } else {
         return null;
@@ -33,6 +40,28 @@ class FireAuth {
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
 
+      rethrow;
+    }
+  }
+
+  Future<User?> login(
+      {required String? email, required String? password}) async {
+    try {
+      if (email != null && password != null) {
+        // Delete anon user if he desides to signup.
+        if (_auth.currentUser?.isAnonymous == true) {
+          await _auth.currentUser?.delete();
+        }
+        final user = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        return user.user;
+      } else {
+        return null;
+      }
+    } on FirebaseException catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -61,24 +90,6 @@ class FireAuth {
         throw ConnectionChecker.connectionException;
       }
     } on FirebaseAuthException catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
-  }
-
-  Future<User?> login(
-      {required String? email, required String? password}) async {
-    try {
-      if (email != null && password != null) {
-        final user = await _auth.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-        return user.user;
-      } else {
-        return null;
-      }
-    } on FirebaseException catch (e) {
       debugPrint(e.toString());
       rethrow;
     }

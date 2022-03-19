@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
   }
 
-  Future<void> loginEmail() async {
+  Future<void> login() async {
     FocusScope.of(context).unfocus();
 
     final signUpProvider = Provider.of<SignUpNotifier>(context, listen: false);
@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: kContentSpacing8),
                     _buildForgotButton(signUpProvider: signUpProvider),
                     const SizedBox(height: kContentSpacing32),
-                    _buildLogInBtn(),
+                    _buildLoginButton(),
                   ],
                 );
               },
@@ -107,13 +107,13 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildLogInBtn() {
+  Widget _buildLoginButton() {
     return Consumer<SignUpNotifier>(builder: (context, signUpProvider, _) {
       return Buttons.buildButton(
         context: context,
         color: signUpProvider.isLoading ? kDisabledColor : kBlue,
         btnText: 'Log in',
-        onPressed: signUpProvider.isLoading ? null : loginEmail,
+        onPressed: signUpProvider.isLoading ? null : login,
         width: double.infinity,
         fontColor: Colors.white,
       );
@@ -130,9 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
         validator: Validators.emailValidator,
-        onChanged: (value) {
-          signUpProvider.emailKey.currentState?.validate();
-        },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
   }
@@ -173,6 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
         obscureText: signUpProvider.viewPassword ? false : true,
         textInputAction: TextInputAction.done,
         validator: Validators.passwordValidator,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         suffixIcon: GestureDetector(
           child: Icon(
             signUpProvider.viewPassword
@@ -184,11 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
             signUpProvider.togglePasswordView();
           },
         ),
-        onChanged: (value) {
-          signUpProvider.passwordKey.currentState?.validate();
-        },
         onSubmitted: (value) async {
-          await loginEmail();
+          await login();
         },
       ),
     );
