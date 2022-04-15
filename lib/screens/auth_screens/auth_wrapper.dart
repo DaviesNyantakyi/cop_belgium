@@ -1,4 +1,5 @@
 import 'package:cop_belgium/bottom_nav_selector.dart';
+import 'package:cop_belgium/screens/auth_screens/welcome_screen.dart';
 import 'package:cop_belgium/utilities/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
             return const BottomNavScreen();
           }
 
-          return const BottomNavScreen();
+          return const WelcomeScreen();
         } else {
           return const Scaffold(
             body: Center(

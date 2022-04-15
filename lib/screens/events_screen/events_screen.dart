@@ -131,7 +131,7 @@ class _EventsScreenState extends State<EventsScreen> {
         titleTextStyle: kSFHeadLine3,
         leftChevronMargin: const EdgeInsets.only(right: 10),
         rightChevronMargin: const EdgeInsets.only(left: 10),
-        formatButtonTextStyle: kSFBtnStyleBold,
+        formatButtonTextStyle: kSFButtonStyleBold,
         leftChevronIcon: Icon(
           Icons.chevron_left_outlined,
           color: kBlack.withOpacity(0.7),

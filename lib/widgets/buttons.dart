@@ -101,3 +101,50 @@ class Buttons {
     );
   }
 }
+
+class CustomElevatedButton extends StatelessWidget {
+  final Widget child;
+  final VoidCallback onPressed;
+  final double? height;
+  final double? width;
+  final double? radius;
+  final Color backgroundColor;
+
+  const CustomElevatedButton({
+    Key? key,
+    required this.child,
+    required this.onPressed,
+    this.height = 55,
+    this.width,
+    this.radius = 10,
+    this.backgroundColor = Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      width: width,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          elevation: MaterialStateProperty.all<double>(0),
+          backgroundColor: MaterialStateProperty.all<Color>(
+            backgroundColor,
+          ),
+          overlayColor: MaterialStateProperty.all<Color>(
+            Colors.grey.withOpacity(0.2),
+          ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(radius ?? 10),
+              ),
+            ),
+          ),
+        ),
+        child: child,
+        onPressed: onPressed,
+      ),
+    );
+  }
+}

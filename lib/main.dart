@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'package:audio_service/audio_service.dart';
+import 'package:cop_belgium/screens/auth_screens/date_gender_view.dart';
+import 'package:cop_belgium/screens/events_screen/events_screen.dart';
+import 'package:cop_belgium/widgets/buttons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -134,93 +137,100 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
-class TestModel {
-  String? text;
-  TestModel({
-    this.text,
-  });
-}
-
-class Test extends StatefulWidget {
+class Test extends StatelessWidget {
   const Test({Key? key}) : super(key: key);
 
   @override
-  State<Test> createState() => _TestState();
-}
-
-class _TestState extends State<Test> {
-  List<TestModel> tests = List<TestModel>.filled(5, TestModel());
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+      appBar: AppBar(
+        elevation: 0,
+        actions: [
+          CustomElevatedButton(
+            radius: 0,
+            child: const Text(
+              'SKIP',
+              style: kSFButtonStyleBold,
+            ),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(kBodyPadding),
+          child: Column(
             children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: tests.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                Colors.yellow,
-                              ),
-                              padding: MaterialStateProperty.all(
-                                EdgeInsets.all(10),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(tests[index].text ?? ''),
-                                TextFormField(
-                                  onChanged: (value) {
-                                    tests[index].text = value;
-                                    setState(() {});
-                                  },
-                                )
-                              ],
-                            ),
-                            onPressed: () {
-                              tests.removeAt(index);
-                              FocusScope.of(context).unfocus();
-                              setState(() {});
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text('Add'),
-                      onPressed: () {
-                        tests.add(TestModel(text: 'hallo ${tests.length + 1}'));
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                ),
+              const SizedBox(height: 100),
+              Image.asset(
+                'assets/images/logos/cop_logo.png',
+                width: 100,
+                height: 100,
               ),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: tests.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Text(tests[index].text ?? ''),
-                      ],
-                    );
-                  },
+              const SizedBox(height: 91),
+              CustomElevatedButton(
+                width: double.infinity,
+                height: 60,
+                child: const Text(
+                  'Continue with Google',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
+                onPressed: () {},
+                backgroundColor: const Color(0xFFFF6060),
               ),
+              const SizedBox(height: kContentSpacing8),
+              CustomElevatedButton(
+                width: double.infinity,
+                height: 60,
+                child: const Text(
+                  'Continue with Apple',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                onPressed: () {},
+                backgroundColor: const Color(0xFF343340),
+              ),
+              const SizedBox(height: kContentSpacing8),
+              CustomElevatedButton(
+                width: double.infinity,
+                height: 60,
+                child: const Text(
+                  'Continue with Email',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                onPressed: () {},
+                backgroundColor: const Color(0xFFF7F7F7),
+              ),
+              const SizedBox(height: kContentSpacing128),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    'Already have an account?',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    ' Login',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

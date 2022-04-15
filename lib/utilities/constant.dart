@@ -47,7 +47,7 @@ const kSFBody2Bold = TextStyle(
   fontFamily: _sfDisplayFont,
 );
 
-const kSFBtnStyleBold = TextStyle(
+const kSFButtonStyleBold = TextStyle(
   fontWeight: FontWeight.bold,
   color: kBlack,
   fontSize: 14,
@@ -154,6 +154,8 @@ const double kContentSpacing12 = 12;
 const double kContentSpacing16 = 16;
 const double kContentSpacing20 = 20;
 const double kContentSpacing32 = 32;
+const double kContentSpacing64 = 64;
+const double kContentSpacing128 = 128;
 
 const double kIconSize = 24;
 const double kDividerThickness = 1;

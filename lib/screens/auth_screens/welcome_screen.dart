@@ -84,7 +84,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       label: const Text(
         'Continue with Email',
-        style: kSFBtnStyleBold,
+        style: kSFButtonStyleBold,
       ),
       onPressed: () {
         final signUpProvider =
@@ -116,7 +116,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       label: const Text(
         'Continue with Google',
-        style: kSFBtnStyleBold,
+        style: kSFButtonStyleBold,
       ),
       onPressed: () {
         final signUpProvider =

@@ -1,6 +1,3 @@
-import 'package:cop_belgium/models/service_time_model.dart';
-import 'package:cop_belgium/screens/churches_screen/create_church_screen.dart';
-
 class ChurchModel {
   String? id;
   final String churchName;
